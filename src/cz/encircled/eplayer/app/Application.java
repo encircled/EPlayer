@@ -82,6 +82,7 @@ public class Application {
 	
 	public final void initialize(){
 		if(frame != null){
+            frame.releasePlayer();
 			frame.dispose();
 		}
 		PropertyProvider.initialize();
@@ -96,17 +97,19 @@ public class Application {
                 frame = new Frame();
                 actionsMouseListener.setFrame(frame);
                 frame.run();
+                frame.showQuickNavi();
             }
         });		
 	}
 	
-	private final void initVLCLib(){
+	private void initVLCLib(){
 		try {
 			NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), PropertyProvider.get(PropertyProvider.SETTING_VLC_PATH));
 			Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);     
 			vlcLibStatus = VLC_READY;
 		} catch(UnsatisfiedLinkError e){
 			vlcLibStatus = VLC_ERROR;
+            e.printStackTrace();
 			JOptionPane.showMessageDialog(frame, "VLC FAILED", "Title ", JOptionPane.ERROR_MESSAGE);
 			log.error("Failed to load vlc libs from specified path {}", PropertyProvider.get("vlc_path"));
 		}
@@ -114,7 +117,7 @@ public class Application {
 	
 	public Map<Integer, Playable> getPlayable(){
 		try {
-			return IOUtil.jsonFromFile("C:/software/deleteme.json", IOUtil.DEFAULT_TYPE_TOKEN);
+			return IOUtil.jsonFromFile("C:/deleteme.json", IOUtil.DEFAULT_TYPE_TOKEN);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -122,10 +125,20 @@ public class Application {
 	}
 	
 	public void play(Playable p){
-		frame.initializePlayer();
-		frame.play(p.getPath());
+		frame.showPlayer();
+		frame.play(p.getPath(), p.getTime());
 	}
-	
+
+    public void play(String path){
+        frame.showPlayer();
+
+        frame.play(path);
+    }
+
+    public void showQuickNavi(){
+        frame.showQuickNavi();
+    }
+
     public static void main(final String[] args) {
     	System.setProperty("-Dfile.encoding", "UTF-8");
     	Application.getInstance().initialize();

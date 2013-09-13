@@ -31,7 +31,7 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
-public class PlayerControlsPanel extends JPanel {
+public class PlayerControlsPanelOLD extends JPanel {
 
     private static final long serialVersionUID = 1L;
 
@@ -70,7 +70,7 @@ public class PlayerControlsPanel extends JPanel {
 
     private boolean mousePressedPlaying = false;
 
-    public PlayerControlsPanel(EmbeddedMediaPlayer mediaPlayer) {
+    public PlayerControlsPanelOLD(EmbeddedMediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
 
         createUI();
@@ -371,7 +371,7 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.enableOverlay(false);
-                if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanel.this)) {
+                if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(PlayerControlsPanelOLD.this)) {
                     mediaPlayer.playMedia(fileChooser.getSelectedFile().getAbsolutePath());
                 }
                 mediaPlayer.enableOverlay(true);
@@ -382,7 +382,7 @@ public class PlayerControlsPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mediaPlayer.enableOverlay(false);
-                String mediaUrl = JOptionPane.showInputDialog(PlayerControlsPanel.this, "Enter a media URL", "Connect to media", JOptionPane.QUESTION_MESSAGE);
+                String mediaUrl = JOptionPane.showInputDialog(PlayerControlsPanelOLD.this, "Enter a media URL", "Connect to media", JOptionPane.QUESTION_MESSAGE);
                 if(mediaUrl != null && mediaUrl.length() > 0) {
                     mediaPlayer.playMedia(mediaUrl);
                 }

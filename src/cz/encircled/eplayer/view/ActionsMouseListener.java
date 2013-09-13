@@ -71,12 +71,14 @@ public class ActionsMouseListener implements ActionListener {
 					if (res == JFileChooser.APPROVE_OPTION) {
 						File f = fc.getSelectedFile();
 						fileChooserLastPath = f.getPath();
-						System.out.println(fileChooserLastPath);
+						Application.getInstance().play(fileChooserLastPath);
 					}
 				}
 			});
 			
-		}
+		} else if(eName.equalsIgnoreCase(ActionCommands.OPEN_QUICK_NAVI)){
+            Application.getInstance().showQuickNavi();
+        }
 		
 	}
 

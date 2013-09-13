@@ -20,4 +20,5 @@ public class LocalizedMessages {
 
 	public static final String EXIT = "exit";
 
+    public static final String OPEN_QUICK_NAVI = "openQuickNavi";
 }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="EclipseModuleManager">
+    <libelement value="jar://$MODULE_DIR$/lib/jna-3.5.2.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/vlcj-2.4.1.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/JTattoo-1.6.9.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/log4j-api-2.0-beta8.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/log4j-core-2.0-beta8.jar!/" />
+    <libelement value="jar://$MODULE_DIR$/lib/gson-2.2.4.jar!/" />
+    <src_description expected_position="0">
+      <src_folder value="file://$MODULE_DIR$/src" expected_position="0" />
+    </src_description>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/bin" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
+    <orderEntry type="module-library">
+      <library name="jna-3.5.2.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jna-3.5.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="vlcj-2.4.1.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/vlcj-2.4.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/vlcj-2.4.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="JTattoo-1.6.9.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/JTattoo-1.6.9.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/JTattoo-1.6.9-sources.zip!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="log4j-api-2.0-beta8.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/log4j-api-2.0-beta8.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/log4j-api-2.0-beta8-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="log4j-core-2.0-beta8.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/log4j-core-2.0-beta8.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="gson-2.2.4.jar">
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/gson-2.2.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/lib/gson-2.2.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
+

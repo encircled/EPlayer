@@ -12,4 +12,5 @@ public class ActionCommands {
 
 	public final static String OPEN = "open";
 
+    public static final String OPEN_QUICK_NAVI = "openQuickNavi";
 }
