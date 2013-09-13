@@ -1,0 +1,538 @@
+11:52:13.842 [main] ERROR cz.encircled.eplayer.app.PropertyProvider - reading props from settings.properties
+11:52:37.335 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - reading props from settings.properties
+12:02:01.942 [main] ERROR cz.encircled.eplayer.app.PropertyProvider - failed to read props from settings.properties
+12:05:07.447 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:07:25.961 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:08:30.148 [main] ERROR cz.encircled.eplayer.app.PropertyProvider - failed to read props from settings.properties
+12:09:12.482 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:10:13.384 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:10:35.862 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:12:49.193 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:13:26.125 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:15:25.549 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:16:46.794 [main] ERROR cz.encircled.eplayer.app.PropertyProvider - failed to read props from ../settings.properties
+12:17:14.889 [main] ERROR cz.encircled.eplayer.app.PropertyProvider - failed to read props from ../settings.properties
+12:17:22.812 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+12:18:03.359 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+13:13:35.628 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+13:13:44.735 [main] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+10:25:14.431 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.SettingsDialog - ButtonUI
+10:25:14.501 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.SettingsDialog - ButtonUI
+14:42:55.829 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+14:43:03.529 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+14:43:09.179 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+14:44:27.371 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+14:44:42.913 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+14:44:55.283 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+14:49:18.419 [Thread-9] ERROR cz.encircled.eplayer.app.Application - Failed to load vlc libs from specified path C:/software/vlc2
+14:49:43.794 [main] ERROR cz.encircled.eplayer.app.Application - Failed to load vlc libs from specified path C:/software/vlc2
+14:51:35.535 [main] ERROR cz.encircled.eplayer.app.Application - Failed to load vlc libs from specified path C:/software/vlc2
+14:51:39.185 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+14:51:58.906 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+11:01:13.098 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:13.845 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:01:24.664 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:25.581 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:01:29.941 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:30.965 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:01:33.070 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:33.925 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:01:35.629 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:36.277 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:01:37.501 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:37.989 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:01:39.309 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:39.709 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:01:41.231 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:01:41.966 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed
+11:02:05.923 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:02:06.207 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 0
+11:02:17.607 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:02:18.351 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 16
+11:02:23.231 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:02:23.999 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 30
+11:02:31.680 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:02:32.576 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 0
+11:03:16.895 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:03:16.961 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 3
+11:03:18.689 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:03:20.017 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 14
+11:03:25.554 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released
+11:03:25.801 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 21
+11:04:03.128 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 7840
+11:04:04.291 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 14
+13:47:14.718 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4952
+13:47:16.306 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:47:18.049 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5131
+13:47:18.745 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:47:20.529 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5078
+13:47:21.688 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:47:25.985 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 7358
+13:47:27.377 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:48:22.097 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4775
+13:48:22.868 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:48:22.894 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 0
+13:48:25.164 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5491
+13:48:25.923 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:48:25.938 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 0
+13:48:28.882 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+13:48:46.250 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 549
+13:48:47.516 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 14
+13:48:47.517 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 14000
+13:49:00.684 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4160
+13:49:01.036 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 17
+13:49:01.038 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 17000
+13:49:03.581 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 6503
+13:49:04.141 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 13
+13:49:04.141 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 13000
+13:49:11.117 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4160
+13:49:12.645 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 4
+13:49:12.646 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 4000
+13:49:14.533 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 1766
+13:49:15.069 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:49:15.091 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 0
+13:49:21.181 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5905
+13:49:22.493 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 29
+13:49:22.540 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 29000
+13:49:30.269 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 28364
+13:49:31.037 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 13
+13:49:31.039 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 13000
+13:50:12.293 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 549
+13:50:13.176 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 15
+13:50:13.176 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 15000
+13:50:18.519 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4160
+13:50:18.943 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:50:18.945 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 0
+13:50:19.943 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 909
+13:50:20.271 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 14
+13:50:20.289 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 14000
+13:50:21.511 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5136
+13:50:21.751 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 20
+13:50:21.753 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 20000
+13:56:01.377 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 12944
+13:56:01.756 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 3
+13:56:01.758 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 3000
+13:56:03.892 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5488
+13:56:04.716 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+13:56:04.718 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 0
+13:56:06.380 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5076
+13:56:06.756 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 7
+13:56:06.758 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 7000
+13:56:08.100 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4709
+13:56:08.476 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 9
+13:56:08.501 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 9000
+13:56:09.524 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4362
+13:56:09.835 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 14
+13:56:09.849 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 14000
+13:56:10.668 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4897
+13:56:10.979 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 18
+13:56:10.981 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 18000
+13:56:11.828 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 7835
+13:56:12.268 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 24
+13:56:12.290 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 24000
+13:56:12.868 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 12096
+13:56:13.244 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 27
+13:56:13.265 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 27000
+13:56:14.356 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 17912
+13:56:14.924 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 30
+13:56:14.926 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 30000
+13:57:07.825 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - 0
+13:57:46.552 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 0
+13:57:47.660 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 549
+13:57:48.660 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 1792
+13:57:49.660 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 2849
+13:57:50.660 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3610
+13:57:51.660 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4775
+13:57:52.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 5496
+13:57:53.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 6658
+13:57:54.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 7840
+13:57:55.504 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 8562
+13:57:55.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 8706
+13:57:55.984 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 14
+13:57:55.987 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 14000
+13:57:56.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4394
+13:57:57.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 5496
+13:57:58.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 6657
+13:57:59.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 7412
+13:58:00.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 8561
+13:58:01.661 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 9362
+13:58:02.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 10486
+13:58:03.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 11499
+13:58:04.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 12509
+13:58:05.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 13635
+13:58:06.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 14388
+13:58:07.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 15435
+13:58:08.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 16549
+13:58:09.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 17675
+13:58:10.616 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 18326
+13:58:10.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 18326
+13:58:11.088 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 8
+13:58:11.102 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 8000
+13:58:11.662 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3902
+13:58:12.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 5063
+13:58:13.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 5812
+13:58:14.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 6979
+13:58:15.545 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 7767
+13:58:15.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 7767
+13:58:16.056 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 30
+13:58:16.080 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 30000
+13:58:16.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 21039
+13:58:17.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 22159
+13:58:18.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 22896
+13:58:19.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 24057
+13:58:20.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 25088
+13:58:21.663 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 26089
+13:58:22.664 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 27157
+13:58:23.121 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 27668
+13:58:23.377 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 22
+13:58:23.384 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 22000
+13:58:23.664 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 22000
+13:58:24.664 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 12871
+13:58:25.664 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 13933
+13:58:26.664 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 14965
+13:58:27.664 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 15687
+13:58:28.664 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 16848
+14:01:22.528 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 0
+14:01:23.560 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 549
+14:01:23.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 549
+14:01:24.240 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 13
+14:01:24.240 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 13000
+14:01:24.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 13000
+14:01:25.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 13000
+14:01:26.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 13000
+14:01:27.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4160
+14:01:28.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4160
+14:01:29.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4160
+14:01:30.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4160
+14:01:31.608 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4160
+14:01:32.609 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4160
+14:01:32.696 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 4160
+14:01:33.328 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 22
+14:01:33.329 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 22000
+14:01:33.609 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 22000
+14:01:34.609 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 12741
+14:01:35.609 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 13809
+14:01:36.609 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 14517
+14:01:37.609 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 15620
+14:01:38.609 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 16735
+14:01:50.171 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 0
+14:01:51.256 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 549
+14:01:51.408 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 911
+14:01:52.121 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+14:01:52.122 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 10000
+14:01:52.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 10000
+14:01:53.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 10000
+14:01:54.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 10000
+14:01:55.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3660
+14:01:56.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3660
+14:01:57.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3660
+14:01:58.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3660
+14:01:59.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3660
+14:02:00.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3660
+14:02:01.257 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3660
+14:02:02.105 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 3660
+14:02:02.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3770
+14:02:02.409 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 12
+14:02:02.410 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 22000
+14:02:03.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 12349
+14:02:03.953 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 13074
+14:02:04.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 13112
+14:02:04.265 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 19
+14:02:04.266 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 29000
+14:02:05.025 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 21201
+14:02:05.256 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 23
+14:02:05.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 21481
+14:02:05.258 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 33000
+14:02:06.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 25195
+14:02:06.473 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 25474
+14:02:06.753 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 26
+14:02:06.754 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 36000
+14:02:07.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 24916
+14:02:07.689 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 25195
+14:02:07.944 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 28
+14:02:07.946 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 38000
+14:02:08.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 38000
+14:02:08.809 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 29860
+14:02:09.080 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 29
+14:02:09.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:02:10.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:02:11.258 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:02:12.259 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:02:13.259 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:02:14.259 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:02:15.259 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:02:16.259 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29860
+14:06:11.728 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 0
+14:06:12.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 549
+14:06:12.882 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 549
+14:06:13.410 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 12
+14:06:13.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 1236
+14:06:13.911 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 12000
+14:06:14.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 12000
+14:06:15.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 12000
+14:06:16.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3226
+14:06:17.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3226
+14:06:18.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3226
+14:06:19.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3226
+14:06:20.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3226
+14:06:21.209 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 3226
+14:06:21.710 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 16
+14:06:21.848 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3289
+14:06:22.212 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 16000
+14:06:22.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 7413
+14:06:23.570 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 8351
+14:06:23.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 8622
+14:06:24.314 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 6
+14:06:24.815 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 6000
+14:06:24.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 6000
+14:06:25.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 714
+14:06:26.314 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 1086
+14:06:26.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 1475
+14:06:27.042 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+14:06:27.544 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 0
+14:06:27.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 0
+14:06:28.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 714
+14:06:29.338 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 1475
+14:06:29.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 1840
+14:06:29.890 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 8
+14:06:30.392 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 8000
+14:06:30.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 8000
+14:06:31.849 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 1086
+14:06:32.018 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 1086
+14:06:32.519 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 10
+14:06:32.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 1966
+14:06:33.019 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 10000
+14:06:33.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:34.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:35.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:36.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:37.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:38.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:39.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:40.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:41.850 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:42.851 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:43.851 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3760
+14:06:58.358 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 0
+14:06:59.463 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 548
+14:06:59.603 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 910
+14:07:00.035 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 14
+14:07:00.036 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 14000
+14:07:00.059 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 14000
+14:07:00.359 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 14
+14:07:00.359 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 14000
+14:07:00.463 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 14000
+14:07:01.463 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 14000
+14:07:02.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 14000
+14:07:03.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4774
+14:07:03.876 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5495
+14:07:04.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 5832
+14:07:04.739 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 0
+14:07:04.742 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 0
+14:07:05.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 219
+14:07:06.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 1235
+14:07:07.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 2117
+14:07:08.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 3220
+14:07:09.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 4392
+14:07:10.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 5135
+14:07:10.995 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 5885
+14:07:11.464 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 6254
+14:07:12.204 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 16
+14:07:12.206 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 16000
+14:07:12.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 16000
+14:07:13.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 5429
+14:07:14.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 6207
+14:07:15.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 7332
+14:07:16.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 8173
+14:07:17.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 9282
+14:07:17.532 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 9282
+14:07:18.339 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 26
+14:07:18.342 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 26000
+14:07:18.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 26000
+14:07:19.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 18246
+14:07:19.812 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 18606
+14:07:20.451 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 29
+14:07:20.453 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 29000
+14:07:20.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 29000
+14:07:21.465 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 21461
+14:07:21.860 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - pressed 21786
+14:07:22.316 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - released 30
+14:07:22.318 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - releaser time 30000
+14:07:22.466 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 30000
+14:07:23.466 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - 21460
+14:08:41.505 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:08:42.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 549
+14:08:43.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1236
+14:08:43.936 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME : 15000
+14:08:43.936 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME2 : 15000
+14:08:44.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 15000
+14:08:45.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 15000
+14:08:46.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:08:47.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:08:48.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:08:49.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:08:50.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:08:51.584 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:08:52.585 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:08:52.929 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME : 11000
+14:08:52.929 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME2 : 11000
+14:08:53.585 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 548
+14:08:54.585 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1523
+14:08:55.585 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2497
+14:08:56.585 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3220
+14:08:57.585 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4392
+14:10:43.441 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:10:44.549 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 549
+14:10:45.444 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME : 14000
+14:10:45.445 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME2 : 14000
+14:10:45.549 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 14000
+14:10:46.549 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 14000
+14:10:47.549 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 14000
+14:10:48.549 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:10:49.549 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:12:02.313 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:12:03.398 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 549
+14:12:06.414 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : -1
+14:12:06.416 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME : -1
+14:12:06.439 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME2 : 14000
+14:12:07.002 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME : -1
+14:12:07.038 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME2 : 11000
+14:12:07.414 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 11000
+14:12:08.414 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4766
+14:12:09.414 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5487
+14:12:10.414 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 6648
+14:12:11.414 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 7403
+14:12:12.275 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME : -1
+14:12:12.302 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME2 : 14000
+14:12:12.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 14000
+14:12:13.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4776
+14:12:14.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5886
+14:12:15.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 6658
+14:12:16.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 7840
+14:12:17.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 8561
+14:12:18.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 9735
+14:12:19.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 10757
+14:12:20.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 11825
+14:12:21.128 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME : -1
+14:12:21.164 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - RELEASE TIME2 : 17000
+14:12:21.415 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 17000
+14:12:22.416 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5289
+14:12:23.416 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 6053
+14:12:24.416 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 7210
+14:15:19.755 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:15:20.864 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 549
+14:15:21.864 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1793
+14:15:22.865 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2849
+14:15:23.865 [Thread-26] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3610
+14:17:48.689 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:17:49.764 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 549
+14:17:50.764 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1793
+14:17:51.764 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2498
+14:17:52.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3610
+14:17:53.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4775
+14:17:54.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4363
+14:17:55.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3916
+14:17:56.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4716
+14:17:57.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5826
+14:17:58.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5417
+14:17:59.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4346
+14:18:00.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5068
+14:18:01.765 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 6229
+14:18:02.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 7355
+14:18:03.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 8196
+14:18:04.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:18:05.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 17910
+14:18:06.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 19071
+14:18:07.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 18628
+14:18:08.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:18:09.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 821
+14:18:10.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2083
+14:18:11.766 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:18:12.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4781
+14:18:13.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5942
+14:18:14.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:18:15.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 12109
+14:18:16.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 13177
+14:18:17.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 14263
+14:18:18.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4160
+14:18:19.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3009
+14:18:20.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3852
+14:18:21.767 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 286
+14:18:22.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3882
+14:18:23.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 361
+14:18:24.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3912
+14:18:25.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 285
+14:18:26.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:18:27.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:18:28.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 21066
+14:18:29.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 22185
+14:18:30.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 23289
+14:18:31.768 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 24346
+14:18:32.769 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 24996
+14:18:33.769 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 26063
+14:18:34.769 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 17273
+14:18:35.769 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 208
+14:18:36.769 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1148
+14:18:37.769 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2251
+14:18:38.771 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:18:39.771 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 235
+14:18:40.771 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:18:41.771 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 7472
+14:18:42.772 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 8450
+14:18:43.772 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 9422
+14:21:29.098 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:21:30.165 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 549
+14:21:31.165 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1793
+14:21:32.165 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2498
+14:21:33.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3610
+14:21:34.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4775
+14:21:35.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:21:36.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5068
+14:21:37.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5832
+14:21:38.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 8516
+14:21:39.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 17273
+14:21:40.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 17273
+14:21:41.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 17273
+14:21:42.166 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 17273
+14:21:43.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 289
+14:21:44.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 357
+14:21:45.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 357
+14:21:46.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 357
+14:21:47.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 357
+14:21:48.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 357
+14:21:49.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 357
+14:21:50.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : -1
+14:21:51.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : -1
+14:21:52.167 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 220
+14:21:53.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 220
+14:21:54.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 220
+14:21:55.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 220
+14:21:56.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 224
+14:21:57.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 620
+14:21:58.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1793
+14:21:59.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2498
+14:22:00.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3610
+14:22:01.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4775
+14:22:02.168 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5496
+14:22:03.169 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3760
+14:22:04.169 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4713
+14:22:05.169 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5837
+14:23:24.440 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 0
+14:23:25.514 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 549
+14:23:26.514 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 1793
+14:23:27.514 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 2498
+14:23:28.514 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 3610
+14:23:29.514 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4775
+14:23:30.514 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5496
+14:23:31.514 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 6657
+14:23:32.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 7412
+14:23:33.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 8561
+14:23:34.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 19734
+14:23:35.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5109
+14:23:36.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5858
+14:23:37.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 16230
+14:23:38.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 4690
+14:23:39.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 5840
+14:23:40.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 6640
+14:23:41.515 [Thread-27] DEBUG cz.encircled.eplayer.app.PropertyProvider - REAL TIME IS : 7765
+14:24:44.891 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
