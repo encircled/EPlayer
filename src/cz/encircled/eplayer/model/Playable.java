@@ -1,17 +1,23 @@
 package cz.encircled.eplayer.model;
 
+import java.util.regex.Pattern;
+
 public class Playable {
 
 	private String name;
 	
 	private String path;
 	
-	private int time;
+	private long time;
+
+    private static final Pattern FILENAME_PATTERN = Pattern.compile("^.*\\.*\\..*$");
 	
-	
-	public Playable(String name, String path){
-		this.name = name;
+	public Playable(String path){
 		this.path = path;
+        name = FILENAME_PATTERN.matcher(path).matches()
+                                             ? path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."))
+                                             : path;
+        time = 0;
 	}
 
 	public String getName() {
@@ -30,16 +36,16 @@ public class Playable {
 		this.path = path;
 	}
 
-	public int getTime() {
+	public long getTime() {
 		return time;
 	}
 
-	public void setTime(int time) {
+	public void setTime(long time) {
 		this.time = time;
 	}
 	
 	public boolean exists(){
 		return path != null && new java.io.File(path).exists();
 	}
-	
+
 }

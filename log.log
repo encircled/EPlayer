@@ -1266,3 +1266,151 @@
 22:48:36.683 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
 23:00:04.804 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
 23:16:11.673 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+23:32:16.111 [Thread-3] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:32:54.577 [Thread-3] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:34:08.409 [Thread-3] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:34:24.243 [Thread-3] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:34:44.195 [Thread-3] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:37:27.777 [Thread-3] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:38:04.607 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+23:38:04.628 [Thread-5] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:38:12.935 [Thread-3] ERROR cz.encircled.eplayer.app.Application - Failed to read playable data from D:/soft/vlc64 with default type token. Message: D:\soft\vlc64 (Access is denied)
+23:43:23.965 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+00:51:47.316 [Thread-2] ERROR cz.encircled.eplayer.app.Application - JSON syntax error. Message: java.lang.IllegalStateException: Expected BEGIN_OBJECT but was STRING at line 1 column 2
+00:52:40.648 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 0
+00:53:19.375 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 3740
+00:53:43.759 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 3742
+00:59:21.620 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2118
+00:59:26.038 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2120
+00:59:36.071 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2129
+00:59:36.956 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2130
+00:59:39.704 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2132
+00:59:40.667 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2132
+00:59:44.877 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2136
+00:59:57.298 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2145
+01:00:13.179 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2159
+01:00:18.654 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2164
+01:00:26.221 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2418
+01:00:38.965 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 2428
+01:03:28.049 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 3706224
+01:03:33.009 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - updated, time is 3708525
+01:12:10.356 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+01:49:02.611 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+01:49:40.615 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+10:30:46.331 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:30:48.244 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:30:51.943 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:30:56.043 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:30:57.540 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:31:03.437 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:31:46.325 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:31:48.943 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:31:50.422 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:31:54.054 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue
+10:32:42.757 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 84851
+10:32:44.156 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 77677
+10:33:12.172 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 80013
+10:33:15.192 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 79263
+10:33:20.348 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1333248
+10:33:23.347 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 79262
+10:33:34.727 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 2933113
+10:33:38.476 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 80263
+10:34:07.763 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1298159
+10:34:12.380 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1302107
+10:34:15.224 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1304207
+10:34:18.688 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1307281
+10:34:21.015 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1309242
+10:34:24.190 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1311856
+10:34:29.553 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1316541
+10:34:55.399 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1342415
+10:36:27.183 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1346945
+10:36:28.403 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1347823
+10:36:30.710 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1349615
+10:36:32.362 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1350657
+10:36:33.841 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1351575
+10:36:34.053 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue -1
+10:37:30.166 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1353424
+10:37:31.561 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1354511
+10:37:36.170 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1358623
+10:37:37.884 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1359760
+10:37:44.070 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1365339
+10:37:53.620 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1370609
+11:05:58.534 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1372527
+11:06:00.266 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1373591
+11:09:36.080 [Timer-0] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:09:36.259 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1374671
+11:09:38.387 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1376183
+11:10:05.630 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1402960
+11:10:06.764 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1403627
+11:10:07.698 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1404239
+11:10:08.776 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1405006
+11:10:09.883 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1405545
+11:10:11.225 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1406296
+11:10:33.314 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1428015
+11:10:35.416 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1429736
+11:11:17.446 [Timer-0] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:11:17.722 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1432197
+11:11:20.831 [Timer-1] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:11:20.881 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1435075
+11:11:43.726 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1439120
+11:11:44.988 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1439871
+11:11:48.241 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1442623
+11:11:49.673 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1443792
+11:11:51.179 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1444876
+11:11:52.327 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1445743
+11:11:53.663 [Timer-6] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:26.021 [Timer-0] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:26.924 [Timer-1] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:27.819 [Timer-2] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:28.576 [Timer-3] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:29.667 [Timer-4] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:30.414 [Timer-5] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:31.239 [Timer-6] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:32.040 [Timer-7] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+11:12:32.952 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1451633
+11:12:34.718 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1452841
+11:12:36.087 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1453807
+11:12:37.639 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1454803
+11:12:38.908 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1455511
+11:12:40.037 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1456054
+11:12:41.317 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1456973
+11:12:42.856 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1458000
+11:20:16.819 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+11:56:21.268 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 2610123
+12:07:19.730 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 3267906
+12:07:27.382 [Timer-2] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+12:07:36.076 [Timer-3] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+12:07:37.100 [Timer-4] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+12:08:09.687 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1472153
+12:08:11.383 [Timer-5] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+12:08:14.298 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1473711
+12:08:16.472 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1475031
+12:08:19.706 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1477826
+12:08:26.893 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1482538
+12:08:32.916 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1482538
+12:08:37.016 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1484665
+12:08:39.323 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1486511
+12:08:41.077 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1487711
+12:09:53.696 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 3277583
+12:11:00.386 [Timer-11] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+12:11:50.056 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 3344106
+12:11:59.962 [Timer-13] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+13:25:23.902 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 6525
+13:25:26.969 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 8524
+14:03:38.306 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 0
+14:04:57.420 [Timer-0] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+14:39:17.991 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 8091
+14:39:19.785 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 9390
+14:39:26.932 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 15076
+14:43:49.343 [Timer-0] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+14:47:19.167 [Timer-0] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+14:47:58.550 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 3356915
+14:49:54.896 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 3472943
+14:50:07.481 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 0
+14:50:22.657 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 1893
+14:50:35.337 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 93443
+14:50:37.383 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 95028
+14:56:17.163 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 434408
+14:56:31.431 [Timer-6] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+14:56:33.643 [Timer-7] DEBUG cz.encircled.eplayer.view.Frame - PAUSED
+14:56:39.552 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - continue 443125

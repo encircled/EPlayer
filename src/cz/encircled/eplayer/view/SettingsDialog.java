@@ -83,7 +83,7 @@ public class SettingsDialog extends JDialog {
         setLocationRelativeTo(null);
 	}
 	
-	private final JPanel getButtonsPanel(){
+	private JPanel getButtonsPanel(){
 		JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, BUTTONs_PANEL_HORIZONTAL_MARGIN, 0));
         buttonsPanel.setBackground(Color.WHITE);
@@ -95,14 +95,14 @@ public class SettingsDialog extends JDialog {
         return buttonsPanel;
 	}
 	
-	private final void initKeysPanel(){
+	private void initKeysPanel(){
 		keysPanel = new JPanel();	
 		keysPanel.setPreferredSize(new Dimension(WIDTH_30, WIDTH_80));
         keysPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         keysPanel.add(Components.getJLine(WIDTH_30, Components.MAIN_BLUE_COLOR));
 	}
 	
-	private final void initValuesPanel(){
+	private void initValuesPanel(){
 		valuesPanel = new JPanel();
         valuesPanel.setBackground(Color.WHITE);
         valuesPanel.setPreferredSize(new Dimension(WIDTH_55, WIDTH_80));
@@ -110,11 +110,14 @@ public class SettingsDialog extends JDialog {
         valuesPanel.add(Components.getJLine(WIDTH_55, Color.WHITE));
 	}
 	
-	private final void initializeSettings(){
+	private void initializeSettings(){
 		settings.clear();
-		settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT));
-		settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.INPUT_TEXT_ELEMENT));
-		for(SettingItem item : settings){
+        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT));
+        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.DEFAULT_OPEN_LOCATION), PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, SettingItem.INPUT_TEXT_ELEMENT));
+        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.QUICK_NAVI_STORAGE_PATH), PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH, SettingItem.INPUT_TEXT_ELEMENT));
+        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.INPUT_TEXT_ELEMENT));
+
+        for(SettingItem item : settings){
 			keysPanel.add(Components.getLabel(item.getViewText(), WIDTH_30, LABEL_HEIGHT, true));
 			switch(item.getElementType()){
 				case 0: 

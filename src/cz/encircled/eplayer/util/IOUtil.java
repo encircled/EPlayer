@@ -1,14 +1,6 @@
 package cz.encircled.eplayer.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.Closeable;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -64,13 +56,21 @@ public class IOUtil {
 	}
 	
 	public final static void storeJson(Object obj, String filepath) throws IOException {
+        File old = new File(filepath);
+        if(old.exists()){
+            old.renameTo(new File(filepath + ".bu"));
+        }
 		String json = new Gson().toJson(obj);
 		BufferedWriter writer = null;
 		try {
 			writer = new BufferedWriter(new FileWriter(filepath));
 			writer.write(json);
 			writer.flush();
-		} finally {
+            System.out.print(old.delete());    // TODO
+        } catch(IOException e){
+            old.renameTo(new File(filepath));
+            throw e;
+        }finally {
 			close(writer);
 			writer = null;
 		}

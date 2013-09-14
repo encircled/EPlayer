@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Insets;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import javax.swing.plaf.basic.BasicButtonUI;
 import cz.encircled.eplayer.app.Application;
 import cz.encircled.eplayer.app.LocalizedMessages;
 import cz.encircled.eplayer.app.MessagesProvider;
+import cz.encircled.eplayer.view.componensts.EPlayerJButton;
 import cz.encircled.eplayer.view.componensts.JLine;
 
 public class Components {
@@ -48,14 +50,22 @@ public class Components {
         return l;
     }
     
-    public static JButton getButton(String text, String actionCommand, int width, int height){
-        JButton b = new JButton(text);
+    public static EPlayerJButton getButton(String text, String actionCommand, int width, int height){
+        return getButton(text, actionCommand, width, height, Application.getInstance().getActionsMouseListener());
+    }
+
+    public static EPlayerJButton getButton(String text, String actionCommand, int width, int height, ActionListener actionListener){
+        return getButton(text, actionCommand, width, height, actionListener, null);
+    }
+
+    public static EPlayerJButton getButton(String text, String actionCommand, int width, int height, ActionListener actionListener, Color colorOnHover){
+        EPlayerJButton b = new EPlayerJButton(text, colorOnHover);
         b.setUI(new BasicButtonUI());
         b.setActionCommand(actionCommand);
         b.setPreferredSize(new Dimension(width, height));
         b.setBackground(Components.MAIN_LIGHT_GRAY_COLOR);
         b.setBorderPainted(false);
-        b.addActionListener(Application.getInstance().getActionsMouseListener());
+        b.addActionListener(actionListener);
         b.addMouseListener(Application.getInstance().getHoverMouseListener());
         return b;
     }
@@ -81,5 +91,5 @@ public class Components {
     	i.addActionListener(Application.getInstance().getActionsMouseListener());
     	return i;
     }
-    
+
 }

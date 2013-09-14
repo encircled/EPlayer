@@ -3,8 +3,9 @@ package cz.encircled.eplayer.view;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.Timer;
 
 import javax.swing.*;
 
@@ -21,8 +22,6 @@ import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
-import uk.co.caprica.vlcj.player.embedded.videosurface.CanvasVideoSurface;
 
 public class Frame extends JFrame implements Runnable {
 
@@ -92,22 +91,44 @@ public class Frame extends JFrame implements Runnable {
         showPlayerInternal();
         if(player.isPlaying())
             stopPlayer();
+
+        if(path.equals(current)){
+//            player.setTime(time);
+            log.debug("continue {}", time);
+        } else {
+            player.prepareMedia("file:///" + path, String.format(":start-time=%d", time/1000));
+        }
         current = path;
-        player.prepareMedia("file:///" + path, String.format(":start-time=%d", time));
         player.start();
+        if(path.equals(current)){
+            player.setTime(time);
+        }
         playerControls.reinitialize();
     }
 
     public void releasePlayer(){
-        if(player != null){
+        if(player.isPlaying()){
             player.stop();
-            player.release();
         }
+        player.release();
     }
 
     public void stopPlayer(){
-        if(player != null){
+        if(player.isPlaying()){
+            updateCurrentPlayableInCache();
             player.stop();
+        }
+    }
+
+    public void updateCurrentPlayableInCache(){
+        if(current != null)
+            Application.getInstance().updatePlayableCache(current.hashCode(), (int)(player.getTime()));
+    }
+
+    public void pausePlayer(){
+        if(player.isPlaying()){
+            player.pause();
+            updateCurrentPlayableInCache();
         }
     }
 
@@ -121,6 +142,7 @@ public class Frame extends JFrame implements Runnable {
                     wrapper.removeAll();
                     wrapper.add(naviPanel, BorderLayout.CENTER);
                     wrapper.repaint();
+                    repaintQuickNavi();
                 }
             }
         });
@@ -143,23 +165,44 @@ public class Frame extends JFrame implements Runnable {
             wrapper.add(mediaPlayerComponent, BorderLayout.CENTER);
             wrapper.add(playerControls, BorderLayout.SOUTH);
             wrapper.repaint();
+            jMenuBar.repaint();
         }
     }
 
+    public void repaintQuickNavi(){
+        final java.util.List<QuickNaviButton> naviButtons = new ArrayList<QuickNaviButton>();
+        Map<Integer, Playable> data = Application.getInstance().getPlayableCache();
+        for(Entry<Integer, Playable> e : data.entrySet())
+            naviButtons.add(new QuickNaviButton(e.getValue()));
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                naviPanel.removeAll();
+                naviPanel.revalidate();
+                for(final QuickNaviButton b : naviButtons)
+                    naviPanel.add(b);
+                naviPanel.repaint();
+            }
+        });
+
+    }
+
     public void fullScreen(){
-        final long time = player.getTime()/1000;
+        final long time = player.getTime();
         player.stop();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 dispose();
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
                 setUndecorated(true);
                 setVisible(true);
                 toFront();
                 setJMenuBar(null);
-                play(current, time);
                 playerControls.setVisible(false);
                 setCursor(blankCursor);
+                play(current, time);
                 isFullScreen = true;
             }
         });
@@ -167,7 +210,7 @@ public class Frame extends JFrame implements Runnable {
 
     public void exitFullScreen(){
         final long time = player.getTime();
-        player.stop();
+        stopPlayer();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -176,13 +219,14 @@ public class Frame extends JFrame implements Runnable {
                 setExtendedState(JFrame.MAXIMIZED_BOTH);
                 setVisible(true);
                 setCursor(Cursor.getDefaultCursor());
-                play(current, time / 1000);
                 setJMenuBar(jMenuBar);
-                playerControls.setVisible(true);
                 toFront();
+                playerControls.setVisible(true);
+                play(current, time);
                 isFullScreen = false;
             }
         });
+
     }
 
     @Override
@@ -191,7 +235,6 @@ public class Frame extends JFrame implements Runnable {
             @Override
             public void run() {
                 setVisible(true);
-//                play("D:\\video\\boss2\\test.mkv");
             }
         });
     }
@@ -233,15 +276,35 @@ public class Frame extends JFrame implements Runnable {
             player.setEnableKeyInputHandling(false);
 
             mediaPlayerComponent.getVideoSurface().addMouseListener(new MouseAdapter() {
+
+                private Timer pauseTimer;
+
+                private int tasksCount = 0;
+
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
                     if(e.getClickCount() == 1){
-                        if(player.isPlaying())
-                            player.pause();
-                        else
-                            player.start();
+                        if(tasksCount == 0){
+                            pauseTimer = new Timer();
+                            pauseTimer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    if(player.isPlaying())
+                                        pausePlayer();
+                                    else
+                                        player.start();
+                                    log.debug("PAUSED");
+                                    tasksCount--;
+                                }
+                            }, 200);
+                            tasksCount++;
+                        }
                     } else {
+                        if(tasksCount > 0){
+                            pauseTimer.cancel();
+                            tasksCount = 0;
+                        }
                         if(isFullScreen)
                             exitFullScreen();
                         else
@@ -265,7 +328,10 @@ public class Frame extends JFrame implements Runnable {
 
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
-                    JOptionPane.showMessageDialog(Frame.this, "Player error", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(Frame.this, "Failed to open " + current, "Error", JOptionPane.ERROR_MESSAGE);
+                    Application.getInstance().deletePlayableCache(current.hashCode());
+                    current = null;
+                    showQuickNavi();
                 }
 
             });
@@ -297,17 +363,11 @@ public class Frame extends JFrame implements Runnable {
         jMenuBar.add(tools);
     }
 
-
-
     private final void initializeQuickNavi(){
         naviPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 30));
         naviPanel.setBackground(Color.WHITE);
-
-        Map<Integer, Playable> data = Application.getInstance().getPlayable();
-        for(Entry<Integer, Playable> e : data.entrySet()){
-            Playable p = e.getValue();
-            naviPanel.add(new QuickNaviButton(p));
-        }
     }
+
+
 
 }

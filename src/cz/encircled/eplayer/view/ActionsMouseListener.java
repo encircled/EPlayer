@@ -5,13 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import cz.encircled.eplayer.app.Application;
 import cz.encircled.eplayer.app.PropertyProvider;
@@ -22,7 +17,7 @@ public class ActionsMouseListener implements ActionListener {
 	
 	private SettingsDialog settingsDialog;
 	
-	private String fileChooserLastPath = System.getProperty("user.home");
+	private String fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
 	
 	public void setFrame(Frame frame){
 		this.frame = frame;
@@ -32,54 +27,73 @@ public class ActionsMouseListener implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String eName = e.getActionCommand();
 		
-		System.out.println(eName);
 		if(eName.equalsIgnoreCase(ActionCommands.EXIT)){
-			frame.stopPlayer();
-			frame.dispose();
-			System.exit(0);
+            exit();
 		} else if(eName.equalsIgnoreCase(ActionCommands.SETTINGS)){
-			settingsDialog = new SettingsDialog(frame, true);
-			settingsDialog.setVisible(true);
+            showSettingsDialog();
 		} else if(eName.equalsIgnoreCase(ActionCommands.CANCEL)){
-			int i = 0;
-			Object c = e.getSource();
-			while(!(c instanceof JDialog) && i++ < 20)
-				c = ((JComponent)c).getParent();
-			((JDialog)c).dispose();
+            cancelDialog(e);
 		} else if(eName.equalsIgnoreCase(ActionCommands.SAVE_SETTINGS)){
-			Component[] components = settingsDialog.getValuesPanel().getComponents();
-			for(Component c : components){
-				if(c instanceof JTextField){
-					PropertyProvider.set(c.getName(), ((JTextField)c).getText());
-				}
-			}
-			try {
-				PropertyProvider.save();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			Application.getInstance().initialize();
+            saveSettings();
 		} else if(eName.equalsIgnoreCase(ActionCommands.OPEN)){
-			System.out.println("open a");
-			SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-					JFileChooser fc = new JFileChooser(fileChooserLastPath);
-					int res = fc.showOpenDialog(frame);
-					if (res == JFileChooser.APPROVE_OPTION) {
-						File f = fc.getSelectedFile();
-						fileChooserLastPath = f.getPath();
-						Application.getInstance().play(fileChooserLastPath);
-					}
-				}
-			});
-			
-		} else if(eName.equalsIgnoreCase(ActionCommands.OPEN_QUICK_NAVI)){
+            openMedia();
+        } else if(eName.equalsIgnoreCase(ActionCommands.OPEN_QUICK_NAVI)){
             Application.getInstance().showQuickNavi();
         }
 		
 	}
+
+    private void exit() {
+        Application.getInstance().exit();
+    }
+
+    private void openMedia() {
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                JFileChooser fc = new JFileChooser(fileChooserLastPath);
+                int res = fc.showOpenDialog(frame);
+                if (res == JFileChooser.APPROVE_OPTION) {
+                    File f = fc.getSelectedFile();
+                    fileChooserLastPath = f.getPath();
+                    Application.getInstance().play(fileChooserLastPath);
+                }
+            }
+        });
+    }
+
+    private void saveSettings() {
+        Component[] components = settingsDialog.getValuesPanel().getComponents();
+        for(Component c : components){
+            if(c instanceof JTextField)
+                PropertyProvider.set(c.getName(), ((JTextField) c).getText());
+        }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    PropertyProvider.save();
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(frame, "Failed to save settings", "error", JOptionPane.ERROR_MESSAGE);
+                }
+                Application.getInstance().initialize();
+            }
+        }).start();
+    }
+
+    private void cancelDialog(ActionEvent e) {
+        int i = 0;
+        Object c = e.getSource();
+        while(!(c instanceof JDialog) && i++ < 20)
+            c = ((JComponent)c).getParent();
+        ((JDialog)c).dispose();
+    }
+
+    private void showSettingsDialog() {
+        settingsDialog = new SettingsDialog(frame, true);
+        settingsDialog.setVisible(true);
+    }
 
 }

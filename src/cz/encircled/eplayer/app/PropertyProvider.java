@@ -21,10 +21,14 @@ public class PropertyProvider {
 	private final static Logger log = LogManager.getLogger(PropertyProvider.class);
 
 	private static Properties properties;
-	
-	public final static String SETTING_VLC_PATH = "vlc_path";
-	
-	public final static String SETTING_LANGUAGE = "language";
+
+    public final static String SETTING_VLC_PATH = "vlc_path";
+
+    public final static String SETTING_QUICK_NAVI_STORAGE_PATH = "quick_navi_path";
+
+    public final static String SETTING_LANGUAGE = "language";
+
+    public final static String SETTING_DEFAULT_OPEN_LOCATION = "fc_open_location";
 	
 	public static void initialize(){
 		properties = new Properties();
