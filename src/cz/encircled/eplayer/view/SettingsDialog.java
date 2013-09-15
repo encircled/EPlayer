@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.*;
 
+import cz.encircled.eplayer.util.GUIUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -54,14 +55,13 @@ public class SettingsDialog extends JDialog {
 		super(parent, isModal);
 		initialize();
 		initializeSettings();
-		pack();
 	}
 	
 	public JPanel getValuesPanel(){
 		return valuesPanel;
 	}
 	
-	private final void initialize(){
+	private void initialize(){
 		setTitle(MessagesProvider.get(LocalizedMessages.SETTINGS));
 		setPreferredSize(new Dimension(DIALOG_WIDTH, DIALOG_HEIGHT));
 		setResizable(false);
@@ -78,6 +78,9 @@ public class SettingsDialog extends JDialog {
         wrapper.add(keysPanel);
         wrapper.add(valuesPanel);
         wrapper.add(getButtonsPanel());
+
+        GUIUtil.bindKey(wrapper, KeyConstants.ENTER, null, ActionCommands.SAVE_SETTINGS);
+        GUIUtil.bindKey(wrapper, KeyConstants.ESCAPE, null, ActionCommands.CANCEL);
         
         pack();
         setLocationRelativeTo(null);
@@ -111,23 +114,36 @@ public class SettingsDialog extends JDialog {
 	}
 	
 	private void initializeSettings(){
-		settings.clear();
-        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT));
-        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.DEFAULT_OPEN_LOCATION), PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, SettingItem.INPUT_TEXT_ELEMENT));
-        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.QUICK_NAVI_STORAGE_PATH), PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH, SettingItem.INPUT_TEXT_ELEMENT));
-        settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.INPUT_TEXT_ELEMENT));
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                settings.clear();
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.DEFAULT_OPEN_LOCATION), PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, SettingItem.INPUT_TEXT_ELEMENT));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.QUICK_NAVI_STORAGE_PATH), PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH, SettingItem.INPUT_TEXT_ELEMENT));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.INPUT_TEXT_ELEMENT));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.MAX_VOLUME_PERCENTS), PropertyProvider.SETTING_MAX_VOLUME, SettingItem.INPUT_TEXT_ELEMENT));
 
-        for(SettingItem item : settings){
-			keysPanel.add(Components.getLabel(item.getViewText(), WIDTH_30, LABEL_HEIGHT, true));
-			switch(item.getElementType()){
-				case 0: 
-					valuesPanel.add(Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName()), WIDTH_55, INPUT_HEIGHT));
-					break;
-				case 1: 
-					valuesPanel.add(Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName()), WIDTH_55, INPUT_HEIGHT));
-					break;
-			}
-		}		
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(SettingItem item : settings){
+                            keysPanel.add(Components.getLabel(item.getViewText(), WIDTH_30, LABEL_HEIGHT, true));
+                            switch(item.getElementType()){
+                                case 0:
+                                    valuesPanel.add(Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName()), WIDTH_55, INPUT_HEIGHT));
+                                    break;
+                                case 1:
+                                    valuesPanel.add(Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName()), WIDTH_55, INPUT_HEIGHT));
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+            }
+        }).start();
+
 	}
     
 }

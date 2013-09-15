@@ -10,6 +10,8 @@ public class Playable {
 	
 	private long time;
 
+    private long watchDate;
+
     private static final Pattern FILENAME_PATTERN = Pattern.compile("^.*\\.*\\..*$");
 	
 	public Playable(String path){
@@ -48,4 +50,11 @@ public class Playable {
 		return path != null && new java.io.File(path).exists();
 	}
 
+    public long getWatchDate() {
+        return watchDate;
+    }
+
+    public void setWatchDate(long watchDate) {
+        this.watchDate = watchDate;
+    }
 }

@@ -2,15 +2,11 @@ package cz.encircled.eplayer.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
@@ -19,8 +15,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 import cz.encircled.eplayer.app.Application;
-import cz.encircled.eplayer.app.LocalizedMessages;
 import cz.encircled.eplayer.app.MessagesProvider;
+import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.componensts.EPlayerJButton;
 import cz.encircled.eplayer.view.componensts.JLine;
 
@@ -30,7 +26,7 @@ public class Components {
 
 	public final static Color MAIN_BLUE_COLOR = new Color(73, 117, 255);
 	
-	final static Color MAIN_GRAY_COLOR = new Color(85, 85, 85);
+	public final static Color MAIN_GRAY_COLOR = new Color(85, 85, 85);
 	
 	public final static Color MAIN_LIGHT_GRAY_COLOR = new Color(235,235,235);
 	
@@ -45,13 +41,14 @@ public class Components {
 	}
 	
     public static JLabel getLabel(String text, int w, int h, boolean addPadding){
-        JLabel l = addPadding ? new JLabel(LABEL_PADDING + text) : new JLabel(text);
+        text = StringUtil.toHtml(text, 23, addPadding ? StringUtil.HTML_PADDING : null);
+        JLabel l = new JLabel(text);
         l.setPreferredSize(new Dimension(w, h));
         return l;
     }
     
     public static EPlayerJButton getButton(String text, String actionCommand, int width, int height){
-        return getButton(text, actionCommand, width, height, Application.getInstance().getActionsMouseListener());
+        return getButton(text, actionCommand, width, height, Application.getInstance().getDefaultActionMouseListener());
     }
 
     public static EPlayerJButton getButton(String text, String actionCommand, int width, int height, ActionListener actionListener){
@@ -88,7 +85,7 @@ public class Components {
     public static JMenuItem getMenuItem(String textToLocalize, String actionCommand){
     	JMenuItem i = new JMenuItem(MessagesProvider.get(textToLocalize));
     	i.setActionCommand(actionCommand);
-    	i.addActionListener(Application.getInstance().getActionsMouseListener());
+    	i.addActionListener(Application.getInstance().getDefaultActionMouseListener());
     	return i;
     }
 

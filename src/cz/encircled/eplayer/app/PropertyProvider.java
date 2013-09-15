@@ -29,8 +29,10 @@ public class PropertyProvider {
     public final static String SETTING_LANGUAGE = "language";
 
     public final static String SETTING_DEFAULT_OPEN_LOCATION = "fc_open_location";
-	
-	public static void initialize(){
+
+    public final static String SETTING_MAX_VOLUME = "max_volume";
+
+    public static void initialize(){
 		properties = new Properties();
 		FileInputStream stream = null;
 		try {

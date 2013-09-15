@@ -24,5 +24,5 @@ public class MessagesProvider {
 	public static String get(String key){
 		return bundle.containsKey(key) ? bundle.getString(key) : NOT_FOUND_VALUE;
 	}
-	
+
 }

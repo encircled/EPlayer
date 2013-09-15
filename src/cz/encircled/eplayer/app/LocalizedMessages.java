@@ -36,4 +36,6 @@ public class LocalizedMessages {
 
     public static final String MSG_QN_FILE_IO_FAIL = "msg_qn_file_io_fail";
 
+    public static final String MAX_VOLUME_PERCENTS = "max_volume_percents";
+
 }

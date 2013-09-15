@@ -9,6 +9,7 @@ import java.util.Timer;
 
 import javax.swing.*;
 
+import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,8 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 public class Frame extends JFrame implements Runnable {
 
     private static final long serialVersionUID = 1L;
+
+    private static final String TITLE = "EPlayer";
 
     private EmbeddedMediaPlayerComponent mediaPlayerComponent;
 
@@ -47,9 +50,8 @@ public class Frame extends JFrame implements Runnable {
 
     private final static int PLAYER_STATE = 1;
 
-
     private final Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-            new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
+                            new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
     private JMenuBar jMenuBar;
 
@@ -58,71 +60,63 @@ public class Frame extends JFrame implements Runnable {
     public Frame() {
         try {
             UIManager.setLookAndFeel("com.jtattoo.plaf.acryl.AcrylLookAndFeel");
-            Font font = new Font("Dialog", Font.BOLD,  12);
-
-            UIManager.put("Label.font", font);
-            UIManager.put("Button.font", font);
-            UIManager.put("TextField.font", new Font("Dialog", Font.BOLD,  14));
-
-            UIManager.put("Label.foreground", Components.MAIN_GRAY_COLOR);
-            UIManager.put("Button.foreground", Components.MAIN_GRAY_COLOR);
-            UIManager.put("TextField.foreground", Components.MAIN_GRAY_COLOR);
-
         }
         catch (Exception e){
-            e.printStackTrace();
+            log.warn("l&f failed with msg {}", e.getMessage());
         }
-
         initialize();
         initializeWrapper();
         initializeMenu();
         initializeQuickNavi();
-        initializePlayer();
-        showPlayer();
-
-        pack();
+        if(Application.getInstance().isVlcAvailable()){
+            initializePlayer();
+        } else {
+            disablePlayerFunctionality();
+        }
+        GUIUtil.bindKey(wrapper, null, 'o', ActionCommands.OPEN);
+        GUIUtil.bindKey(wrapper, null, 'n', ActionCommands.OPEN_QUICK_NAVI);
+        GUIUtil.bindKey(wrapper, null, 'q', ActionCommands.EXIT);
+        GUIUtil.bindKey(wrapper, null, 'f', ActionCommands.TOGGLE_FULL_SCREEN);
+        GUIUtil.bindKey(wrapper, null, 'c', ActionCommands.PLAY_LAST);
+        GUIUtil.bindKey(wrapper, KeyConstants.ENTER, null, ActionCommands.PLAY_LAST);
+        GUIUtil.bindKey(wrapper, KeyConstants.SPACE, null, ActionCommands.TOGGLE_PLAYER);
+        GUIUtil.bindKey(wrapper, KeyConstants.ESCAPE, null, ActionCommands.BACK);
     }
 
-    public final void play(String path){
-        play(path, 0L);
-    }
 
     public final void play(String path, long time){
-        showPlayerInternal();
-        if(player.isPlaying())
-            stopPlayer();
-
-        if(path.equals(current)){
-//            player.setTime(time);
-            log.debug("continue {}", time);
-        } else {
-            player.prepareMedia("file:///" + path, String.format(":start-time=%d", time/1000));
+        if(!showPlayerInternal()){
+            JOptionPane.showMessageDialog(Frame.this, MessagesProvider.get(LocalizedMessages.MSG_VLC_LIBS_FAIL),
+                                            MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        stopPlayer();
+        if(!path.equals(current)){
+            player.prepareMedia("file:///" + path);//, String.format(":start-time=%d", time/1000));
         }
         current = path;
         player.start();
-        if(path.equals(current)){
-            player.setTime(time);
-        }
+        player.setTime(Math.min(time, player.getLength() - 1000));
         playerControls.reinitialize();
     }
 
     public void releasePlayer(){
-        if(player.isPlaying()){
+        if(player != null){
             player.stop();
+            player.release();
         }
-        player.release();
     }
 
     public void stopPlayer(){
-        if(player.isPlaying()){
+        if(player != null){
             updateCurrentPlayableInCache();
             player.stop();
         }
     }
 
     public void updateCurrentPlayableInCache(){
-        if(current != null)
-            Application.getInstance().updatePlayableCache(current.hashCode(), (int)(player.getTime()));
+        if(current != null && player.getTime() >= 0L)
+            Application.getInstance().updatePlayableCache(current.hashCode(), player.getTime());
     }
 
     public void pausePlayer(){
@@ -132,12 +126,25 @@ public class Frame extends JFrame implements Runnable {
         }
     }
 
+
+    public void togglePlayer() {
+        if(player != null && current != null){
+            if(player.isPlaying())
+                pausePlayer();
+            else
+                player.start();
+        }
+    }
+
     public void showQuickNavi(){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                stopPlayer();
                 if(wrapperState != QUICK_NAVI_STATE){
+                    if(isFullScreen)
+                        exitFullScreenInternal(false);
+                    else
+                        stopPlayer();
                     wrapperState = QUICK_NAVI_STATE;
                     wrapper.removeAll();
                     wrapper.add(naviPanel, BorderLayout.CENTER);
@@ -158,7 +165,9 @@ public class Frame extends JFrame implements Runnable {
         });
     }
 
-    private void showPlayerInternal(){
+    private boolean showPlayerInternal(){
+        if(!Application.getInstance().isVlcAvailable())
+            return false;
         if(wrapperState != PLAYER_STATE){
             wrapperState = PLAYER_STATE;
             wrapper.removeAll();
@@ -167,6 +176,7 @@ public class Frame extends JFrame implements Runnable {
             wrapper.repaint();
             jMenuBar.repaint();
         }
+        return true;
     }
 
     public void repaintQuickNavi(){
@@ -209,24 +219,53 @@ public class Frame extends JFrame implements Runnable {
     }
 
     public void exitFullScreen(){
-        final long time = player.getTime();
-        stopPlayer();
+        exitFullScreen(player.isPlaying());
+    }
+
+    public void exitFullScreen(final boolean continuePlaying){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                dispose();
-                setUndecorated(false);
-                setExtendedState(JFrame.MAXIMIZED_BOTH);
-                setVisible(true);
-                setCursor(Cursor.getDefaultCursor());
-                setJMenuBar(jMenuBar);
-                toFront();
-                playerControls.setVisible(true);
-                play(current, time);
-                isFullScreen = false;
+                exitFullScreenInternal(continuePlaying);
             }
         });
+    }
 
+    private void exitFullScreenInternal(boolean continuePlaying){
+        final long time = player.getTime();
+        stopPlayer();
+        dispose();
+        setUndecorated(false);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setVisible(true);
+        setCursor(Cursor.getDefaultCursor());
+        setJMenuBar(jMenuBar);
+        toFront();
+        playerControls.setVisible(true);
+        if(continuePlaying)
+            play(current, time);
+        isFullScreen = false;
+    }
+
+    public void toggleFullScreen() {
+        if(player != null && current != null){
+            if(isFullScreen)
+                exitFullScreen();
+            else
+                fullScreen();
+        }
+    }
+
+    public boolean isQuickNaviState(){
+        return wrapperState == QUICK_NAVI_STATE;
+    }
+
+    public boolean isPlayerState(){
+        return wrapperState == PLAYER_STATE;
+    }
+
+    public boolean isFullScreen(){
+        return isFullScreen;
     }
 
     @Override
@@ -240,7 +279,8 @@ public class Frame extends JFrame implements Runnable {
     }
 
     private void initialize(){
-        setTitle("EPlayer");
+
+        setTitle(TITLE);
         setPreferredSize(new Dimension(1000, 700));
         setExtendedState(Frame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -290,11 +330,7 @@ public class Frame extends JFrame implements Runnable {
                             pauseTimer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    if(player.isPlaying())
-                                        pausePlayer();
-                                    else
-                                        player.start();
-                                    log.debug("PAUSED");
+                                    togglePlayer();
                                     tasksCount--;
                                 }
                             }, 200);
@@ -305,22 +341,27 @@ public class Frame extends JFrame implements Runnable {
                             pauseTimer.cancel();
                             tasksCount = 0;
                         }
-                        if(isFullScreen)
-                            exitFullScreen();
-                        else
-                            fullScreen();
+                        toggleFullScreen();
                     }
                 }
             });
 
             player.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+                @Override
+                public void finished(MediaPlayer mediaPlayer) {
+                    super.finished(mediaPlayer);
+                    log.debug("FINISHED");
+                    Application.getInstance().updatePlayableCache(current.hashCode(), 0L);
+                    current = null;
+                    showQuickNavi();
+                }
 
-                private Long lastTime = -500L;
+                private long lastTime = -501L;
 
                 @Override
                 public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
                     super.timeChanged(mediaPlayer, newTime);
-                    if (Math.abs(newTime - lastTime) > 500) {
+                    if (Math.abs(newTime - lastTime) > 500L) {
                         playerControls.fireTimeChanged(newTime);
                         lastTime = newTime;
                     }
@@ -335,14 +376,14 @@ public class Frame extends JFrame implements Runnable {
                 }
 
             });
-
             playerControls = new PlayerControls(player);
         } catch(Exception e){
             e.printStackTrace();
             JOptionPane.showMessageDialog(Frame.this, "VLC library not found", "Error title", JOptionPane.ERROR_MESSAGE);
+        } catch (NoClassDefFoundError re){
+            re.printStackTrace();
         }
     }
-
 
     private void initializeMenu(){
         jMenuBar = new JMenuBar();
@@ -363,11 +404,14 @@ public class Frame extends JFrame implements Runnable {
         jMenuBar.add(tools);
     }
 
-    private final void initializeQuickNavi(){
+    private void initializeQuickNavi(){
         naviPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 30));
         naviPanel.setBackground(Color.WHITE);
     }
 
+    private void disablePlayerFunctionality(){
+
+    }
 
 
 }

@@ -3,6 +3,9 @@ package cz.encircled.eplayer.util;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,7 +24,7 @@ public class IOUtil {
 	
 	public final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, Playable>>(){}.getType();
 	
-	public final static void close(Closeable c){
+	public static void close(Closeable c){
 		if(c != null){
 			try {
 				c.close();
@@ -36,12 +39,12 @@ public class IOUtil {
 		}
 	}
 	
-	public final static <T> T jsonFromFile(String filepath, Type classOfT) throws IOException {
+	public static <T> T jsonFromFile(String filepath, Type classOfT) throws IOException {
 		String json = getFileContent(filepath);
 		return new Gson().fromJson(json, classOfT);
 	}
 	
-	public final static String getFileContent(String filepath) throws IOException {
+	public static String getFileContent(String filepath) throws IOException {
 		BufferedReader reader = null;
 		StringBuilder result = new StringBuilder();
 		String buffer;
@@ -55,22 +58,14 @@ public class IOUtil {
 		return result.toString();
 	}
 	
-	public final static void storeJson(Object obj, String filepath) throws IOException {
-        File old = new File(filepath);
-        if(old.exists()){
-            old.renameTo(new File(filepath + ".bu"));
-        }
+	public static void storeJson(Object obj, String path) throws IOException {
 		String json = new Gson().toJson(obj);
 		BufferedWriter writer = null;
 		try {
-			writer = new BufferedWriter(new FileWriter(filepath));
+			writer = new BufferedWriter(new FileWriter(path));
 			writer.write(json);
 			writer.flush();
-            System.out.print(old.delete());    // TODO
-        } catch(IOException e){
-            old.renameTo(new File(filepath));
-            throw e;
-        }finally {
+        } finally {
 			close(writer);
 			writer = null;
 		}
