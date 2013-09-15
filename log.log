@@ -79,3 +79,17 @@
 16:56:57.499 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
 17:11:05.600 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
 17:11:10.455 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
+19:09:56.310 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
+19:10:00.970 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
+19:11:01.952 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - time is 1593650
+19:11:03.307 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
+19:11:05.515 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - time is -1
+19:11:06.799 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
+19:11:26.811 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - time is 1140656
+19:11:28.715 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
+19:11:31.741 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - time is -1
+19:11:34.478 [Thread-4] DEBUG cz.encircled.eplayer.app.Application - update
+19:12:16.678 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - time is 1763654
+19:12:18.243 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update
+19:12:19.612 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.view.Frame - time is -1
+19:12:21.319 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - update

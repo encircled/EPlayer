@@ -90,7 +90,7 @@ public class Frame extends JFrame implements Runnable {
                                             MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
             return;
         }
-        stopPlayer();
+//        stopPlayer();
         if(!path.equals(current)){
             player.prepareMedia("file:///" + path);//, String.format(":start-time=%d", time/1000));
         }
@@ -200,6 +200,7 @@ public class Frame extends JFrame implements Runnable {
 
     public void fullScreen(){
         final long time = player.getTime();
+        log.debug("time is {}", time);
         player.stop();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
