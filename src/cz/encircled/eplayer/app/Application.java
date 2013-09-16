@@ -5,15 +5,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import javax.swing.*;
 
 import com.google.gson.JsonSyntaxException;
+
 import cz.encircled.eplayer.view.*;
 import cz.encircled.eplayer.view.Frame;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -83,7 +87,7 @@ public class Application {
     public boolean isVlcAvailable(){
         return isVlcAvailable;
     }
-	
+    
 	public void initialize(){
 		if(frame != null){
             frame.stopPlayer();
@@ -173,7 +177,6 @@ public class Application {
     }
 
     public void updatePlayableCache(int hash, long time){
-        log.debug("update");
         Playable p = playableCache.get(hash);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
@@ -222,8 +225,11 @@ public class Application {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                playableCache = new HashMap<>();
+                playableCache = new HashMap<Integer, Playable>();
                 String path = PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH);
+                if(path == null || path.isEmpty()){
+                	return;
+                }
                 File f = new File(path);
                 if(!f.exists()) {
                     try {
@@ -237,12 +243,16 @@ public class Application {
                 }
                 try {
                     playableCache = IOUtil.jsonFromFile(path, IOUtil.DEFAULT_TYPE_TOKEN);
+                    if(playableCache == null)
+                    	playableCache = new HashMap<Integer, Playable>();
                 } catch (IOException e) {
+                	playableCache = new HashMap<Integer, Playable>();
                     log.error("Failed to read playableCache data from {} with default type token. Message: {}",
                             PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH), e.getMessage());
                     JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_IO_FAIL),
                                                         MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
                 } catch (JsonSyntaxException e){
+                	playableCache = new HashMap<Integer, Playable>();
                     log.error("JSON syntax error. Message: {}", e.getMessage());
                     JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_CORRUPTED),
                                                     MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
