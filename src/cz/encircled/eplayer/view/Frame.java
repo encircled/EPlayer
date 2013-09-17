@@ -90,11 +90,10 @@ public class Frame extends JFrame implements Runnable {
                                             MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
             return;
         }
-//        stopPlayer();
         if(!path.equals(current)){
-            player.prepareMedia("file:///" + path);//, String.format(":start-time=%d", time/1000));
+        	current = path;
+        	player.prepareMedia(new File(path).toURI().toASCIIString().replaceFirst("file:/", "file:///"));
         }
-        current = path;
         player.start();
         player.setTime(Math.min(time, player.getLength() - 1000));
         playerControls.reinitialize();
