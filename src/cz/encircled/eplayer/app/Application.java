@@ -181,8 +181,12 @@ public class Application {
 	
 	public void play(Playable p){
 		log.debug("play: {}", p.toString());
-		frame.showPlayer();
-		frame.play(p.getPath(), p.getTime());
+		if(p.exists()){
+			frame.showPlayer();
+			frame.play(p.getPath(), p.getTime());
+		} else {
+			JOptionPane.showMessageDialog(frame, "DOMERGE", "Title", JOptionPane.INFORMATION_MESSAGE);
+		}
     }
 
 
@@ -209,6 +213,13 @@ public class Application {
 
     public void deletePlayableCache(int hash){
         playableCache.remove(hash);
+        frame.repaintQuickNavi();
+        savePlayable();
+    }
+    
+    public void mergePlayable(Playable playable, String path){
+    	playableCache.remove(playable.hashCode());
+    	playable.readPath(path);
         frame.repaintQuickNavi();
         savePlayable();
     }
