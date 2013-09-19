@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 public class Playable {
 
+	private static final String TO_STRING_FORMAT = "Playable %d. name: %s, path: %s, time: %d, watchDate: %d";
+
 	private String name;
 	
 	private String path;
@@ -57,4 +59,11 @@ public class Playable {
     public void setWatchDate(long watchDate) {
         this.watchDate = watchDate;
     }
+    
+    @Override
+    public String toString(){
+    	return String.format(TO_STRING_FORMAT, name.hashCode(), name, path, time, watchDate);
+    }
+   
+
 }

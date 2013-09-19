@@ -3,6 +3,9 @@ package cz.encircled.eplayer.view;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.Timer;
@@ -11,6 +14,7 @@ import javax.swing.*;
 
 import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -80,6 +84,7 @@ public class Frame extends JFrame implements Runnable {
         GUIUtil.bindKey(wrapper, null, 'q', ActionCommands.EXIT);
         GUIUtil.bindKey(wrapper, null, 'f', ActionCommands.TOGGLE_FULL_SCREEN);
         GUIUtil.bindKey(wrapper, null, 'c', ActionCommands.PLAY_LAST);
+        GUIUtil.bindKey(wrapper, null, 's', ActionCommands.SETTINGS);
         GUIUtil.bindKey(wrapper, KeyConstants.ENTER, null, ActionCommands.PLAY_LAST);
         GUIUtil.bindKey(wrapper, KeyConstants.SPACE, null, ActionCommands.TOGGLE_PLAYER);
         GUIUtil.bindKey(wrapper, KeyConstants.ESCAPE, null, ActionCommands.BACK);
@@ -92,11 +97,10 @@ public class Frame extends JFrame implements Runnable {
                                             MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
             return;
         }
-//        stopPlayer();
         if(!path.equals(current)){
-            player.prepareMedia("file:///" + path);//, String.format(":start-time=%d", time/1000));
+        	current = path;
+        	player.prepareMedia(new File(path).toURI().toASCIIString().replaceFirst("file:/", "file:///"));
         }
-        current = path;
         player.start();
         player.setTime(Math.min(time, player.getLength() - 1000));
         playerControls.reinitialize();

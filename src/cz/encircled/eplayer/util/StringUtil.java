@@ -21,6 +21,10 @@ public class StringUtil {
         return s!= null && !s.isEmpty();
     }
 
+    public static boolean notSet(String s){
+    	return !isSet(s);
+    }
+
     public static String toHtml(String s, int lineBreakAt, String padding){
         int addedLength = 0;
         StringBuilder sb = new StringBuilder(HTML_TAG);
