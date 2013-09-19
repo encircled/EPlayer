@@ -184,7 +184,7 @@ public class Application {
 		if(p.exists()){
 			frame.showPlayer();
 			frame.play(p.getPath(), p.getTime());
-		} else {
+		} else { // TODO hot keys bug
 			JOptionPane.showMessageDialog(frame, "DOMERGE", "Title", JOptionPane.INFORMATION_MESSAGE);
 		}
     }
