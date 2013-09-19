@@ -3,6 +3,8 @@ package cz.encircled.eplayer.app;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.text.NumberFormat;
@@ -38,13 +40,22 @@ public class Application {
 	
 	private final static Logger log = LogManager.getLogger(Application.class);
 	
+	private Map<Integer, Playable> playableCache;
+
 	private ActionExecutor actionExecutor;
 	
 	private HoverMouseListener hoverMouseListener;
 	
 	private BackgroundFocusListener backgroundFocusListener;
-
-    private Map<Integer, Playable> playableCache;
+	
+	private MouseAdapter fileChooserMouseAdapter = new MouseAdapter() {
+		@Override
+		public void mouseClicked(MouseEvent e) {
+            JFileChooser fc = new JFileChooser();
+            if (fc.showOpenDialog(SwingUtilities.getRoot(e.getComponent())) == JFileChooser.APPROVE_OPTION) 
+                ((JTextField)e.getSource()).setText(fc.getSelectedFile().getAbsolutePath());
+		}
+	};
 
     private ActionListener defaultActionListener = new ActionListener() {
         @Override
@@ -89,6 +100,10 @@ public class Application {
         return isVlcAvailable;
     }
     
+    public MouseAdapter getFileChooserMouseAdapter(){
+    	return fileChooserMouseAdapter;
+    }
+    
 	public void initialize(){
 		log.trace("Application initialization");
 		if(frame != null){
@@ -104,6 +119,10 @@ public class Application {
 		actionExecutor = new ActionExecutor();
 		hoverMouseListener = new HoverMouseListener();
 		backgroundFocusListener = new BackgroundFocusListener();
+		initializeGui();
+	}
+	
+	private void initializeGui(){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -127,7 +146,7 @@ public class Application {
             frame.run();
             frame.showQuickNavi();
             }
-        });
+        });		
 	}
 
     private void addCloseHook(){
@@ -136,9 +155,9 @@ public class Application {
             public void run() {
                 frame.updateCurrentPlayableInCache();
                 frame.releasePlayer();
-                log.trace("close hook: successfull exit");
             }
         });
+        log.trace("Close hook added");
     }
 
 	private void initVLCLib(){
