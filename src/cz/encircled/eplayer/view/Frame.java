@@ -78,6 +78,7 @@ public class Frame extends JFrame implements Runnable {
         GUIUtil.bindKey(wrapper, null, 'q', ActionCommands.EXIT);
         GUIUtil.bindKey(wrapper, null, 'f', ActionCommands.TOGGLE_FULL_SCREEN);
         GUIUtil.bindKey(wrapper, null, 'c', ActionCommands.PLAY_LAST);
+        GUIUtil.bindKey(wrapper, null, 's', ActionCommands.SETTINGS);
         GUIUtil.bindKey(wrapper, KeyConstants.ENTER, null, ActionCommands.PLAY_LAST);
         GUIUtil.bindKey(wrapper, KeyConstants.SPACE, null, ActionCommands.TOGGLE_PLAYER);
         GUIUtil.bindKey(wrapper, KeyConstants.ESCAPE, null, ActionCommands.BACK);
