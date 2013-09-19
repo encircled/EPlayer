@@ -4,7 +4,7 @@ public class SettingItem {
 	
 	public final static int INPUT_TEXT_ELEMENT = 0;
 	
-	public final static int CHECKBOX_ELEMENT = 1;
+	public final static int COMBOBOX_ELEMENT = 1;
 	
 	private String viewText;
 	

@@ -44,6 +44,15 @@ public class Application {
 
     private Map<Integer, Playable> playableCache;
 
+    private MouseAdapter fileChooserMouseAdapter = new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JFileChooser fc = new JFileChooser();
+            if (fc.showOpenDialog(SwingUtilities.getRoot(e.getComponent())) == JFileChooser.APPROVE_OPTION)
+                ((JTextField)e.getSource()).setText(fc.getSelectedFile().getAbsolutePath());
+        }
+    };
+
     private ActionListener defaultActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -83,10 +92,18 @@ public class Application {
     	return backgroundFocusListener;
     }
 
+    public MouseAdapter getFileChooserMouseAdapter(){
+        return fileChooserMouseAdapter;
+    }
+
     public boolean isVlcAvailable(){
         return isVlcAvailable;
     }
-	
+
+    public void showMessage(String text, String title, int messageLevel){
+        JOptionPane.showMessageDialog(frame, text, title, messageLevel);
+    }
+
 	public void initialize(){
 		if(frame != null){
             frame.stopPlayer();

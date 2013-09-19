@@ -17,10 +17,7 @@ public class Playable {
     private static final Pattern FILENAME_PATTERN = Pattern.compile("^.*\\.*\\..*$");
 	
 	public Playable(String path){
-		this.path = path;
-        name = FILENAME_PATTERN.matcher(path).matches()
-                                             ? path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."))
-                                             : path;
+		readPath(path);
         time = 0;
 	}
 
@@ -64,6 +61,12 @@ public class Playable {
     public String toString(){
     	return String.format(TO_STRING_FORMAT, name.hashCode(), name, path, time, watchDate);
     }
-   
 
+
+    public void readPath(String path) {
+        this.path = path;
+        name = FILENAME_PATTERN.matcher(path).matches()
+                ? path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."))
+                : path;
+    }
 }

@@ -34,8 +34,12 @@ public class LocalizedMessages {
 
     public static final String MSG_QN_FILE_CORRUPTED = "msg_qn_file_corrupted";
 
+    public static final String MSG_QN_FILE_NOT_SPECIFIED = "msg_qn_file_not_set";
+
     public static final String MSG_QN_FILE_IO_FAIL = "msg_qn_file_io_fail";
 
     public static final String MAX_VOLUME_PERCENTS = "max_volume_percents";
+
+    public static final String WARN_TITLE = "warning";
 
 }

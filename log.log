@@ -305,3 +305,21 @@
 21:09:55.987 [main] DEBUG cz.encircled.eplayer.app.Application - http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8
 21:09:59.595 [main] DEBUG cz.encircled.eplayer.app.Application - listening
 21:10:29.064 [pool-2-thread-1] DEBUG cz.encircled.eplayer.view.Frame - FINISHED
+19:24:03.153 [main] TRACE cz.encircled.eplayer.app.Application - Application initialization
+19:24:03.161 [main] TRACE cz.encircled.eplayer.app.Application - Properties initialized
+19:24:03.182 [main] TRACE cz.encircled.eplayer.app.Application - Messages initialized
+19:24:03.373 [main] TRACE cz.encircled.eplayer.app.Application - Close hook added
+19:24:08.897 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - play: Playable -2085911903. name: Breaking.Bad.S02E01.rus.LostFilm.TV, path: D:\video\Breaking Bad S2\Breaking.Bad.S02E01.rus.LostFilm.TV.avi, time: 2805267, watchDate: 1379429483731
+19:24:11.583 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - play: Playable -2085911903. name: Breaking.Bad.S02E01.rus.LostFilm.TV, path: D:\video\Breaking Bad S2\Breaking.Bad.S02E01.rus.LostFilm.TV.avi, time: 2806116, watchDate: 1379611450367
+20:52:40.324 [main] TRACE cz.encircled.eplayer.app.Application - VLCLib successfully initialized
+20:52:40.342 [main] TRACE cz.encircled.eplayer.app.Application - Close hook added
+20:52:48.919 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - play: Playable 1577501419. name: Dom.s.pripravami.2012.L1.HDRip.1400Mb, path: D:\video\Dom.s.pripravami.2012.L1.HDRip.1400Mb.avi, time: 0, watchDate: 0
+20:53:01.320 [AWT-EventQueue-0] DEBUG cz.encircled.eplayer.app.Application - play: Playable 1577501419. name: Dom.s.pripravami.2012.L1.HDRip.1400Mb, path: D:\video\Dom.s.pripravami.2012.L1.HDRip.1400Mb.avi, time: 2503121, watchDate: 1379616779036
+20:53:16.571 [main] TRACE cz.encircled.eplayer.app.Application - VLCLib successfully initialized
+20:53:16.589 [main] TRACE cz.encircled.eplayer.app.Application - Close hook added
+20:53:24.421 [Thread-7] DEBUG cz.encircled.eplayer.app.PropertyProvider - prop saved
+20:53:24.452 [Thread-7] TRACE cz.encircled.eplayer.app.Application - VLCLib successfully initialized
+20:53:24.453 [Thread-8] WARN  cz.encircled.eplayer.app.Application - Path to qn data file is not set
+20:53:32.925 [main] TRACE cz.encircled.eplayer.app.Application - VLCLib successfully initialized
+20:53:32.927 [Thread-2] WARN  cz.encircled.eplayer.app.Application - Path to qn data file is not set
+20:53:32.942 [main] TRACE cz.encircled.eplayer.app.Application - Close hook added
