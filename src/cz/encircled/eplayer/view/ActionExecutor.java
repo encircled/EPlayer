@@ -11,6 +11,7 @@ import javax.swing.*;
 
 import cz.encircled.eplayer.app.Application;
 import cz.encircled.eplayer.app.PropertyProvider;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,7 @@ public class ActionExecutor {
 	}
 
     private void initializeCommandsTree(){
-        commands = new TreeMap<>();
+        commands = new TreeMap<String, Method>();
         Field[] commandFields = ActionCommands.class.getDeclaredFields();
         for(Field f : commandFields){
             try {
@@ -80,6 +81,8 @@ public class ActionExecutor {
         for(Component c : components){
             if(c instanceof JTextField)
                 PropertyProvider.set(c.getName(), ((JTextField) c).getText());
+            else if(c instanceof JComboBox)
+                PropertyProvider.set(c.getName(), ((JComboBox<?>) c).getSelectedItem().toString());
         }
 
         new Thread(new Runnable() {
