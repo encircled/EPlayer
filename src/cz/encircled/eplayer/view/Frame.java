@@ -3,6 +3,9 @@ package cz.encircled.eplayer.view;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.Timer;
@@ -11,6 +14,7 @@ import javax.swing.*;
 
 import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
