@@ -29,6 +29,7 @@ import com.sun.jna.NativeLibrary;
 
 import cz.encircled.eplayer.model.Playable;
 import cz.encircled.eplayer.util.IOUtil;
+import cz.encircled.eplayer.util.StringUtil;
 
 
 public class Application {
@@ -89,13 +90,16 @@ public class Application {
     }
     
 	public void initialize(){
+		log.trace("Application initialization");
 		if(frame != null){
             frame.stopPlayer();
 			frame.dispose();
 		}
 		PropertyProvider.initialize();
+		log.trace("Properties initialized");
 		MessagesProvider.initialize();
-		initVLCLib();
+		log.trace("Messages initialized");
+		initVLCLib();		
         initializePlayable();
 		actionExecutor = new ActionExecutor();
 		hoverMouseListener = new HoverMouseListener();
@@ -132,6 +136,7 @@ public class Application {
             public void run() {
                 frame.updateCurrentPlayableInCache();
                 frame.releasePlayer();
+                log.trace("close hook: successfull exit");
             }
         });
     }
@@ -141,14 +146,13 @@ public class Application {
 		try {
 			Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
             isVlcAvailable = true;
+            log.trace("VLCLib successfully initialized");
 		} catch(UnsatisfiedLinkError e){
             isVlcAvailable = false;
             e.printStackTrace();
 			JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_VLC_LIBS_FAIL), MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
 			log.error("Failed to load vlc libs from specified path {}", PropertyProvider.get(PropertyProvider.SETTING_VLC_PATH));
-		} catch (RuntimeException re){
-            re.printStackTrace();
-        }
+		} 
 	}
 	
 	public Map<Integer, Playable> getPlayableCache(){
@@ -157,6 +161,7 @@ public class Application {
 
 	
 	public void play(Playable p){
+		log.debug("play: {}", p.toString());
 		frame.showPlayer();
 		frame.play(p.getPath(), p.getTime());
     }
@@ -208,6 +213,9 @@ public class Application {
         System.exit(0);
     }
 
+    /**
+     * Async save playable map to file in JSON format
+     */
     public synchronized void savePlayable(){
         new Thread(new Runnable() {
             @Override
@@ -227,9 +235,13 @@ public class Application {
             public void run() {
                 playableCache = new HashMap<Integer, Playable>();
                 String path = PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH);
-                if(path == null || path.isEmpty()){
+                if(StringUtil.notSet(path)){
+                	log.warn("Path to qn data file is not set");
+                	JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_NOT_SPECIFIED),
+                            MessagesProvider.get(LocalizedMessages.WARN_TITLE), JOptionPane.WARNING_MESSAGE);
                 	return;
                 }
+                
                 File f = new File(path);
                 if(!f.exists()) {
                     try {
@@ -240,6 +252,7 @@ public class Application {
                         JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_CREATE_QN_FILE_FAIL),
                                                         MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
                     }
+                    return;
                 }
                 try {
                     playableCache = IOUtil.jsonFromFile(path, IOUtil.DEFAULT_TYPE_TOKEN);
@@ -263,11 +276,9 @@ public class Application {
     }
 
     public static void main(final String[] args) {
-        System.setProperty("-Dfile.encoding", "UTF-8");
+        System.setProperty("file.encoding", "UTF-8");
         Application.getInstance().initialize();
         Application.getInstance().addCloseHook();
     }
-
-
 
 }
