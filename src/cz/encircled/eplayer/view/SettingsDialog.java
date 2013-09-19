@@ -1,17 +1,26 @@
 package cz.encircled.eplayer.view;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 
 import cz.encircled.eplayer.util.GUIUtil;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import cz.encircled.eplayer.app.Application;
 import cz.encircled.eplayer.app.LocalizedMessages;
 import cz.encircled.eplayer.app.MessagesProvider;
 import cz.encircled.eplayer.app.PropertyProvider;
@@ -121,7 +130,7 @@ public class SettingsDialog extends JDialog {
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.DEFAULT_OPEN_LOCATION), PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, SettingItem.INPUT_TEXT_ELEMENT));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.QUICK_NAVI_STORAGE_PATH), PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH, SettingItem.INPUT_TEXT_ELEMENT));
-                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.INPUT_TEXT_ELEMENT));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.COMBOBOX_ELEMENT));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.MAX_VOLUME_PERCENTS), PropertyProvider.SETTING_MAX_VOLUME, SettingItem.INPUT_TEXT_ELEMENT));
 
                 SwingUtilities.invokeLater(new Runnable() {
@@ -129,15 +138,40 @@ public class SettingsDialog extends JDialog {
                     public void run() {
                         for(SettingItem item : settings){
                             keysPanel.add(Components.getLabel(item.getViewText(), WIDTH_30, LABEL_HEIGHT, true));
+                            JComponent componentToAdd = null;
                             switch(item.getElementType()){
-                                case 0:
-                                    valuesPanel.add(Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName()), WIDTH_55, INPUT_HEIGHT));
-                                    break;
                                 case 1:
-                                    valuesPanel.add(Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName()), WIDTH_55, INPUT_HEIGHT));
+                                	componentToAdd = new JComboBox<String>();
+                                	componentToAdd.setPreferredSize(new Dimension(WIDTH_55, INPUT_HEIGHT - 10));
+                                	JComboBox c = (JComboBox)componentToAdd;
+                                	c.addItem("en");
+                                	c.addItem("ru");
+                                	c.setName(PropertyProvider.SETTING_LANGUAGE);
+//                                	c.setUI(new BasicComboBoxUI());
+                                	c.setBorder(new LineBorder(Color.white));
+                                	c.setRenderer(new DefaultListCellRenderer() {
+                                	    @Override
+                                	    public void paint(Graphics g) {
+                                	        setBackground(Color.WHITE);
+                                	        setForeground(Color.BLACK);
+                                	        super.paint(g);
+                                	    }
+                                	});
+                                	c.setSelectedItem(PropertyProvider.get(item.getSettingName(), ""));
+                                	System.out.println();
                                     break;
+                                case 0:
+                                default:
+                                	componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);
+                                    componentToAdd.addMouseListener(Application.getInstance().getFileChooserMouseAdapter());
                             }
+                            valuesPanel.add(componentToAdd);
+
+                            GUIUtil.bindKey(componentToAdd, KeyConstants.ENTER, null, ActionCommands.SAVE_SETTINGS);
+                            GUIUtil.bindKey(componentToAdd, KeyConstants.ESCAPE, null, ActionCommands.CANCEL);
                         }
+                        revalidate();
+                        repaint();
                     }
                 });
 
