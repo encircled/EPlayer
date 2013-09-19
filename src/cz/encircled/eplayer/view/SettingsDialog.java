@@ -43,7 +43,7 @@ public class SettingsDialog extends JDialog {
 	
 	private final static int WRAPPER_PANEL_MARGINS = 14;
 	
-	private final static int BUTTONs_PANEL_HORIZONTAL_MARGIN = 30;
+	private final static int BUTTONS_PANEL_HORIZONTAL_MARGIN = 30;
 	
 	private static List<SettingItem> settings = new ArrayList<SettingItem>();
 
@@ -88,7 +88,7 @@ public class SettingsDialog extends JDialog {
 	
 	private JPanel getButtonsPanel(){
 		JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, BUTTONs_PANEL_HORIZONTAL_MARGIN, 0));
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, BUTTONS_PANEL_HORIZONTAL_MARGIN, 0));
         buttonsPanel.setBackground(Color.WHITE);
         buttonsPanel.setPreferredSize(new Dimension((int)(DIALOG_WIDTH * 0.9), (int)(DIALOG_HEIGHT * 0.95)));		
         buttonsPanel.add(Components.getButton(
@@ -138,6 +138,7 @@ public class SettingsDialog extends JDialog {
                                     break;
                             }
                         }
+                        revalidate();
                     }
                 });
 

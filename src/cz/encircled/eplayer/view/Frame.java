@@ -44,6 +44,8 @@ public class Frame extends JFrame implements Runnable {
 
     private String current;
 
+    private long currentTime;
+
     private volatile int wrapperState = -1;
 
     private final static int QUICK_NAVI_STATE = 0;
@@ -109,7 +111,7 @@ public class Frame extends JFrame implements Runnable {
 
     public void stopPlayer(){
         if(player != null){
-            updateCurrentPlayableInCache();
+            currentTime = player.getTime();
             player.stop();
         }
     }
@@ -119,20 +121,17 @@ public class Frame extends JFrame implements Runnable {
             Application.getInstance().updatePlayableCache(current.hashCode(), player.getTime());
     }
 
-    public void pausePlayer(){
-        if(player.isPlaying()){
+    private void pausePlayerInternal(){
+            currentTime = player.getTime();
             player.pause();
-            updateCurrentPlayableInCache();
-        }
     }
-
 
     public void togglePlayer() {
         if(player != null && current != null){
             if(player.isPlaying())
-                pausePlayer();
+                pausePlayerInternal();
             else
-                player.start();
+                play(current, currentTime);
         }
     }
 
@@ -141,6 +140,7 @@ public class Frame extends JFrame implements Runnable {
             @Override
             public void run() {
                 if(wrapperState != QUICK_NAVI_STATE){
+                    updateCurrentPlayableInCache();
                     if(isFullScreen)
                         exitFullScreenInternal(false);
                     else
@@ -199,9 +199,10 @@ public class Frame extends JFrame implements Runnable {
     }
 
     public void fullScreen(){
-        final long time = player.getTime();
-        log.debug("time is {}", time);
-        player.stop();
+        final long time = player.isPlaying() ? player.getTime() : currentTime;
+        if(time < 0L)
+            log.warn("entering fc with negative time :( {}", time);
+        stopPlayer();
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -232,20 +233,26 @@ public class Frame extends JFrame implements Runnable {
         });
     }
 
-    private void exitFullScreenInternal(boolean continuePlaying){
-        final long time = player.getTime();
+    private void exitFullScreenInternal(final boolean continuePlaying){
+        final long time = player.isPlaying() ? player.getTime() : currentTime;
         stopPlayer();
-        dispose();
-        setUndecorated(false);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setVisible(true);
-        setCursor(Cursor.getDefaultCursor());
-        setJMenuBar(jMenuBar);
-        toFront();
-        playerControls.setVisible(true);
-        if(continuePlaying)
-            play(current, time);
-        isFullScreen = false;
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                dispose();
+                setUndecorated(false);
+                setExtendedState(JFrame.MAXIMIZED_BOTH);
+                setVisible(true);
+                toFront();
+                setJMenuBar(jMenuBar);
+                playerControls.setVisible(true);
+                setCursor(Cursor.getDefaultCursor());
+                if(continuePlaying)
+                    play(current, time);
+                isFullScreen = false;
+            }
+        });
     }
 
     public void toggleFullScreen() {
@@ -280,7 +287,6 @@ public class Frame extends JFrame implements Runnable {
     }
 
     private void initialize(){
-
         setTitle(TITLE);
         setPreferredSize(new Dimension(1000, 700));
         setExtendedState(Frame.MAXIMIZED_BOTH);

@@ -121,12 +121,12 @@ public class ActionExecutor {
 
     public void back(){
         if(frame.isPlayerState()){
-            if(frame.isFullScreen())
+            if(frame.isFullScreen()){
                 frame.exitFullScreen(false);
-            else {
-
-                execute(ActionCommands.OPEN_QUICK_NAVI);
+                frame.updateCurrentPlayableInCache();
             }
+            else
+                execute(ActionCommands.OPEN_QUICK_NAVI);
         } else if(frame.isQuickNaviState())
             execute(ActionCommands.EXIT);
     }
