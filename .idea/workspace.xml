@@ -6,26 +6,32 @@
     </artifacts-to-build>
   </component>
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/messages_ru.properties" line="15" mnemonic="2" />
+    <bookmark url="file://$PROJECT_DIR$/src/messages_ru.properties" line="16" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b59403b-677a-4dfe-868f-54ef79a1779b" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/ver0.4/EPlayer.jar" afterPath="$PROJECT_DIR$/build/ver0.4/EPlayer.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionCommands.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionCommands.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionExecutor.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionExecutor.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/app/LocalizedMessages.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/app/LocalizedMessages.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/model/Playable.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/model/Playable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/model/SettingItem.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/model/SettingItem.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EPlayer.iml" afterPath="$PROJECT_DIR$/EPlayer.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log.log" afterPath="$PROJECT_DIR$/log.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/log4j2.xml" afterPath="$PROJECT_DIR$/src/log4j2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/messages_en.properties" afterPath="$PROJECT_DIR$/src/messages_en.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/messages_ru.properties" afterPath="$PROJECT_DIR$/src/messages_ru.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="EPlayer.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379617632127" ignored="false" />
-    <file path="/Application.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379616895719" ignored="false" />
-    <file path="/Frame.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379368846501" ignored="false" />
-    <file path="/PlayerControls.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379192626747" ignored="false" />
+    <file path="/Dummy.txt" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381419975812" ignored="false" />
+    <file path="/Application.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381420169471" ignored="false" />
+    <file path="/Frame.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381341120562" ignored="false" />
+    <file path="/PlayerControls.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381341573144" ignored="false" />
     <file path="/PlayerStrategy.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379097945671" ignored="false" />
     <file path="/ActionsMouseListener.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379189712976" ignored="false" />
-    <file path="/messages_ru.properties" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379165712260" ignored="false" />
+    <file path="/messages_ru.properties" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379618049473" ignored="false" />
     <file path="/PropertyProvider.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379165608267" ignored="false" />
     <file path="/SettingsDialog.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379369087875" ignored="false" />
     <file path="/IOUtil.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379245472576" ignored="false" />
@@ -38,12 +44,16 @@
     <file path="/HoverMouseListener.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379152046231" ignored="false" />
     <file path="/QuickNaviActionListener.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379160356793" ignored="false" />
     <file path="/MessagesProvider.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379165963297" ignored="false" />
-    <file path="/fragment.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379192503306" ignored="false" />
+    <file path="/fragment.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381344719134" ignored="false" />
     <file path="/StringUtil.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379168783174" ignored="false" />
     <file path="/GUIUtil.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379187724622" ignored="false" />
     <file path="/KeyConsts.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379189249716" ignored="false" />
-    <file path="/ActionExecutor.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379368922052" ignored="false" />
-    <file path="/ActionCommands.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379193250319" ignored="false" />
+    <file path="/ActionExecutor.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381340555616" ignored="false" />
+    <file path="/ActionCommands.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379683298859" ignored="false" />
+    <file path="/PlayerControlsPanelOLD.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1379628477706" ignored="false" />
+    <file path="/a.dummy" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381338832996" ignored="false" />
+    <file path="/DoS.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381344765090" ignored="false" />
+    <file path="/XugglerRtmpReferenceImpl.java" changelist="8b59403b-677a-4dfe-868f-54ef79a1779b" time="1381347390653" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,74 +114,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Application.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="Application.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="48" selection-start="2843" selection-end="2843" vertical-scroll-proportion="0.0">
+            <state line="188" column="55" selection-start="5812" selection-end="5812" vertical-scroll-proportion="0.4216028">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DoS.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/DoS.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="30" column="40" selection-start="974" selection-end="974" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="XugglerRtmpReferenceImpl.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/XugglerRtmpReferenceImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="40" column="68" selection-start="1574" selection-end="1574" vertical-scroll-proportion="0.0">
               <folding>
-                <element signature="e#1646#1818#0" expanded="true" />
-                <element signature="e#1811#1812#0" expanded="true" />
-                <element signature="e#3275#4205#0" expanded="true" />
-                <element signature="e#4194#4195#0" expanded="true" />
-                <element signature="e#7675#10248#0" expanded="true" />
-                <element signature="e#10237#10238#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SettingsDialog.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/SettingsDialog.java">
+      <file leaf-file-name="PlayerControls.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="147" column="36" selection-start="5955" selection-end="5955" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StringUtil.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/StringUtil.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="13" selection-start="206" selection-end="206" vertical-scroll-proportion="-0.03858521">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Playable.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/model/Playable.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="23" selection-start="1396" selection-end="1396" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LocalizedMessages.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/LocalizedMessages.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="36" column="79" selection-start="1108" selection-end="1108" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="messages_en.properties" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/messages_en.properties">
-          <provider editor-type-id="ResourceBundle">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="42" selection-start="649" selection-end="649" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SettingItem.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/model/SettingItem.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="44" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
+            <state line="90" column="0" selection-start="2857" selection-end="2857" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -180,7 +155,7 @@
       <file leaf-file-name="ActionExecutor.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionExecutor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="74" column="47" selection-start="2229" selection-end="2229" vertical-scroll-proportion="0.0">
+            <state line="147" column="19" selection-start="4320" selection-end="4320" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -189,16 +164,7 @@
       <file leaf-file-name="Frame.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="92" column="3" selection-start="3108" selection-end="3108" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IOUtil.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/IOUtil.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="60" column="79" selection-start="1614" selection-end="1614" vertical-scroll-proportion="0.0">
+            <state line="127" column="53" selection-start="4310" selection-end="4310" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -227,21 +193,21 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/StringUtil.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionsMouseListener.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIUtil.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/KeyConsts.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/KeyConstants.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionCommands.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/IOUtil.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionExecutor.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/model/SettingItem.java" />
         <option value="$PROJECT_DIR$/src/messages_en.properties" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/LocalizedMessages.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/model/Playable.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/SettingsDialog.java" />
+        <option value="$PROJECT_DIR$/src/messages_ru.properties" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionCommands.java" />
+        <option value="$PROJECT_DIR$/src/log4j2.xml" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionExecutor.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/DoS.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/XugglerRtmpReferenceImpl.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java" />
       </list>
     </option>
@@ -249,8 +215,30 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1932" />
+    <option name="width" value="1936" />
     <option name="height" value="1056" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Android Lint</id>
+          </State>
+          <State>
+            <id>Plugin DevKit</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>Abstraction issues</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -280,7 +268,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -303,217 +290,37 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Resource Bundle 'messages'" />
-              <option name="myItemType" value="com.intellij.lang.properties.projectView.ResourceBundleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="icons" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="componensts" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="model" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="exception" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="File.Encoding" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="options.lastSelected" value="appearance" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/xuggle-xuggler-5.4.jar!/" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="GoToClass.includeJavaFiles" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="FullScreen" value="false" />
+    <property name="restartRequiresConfirmation" value="true" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="dynamic.classpath" value="false" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="Downloaded.Files.Path" value="D:\Soft\EPlayer\lib" />
   </component>
   <component name="RunManager" selected="Application.Application">
     <configuration default="false" name="Application" type="Application" factoryName="Application" temporary="true">
@@ -524,6 +331,62 @@
         </pattern>
       </extension>
       <option name="MAIN_CLASS_NAME" value="cz.encircled.eplayer.app.Application" />
+      <option name="VM_PARAMETERS" value="-Dvlcj.log=WARN" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="EPlayer" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="DoS" type="Application" factoryName="Application" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="cz.encircled.eplayer.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="cz.encircled.eplayer.app.DoS" />
+      <option name="VM_PARAMETERS" value="-Xmx2024M" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="EPlayer" />
+      <envs />
+      <RunnerSettings RunnerId="Debug">
+        <option name="DEBUG_PORT" value="" />
+        <option name="TRANSPORT" value="0" />
+        <option name="LOCAL" value="true" />
+      </RunnerSettings>
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Debug" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration default="false" name="XugglerRtmpReferenceImpl" type="Application" factoryName="Application" temporary="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
+        <pattern>
+          <option name="PATTERN" value="cz.encircled.eplayer.app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="MAIN_CLASS_NAME" value="cz.encircled.eplayer.app.XugglerRtmpReferenceImpl" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
@@ -558,19 +421,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -597,6 +447,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -635,12 +498,16 @@
       <patterns />
       <method />
     </configuration>
-    <list size="1">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Application.Application" />
+      <item index="1" class="java.lang.String" itemvalue="Application.DoS" />
+      <item index="2" class="java.lang.String" itemvalue="Application.XugglerRtmpReferenceImpl" />
     </list>
     <recent_temporary>
-      <list size="1">
+      <list size="3">
         <item index="0" class="java.lang.String" itemvalue="Application.Application" />
+        <item index="1" class="java.lang.String" itemvalue="Application.XugglerRtmpReferenceImpl" />
+        <item index="2" class="java.lang.String" itemvalue="Application.DoS" />
       </list>
     </recent_temporary>
     <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
@@ -701,33 +568,33 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1932" height="1056" extended-state="0" />
-    <editor active="false" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39910814" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39822024" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23101604" sideWeight="0.72240806" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27759197" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20917822" sideWeight="0.6674082" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33259177" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32998884" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.72240806" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.6666667" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -801,122 +668,103 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="16" column="26" selection-start="347" selection-end="347" vertical-scroll-proportion="0.45257902" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControlsPanelOLD.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="0" selection-start="3123" selection-end="3296" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/QuickNaviButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="53" selection-start="1571" selection-end="1571" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionCommands.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="40" selection-start="622" selection-end="622" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="27" selection-start="2267" selection-end="2267" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/KeyConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="13" column="34" selection-start="304" selection-end="309" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionExecutor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="74" column="47" selection-start="2229" selection-end="2229" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="3" selection-start="3108" selection-end="3108" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/IOUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="60" column="79" selection-start="1614" selection-end="1614" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/model/SettingItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="44" selection-start="158" selection-end="158" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/messages_en.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="42" selection-start="649" selection-end="649" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="ResourceBundle">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/LocalizedMessages.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="79" selection-start="1108" selection-end="1108" vertical-scroll-proportion="0.0">
+        <state line="36" column="79" selection-start="1089" selection-end="1108" vertical-scroll-proportion="0.59003216">
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/model/Playable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="23" selection-start="1396" selection-end="1396" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="48" selection-start="2843" selection-end="2843" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="e#1646#1818#0" expanded="true" />
-            <element signature="e#1811#1812#0" expanded="true" />
-            <element signature="e#3275#4205#0" expanded="true" />
-            <element signature="e#4194#4195#0" expanded="true" />
-            <element signature="e#7675#10248#0" expanded="true" />
-            <element signature="e#10237#10238#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/SettingsDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="147" column="36" selection-start="5955" selection-end="5955" vertical-scroll-proportion="0.0">
+        <state line="147" column="36" selection-start="5955" selection-end="5955" vertical-scroll-proportion="0.16976744" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControlsPanelOLD.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="357" column="58" selection-start="12822" selection-end="12822" vertical-scroll-proportion="3.2660098" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/log.log">
+      <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/model/Playable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="18" selection-start="1056" selection-end="1056" vertical-scroll-proportion="0.6494845" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/model/SettingItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="44" selection-start="158" selection-end="158" vertical-scroll-proportion="0.116838485" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionCommands.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="35" selection-start="613" selection-end="622" vertical-scroll-proportion="0.4284078" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/log4j2.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="36" selection-start="202" selection-end="202" vertical-scroll-proportion="0.1486014">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/StringUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="13" selection-start="206" selection-end="206" vertical-scroll-proportion="-0.03858521">
+        <state line="23" column="26" selection-start="595" selection-end="595" vertical-scroll-proportion="0.33216783" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/ActionExecutor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="147" column="19" selection-start="4320" selection-end="4320" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="90" column="0" selection-start="2857" selection-end="2857" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/EPlayer.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-1.7247387" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/DoS.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="40" selection-start="974" selection-end="974" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/XugglerRtmpReferenceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="40" column="68" selection-start="1574" selection-end="1574" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="127" column="53" selection-start="4310" selection-end="4310" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="188" column="55" selection-start="5812" selection-end="5812" vertical-scroll-proportion="0.4216028">
           <folding />
         </state>
       </provider>
@@ -999,6 +847,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>org.slf4j:slf4j-api:1.7.4</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

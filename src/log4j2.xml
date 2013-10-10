@@ -3,11 +3,11 @@
  <appenders>
   <File name="FILE" fileName="log.log">
    <PatternLayout>
-   	<pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</pattern>
+   	<pattern>%d{HH:mm:ss.SSS} [%-5level] [%t] %logger{36} - %msg%n</pattern>
    </PatternLayout>
   </File>
   <Console name="STDOUT" target="SYSTEM_OUT">
-	<PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+	<PatternLayout pattern="%d{HH:mm:ss.SSS} [%-5level] [%t] %logger{36} - %msg%n"/>
   </Console>     
  </appenders>
  <loggers>

@@ -21,7 +21,7 @@ public class ActionExecutor {
 	
 	private SettingsDialog settingsDialog;
 	
-	private String fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
+	private String fileChooserLastPath;
 
     private final static Logger log = LogManager.getLogger(ActionExecutor.class);
 
@@ -29,6 +29,7 @@ public class ActionExecutor {
 
     public ActionExecutor(){
         initializeCommandsTree();
+        setDefaultFileChooserPath();
     }
 
 	public void setFrame(Frame frame){
@@ -45,6 +46,10 @@ public class ActionExecutor {
                 log.warn("error reading command field {} ", f.getName());
             }
         }
+    }
+
+    public void setDefaultFileChooserPath(){
+        fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
     }
 
     public void execute(String command){
@@ -70,6 +75,7 @@ public class ActionExecutor {
                 if (res == JFileChooser.APPROVE_OPTION) {
                     File f = fc.getSelectedFile();
                     fileChooserLastPath = f.getPath();
+                    frame.updateCurrentPlayableInCache();
                     Application.getInstance().play(fileChooserLastPath);
                 }
             }
@@ -103,6 +109,10 @@ public class ActionExecutor {
             if (w instanceof JDialog)
                 w.dispose();
         }
+    }
+
+    public void showShutdownTimeChooser(){
+        frame.showShutdownTimeChooser();
     }
 
     public void settings() {

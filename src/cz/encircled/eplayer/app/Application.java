@@ -7,11 +7,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
+import java.util.Timer;
 
 import com.google.gson.JsonSyntaxException;
 import cz.encircled.eplayer.view.*;
@@ -32,10 +32,20 @@ import cz.encircled.eplayer.util.StringUtil;
 
 public class Application {
 
-	private static volatile Application instance;
-	
-	private final static Logger log = LogManager.getLogger(Application.class);
-	
+	private static final Logger log = LogManager.getLogger(Application.class);
+
+    private static final String SD_CMD_COMMAND = "shutdown";
+
+    private static final String SD_CMD_TIME = " /t ";
+
+    private static final String SD_CMD_HIBERNATE = " /h ";
+
+    public static final String SD_CMD_SHUTDOWN = " /s";
+
+    private static final String SD_CMD_CANCEL = "shutdown -a";
+
+    private static volatile Application instance;
+
 	private ActionExecutor actionExecutor;
 	
 	private HoverMouseListener hoverMouseListener;
@@ -48,6 +58,7 @@ public class Application {
         @Override
         public void mouseClicked(MouseEvent e) {
             JFileChooser fc = new JFileChooser();
+            fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             if (fc.showOpenDialog(SwingUtilities.getRoot(e.getComponent())) == JFileChooser.APPROVE_OPTION)
                 ((JTextField)e.getSource()).setText(fc.getSelectedFile().getAbsolutePath());
         }
@@ -100,47 +111,77 @@ public class Application {
         return isVlcAvailable;
     }
 
-    public void showMessage(String text, String title, int messageLevel){
-        JOptionPane.showMessageDialog(frame, text, title, messageLevel);
+    private void waitAndShowMessage(final String text, final String title, final int messageLevel){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                boolean retry = true;
+                int i = 0;
+                while(retry && i++ < 10){
+                    if(frame != null){
+                        JOptionPane.showMessageDialog(frame, text, title, messageLevel);
+                        retry = false;
+                    } else {
+                        try{
+                            Thread.sleep(500);
+                        } catch (InterruptedException e){
+                            retry = false;
+                            log.warn("waitAndShowMessage thread", e);
+                        }
+                    }
+                }
+            }
+        }).start();
     }
 
 	public void initialize(){
+        log.trace("App init");
 		if(frame != null){
             frame.stopPlayer();
 			frame.dispose();
+            frame = null;
 		}
 		PropertyProvider.initialize();
+        log.trace("Properties init success");
 		MessagesProvider.initialize();
+        log.trace("Messages init success");
 		initVLCLib();
         initializePlayable();
 		actionExecutor = new ActionExecutor();
 		hoverMouseListener = new HoverMouseListener();
 		backgroundFocusListener = new BackgroundFocusListener();
+        initializeGui();
+        addCloseHook();
+        log.trace("Init complete");
+	}
+
+    private void initializeGui(){
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-            Font font = new Font("Dialog", Font.BOLD,  12);
-            UIManager.put("Label.font", font);
-            UIManager.put("Button.font", font);
-            UIManager.put("TextField.font", new Font("Dialog", Font.BOLD,  14));
+                Font font = new Font("Dialog", Font.BOLD,  12);
+                UIManager.put("Label.font", font);
+                UIManager.put("Button.font", font);
+                UIManager.put("TextField.font", new Font("Dialog", Font.BOLD,  14));
 
-            UIManager.put("Label.foreground", Components.MAIN_GRAY_COLOR);
-            UIManager.put("Button.foreground", Components.MAIN_GRAY_COLOR);
-            UIManager.put("TextField.foreground", Components.MAIN_GRAY_COLOR);
-            try {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-            }
-            catch (Exception e){
-               log.warn("l&f failed with msg {}", e.getMessage());
-            }
+                UIManager.put("Label.foreground", Components.MAIN_GRAY_COLOR);
+                UIManager.put("Button.foreground", Components.MAIN_GRAY_COLOR);
+                UIManager.put("TextField.foreground", Components.MAIN_GRAY_COLOR);
+                try {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                }
+                catch (Exception e){
+                    log.warn("l&f failed with msg {}", e.getMessage());
+                }
 
-            frame = new Frame();
-            actionExecutor.setFrame(frame);
-            frame.run();
-            frame.showQuickNavi();
+                frame = new Frame();
+                actionExecutor.setFrame(frame);
+                frame.showQuickNavi();
+                frame.run();
+                frame.repaintQuickNavi();
             }
         });
-	}
+    }
 
     private void addCloseHook(){
         Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -162,33 +203,39 @@ public class Application {
 		} catch(UnsatisfiedLinkError e){
             isVlcAvailable = false;
             e.printStackTrace();
-			JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_VLC_LIBS_FAIL), MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+			waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_VLC_LIBS_FAIL), MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
 			log.error("Failed to load vlc libs from specified path {}", PropertyProvider.get(PropertyProvider.SETTING_VLC_PATH));
 		} 
 	}
 	
 	public Map<Integer, Playable> getPlayableCache(){
+        if(playableCache == null)
+            playableCache = new HashMap<>();
         return playableCache;
 	}
 
-	
 	public void play(Playable p){
 		log.debug("play: {}", p.toString());
 		if(p.exists()){
 			frame.showPlayer();
 			frame.play(p.getPath(), p.getTime());
-		} else { // TODO hot keys bug
-			JOptionPane.showMessageDialog(frame, "DOMERGE", "Title", JOptionPane.INFORMATION_MESSAGE);
+		} else {
+            JFileChooser fc = new JFileChooser();
+            if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
+                getPlayableCache().remove(p.getPath().hashCode());
+                p.readPath(fc.getSelectedFile().getAbsolutePath());
+                getPlayableCache().put(p.getPath().hashCode(), p);
+                play(p);
+            }
 		}
     }
 
-
     public Playable getOrCreatePlayable(String path){
         int hash = path.hashCode();
-        Playable p = playableCache.get(hash);
+        Playable p = getPlayableCache().get(hash);
         if(p == null){
             p = new Playable(path);
-            playableCache.put(hash, p);
+            getPlayableCache().put(hash, p);
         }
         return p;
     }
@@ -198,23 +245,24 @@ public class Application {
     }
 
     public void updatePlayableCache(int hash, long time){
-        Playable p = playableCache.get(hash);
+        Playable p = getPlayableCache().get(hash);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
         savePlayable();
     }
 
     public void deletePlayableCache(int hash){
-        playableCache.remove(hash);
+        Playable deleted = getPlayableCache().remove(hash);
+        if(JOptionPane.showConfirmDialog(frame, "delete file?", "title", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
+            log.debug("deleted: {}", new File(deleted.getPath()).delete());
+        actionExecutor.setDefaultFileChooserPath();
         frame.repaintQuickNavi();
-        savePlayable();
     }
     
     public void mergePlayable(Playable playable, String path){
-    	playableCache.remove(playable.hashCode());
+        getPlayableCache().remove(playable.hashCode());
     	playable.readPath(path);
         frame.repaintQuickNavi();
-        savePlayable();
     }
 
     public void playLast(){
@@ -225,11 +273,56 @@ public class Application {
 
     private Playable getLastPlayable(){
         Playable p = null;
-        for(Map.Entry<Integer, Playable> e : playableCache.entrySet()){
+        for(Map.Entry<Integer, Playable> e : getPlayableCache().entrySet()){
             if(p == null || p.getWatchDate() < e.getValue().getWatchDate())
                 p = e.getValue();
         }
         return p;
+    }
+
+    /**
+     * Call shutdown api
+     */
+    public void shutdown(final Integer minutes, final String param) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    internalShutdown(minutes, param);
+                } catch (IOException e) {
+                    log.error("Hibernate timer failed", e);
+                }
+            }
+        }).start();
+    }
+
+    private void internalShutdown(Integer time, String param) throws IOException {
+        StringBuilder s = new StringBuilder(SD_CMD_COMMAND);
+        if(time != null)
+                s.append(SD_CMD_TIME).append(time * 60);
+        s.append(param);
+        log.debug("Shutdown {} in {} mins. {}", param, time, s.toString());
+        Runtime.getRuntime().exec(s.toString());
+    }
+
+    private Timer hibernateTimer;
+
+    public void hibernate(int time){
+        hibernateTimer = new java.util.Timer();
+        hibernateTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                shutdown(null, SD_CMD_HIBERNATE);
+            }
+        }, time * 60000);
+    }
+
+    public void cancelShutdown(){
+        try {
+            Runtime.getRuntime().exec(SD_CMD_CANCEL);
+        } catch (IOException e) {
+            log.error("Cancel shutdown failed to execute", e);
+        }
     }
 
     public void exit() {
@@ -244,7 +337,8 @@ public class Application {
             @Override
             public void run() {
                 try {
-                    IOUtil.storeJson(playableCache, PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH));
+                    IOUtil.storeJson(getPlayableCache(), PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH));
+                    log.debug("Json successfully saved");
                 } catch (IOException e) {
                     log.error("Failed to save playable to {}, msg {}", PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH), e);
                 }
@@ -256,54 +350,52 @@ public class Application {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                playableCache = new HashMap<>();
+                log.trace("Init playable cache");
                 String path = PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH);
                 if(StringUtil.notSet(path)){
                 	log.warn("Path to qn data file is not set");
-                	JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_NOT_SPECIFIED),
+                	waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_NOT_SPECIFIED),
                             MessagesProvider.get(LocalizedMessages.WARN_TITLE), JOptionPane.WARNING_MESSAGE);
                 	return;
                 }
-                
-                File f = new File(path);
-                if(!f.exists()) {
-                    try {
-                        if(!f.createNewFile())
-                            throw new IOException();
-                    } catch (IOException e) {
-                        log.error("Failed to create QuickNavi data file at {}", path);
-                        JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_CREATE_QN_FILE_FAIL),
-                                                        MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
-                    }
+                try {
+                    checkOrCreateFile(path);
+                } catch (IOException e) {
+                    log.error("Failed to create QuickNavi data file at {}", path);
+                    waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_CREATE_QN_FILE_FAIL),
+                            MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 try {
                     playableCache = IOUtil.jsonFromFile(path, IOUtil.DEFAULT_TYPE_TOKEN);
-                    if(playableCache == null)
-                        playableCache = new HashMap<>();
                 } catch (IOException e) {
-                    playableCache = new HashMap<Integer, Playable>();
                     log.error("Failed to read playableCache data from {} with default type token. Message: {}",
                             PropertyProvider.get(PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH), e.getMessage());
-                    JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_IO_FAIL),
-                                                        MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+                    waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_IO_FAIL),
+                            MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
                 } catch (JsonSyntaxException e){
-                    playableCache = new HashMap<>();
                     log.error("JSON syntax error. Message: {}", e.getMessage());
-                    JOptionPane.showMessageDialog(frame, MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_CORRUPTED),
-                                                    MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+                    waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_CORRUPTED),
+                            MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
                 }
             }
         }).start();
 
     }
 
+    private void checkOrCreateFile(String path) throws IOException {
+        File f = new File(path);
+        if(!f.exists()) {
+            if(!f.createNewFile())
+                throw new IOException();
+            else
+                log.debug("File {} has been created", path);
+        }
+    }
+
     public static void main(final String[] args) {
         System.setProperty("file.encoding", "UTF-8");
         Application.getInstance().initialize();
-        Application.getInstance().addCloseHook();
     }
-
-
 
 }

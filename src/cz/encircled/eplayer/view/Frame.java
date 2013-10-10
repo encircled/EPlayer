@@ -9,6 +9,7 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.Timer;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 
@@ -121,8 +122,11 @@ public class Frame extends JFrame implements Runnable {
     }
 
     public void updateCurrentPlayableInCache(){
-        if(current != null && player.getTime() >= 0L)
-            Application.getInstance().updatePlayableCache(current.hashCode(), player.getTime());
+        if(current != null){
+            long time = Math.max(player.getTime(), currentTime);
+            if(time > 0L)
+                Application.getInstance().updatePlayableCache(current.hashCode(), time);
+        }
     }
 
     private void pausePlayerInternal(){
@@ -167,6 +171,14 @@ public class Frame extends JFrame implements Runnable {
                 showPlayerInternal();
             }
         });
+    }
+
+    private static final Pattern digitsPattern = Pattern.compile("^\\d+$");
+
+    public void showShutdownTimeChooser(){
+        String val = JOptionPane.showInputDialog(Frame.this, "blablabla");
+        if(digitsPattern.matcher(val).matches())
+            Application.getInstance().shutdown(Integer.parseInt(val), Application.SD_CMD_SHUTDOWN);
     }
 
     private boolean showPlayerInternal(){
@@ -403,6 +415,7 @@ public class Frame extends JFrame implements Runnable {
 
         tools.add(Components.getMenuItem(LocalizedMessages.OPEN_QUICK_NAVI, ActionCommands.OPEN_QUICK_NAVI));
         tools.add(Components.getMenuItem(LocalizedMessages.SETTINGS, ActionCommands.SETTINGS));
+        tools.add(Components.getMenuItem(LocalizedMessages.LANGUAGE, ActionCommands.SHUTDOWN_TIME_CHOOSER));
 
         file.add(new JSeparator());
         file.add(Components.getMenuItem(LocalizedMessages.OPEN, ActionCommands.OPEN));

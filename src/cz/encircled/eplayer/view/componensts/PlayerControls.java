@@ -8,11 +8,8 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.plaf.basic.BasicSliderUI;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -59,17 +56,21 @@ public class PlayerControls extends JPanel {
         positionSlider.setValue(0);
 
         positionSlider.addChangeListener(new ChangeListener() {
+            long last = 0;
             @Override
             public void stateChanged(ChangeEvent e) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-//                        positionLabel.setBounds((int)getMousePosition().getX(),5,70,15);
-                    }
-                });
-//                Object[] time = parseTime(positionSlider.getValue() * 1000L);
-//                positionLabel.setText(String.format("%02d:%02d:%02d", time[0], time[1], time[2]));
+                if(System.currentTimeMillis() - last > 50 && positionSlider.getValueIsAdjusting()){
+                    last = System.currentTimeMillis();
+                    final Object[] time = parseTime(positionSlider.getValue() * 1000L);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            positionLabel.setBounds((int)getMousePosition().getX(),5,70,15);
 
+                        }
+                    });
+                     positionLabel.setText(String.format("%02d:%02d:%02d", time[0], time[1], time[2]));
+                }
             }
         });
         positionSlider.addMouseListener(new MouseAdapter() {
@@ -83,6 +84,10 @@ public class PlayerControls extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 player.pause();
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
             }
 
             @Override
@@ -102,7 +107,7 @@ public class PlayerControls extends JPanel {
         positionSlider = new JSlider();
         positionSlider.setEnabled(false);
 
-        intializeVolumeSlider();
+        initializeVolumeSlider();
         initializeLabels();
         initializeVolumeButton();
         positionLabel = new JLabel();
@@ -143,7 +148,7 @@ public class PlayerControls extends JPanel {
         volumeLabel.setPreferredSize(new Dimension(40, 20));
     }
 
-    private void intializeVolumeSlider() {
+    private void initializeVolumeSlider() {
         volumeSlider = new JSlider();
         volumeSlider.setEnabled(true);
         volumeSlider.setMaximum(PropertyProvider.getInt(PropertyProvider.SETTING_MAX_VOLUME, DEFAULT_MAX_VOLUME));

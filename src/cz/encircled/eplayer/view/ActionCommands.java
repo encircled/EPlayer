@@ -22,4 +22,6 @@ public class ActionCommands {
 
     public static final String PLAY_LAST = "playLast";
 
+    public static final String SHUTDOWN_TIME_CHOOSER = "showShutdownTimeChooser";
+
 }

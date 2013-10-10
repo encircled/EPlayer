@@ -81,6 +81,8 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="xuggle-xuggler-5.4" level="project" />
+    <orderEntry type="library" name="org.slf4j:slf4j-api:1.7.4" level="project" />
   </component>
 </module>
 
