@@ -1,4 +1,4 @@
-package cz.encircled.eplayer.view;
+package cz.encircled.eplayer.view.listeners;
 
 import java.awt.Color;
 import java.awt.event.FocusEvent;

@@ -1,30 +1,17 @@
 package cz.encircled.eplayer.view;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.plaf.basic.BasicComboBoxUI;
-
-import cz.encircled.eplayer.util.GUIUtil;
-
+import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.model.SettingItem;
+import cz.encircled.eplayer.util.*;
+import cz.encircled.eplayer.view.actions.ActionCommands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import cz.encircled.eplayer.app.Application;
-import cz.encircled.eplayer.app.LocalizedMessages;
-import cz.encircled.eplayer.app.MessagesProvider;
-import cz.encircled.eplayer.app.PropertyProvider;
-import cz.encircled.eplayer.model.SettingItem;
+import javax.swing.*;
+import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SettingsDialog extends JDialog {
 	
@@ -38,8 +25,6 @@ public class SettingsDialog extends JDialog {
 
 	private static final int LABEL_HEIGHT = 44;
 
-	private static final long serialVersionUID = 1L;
-	
 	private final static int DIALOG_WIDTH = 610;
 
 	private final static int DIALOG_HEIGHT = 630;
@@ -52,16 +37,16 @@ public class SettingsDialog extends JDialog {
 	
 	private final static int WRAPPER_PANEL_MARGINS = 14;
 	
-	private final static int BUTTONs_PANEL_HORIZONTAL_MARGIN = 30;
+	private final static int BUTTONS_PANEL_HORIZONTAL_MARGIN = 30;
 	
-	private static List<SettingItem> settings = new ArrayList<SettingItem>();
+	private final static List<SettingItem> settings = new ArrayList<>();
 
 	private JPanel keysPanel;
 	
 	private JPanel valuesPanel;
 	
-	public SettingsDialog(JFrame parent, boolean isModal){
-		super(parent, isModal);
+	public SettingsDialog(JFrame parent){
+		super(parent, true);
 		initialize();
 		initializeSettings();
 	}
@@ -97,7 +82,7 @@ public class SettingsDialog extends JDialog {
 	
 	private JPanel getButtonsPanel(){
 		JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, BUTTONs_PANEL_HORIZONTAL_MARGIN, 0));
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, BUTTONS_PANEL_HORIZONTAL_MARGIN, 0));
         buttonsPanel.setBackground(Color.WHITE);
         buttonsPanel.setPreferredSize(new Dimension((int)(DIALOG_WIDTH * 0.9), (int)(DIALOG_HEIGHT * 0.95)));		
         buttonsPanel.add(Components.getButton(
@@ -127,9 +112,9 @@ public class SettingsDialog extends JDialog {
             @Override
             public void run() {
                 settings.clear();
-                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT));
-                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.DEFAULT_OPEN_LOCATION), PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, SettingItem.INPUT_TEXT_ELEMENT));
-                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.QUICK_NAVI_STORAGE_PATH), PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH, SettingItem.INPUT_TEXT_ELEMENT));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.DEFAULT_OPEN_LOCATION), PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER));
+                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.QUICK_NAVI_STORAGE_PATH), PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH, SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.COMBOBOX_ELEMENT));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.MAX_VOLUME_PERCENTS), PropertyProvider.SETTING_MAX_VOLUME, SettingItem.INPUT_TEXT_ELEMENT));
 
@@ -140,7 +125,7 @@ public class SettingsDialog extends JDialog {
                             keysPanel.add(Components.getLabel(item.getViewText(), WIDTH_30, LABEL_HEIGHT, true));
                             JComponent componentToAdd = null;
                             switch(item.getElementType()){
-                                case 1:
+                                case SettingItem.COMBOBOX_ELEMENT:
                                 	componentToAdd = new JComboBox<String>();
                                 	componentToAdd.setPreferredSize(new Dimension(WIDTH_55, INPUT_HEIGHT - 10));
                                 	JComboBox c = (JComboBox)componentToAdd;
@@ -160,10 +145,14 @@ public class SettingsDialog extends JDialog {
                                 	c.setSelectedItem(PropertyProvider.get(item.getSettingName(), ""));
                                 	System.out.println();
                                     break;
-                                case 0:
-                                default:
-                                	componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);
+                                case SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER:
+                                    componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);
                                     componentToAdd.addMouseListener(Application.getInstance().getFileChooserMouseAdapter());
+                                    break;
+                                case SettingItem.INPUT_TEXT_ELEMENT:
+                                	componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);
+                                    ((JTextField)componentToAdd).setDragEnabled(true);
+                                    break;
                             }
                             valuesPanel.add(componentToAdd);
 

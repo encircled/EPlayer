@@ -18,7 +18,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="module-library">
       <library name="jna-3.5.2.jar">
         <CLASSES>
@@ -83,6 +83,8 @@
     </orderEntry>
     <orderEntry type="library" name="xuggle-xuggler-5.4" level="project" />
     <orderEntry type="library" name="org.slf4j:slf4j-api:1.7.4" level="project" />
+    <orderEntry type="library" name="annotations" level="application" />
+    <orderEntry type="library" name="gson-2.2.4" level="project" />
   </component>
 </module>
 

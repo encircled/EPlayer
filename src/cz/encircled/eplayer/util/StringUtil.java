@@ -15,7 +15,7 @@ public class StringUtil {
 
     private static final String HTML_BR_TAG = "<br/>";
 
-    public static final String HTML_PADDING = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp";
+    public static final String HTML_PADDING = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
     public static boolean isSet(String s){
         return s!= null && !s.isEmpty();
@@ -26,11 +26,10 @@ public class StringUtil {
     }
 
     public static String toHtml(String s, int lineBreakAt, String padding){
-        int addedLength = 0;
         StringBuilder sb = new StringBuilder(HTML_TAG);
         if(padding != null)
             sb.append(padding);
-        addedLength = sb.length();
+        int addedLength = sb.length();
         sb.append(s);
         if(lineBreakAt > 0 && s.length() > lineBreakAt)
             sb.insert(addedLength + lineBreakAt, padding == null ? HTML_BR_TAG : HTML_BR_TAG + padding);

@@ -1,14 +1,12 @@
 package cz.encircled.eplayer.view.componensts;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 public class JLine extends JPanel {
-	private static final long serialVersionUID = 1L;
-	Color color;
+
+	private final Color color;
+
     public JLine(int w, Color c){
         color = c;
         setPreferredSize(new Dimension(w, 5));

@@ -1,22 +1,15 @@
 package cz.encircled.eplayer.util;
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import org.jetbrains.annotations.NotNull;
+import cz.encircled.eplayer.model.Playable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import cz.encircled.eplayer.app.PropertyProvider;
-import cz.encircled.eplayer.model.Playable;
+import java.io.*;
+import java.lang.reflect.Type;
+import java.util.Map;
 
 public class IOUtil {
 
@@ -24,51 +17,27 @@ public class IOUtil {
 	
 	public final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, Playable>>(){}.getType();
 	
-	public static void close(Closeable c){
-		if(c != null){
-			try {
-				c.close();
- 			} catch(Exception e){
- 				try {
- 					c.close();
- 				} catch(Exception critical){
- 					log.error("Failed to close {}", c.toString());
- 				}
- 			}
-			c = null;
-		}
-	}
-	
-	public static <T> T jsonFromFile(String filepath, Type classOfT) throws IOException {
-		String json = getFileContent(filepath);
+	public static <T> T jsonFromFile(@NotNull String filePath, Type classOfT) throws IOException {
+		String json = getFileContent(filePath);
 		return new Gson().fromJson(json, classOfT);
 	}
 	
-	public static String getFileContent(String filepath) throws IOException {
-		BufferedReader reader = null;
+	public static String getFileContent(@NotNull String filePath) throws IOException {
 		StringBuilder result = new StringBuilder();
-		String buffer;
-		try {
-			reader = new BufferedReader(new FileReader(filepath));
-			while((buffer = reader.readLine()) != null)
-				result.append(buffer).append("\n");
-		} finally {
-			close(reader);
+		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))){
+            reader.lines()
+                    .parallel()
+                    .forEachOrdered((line) -> result.append(line).append("\n"));
 		}
 		return result.toString();
 	}
 	
 	public static void storeJson(Object obj, String path) throws IOException {
 		String json = new Gson().toJson(obj);
-		BufferedWriter writer = null;
-		try {
-			writer = new BufferedWriter(new FileWriter(path));
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))){
 			writer.write(json);
 			writer.flush();
-        } finally {
-			close(writer);
-			writer = null;
-		}
+        }
 	}
 	
 }

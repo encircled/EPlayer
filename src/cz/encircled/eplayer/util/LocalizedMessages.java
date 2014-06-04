@@ -1,4 +1,4 @@
-package cz.encircled.eplayer.app;
+package cz.encircled.eplayer.util;
 
 public class LocalizedMessages {
 	
@@ -41,5 +41,7 @@ public class LocalizedMessages {
     public static final String MAX_VOLUME_PERCENTS = "max_volume_percents";
 
     public static final String WARN_TITLE = "warning";
+
+    public static final String AUTO_SHUTDOWN = "autoshutdown";
 
 }

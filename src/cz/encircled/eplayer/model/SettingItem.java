@@ -1,8 +1,10 @@
 package cz.encircled.eplayer.model;
 
 public class SettingItem {
-	
-	public final static int INPUT_TEXT_ELEMENT = 0;
+
+    public final static int INPUT_TEXT_ELEMENT_WITH_CHOOSER = 0;
+
+    public final static int INPUT_TEXT_ELEMENT = 2;
 	
 	public final static int COMBOBOX_ELEMENT = 1;
 	

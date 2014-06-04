@@ -1,4 +1,4 @@
-package cz.encircled.eplayer.view;
+package cz.encircled.eplayer.util;
 
 /**
  * Created with IntelliJ IDEA.

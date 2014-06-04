@@ -1,16 +1,12 @@
-package cz.encircled.eplayer.view;
+package cz.encircled.eplayer.view.listeners;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.LineBorder;
-
+import cz.encircled.eplayer.view.Components;
 import cz.encircled.eplayer.view.componensts.EPlayerJButton;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
+
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class HoverMouseListener implements MouseListener {
 

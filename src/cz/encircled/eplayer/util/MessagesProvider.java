@@ -1,9 +1,10 @@
-package cz.encircled.eplayer.app;
+package cz.encircled.eplayer.util;
 
+import cz.encircled.eplayer.app.UTF8Control;
+
+import javax.swing.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
-
-import javax.swing.JComponent;
 
 public class MessagesProvider {
 
@@ -15,7 +16,7 @@ public class MessagesProvider {
 	
 	private static ResourceBundle bundle;
 	
-	public final static void initialize(){
+	public static void initialize(){
 		Locale l = new Locale(PropertyProvider.get(LocalizedMessages.LANGUAGE, DEFAULT_LANGUAGE));
 		bundle = ResourceBundle.getBundle(BUNDLE_NAME, l, new UTF8Control());
 		JComponent.setDefaultLocale(l);

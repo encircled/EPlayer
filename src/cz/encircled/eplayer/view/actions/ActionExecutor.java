@@ -1,23 +1,21 @@
-package cz.encircled.eplayer.view;
+package cz.encircled.eplayer.view.actions;
 
+import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.util.PropertyProvider;
+import cz.encircled.eplayer.view.SettingsDialog;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
 
-import javax.swing.*;
-
-import cz.encircled.eplayer.app.Application;
-import cz.encircled.eplayer.app.PropertyProvider;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class ActionExecutor {
 
-	private Frame frame;
+	private cz.encircled.eplayer.view.Frame frame;
 	
 	private SettingsDialog settingsDialog;
 	
@@ -32,12 +30,12 @@ public class ActionExecutor {
         setDefaultFileChooserPath();
     }
 
-	public void setFrame(Frame frame){
+	public void setFrame(cz.encircled.eplayer.view.Frame frame){
 		this.frame = frame;
 	}
 
     private void initializeCommandsTree(){
-        commands = new TreeMap<String, Method>();
+        commands = new TreeMap<>();
         Field[] commandFields = ActionCommands.class.getDeclaredFields();
         for(Field f : commandFields){
             try {
@@ -55,33 +53,30 @@ public class ActionExecutor {
     public void execute(String command){
         try {
             commands.get(command).invoke(ActionExecutor.this);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             log.error("Failed to execute command {}, msg:", command, e.getMessage());
         }
     }
 
-
+    @SuppressWarnings("UnusedDeclaration")
     public void exit() {
         Application.getInstance().exit();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void openMedia() {
-        SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                JFileChooser fc = new JFileChooser(fileChooserLastPath);
-                int res = fc.showOpenDialog(frame);
-                if (res == JFileChooser.APPROVE_OPTION) {
-                    File f = fc.getSelectedFile();
-                    fileChooserLastPath = f.getPath();
-                    frame.updateCurrentPlayableInCache();
-                    Application.getInstance().play(fileChooserLastPath);
-                }
+        SwingUtilities.invokeLater(() -> {
+            JFileChooser fc = new JFileChooser(fileChooserLastPath);
+            int res = fc.showOpenDialog(frame);
+            if (res == JFileChooser.APPROVE_OPTION) {
+                fileChooserLastPath = fc.getSelectedFile().getPath();
+                frame.updateCurrentPlayableInCache();
+                Application.getInstance().play(fileChooserLastPath);
             }
         });
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void saveSettings() {
         Component[] components = settingsDialog.getValuesPanel().getComponents();
         for(Component c : components){
@@ -91,19 +86,17 @@ public class ActionExecutor {
                 PropertyProvider.set(c.getName(), ((JComboBox<?>) c).getSelectedItem().toString());
         }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    PropertyProvider.save();
-                } catch (IOException e1) {
-                    JOptionPane.showMessageDialog(frame, "Failed to save settings", "error", JOptionPane.ERROR_MESSAGE);
-                }
-                Application.getInstance().initialize();
+        new Thread(() -> {
+            try {
+                PropertyProvider.save();
+            } catch (IOException e1) {
+                JOptionPane.showMessageDialog(frame, "Failed to save settings", "error", JOptionPane.ERROR_MESSAGE);
             }
+            Application.getInstance().initialize();
         }).start();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void cancelDialog() {
         for (Window w : JDialog.getWindows()){
             if (w instanceof JDialog)
@@ -111,27 +104,33 @@ public class ActionExecutor {
         }
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void showShutdownTimeChooser(){
         frame.showShutdownTimeChooser();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void settings() {
-        settingsDialog = new SettingsDialog(frame, true);
+        settingsDialog = new SettingsDialog(frame);
         settingsDialog.setVisible(true);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void openQuickNavi(){
         frame.showQuickNavi();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void togglePlayer(){
         frame.togglePlayer();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void toggleFullScreen(){
         frame.toggleFullScreen();
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void back(){
         if(frame.isPlayerState()){
             if(frame.isFullScreen()){
@@ -144,13 +143,9 @@ public class ActionExecutor {
             execute(ActionCommands.EXIT);
     }
 
+    @SuppressWarnings("UnusedDeclaration")
     public void playLast(){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Application.getInstance().playLast();
-            }
-        }).start();
+        new Thread(() -> Application.getInstance().playLast()).start();
     }
 
 }

@@ -1,15 +1,16 @@
 package cz.encircled.eplayer.view.componensts;
 
-import cz.encircled.eplayer.app.PropertyProvider;
+import cz.encircled.eplayer.common.Constants;
+import cz.encircled.eplayer.util.PropertyProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -24,7 +25,9 @@ public class PlayerControls extends JPanel {
 
     private static final int DEFAULT_MAX_VOLUME = 150;
 
-    private EmbeddedMediaPlayer player;
+    private static final String LENGTH_LABEL_PREFIX = "/  ";
+
+    private final EmbeddedMediaPlayer player;
 
     private JSlider positionSlider;
 
@@ -40,86 +43,79 @@ public class PlayerControls extends JPanel {
 
     private JLabel positionLabel;
 
-    public PlayerControls(EmbeddedMediaPlayer player){
+    private static final String TIME_SEPARATOR = ":";
+
+    public PlayerControls(@NotNull EmbeddedMediaPlayer player){
         this.player = player;
         initialize();
     }
 
     public void reinitialize(){
-        Object[] time = parseTime(player.getLength());
-        lengthLabel.setText(String.format("/ %02d:%02d:%02d", time[0], time[1], time[2]));
-
-        positionSlider.setPreferredSize(new Dimension(1200, 20));
-        positionSlider.setFocusable(false);
-        positionSlider.setMinimum(0);
-        positionSlider.setMaximum((int) player.getLength() / 1000);
-        positionSlider.setValue(0);
-
-        positionSlider.addChangeListener(new ChangeListener() {
-            long last = 0;
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if(System.currentTimeMillis() - last > 50 && positionSlider.getValueIsAdjusting()){
-                    last = System.currentTimeMillis();
-                    final Object[] time = parseTime(positionSlider.getValue() * 1000L);
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            positionLabel.setBounds((int)getMousePosition().getX(),5,70,15);
-
-                        }
-                    });
-                     positionLabel.setText(String.format("%02d:%02d:%02d", time[0], time[1], time[2]));
-                }
-            }
-        });
-        positionSlider.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                player.setTime(positionSlider.getValue() * 1000);
-                player.start();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                player.pause();
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-            }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-
-            }
-        });
+        log.debug("Reinitializing controls panel. New length is {}", player.getLength());
+        lengthLabel.setText(LENGTH_LABEL_PREFIX + buildTimeTextLabel((int) player.getLength()));
+        positionSlider.setMaximum((int) player.getLength());
         positionSlider.setEnabled(true);
-        volumeSlider.setValue(player.getVolume());
-        volumeLabel.setText(volumeSlider.getValue() + " %");
+        if(player.getTime() > Constants.ZERO)
+            positionSlider.setValue((int) player.getTime());
+    }
+
+    private static void setSliderToCursorPosition(MouseEvent e, JSlider slider){
+        double percent = e.getPoint().x / ((double) slider.getWidth());
+        int range = slider.getMaximum() - slider.getMinimum();
+        double newVal = range * percent;
+        slider.setValue((int)(slider.getMinimum() + newVal));
+    }
+
+    private static String buildTimeTextLabel(int ms){
+        long h = TimeUnit.MILLISECONDS.toHours(ms);
+        long m = TimeUnit.MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(ms));
+        long s = TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms));
+
+        StringBuilder sb = new StringBuilder();
+        appendZeroIfMissing(sb, h);
+        sb.append(h).append(TIME_SEPARATOR);
+        appendZeroIfMissing(sb, m);
+        sb.append(m).append(TIME_SEPARATOR);
+        appendZeroIfMissing(sb, s);
+        sb.append(s);
+
+        return sb.toString();
+    }
+
+    private static void appendZeroIfMissing(StringBuilder sb, long digit){
+        if(digit < Constants.TEN)
+            sb.append(Constants.ZERO_STRING);
     }
 
     private void initialize(){
-        setPreferredSize(new Dimension(200, 50));
-        setLayout(new FlowLayout(FlowLayout.CENTER, 5, 18));
+        setPreferredSize(new Dimension(1700, 53));
+        setLayout(new BorderLayout());
 
-        positionSlider = new JSlider();
-        positionSlider.setEnabled(false);
+        JPanel top = new JPanel();
+        JPanel bottom = new JPanel();
+        top.setPreferredSize(new Dimension((int) getSize().getWidth(), 18));
+        bottom.setPreferredSize(new Dimension((int) getSize().getWidth(), 35));
+        top.setLayout(null);
+        bottom.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
+        initializePositionSlider();
         initializeVolumeSlider();
         initializeLabels();
         initializeVolumeButton();
-        positionLabel = new JLabel();
-        add(volumeButton);
-        add(volumeSlider);
-        add(volumeLabel);
-        add(positionSlider);
-        add(positionLabel);
-        add(timeLabel);
-        add(lengthLabel);
 
+
+        add(top, BorderLayout.NORTH);
+        add(bottom, BorderLayout.CENTER);
+
+        top.add(positionLabel);
+        bottom.add(volumeButton);
+        bottom.add(volumeSlider);
+        bottom.add(volumeLabel);
+        bottom.add(positionSlider);
+        bottom.add(timeLabel);
+        bottom.add(lengthLabel);
     }
+
 
     private void initializeVolumeButton() {
         volumeButton = new JRadioButton();
@@ -144,63 +140,73 @@ public class PlayerControls extends JPanel {
     private void initializeLabels() {
         timeLabel = new JLabel();
         lengthLabel = new JLabel();
-        volumeLabel = new JLabel();
+        volumeLabel = new JLabel(volumeSlider.getValue() + " %");
         volumeLabel.setPreferredSize(new Dimension(40, 20));
+        positionLabel = new JLabel();
+        positionLabel.setVisible(false);
     }
 
     private void initializeVolumeSlider() {
         volumeSlider = new JSlider();
-        volumeSlider.setEnabled(true);
         volumeSlider.setMaximum(PropertyProvider.getInt(PropertyProvider.SETTING_MAX_VOLUME, DEFAULT_MAX_VOLUME));
-        volumeSlider.setMinimum(0);
+        volumeSlider.setMinimum(Constants.ZERO);
         volumeSlider.setPreferredSize(new Dimension(150, 20));
         volumeSlider.setSize(new Dimension(150, 20));
-        volumeSlider.setFocusable(false);
-        volumeSlider.addChangeListener(new ChangeListener() {
-
-            long lastC = 0L;
+        volumeSlider.setValue(player.getVolume());
+        volumeSlider.addChangeListener(e -> {
+            player.setVolume(volumeSlider.getValue());
+            volumeLabel.setText(volumeSlider.getValue() + " %");
+            if(volumeSlider.getValue() == 0){
+                volumeButton.setSelected(true);
+            } else {
+                if(volumeButton.isSelected())
+                    volumeButton.setSelected(false);
+            }
+        });
+        volumeSlider.addMouseListener(new MouseAdapter() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                Long n = System.currentTimeMillis();
-                if(n - lastC > 100L){
-                    player.setVolume(volumeSlider.getValue());
-                    volumeLabel.setText(volumeSlider.getValue() + " %");
-                    lastC = n;
-                    if(volumeSlider.getValue() == 0){
-                        volumeButton.setSelected(true);
-                    } else {
-                        if(volumeButton.isSelected())
-                            volumeButton.setSelected(false);
-                    }
-                }
+            public void mousePressed(MouseEvent e) {
+                setSliderToCursorPosition(e, volumeSlider);
             }
         });
     }
 
+    private void initializePositionSlider() {
+        positionSlider = new JSlider();
+        positionSlider.setEnabled(false);
+        positionSlider.setFocusable(false);
+        positionSlider.setPreferredSize(new Dimension(800, 20));
+        positionSlider.setMinimum(Constants.ZERO);
+        positionSlider.addChangeListener(e -> SwingUtilities.invokeLater(() -> {
+            if(getMousePosition() != null) {
+                positionLabel.setBounds((int) getMousePosition().getX(), 3, 100, 15);
+                positionLabel.setText(buildTimeTextLabel(positionSlider.getValue()));
+            }
+        }));
+        positionSlider.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                positionLabel.setVisible(false);
+                player.setTime(positionSlider.getValue());
+                player.start();
+                log.debug("Slider released, value is {}", positionSlider.getValue());
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                positionLabel.setVisible(true);
+                player.pause();
+                setSliderToCursorPosition(e, positionSlider);
+            }
+
+        });
+    }
+
     public void fireTimeChanged(Long newTime){
-        positionSlider.setValue((int) (newTime / 1000));
-        Object[] t = parseTime(newTime);
-        timeLabel.setText(String.format("%02d:%02d:%02d", t[0],t[1],t[2]));
-    }
-
-    private Object[] parseTime(Long time){
-        long s = (time / 1000) % 60;
-        long m = (time / (1000*60)) % 60;
-        long h = (time / (1000*60*60)) % 24;
-        return new Object[]{ h,m,s };
-    }
-
-    private class EPlayerJSlider extends JSlider {
-
-        public EPlayerJSlider(){
-
-        }
-
-        @Override
-        public void paint(Graphics g) {
-            super.paint(g);
-
-        }
+        if(!positionSlider.getValueIsAdjusting())
+            positionSlider.setValue(newTime.intValue());
+        timeLabel.setText(buildTimeTextLabel(newTime.intValue()));
     }
 
 }

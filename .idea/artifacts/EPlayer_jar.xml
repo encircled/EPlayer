@@ -5,12 +5,16 @@
       <element id="archive" name="EPlayer.jar">
         <element id="module-output" name="EPlayer" />
       </element>
-      <element id="library" level="module" name="log4j-api-2.0-beta8.jar" module-name="EPlayer" />
-      <element id="library" level="module" name="log4j-core-2.0-beta8.jar" module-name="EPlayer" />
-      <element id="library" level="module" name="jna-3.5.2.jar" module-name="EPlayer" />
-      <element id="library" level="module" name="JTattoo-1.6.9.jar" module-name="EPlayer" />
-      <element id="library" level="module" name="gson-2.2.4.jar" module-name="EPlayer" />
       <element id="library" level="module" name="vlcj-2.4.1.jar" module-name="EPlayer" />
+      <element id="library" level="application" name="annotations" />
+      <element id="library" level="module" name="jna-3.5.2.jar" module-name="EPlayer" />
+      <element id="library" level="module" name="gson-2.2.4.jar" module-name="EPlayer" />
+      <element id="library" level="module" name="JTattoo-1.6.9.jar" module-name="EPlayer" />
+      <element id="library" level="project" name="org.slf4j:slf4j-api:1.7.4" />
+      <element id="library" level="module" name="log4j-core-2.0-beta8.jar" module-name="EPlayer" />
+      <element id="library" level="project" name="xuggle-xuggler-5.4" />
+      <element id="library" level="project" name="gson-2.2.4" />
+      <element id="library" level="module" name="log4j-api-2.0-beta8.jar" module-name="EPlayer" />
     </root>
   </artifact>
 </component>

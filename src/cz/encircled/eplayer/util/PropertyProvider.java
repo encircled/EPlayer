@@ -1,18 +1,15 @@
-package cz.encircled.eplayer.app;
+package cz.encircled.eplayer.util;
+
+import cz.encircled.eplayer.exception.InitializeException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import cz.encircled.eplayer.exception.InitializeException;
-import cz.encircled.eplayer.util.IOUtil;
 
 public class PropertyProvider {
 	
@@ -34,16 +31,11 @@ public class PropertyProvider {
 
     public static void initialize(){
 		properties = new Properties();
-		FileInputStream stream = null;
-		try {
-			stream = new FileInputStream(getPropertiesFile());
+		try (FileInputStream stream = new FileInputStream(getPropertiesFile())){
 			properties.load(stream);
 		} catch(Exception e){
 			log.error("failed to read props from {}", PROPERTIES_FILE_NAME);
 			throw new InitializeException(e.getMessage());
-		} finally {
-			IOUtil.close(stream);
-			stream = null;
 		}
 	}
 	
@@ -51,7 +43,7 @@ public class PropertyProvider {
 		return properties.getProperty(key, defaultValue);
 	}
 	
-	public static String get(String key){
+	public static String get(@NotNull String key){
 		return properties.getProperty(key);
 	}
 	
@@ -68,25 +60,16 @@ public class PropertyProvider {
 	}
 	
 	public static void save() throws IOException {
-		FileOutputStream stream = null;
-		try {
-			stream = new FileOutputStream(PROPERTIES_FILE_NAME);
+		try(FileOutputStream stream = new FileOutputStream(PROPERTIES_FILE_NAME)){
 			properties.store(stream, "user settings");
 			log.debug("prop saved");
 		} catch(IOException e){
 			log.error("Failed to save settings to {}", PROPERTIES_FILE_NAME);
 			throw e;
-		} finally {
-			IOUtil.close(stream);
-			stream = null;
 		}
 	}
 	
-	public Set<Entry<Object, Object>> getEntrySet(){
-		return properties.entrySet();
-	}
-	
-	private final static File getPropertiesFile() throws IOException {
+	private static File getPropertiesFile() throws IOException {
 		File f = new File(PROPERTIES_FILE_NAME);
 		if(!f.exists()){
 			log.debug("prop file doesn't exists, creating new");

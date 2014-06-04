@@ -1,29 +1,22 @@
 package cz.encircled.eplayer.view;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionListener;
+import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.util.MessagesProvider;
+import cz.encircled.eplayer.util.StringUtil;
+import cz.encircled.eplayer.view.componensts.EPlayerJButton;
+import cz.encircled.eplayer.view.componensts.JLine;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicButtonUI;
-
-import cz.encircled.eplayer.app.Application;
-import cz.encircled.eplayer.app.MessagesProvider;
-import cz.encircled.eplayer.util.StringUtil;
-import cz.encircled.eplayer.view.componensts.EPlayerJButton;
-import cz.encircled.eplayer.view.componensts.JLine;
+import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class Components {
 	
-	private static final String LABEL_PADDING = "      ";
-
 	public final static Color MAIN_BLUE_COLOR = new Color(73, 117, 255);
 	
 	public final static Color MAIN_GRAY_COLOR = new Color(85, 85, 85);
@@ -41,7 +34,7 @@ public class Components {
 	}
 	
     public static JLabel getLabel(String text, int w, int h, boolean addPadding){
-        text = StringUtil.toHtml(text, 23, addPadding ? StringUtil.HTML_PADDING : null);
+        text = StringUtil.toHtml(text, 20, addPadding ? StringUtil.HTML_PADDING : null);
         JLabel l = new JLabel(text);
         l.setPreferredSize(new Dimension(w, h));
         return l;
@@ -75,6 +68,7 @@ public class Components {
 
         Border bottomBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, Components.MAIN_BLUE_COLOR);
         f.setBorder(new CompoundBorder(bottomBorder, new EmptyBorder(0, 6, 0, 0)));
+
         return f;
     }
     
