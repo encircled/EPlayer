@@ -25,7 +25,10 @@ public class ActionExecutor {
 
     private TreeMap<String, Method> commands;
 
-    public ActionExecutor(){
+    private final Application app;
+
+    public ActionExecutor(Application app){
+        this.app = app;
         initializeCommandsTree();
         setDefaultFileChooserPath();
     }
@@ -60,7 +63,7 @@ public class ActionExecutor {
 
     @SuppressWarnings("UnusedDeclaration")
     public void exit() {
-        Application.getInstance().exit();
+        app.exit();
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -71,7 +74,7 @@ public class ActionExecutor {
             if (res == JFileChooser.APPROVE_OPTION) {
                 fileChooserLastPath = fc.getSelectedFile().getPath();
                 frame.updateCurrentPlayableInCache();
-                Application.getInstance().play(fileChooserLastPath);
+                app.play(fileChooserLastPath);
             }
         });
     }
@@ -92,7 +95,12 @@ public class ActionExecutor {
             } catch (IOException e1) {
                 JOptionPane.showMessageDialog(frame, "Failed to save settings", "error", JOptionPane.ERROR_MESSAGE);
             }
-            Application.getInstance().initialize();
+            try {
+                app.reinitialize();
+            } catch (IOException io){
+                log.error("Failed to reinitialize application");
+                System.exit(-1);
+            }
         }).start();
     }
 
@@ -134,7 +142,7 @@ public class ActionExecutor {
     public void back(){
         if(frame.isPlayerState()){
             if(frame.isFullScreen()){
-                frame.exitFullScreen(false);
+                frame.exitFullScreen();
                 frame.updateCurrentPlayableInCache();
             }
             else
@@ -145,7 +153,7 @@ public class ActionExecutor {
 
     @SuppressWarnings("UnusedDeclaration")
     public void playLast(){
-        new Thread(() -> Application.getInstance().playLast()).start();
+        new Thread(() -> app.playLast()).start();
     }
 
 }

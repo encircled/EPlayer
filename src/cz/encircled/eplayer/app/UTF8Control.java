@@ -1,5 +1,8 @@
 package cz.encircled.eplayer.app;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -11,8 +14,9 @@ import java.util.ResourceBundle;
 import java.util.ResourceBundle.Control;
 
 public class UTF8Control extends Control {
+    @Nullable
     public ResourceBundle newBundle
-        (String baseName, Locale locale, String format, ClassLoader loader, boolean reload)
+        (String baseName, Locale locale, String format, @NotNull ClassLoader loader, boolean reload)
             throws IllegalAccessException, InstantiationException, IOException
     {
         // The below is a copy of the default implementation.

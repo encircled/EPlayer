@@ -12,4 +12,9 @@ public class Constants {
 
     public final static int ZERO = 0;
 
+    public final static long ZERO_LONG = 0L;
+
+    public static final int HUNDRED = 100;
+
+    public static final int ONE = 1;
 }

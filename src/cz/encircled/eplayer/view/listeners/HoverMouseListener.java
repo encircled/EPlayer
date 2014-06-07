@@ -3,24 +3,17 @@ package cz.encircled.eplayer.view.listeners;
 import cz.encircled.eplayer.view.Components;
 import cz.encircled.eplayer.view.componensts.EPlayerJButton;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class HoverMouseListener implements MouseListener {
+public class HoverMouseListener extends MouseAdapter {
 
-	public HoverMouseListener(){
-		
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		
-	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
+	public void mouseEntered(@NotNull MouseEvent e) {
 		Component c = e.getComponent();
         Color foregroundColor = null;
         if(c instanceof EPlayerJButton){
@@ -30,27 +23,17 @@ public class HoverMouseListener implements MouseListener {
             foregroundColor = Components.MAIN_BLUE_COLOR;
 		c.setForeground(foregroundColor);
 		if(c instanceof QuickNaviButton){
-			((QuickNaviButton) c).setBorder(Components.QUICK_NAVI_BUTTON_HOVER_BORDER);
+			((QuickNaviButton) c).setBorder(Components.QUICK_NAVI_BUTTON_HOVER_BORDER);            // TODO baaaaad!
 		}
 	}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
+	public void mouseExited(@NotNull MouseEvent e) {
 		Component c = e.getComponent(); 
 		c.setForeground(Components.MAIN_GRAY_COLOR);
 		if(c instanceof QuickNaviButton){
 			((QuickNaviButton) c).setBorder(Components.QUICK_NAVI_BUTTON_BORDER);
 		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		
 	}
 
 }

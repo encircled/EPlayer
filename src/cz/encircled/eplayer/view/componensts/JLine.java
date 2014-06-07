@@ -1,5 +1,7 @@
 package cz.encircled.eplayer.view.componensts;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,7 +15,7 @@ public class JLine extends JPanel {
     }
 
     @Override
-    public void paint(Graphics g){
+    public void paint(@NotNull Graphics g){
         g.setColor(color);
         g.drawRect(0, 0, (int) getPreferredSize().getWidth(), 1);
     }

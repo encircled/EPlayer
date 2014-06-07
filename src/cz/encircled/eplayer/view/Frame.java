@@ -3,33 +3,38 @@ package cz.encircled.eplayer.view;
 import cz.encircled.eplayer.app.Application;
 import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.model.Playable;
-import cz.encircled.eplayer.util.GUIUtil;
-import cz.encircled.eplayer.util.KeyConstants;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.view.actions.ActionCommands;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
+import cz.encircled.eplayer.view.listeners.KeyDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
+import uk.co.caprica.vlcj.player.TrackDescription;
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
+import uk.co.caprica.vlcj.player.embedded.windows.Win32FullScreenStrategy;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class Frame extends JFrame implements Runnable {
 
     private static final String TITLE = "EPlayer";
+    private static final int MEDIA_PARSED_STATUS = 9;
 
     private EmbeddedMediaPlayerComponent mediaPlayerComponent;
 
@@ -43,8 +48,9 @@ public class Frame extends JFrame implements Runnable {
 
     private JMenuBar jMenuBar;
 
-    private boolean isFullScreen = false;
+    private JMenu spuMenu;
 
+    @Nullable
     private String current;
 
     private long currentTime;
@@ -60,40 +66,38 @@ public class Frame extends JFrame implements Runnable {
 
     private final static Logger log = LogManager.getLogger(Frame.class);
 
-    public Frame() {
-        try {
-            UIManager.setLookAndFeel("com.jtattoo.plaf.aero.AeroLookAndFeel");
-        }
-        catch (Exception e){
-            log.error("l&f failed with msg {}", e.getMessage());
-        }
+    private final Application app;
+
+    public Frame(Application app) {
+        this.app = app;
         initialize();
         initializeWrapper();
         initializeMenu();
         initializeQuickNavi();
-        if(Application.getInstance().isVlcAvailable())
+        if(app.isVlcAvailable())
             initializePlayer();
         initializeHotKeys();
-        player.setSubTitleFile(new File(""));// TODO
     }
 
     @Override
     public void run() {
-        SwingUtilities.invokeLater(() -> setVisible(true));
+        setVisible(true);
     }
 
-    public synchronized void play(@NotNull String path, long time){
+    public void play(@NotNull String path, long time){
         if(!showPlayerInternal()){
             JOptionPane.showMessageDialog(Frame.this, MessagesProvider.get(LocalizedMessages.MSG_VLC_LIBS_FAIL),
                                             MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(!path.equals(current)){
+            log.debug("Playing new path {}", path);
         	current = path;
-        	player.prepareMedia(new File(path).toURI().toASCIIString().replaceFirst("file:/", "file:///"));
+        	player.prepareMedia(path);
         }
         player.start();
-        player.setTime(Math.min(time, player.getLength() - 1000));
+        setSubtitlesToMenu(player.getSpuDescriptions());
+        player.setTime(Math.min(time, player.getLength()));
         playerControls.reinitialize();
     }
 
@@ -108,46 +112,34 @@ public class Frame extends JFrame implements Runnable {
     public void stopPlayer(){
         if(player != null){
             player.stop();
+            spuMenu.setEnabled(false);
         }
     }
 
     public void updateCurrentPlayableInCache(){
-        if(current != null){
-            if(currentTime > 0L)
-                Application.getInstance().updatePlayableCache(current.hashCode(), currentTime);
-            else
-                log.warn("Current time is negative: {}", currentTime);
-        }
-    }
-
-    public void pausePlayer(){
-            player.pause();
+        if(current != null)
+            app.updatePlayableCache(current.hashCode(), currentTime);
     }
 
     public void togglePlayer() {
-        if(player != null && current != null){
-            if(player.isPlaying())
-                pausePlayer();
-            else
-                play(current, currentTime);
-        }
+        if(player != null && current != null)
+            player.pause();
     }
 
     public void showQuickNavi(){
         SwingUtilities.invokeLater(() -> {
             if(wrapperState != QUICK_NAVI_STATE){
                 updateCurrentPlayableInCache();
-                if(isFullScreen)
-                    exitFullScreenInternal(false);
-                else
-                    stopPlayer();
+                if(player != null && player.isFullScreen())
+                    exitFullScreen();
+                stopPlayer();
                 current = null;
                 wrapperState = QUICK_NAVI_STATE;
                 wrapper.removeAll();
                 wrapper.add(naviPanel, BorderLayout.CENTER);
                 wrapper.repaint();
                 setTitle(TITLE);
-                repaintQuickNavi();
+                repaintQuickNavi(); // TODO swing invoke
             }
         });
 
@@ -156,12 +148,12 @@ public class Frame extends JFrame implements Runnable {
     public void showShutdownTimeChooser(){
         ShutdownChooserDialog chooserDialog = new ShutdownChooserDialog(this);
         log.debug("result: {}, {}", chooserDialog.getTime(), chooserDialog.getShutdownParam());
-        if(chooserDialog.getTime() != null)
-            Application.getInstance().shutdown(chooserDialog.getTime(), chooserDialog.getShutdownParam());
+//        if(chooserDialog.getTime() != null)
+//            app.shutdown(chooserDialog.getTime(), chooserDialog.getShutdownParam()); TODO
     }
 
     private boolean showPlayerInternal(){
-        if(!Application.getInstance().isVlcAvailable())
+        if(!app.isVlcAvailable() || player == null)
             return false;
         if(wrapperState != PLAYER_STATE){
             log.debug("Add player to frame");
@@ -176,9 +168,9 @@ public class Frame extends JFrame implements Runnable {
     }
 
     public void repaintQuickNavi(){
-        final java.util.List<QuickNaviButton> naviButtons = new ArrayList<>();
-        Map<Integer, Playable> data = Application.getInstance().getPlayableCache();
-        data.values().forEach((value) -> naviButtons.add(new QuickNaviButton(value)));
+        final List<QuickNaviButton> naviButtons = new ArrayList<>();
+        Map<Integer, Playable> data = app.getPlayableCache();
+        data.values().forEach((value) -> naviButtons.add(new QuickNaviButton(app, value)));
 
         SwingUtilities.invokeLater(() -> {
             naviPanel.removeAll();
@@ -189,56 +181,27 @@ public class Frame extends JFrame implements Runnable {
 
     }
 
-    public void fullScreen(){
-        stopPlayer();
-
-        SwingUtilities.invokeLater(() -> {
-            dispose();
-            setExtendedState(JFrame.MAXIMIZED_BOTH);
-            setUndecorated(true);
-            setVisible(true);
-            toFront();
-            setJMenuBar(null);
-            playerControls.setVisible(false);
-            setCursor(blankCursor);
-            wrapper.repaint();
-            play(current, currentTime);
-            isFullScreen = true;
-        });
+    public void enterFullScreen(){
+        setCursor(blankCursor);
+        setJMenuBar(null);
+        playerControls.setVisible(false);
+        player.setFullScreen(true);
     }
 
     public void exitFullScreen(){
-        exitFullScreen(player.isPlaying());
-    }
-
-    public void exitFullScreen(final boolean continuePlaying){
-        SwingUtilities.invokeLater(() -> exitFullScreenInternal(continuePlaying));
-    }
-
-    private void exitFullScreenInternal(final boolean continuePlaying){
-        stopPlayer();
-
-        SwingUtilities.invokeLater(() -> {
-            dispose();
-            setUndecorated(false);
-            setExtendedState(JFrame.MAXIMIZED_BOTH);
-            setVisible(true);
-            toFront();
-            setJMenuBar(jMenuBar);
-            playerControls.setVisible(true);
-            setCursor(Cursor.getDefaultCursor());
-            if(continuePlaying)
-                play(current, currentTime);
-            isFullScreen = false;
-        });
+        setCursor(Cursor.getDefaultCursor());
+        setJMenuBar(jMenuBar);
+        playerControls.setVisible(true);
+        player.setFullScreen(false);
     }
 
     public void toggleFullScreen() {
         if(player != null && current != null){
-            if(isFullScreen)
+            if(player.isFullScreen()){
                 exitFullScreen();
-            else
-                fullScreen();
+            } else {
+                enterFullScreen();
+            }
         }
     }
 
@@ -251,12 +214,12 @@ public class Frame extends JFrame implements Runnable {
     }
 
     public boolean isFullScreen(){
-        return isFullScreen;
+        return player.isFullScreen();
     }
 
     private void initialize(){
         setTitle(TITLE);
-        setMinimumSize(new Dimension(1000, 700));
+        setMinimumSize(new Dimension(1130, 700));
         setExtendedState(Frame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
@@ -269,11 +232,11 @@ public class Frame extends JFrame implements Runnable {
             if(playerControls != null){
                 if(e.getWheelRotation() < Constants.ZERO){
                     playerControls.setVisible(true);
-                    if(isFullScreen)
+                    if(player.isFullScreen())
                         setCursor(Cursor.getDefaultCursor());
                 } else{
                     playerControls.setVisible(false);
-                    if(isFullScreen)
+                    if(player.isFullScreen())
                         setCursor(blankCursor);
                 }
             }
@@ -282,7 +245,12 @@ public class Frame extends JFrame implements Runnable {
 
     private void initializePlayer(){
         try {
-            mediaPlayerComponent = new EmbeddedMediaPlayerComponent();
+            mediaPlayerComponent = new EmbeddedMediaPlayerComponent() {
+                @Override
+                protected FullScreenStrategy onGetFullScreenStrategy() {
+                    return new Win32FullScreenStrategy(Frame.this);
+                }
+            };
             player = mediaPlayerComponent.getMediaPlayer();
             player.setEnableMouseInputHandling(false);
             player.setEnableKeyInputHandling(false);
@@ -290,12 +258,12 @@ public class Frame extends JFrame implements Runnable {
             mediaPlayerComponent.getVideoSurface().addMouseListener(new MouseAdapter() {
 
                 @Override
-                public void mouseClicked(MouseEvent e) {
-                    if(e.getClickCount() == 1){
+                public void mouseClicked(@NotNull MouseEvent e) {
+                    if(e.getClickCount() == Constants.ONE){
                         togglePlayer();
                     } else {
                         togglePlayer();
-                        toggleFullScreen(); // TODO
+                        toggleFullScreen();
                     }
                 }
             });
@@ -303,16 +271,14 @@ public class Frame extends JFrame implements Runnable {
             player.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
                 @Override
                 public void finished(MediaPlayer mediaPlayer) {
-                    super.finished(mediaPlayer);
-                    log.debug("FINISHED");
-                    Application.getInstance().updatePlayableCache(current.hashCode(), 0L);
+                    app.updatePlayableCache(current.hashCode(), Constants.ZERO_LONG);
                     current = null;
+                    stopPlayer();
                     showQuickNavi();
                 }
 
                 @Override
                 public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
-                    super.timeChanged(mediaPlayer, newTime);
                     currentTime = newTime;
                     playerControls.fireTimeChanged(newTime);
                 }
@@ -320,8 +286,10 @@ public class Frame extends JFrame implements Runnable {
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
                     JOptionPane.showMessageDialog(Frame.this, "Failed to open " + current, "Error", JOptionPane.ERROR_MESSAGE);
-                    Application.getInstance().deletePlayableCache(current.hashCode());
-                    current = null;
+                    if(current != null) {
+                        app.deletePlayableCache(current.hashCode());
+                        current = null;
+                    }
                     showQuickNavi();
                 }
 
@@ -340,6 +308,10 @@ public class Frame extends JFrame implements Runnable {
         JMenu file = new JMenu(MessagesProvider.get(LocalizedMessages.FILE));
         JMenu tools = new JMenu(MessagesProvider.get(LocalizedMessages.TOOLS));
         JMenu autoShutdown = new JMenu(MessagesProvider.get(LocalizedMessages.AUTO_SHUTDOWN));
+        JMenu mediaMenu = new JMenu(MessagesProvider.get(LocalizedMessages.MEDIA));
+
+        spuMenu = new JMenu("SPU"); // TODO
+        spuMenu.setEnabled(false);
 
         autoShutdown.add(Components.getMenuItem(LocalizedMessages.AUTO_SHUTDOWN, ActionCommands.SHUTDOWN_TIME_CHOOSER));
 
@@ -353,9 +325,25 @@ public class Frame extends JFrame implements Runnable {
         file.add(Components.getMenuItem(LocalizedMessages.EXIT, ActionCommands.EXIT));
         file.add(new JSeparator());
 
+        mediaMenu.add(spuMenu);
+        mediaMenu.add(new JSeparator());
+
         setJMenuBar(jMenuBar);
         jMenuBar.add(file);
+        jMenuBar.add(mediaMenu);
         jMenuBar.add(tools);
+    }
+
+    private void setSubtitlesToMenu(List<TrackDescription> spuDescriptions){
+        log.debug("Set subtitles, count {}", spuDescriptions.size());
+        spuMenu.removeAll();
+        spuDescriptions.forEach((desc) -> {
+            JMenuItem subtitle = new JMenuItem(desc.description());
+            subtitle.addActionListener(e -> player.setSpu(desc.id()));
+            spuMenu.add(subtitle);
+        });
+        spuMenu.setEnabled(spuDescriptions.size() > Constants.ZERO);
+        spuMenu.revalidate();
     }
 
     private void initializeQuickNavi(){
@@ -363,16 +351,19 @@ public class Frame extends JFrame implements Runnable {
         naviPanel.setBackground(Color.WHITE);
     }
 
-    private void initializeHotKeys() {
-        GUIUtil.bindKey(wrapper, null, 'o', ActionCommands.OPEN);
-        GUIUtil.bindKey(wrapper, null, 'n', ActionCommands.OPEN_QUICK_NAVI);
-        GUIUtil.bindKey(wrapper, null, 'q', ActionCommands.EXIT);
-        GUIUtil.bindKey(wrapper, null, 'f', ActionCommands.TOGGLE_FULL_SCREEN);
-        GUIUtil.bindKey(wrapper, null, 'c', ActionCommands.PLAY_LAST);
-        GUIUtil.bindKey(wrapper, null, 's', ActionCommands.SETTINGS);
-        GUIUtil.bindKey(wrapper, KeyConstants.ENTER, null, ActionCommands.PLAY_LAST);
-        GUIUtil.bindKey(wrapper, KeyConstants.SPACE, null, ActionCommands.TOGGLE_PLAYER);
-        GUIUtil.bindKey(wrapper, KeyConstants.ESCAPE, null, ActionCommands.BACK);
+    private void initializeHotKeys(){
+        // TODO frame dependency
+        KeyDispatcher dispatcher = new KeyDispatcher(app);
+        dispatcher.bind(KeyEvent.VK_ENTER, ActionCommands.PLAY_LAST);
+        dispatcher.bind(KeyEvent.VK_SPACE, ActionCommands.TOGGLE_PLAYER);
+        dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.CANCEL);
+        dispatcher.bind(KeyEvent.VK_C, ActionCommands.PLAY_LAST);
+        dispatcher.bind(KeyEvent.VK_Q, ActionCommands.EXIT);
+        dispatcher.bind(KeyEvent.VK_O, ActionCommands.OPEN);
+        dispatcher.bind(KeyEvent.VK_N, ActionCommands.OPEN_QUICK_NAVI);
+        dispatcher.bind(KeyEvent.VK_F, ActionCommands.TOGGLE_FULL_SCREEN);
+        dispatcher.bind(KeyEvent.VK_S, ActionCommands.SETTINGS);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher);
     }
 
 }

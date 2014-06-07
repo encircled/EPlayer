@@ -27,6 +27,7 @@ public class PlayerControls extends JPanel {
 
     private static final String LENGTH_LABEL_PREFIX = "/  ";
 
+    @NotNull
     private final EmbeddedMediaPlayer player;
 
     private JSlider positionSlider;
@@ -59,13 +60,14 @@ public class PlayerControls extends JPanel {
             positionSlider.setValue((int) player.getTime());
     }
 
-    private static void setSliderToCursorPosition(MouseEvent e, JSlider slider){
+    private static void setSliderToCursorPosition(@NotNull MouseEvent e, @NotNull JSlider slider){
         double percent = e.getPoint().x / ((double) slider.getWidth());
         int range = slider.getMaximum() - slider.getMinimum();
         double newVal = range * percent;
         slider.setValue((int)(slider.getMinimum() + newVal));
     }
 
+    @NotNull
     private static String buildTimeTextLabel(int ms){
         long h = TimeUnit.MILLISECONDS.toHours(ms);
         long m = TimeUnit.MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(ms));
@@ -82,7 +84,7 @@ public class PlayerControls extends JPanel {
         return sb.toString();
     }
 
-    private static void appendZeroIfMissing(StringBuilder sb, long digit){
+    private static void appendZeroIfMissing(@NotNull StringBuilder sb, long digit){
         if(digit < Constants.TEN)
             sb.append(Constants.ZERO_STRING);
     }
@@ -150,13 +152,14 @@ public class PlayerControls extends JPanel {
         volumeSlider = new JSlider();
         volumeSlider.setMaximum(PropertyProvider.getInt(PropertyProvider.SETTING_MAX_VOLUME, DEFAULT_MAX_VOLUME));
         volumeSlider.setMinimum(Constants.ZERO);
-        volumeSlider.setPreferredSize(new Dimension(150, 20));
-        volumeSlider.setSize(new Dimension(150, 20));
-        volumeSlider.setValue(player.getVolume());
+        volumeSlider.setFocusable(false);
+        volumeSlider.setPreferredSize(new Dimension(100, 20));
+        volumeSlider.setSize(new Dimension(100, 20));
+        volumeSlider.setValue(player.getVolume() >= Constants.ZERO ? player.getVolume() : Constants.HUNDRED);
         volumeSlider.addChangeListener(e -> {
             player.setVolume(volumeSlider.getValue());
             volumeLabel.setText(volumeSlider.getValue() + " %");
-            if(volumeSlider.getValue() == 0){
+            if(volumeSlider.getValue() == Constants.ZERO){
                 volumeButton.setSelected(true);
             } else {
                 if(volumeButton.isSelected())
@@ -165,7 +168,7 @@ public class PlayerControls extends JPanel {
         });
         volumeSlider.addMouseListener(new MouseAdapter() {
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(@NotNull MouseEvent e) {
                 setSliderToCursorPosition(e, volumeSlider);
             }
         });
@@ -179,7 +182,7 @@ public class PlayerControls extends JPanel {
         positionSlider.setMinimum(Constants.ZERO);
         positionSlider.addChangeListener(e -> SwingUtilities.invokeLater(() -> {
             if(getMousePosition() != null) {
-                positionLabel.setBounds((int) getMousePosition().getX(), 3, 100, 15);
+                positionLabel.setBounds((int) getMousePosition().getX(), 3, Constants.HUNDRED, 15);
                 positionLabel.setText(buildTimeTextLabel(positionSlider.getValue()));
             }
         }));
@@ -188,13 +191,12 @@ public class PlayerControls extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 positionLabel.setVisible(false);
-                player.setTime(positionSlider.getValue());
+                player.setTime(Math.min(positionSlider.getValue(), player.getLength() - Constants.ONE));
                 player.start();
-                log.debug("Slider released, value is {}", positionSlider.getValue());
             }
 
             @Override
-            public void mousePressed(MouseEvent e) {
+            public void mousePressed(@NotNull MouseEvent e) {
                 positionLabel.setVisible(true);
                 player.pause();
                 setSliderToCursorPosition(e, positionSlider);
@@ -203,7 +205,7 @@ public class PlayerControls extends JPanel {
         });
     }
 
-    public void fireTimeChanged(Long newTime){
+    public void fireTimeChanged(@NotNull Long newTime){
         if(!positionSlider.getValueIsAdjusting())
             positionSlider.setValue(newTime.intValue());
         timeLabel.setText(buildTimeTextLabel(newTime.intValue()));

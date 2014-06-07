@@ -1,10 +1,11 @@
 package cz.encircled.eplayer.view;
 
-import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.util.GUIConstants;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.componensts.EPlayerJButton;
 import cz.encircled.eplayer.view.componensts.JLine;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -29,10 +30,12 @@ public class Components {
 	public final static Border QUICK_NAVI_BUTTON_HOVER_BORDER = 
 				new CompoundBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Components.MAIN_GRAY_COLOR), new LineBorder(new Color(230,230,230)));
 	
-	public static JLine getJLine(int width, Color color){
+	@NotNull
+    public static JLine getJLine(int width, Color color){
 		return new JLine(width, color);
 	}
 	
+    @NotNull
     public static JLabel getLabel(String text, int w, int h, boolean addPadding){
         text = StringUtil.toHtml(text, 20, addPadding ? StringUtil.HTML_PADDING : null);
         JLabel l = new JLabel(text);
@@ -40,14 +43,17 @@ public class Components {
         return l;
     }
     
+    @NotNull
     public static EPlayerJButton getButton(String text, String actionCommand, int width, int height){
-        return getButton(text, actionCommand, width, height, Application.getInstance().getDefaultActionMouseListener());
+        return getButton(text, actionCommand, width, height, GUIConstants.DEFAULT_ACTION_LISTENER);
     }
 
+    @NotNull
     public static EPlayerJButton getButton(String text, String actionCommand, int width, int height, ActionListener actionListener){
         return getButton(text, actionCommand, width, height, actionListener, null);
     }
 
+    @NotNull
     public static EPlayerJButton getButton(String text, String actionCommand, int width, int height, ActionListener actionListener, Color colorOnHover){
         EPlayerJButton b = new EPlayerJButton(text, colorOnHover);
         b.setUI(new BasicButtonUI());
@@ -56,15 +62,16 @@ public class Components {
         b.setBackground(Components.MAIN_LIGHT_GRAY_COLOR);
         b.setBorderPainted(false);
         b.addActionListener(actionListener);
-        b.addMouseListener(Application.getInstance().getHoverMouseListener());
+        b.addMouseListener(GUIConstants.HOVER_MOUSE_LISTENER);
         return b;
     }
     
+    @NotNull
     public static JTextField getInput(String name, String value, int width, int height){
         JTextField f = new JTextField(value);
         f.setName(name);
         f.setPreferredSize(new Dimension(width, height));
-        f.addFocusListener(Application.getInstance().getBackgroundFocusListener());
+        f.addFocusListener(GUIConstants.BACKGROUND_FOCUS_LISTENER);
 
         Border bottomBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, Components.MAIN_BLUE_COLOR);
         f.setBorder(new CompoundBorder(bottomBorder, new EmptyBorder(0, 6, 0, 0)));
@@ -72,14 +79,11 @@ public class Components {
         return f;
     }
     
-    public static JTextField getInput(String name, int width, int height){
-        return getInput(name, "", width, height);
-    }
-    
-    public static JMenuItem getMenuItem(String textToLocalize, String actionCommand){
+    @NotNull
+    public static JMenuItem getMenuItem(@NotNull String textToLocalize, String actionCommand){
     	JMenuItem i = new JMenuItem(MessagesProvider.get(textToLocalize));
     	i.setActionCommand(actionCommand);
-    	i.addActionListener(Application.getInstance().getDefaultActionMouseListener());
+    	i.addActionListener(GUIConstants.DEFAULT_ACTION_LISTENER);
     	return i;
     }
 

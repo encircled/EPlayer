@@ -1,9 +1,10 @@
 package cz.encircled.eplayer.util;
 
-import cz.encircled.eplayer.exception.InitializeException;
+import cz.encircled.eplayer.app.Application;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,15 +14,11 @@ import java.util.Properties;
 
 public class PropertyProvider {
 	
-	private final static String PROPERTIES_FILE_NAME = System.getProperty("user.home") + "/eplayer.properties";
+	private final static String PROPERTIES_FILE_PATH = Application.APP_DOCUMENTS_ROOT + "eplayer.properties";
 	
 	private final static Logger log = LogManager.getLogger(PropertyProvider.class);
 
 	private static Properties properties;
-
-    public final static String SETTING_VLC_PATH = "vlc_path";
-
-    public final static String SETTING_QUICK_NAVI_STORAGE_PATH = "quick_navi_path";
 
     public final static String SETTING_LANGUAGE = "language";
 
@@ -29,13 +26,10 @@ public class PropertyProvider {
 
     public final static String SETTING_MAX_VOLUME = "max_volume";
 
-    public static void initialize(){
+    public static void initialize() throws IOException {
 		properties = new Properties();
 		try (FileInputStream stream = new FileInputStream(getPropertiesFile())){
 			properties.load(stream);
-		} catch(Exception e){
-			log.error("failed to read props from {}", PROPERTIES_FILE_NAME);
-			throw new InitializeException(e.getMessage());
 		}
 	}
 	
@@ -55,28 +49,26 @@ public class PropertyProvider {
 		return Integer.parseInt(properties.getProperty(key, String.valueOf(defaultValue)));
 	}
 	
-	public static void set(String key, Object value){
-		properties.setProperty(key, value == null ? null : value.toString());
+	public static void set(@NotNull String key, @Nullable Object value){
+        String stringValue = value == null ? null : value.toString();
+        log.debug("set {} = {}", key, stringValue);
+		properties.setProperty(key, stringValue);
 	}
 	
 	public static void save() throws IOException {
-		try(FileOutputStream stream = new FileOutputStream(PROPERTIES_FILE_NAME)){
+		try(FileOutputStream stream = new FileOutputStream(PROPERTIES_FILE_PATH)){
 			properties.store(stream, "user settings");
 			log.debug("prop saved");
 		} catch(IOException e){
-			log.error("Failed to save settings to {}", PROPERTIES_FILE_NAME);
+			log.error("Failed to save settings to {}", PROPERTIES_FILE_PATH);
 			throw e;
 		}
 	}
 	
-	private static File getPropertiesFile() throws IOException {
-		File f = new File(PROPERTIES_FILE_NAME);
-		if(!f.exists()){
-			log.debug("prop file doesn't exists, creating new");
-			if(!f.createNewFile())
-				throw new IOException("Failed to create property file");
-		}
-		return f;
+	@NotNull
+    private static File getPropertiesFile() throws IOException {
+        IOUtil.createIfMissing(PROPERTIES_FILE_PATH);
+		return new File(PROPERTIES_FILE_PATH);
 	}
 
 }

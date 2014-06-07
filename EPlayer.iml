@@ -20,26 +20,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="module-library">
-      <library name="jna-3.5.2.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jna-3.5.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="vlcj-2.4.1.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/vlcj-2.4.1.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/vlcj-2.4.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
       <library name="JTattoo-1.6.9.jar">
         <CLASSES>
           <root url="jar://$MODULE_DIR$/lib/JTattoo-1.6.9.jar!/" />
@@ -85,6 +65,8 @@
     <orderEntry type="library" name="org.slf4j:slf4j-api:1.7.4" level="project" />
     <orderEntry type="library" name="annotations" level="application" />
     <orderEntry type="library" name="gson-2.2.4" level="project" />
+    <orderEntry type="library" name="jna-3.5.2" level="project" />
+    <orderEntry type="library" name="weblaf-1.27" level="project" />
   </component>
 </module>
 

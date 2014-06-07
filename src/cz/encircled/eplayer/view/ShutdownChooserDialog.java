@@ -1,10 +1,6 @@
 package cz.encircled.eplayer.view;
 
-import cz.encircled.eplayer.app.Application;
-import cz.encircled.eplayer.util.GUIUtil;
-import cz.encircled.eplayer.util.KeyConstants;
 import cz.encircled.eplayer.util.StringUtil;
-import cz.encircled.eplayer.view.actions.ActionCommands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,7 +51,7 @@ class ShutdownChooserDialog extends JDialog {
             String val = timeField.getText();
             if(StringUtil.isSet(val)){
                 setTime(Long.parseLong(val));
-                shutdownParam = isShutdownBox.isSelected() ? Application.SD_CMD_SHUTDOWN : Application.SD_CMD_HIBERNATE;
+//                shutdownParam = isShutdownBox.isSelected() ? Application.SD_CMD_SHUTDOWN : Application.SD_CMD_HIBERNATE; TODO
                 dispose();
             }
         });
@@ -73,7 +69,6 @@ class ShutdownChooserDialog extends JDialog {
         wrapper.add(isShutdownBox);
         setLocationRelativeTo(null);
 
-        GUIUtil.bindKey(wrapper, KeyConstants.ESCAPE, null, ActionCommands.CANCEL);
     }
 
     public Long getTime() {

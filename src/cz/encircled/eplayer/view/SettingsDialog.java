@@ -1,11 +1,14 @@
 package cz.encircled.eplayer.view;
 
-import cz.encircled.eplayer.app.Application;
 import cz.encircled.eplayer.model.SettingItem;
-import cz.encircled.eplayer.util.*;
+import cz.encircled.eplayer.util.GUIConstants;
+import cz.encircled.eplayer.util.LocalizedMessages;
+import cz.encircled.eplayer.util.MessagesProvider;
+import cz.encircled.eplayer.util.PropertyProvider;
 import cz.encircled.eplayer.view.actions.ActionCommands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -73,14 +76,14 @@ public class SettingsDialog extends JDialog {
         wrapper.add(valuesPanel);
         wrapper.add(getButtonsPanel());
 
-        GUIUtil.bindKey(wrapper, KeyConstants.ENTER, null, ActionCommands.SAVE_SETTINGS);
-        GUIUtil.bindKey(wrapper, KeyConstants.ESCAPE, null, ActionCommands.CANCEL);
-        
+//        GUIUtil.bindKey(wrapper, KeyConstants.ENTER, null, ActionCommands.SAVE_SETTINGS); TODO
+
         pack();
         setLocationRelativeTo(null);
 	}
 	
-	private JPanel getButtonsPanel(){
+	@NotNull
+    private JPanel getButtonsPanel(){
 		JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, BUTTONS_PANEL_HORIZONTAL_MARGIN, 0));
         buttonsPanel.setBackground(Color.WHITE);
@@ -112,9 +115,7 @@ public class SettingsDialog extends JDialog {
             @Override
             public void run() {
                 settings.clear();
-                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.VLC_PATH), PropertyProvider.SETTING_VLC_PATH, SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.DEFAULT_OPEN_LOCATION), PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER));
-                settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.QUICK_NAVI_STORAGE_PATH), PropertyProvider.SETTING_QUICK_NAVI_STORAGE_PATH, SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.LANGUAGE), PropertyProvider.SETTING_LANGUAGE, SettingItem.COMBOBOX_ELEMENT));
                 settings.add(new SettingItem(MessagesProvider.get(LocalizedMessages.MAX_VOLUME_PERCENTS), PropertyProvider.SETTING_MAX_VOLUME, SettingItem.INPUT_TEXT_ELEMENT));
 
@@ -143,11 +144,10 @@ public class SettingsDialog extends JDialog {
                                 	    }
                                 	});
                                 	c.setSelectedItem(PropertyProvider.get(item.getSettingName(), ""));
-                                	System.out.println();
                                     break;
                                 case SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER:
                                     componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);
-                                    componentToAdd.addMouseListener(Application.getInstance().getFileChooserMouseAdapter());
+                                    componentToAdd.addMouseListener(GUIConstants.FILE_CHOOSER_MOUSE_ADAPTER);
                                     break;
                                 case SettingItem.INPUT_TEXT_ELEMENT:
                                 	componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);
@@ -156,8 +156,6 @@ public class SettingsDialog extends JDialog {
                             }
                             valuesPanel.add(componentToAdd);
 
-                            GUIUtil.bindKey(componentToAdd, KeyConstants.ENTER, null, ActionCommands.SAVE_SETTINGS);
-                            GUIUtil.bindKey(componentToAdd, KeyConstants.ESCAPE, null, ActionCommands.CANCEL);
                         }
                         revalidate();
                         repaint();

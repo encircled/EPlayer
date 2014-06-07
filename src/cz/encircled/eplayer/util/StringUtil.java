@@ -1,5 +1,8 @@
 package cz.encircled.eplayer.util;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Encircled
@@ -17,7 +20,7 @@ public class StringUtil {
 
     public static final String HTML_PADDING = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
-    public static boolean isSet(String s){
+    public static boolean isSet(@Nullable String s){
         return s!= null && !s.isEmpty();
     }
 
@@ -25,7 +28,8 @@ public class StringUtil {
     	return !isSet(s);
     }
 
-    public static String toHtml(String s, int lineBreakAt, String padding){
+    @NotNull
+    public static String toHtml(@NotNull String s, int lineBreakAt, @Nullable String padding){
         StringBuilder sb = new StringBuilder(HTML_TAG);
         if(padding != null)
             sb.append(padding);

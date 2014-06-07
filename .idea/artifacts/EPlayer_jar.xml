@@ -1,20 +1,18 @@
 <component name="ArtifactManager">
-  <artifact name="EPlayer:jar">
+  <artifact type="jar" name="EPlayer:jar">
     <output-path>$PROJECT_DIR$/classes/artifacts/EPlayer_jar</output-path>
-    <root id="root">
-      <element id="archive" name="EPlayer.jar">
-        <element id="module-output" name="EPlayer" />
-      </element>
-      <element id="library" level="module" name="vlcj-2.4.1.jar" module-name="EPlayer" />
-      <element id="library" level="application" name="annotations" />
-      <element id="library" level="module" name="jna-3.5.2.jar" module-name="EPlayer" />
-      <element id="library" level="module" name="gson-2.2.4.jar" module-name="EPlayer" />
-      <element id="library" level="module" name="JTattoo-1.6.9.jar" module-name="EPlayer" />
-      <element id="library" level="project" name="org.slf4j:slf4j-api:1.7.4" />
-      <element id="library" level="module" name="log4j-core-2.0-beta8.jar" module-name="EPlayer" />
-      <element id="library" level="project" name="xuggle-xuggler-5.4" />
-      <element id="library" level="project" name="gson-2.2.4" />
-      <element id="library" level="module" name="log4j-api-2.0-beta8.jar" module-name="EPlayer" />
+    <root id="archive" name="EPlayer.jar">
+      <element id="module-output" name="EPlayer" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/log4j-core-2.0-beta8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/xuggle-xuggler-5.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/jna-3.5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/platform-3.5.2.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/vlcj-3.0.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/log4j-api-2.0-beta8.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$APPLICATION_HOME_DIR$/redist/annotations.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/JTattoo-1.6.9.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/gson-2.2.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/slf4j-api-1.7.4.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

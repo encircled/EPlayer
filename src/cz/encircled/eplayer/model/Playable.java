@@ -1,5 +1,7 @@
 package cz.encircled.eplayer.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.regex.Pattern;
 
 public class Playable {
@@ -16,7 +18,7 @@ public class Playable {
 
     private static final Pattern FILENAME_PATTERN = Pattern.compile("^.*\\.*\\..*$");
 	
-	public Playable(String path){
+	public Playable(@NotNull String path){
 		readPath(path);
         time = 0;
 	}
@@ -55,7 +57,7 @@ public class Playable {
     }
 
 
-    public void readPath(String path) {
+    public void readPath(@NotNull String path) {
         this.path = path;
         name = FILENAME_PATTERN.matcher(path).matches()
                 ? path.substring(path.lastIndexOf("\\") + 1, path.lastIndexOf("."))

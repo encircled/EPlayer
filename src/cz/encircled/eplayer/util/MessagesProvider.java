@@ -1,6 +1,7 @@
 package cz.encircled.eplayer.util;
 
 import cz.encircled.eplayer.app.UTF8Control;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Locale;
@@ -22,7 +23,8 @@ public class MessagesProvider {
 		JComponent.setDefaultLocale(l);
 	}
 	
-	public static String get(String key){
+	@NotNull
+    public static String get(@NotNull String key){
 		return bundle.containsKey(key) ? bundle.getString(key) : NOT_FOUND_VALUE;
 	}
 

@@ -2,42 +2,52 @@ package cz.encircled.eplayer.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.jetbrains.annotations.NotNull;
 import cz.encircled.eplayer.model.Playable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class IOUtil {
 
-	private final static Logger log = LogManager.getLogger(PropertyProvider.class);
+    private static final Logger log = LogManager.getLogger();
+
+	private final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, Playable>>(){}.getType();
 	
-	public final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, Playable>>(){}.getType();
-	
-	public static <T> T jsonFromFile(@NotNull String filePath, Type classOfT) throws IOException {
-		String json = getFileContent(filePath);
-		return new Gson().fromJson(json, classOfT);
+	public static <T> T getPlayableJson(@NotNull String filePath) throws IOException {
+		return new Gson().fromJson(new String(Files.readAllBytes(Paths.get(filePath))), DEFAULT_TYPE_TOKEN);
 	}
 	
-	public static String getFileContent(@NotNull String filePath) throws IOException {
-		StringBuilder result = new StringBuilder();
-		try (BufferedReader reader = new BufferedReader(new FileReader(filePath))){
-            reader.lines()
-                    .parallel()
-                    .forEachOrdered((line) -> result.append(line).append("\n"));
-		}
-		return result.toString();
+	public static void storeJson(@NotNull Object obj, @NotNull String path) throws IOException {
+        Files.write(Paths.get(path), new Gson().toJson(obj).getBytes("UTF-8"));
 	}
-	
-	public static void storeJson(Object obj, String path) throws IOException {
-		String json = new Gson().toJson(obj);
-		try (BufferedWriter writer = new BufferedWriter(new FileWriter(path))){
-			writer.write(json);
-			writer.flush();
+
+    /**
+     * @return true if file was created
+     */
+    public static boolean createIfMissing(String pathToFile) throws IOException {
+        return createIfMissing(pathToFile, false);
+    }
+
+    public static boolean createIfMissing(String pathTo, boolean isDirectory) throws IOException {
+        Path path = Paths.get(pathTo);
+        if(!Files.exists(path)) {
+            if(isDirectory) {
+                Files.createDirectories(path);
+                log.debug("Directory {} not exists and was created", pathTo);
+            } else {
+                Files.createFile(path);
+                log.debug("File {} not exists and was created", pathTo);
+            }
+            return true;
         }
-	}
-	
+        return false;
+    }
+
 }
