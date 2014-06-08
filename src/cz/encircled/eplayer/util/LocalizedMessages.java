@@ -40,4 +40,10 @@ public class LocalizedMessages {
 
     public static final String MEDIA = "media";
 
+    public static final String FILE_OPEN_FAILED = "file_open_failed";
+
+    public static final String CONFIRM_TITLE = "confirm";
+
+    public static final String CONFIRM_DELETE_FILE = "confirm_delete_file";
+
 }

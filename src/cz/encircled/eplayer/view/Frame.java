@@ -1,13 +1,14 @@
 package cz.encircled.eplayer.view;
 
+import com.alee.laf.tabbedpane.WebTabbedPane;
 import cz.encircled.eplayer.app.Application;
 import cz.encircled.eplayer.common.Constants;
-import cz.encircled.eplayer.model.Playable;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.view.actions.ActionCommands;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
+import cz.encircled.eplayer.view.componensts.WrapLayout;
 import cz.encircled.eplayer.view.listeners.KeyDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +30,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Frame extends JFrame implements Runnable {
 
@@ -49,6 +49,8 @@ public class Frame extends JFrame implements Runnable {
     private JMenuBar jMenuBar;
 
     private JMenu spuMenu;
+
+    private WebTabbedPane tabs;
 
     @Nullable
     private String current;
@@ -76,7 +78,9 @@ public class Frame extends JFrame implements Runnable {
         initializeQuickNavi();
         if(app.isVlcAvailable())
             initializePlayer();
+        initializeTabs();
         initializeHotKeys();
+        wrapper.add(tabs);
     }
 
     @Override
@@ -86,8 +90,7 @@ public class Frame extends JFrame implements Runnable {
 
     public void play(@NotNull String path, long time){
         if(!showPlayerInternal()){
-            JOptionPane.showMessageDialog(Frame.this, MessagesProvider.get(LocalizedMessages.MSG_VLC_LIBS_FAIL),
-                                            MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+            app.showMessage(LocalizedMessages.MSG_VLC_LIBS_FAIL, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
             return;
         }
         if(!path.equals(current)){
@@ -135,8 +138,8 @@ public class Frame extends JFrame implements Runnable {
                 stopPlayer();
                 current = null;
                 wrapperState = QUICK_NAVI_STATE;
-                wrapper.removeAll();
-                wrapper.add(naviPanel, BorderLayout.CENTER);
+
+                tabs.setVisible(true);
                 wrapper.repaint();
                 setTitle(TITLE);
                 repaintQuickNavi(); // TODO swing invoke
@@ -158,27 +161,23 @@ public class Frame extends JFrame implements Runnable {
         if(wrapperState != PLAYER_STATE){
             log.debug("Add player to frame");
             wrapperState = PLAYER_STATE;
-            wrapper.removeAll();
-            wrapper.add(mediaPlayerComponent, BorderLayout.CENTER);
+            tabs.setVisible(false);
+            wrapper.add(mediaPlayerComponent, BorderLayout.CENTER); // TODO or not
             wrapper.add(playerControls, BorderLayout.SOUTH);
-            wrapper.repaint();
-            jMenuBar.repaint();
         }
         return true;
     }
 
     public void repaintQuickNavi(){
         final List<QuickNaviButton> naviButtons = new ArrayList<>();
-        Map<Integer, Playable> data = app.getPlayableCache();
-        data.values().forEach((value) -> naviButtons.add(new QuickNaviButton(app, value)));
+        app.getPlayableCache().forEach((value) -> naviButtons.add(new QuickNaviButton(app, value)));
 
         SwingUtilities.invokeLater(() -> {
             naviPanel.removeAll();
             naviPanel.revalidate();
             naviButtons.forEach(naviPanel::add);
-            naviPanel.repaint();
+            naviPanel.repaint(); // TODO check if we need this
         });
-
     }
 
     public void enterFullScreen(){
@@ -197,11 +196,10 @@ public class Frame extends JFrame implements Runnable {
 
     public void toggleFullScreen() {
         if(player != null && current != null){
-            if(player.isFullScreen()){
+            if(player.isFullScreen())
                 exitFullScreen();
-            } else {
+            else
                 enterFullScreen();
-            }
         }
     }
 
@@ -285,9 +283,9 @@ public class Frame extends JFrame implements Runnable {
 
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
-                    JOptionPane.showMessageDialog(Frame.this, "Failed to open " + current, "Error", JOptionPane.ERROR_MESSAGE);
+                    app.showMessage(LocalizedMessages.FILE_OPEN_FAILED, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
                     if(current != null) {
-                        app.deletePlayableCache(current.hashCode());
+                        app.deletePlayable(current.hashCode());
                         current = null;
                     }
                     showQuickNavi();
@@ -334,6 +332,14 @@ public class Frame extends JFrame implements Runnable {
         jMenuBar.add(tools);
     }
 
+    private void initializeTabs(){
+        tabs = new WebTabbedPane();
+        JPanel test = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
+        app.getTest().values().forEach(p -> test.add(new QuickNaviButton(app, p, false)));
+        tabs.add(new JScrollPane(naviPanel), "Navi");
+        tabs.add(new JScrollPane(test), "Video");
+    }
+
     private void setSubtitlesToMenu(List<TrackDescription> spuDescriptions){
         log.debug("Set subtitles, count {}", spuDescriptions.size());
         spuMenu.removeAll();
@@ -347,8 +353,7 @@ public class Frame extends JFrame implements Runnable {
     }
 
     private void initializeQuickNavi(){
-        naviPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 30));
-        naviPanel.setBackground(Color.WHITE);
+        naviPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
     }
 
     private void initializeHotKeys(){

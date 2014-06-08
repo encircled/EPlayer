@@ -25,13 +25,23 @@ public class QuickNaviButton extends JButton {
 
     private final Application app;
 
+    private boolean canBeDeleted = true;
+
 	public QuickNaviButton(Application app, Playable p){
         this.app = app;
         CLICK_LISTENER = e -> app.play(((QuickNaviButton)e.getSource()).getPlayable());
 		playable = p;
 		initialize();
 	}
-	
+
+    public QuickNaviButton(Application app, Playable p, boolean canBeDeleted){
+        this.app = app;
+        this.canBeDeleted = canBeDeleted;
+        CLICK_LISTENER = e -> app.play(((QuickNaviButton)e.getSource()).getPlayable().getPath());
+        playable = p;
+        initialize();
+    }
+
 	private void initialize(){
 		setText(buildHTML());
         setUI(new BasicButtonUI());
@@ -44,11 +54,13 @@ public class QuickNaviButton extends JButton {
         setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
         setToolTipText("At " + playable.getPath());
 
-        ActionListener deleteListener = e -> app.deletePlayableCache(playable.getPath().hashCode());
-        JButton deleteButton = Components.getButton("x", "", 25, 25, deleteListener, new Color(255, 81, 81));
-        deleteButton.setBackground(new Color(253, 253, 253));
-        deleteButton.setBorder(new LineBorder(new Color(235, 235, 235)));
-        add(deleteButton);
+        if(canBeDeleted) {
+            ActionListener deleteListener = e -> app.deletePlayable(playable.getPath().hashCode());
+            JButton deleteButton = Components.getButton("x", "", 25, 25, deleteListener, new Color(255, 81, 81));
+            deleteButton.setBackground(new Color(253, 253, 253));
+            deleteButton.setBorder(new LineBorder(new Color(235, 235, 235)));
+            add(deleteButton);
+        }
 	}
 	
 	@NotNull

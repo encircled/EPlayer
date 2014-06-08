@@ -17,4 +17,5 @@ public class Constants {
     public static final int HUNDRED = 100;
 
     public static final int ONE = 1;
+    public static final char DOT = '.';
 }

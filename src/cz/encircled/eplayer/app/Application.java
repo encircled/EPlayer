@@ -5,7 +5,10 @@ import com.google.gson.JsonSyntaxException;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import cz.encircled.eplayer.model.Playable;
-import cz.encircled.eplayer.util.*;
+import cz.encircled.eplayer.util.IOUtil;
+import cz.encircled.eplayer.util.MessagesProvider;
+import cz.encircled.eplayer.util.PropertyProvider;
+import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.Components;
 import cz.encircled.eplayer.view.Frame;
 import cz.encircled.eplayer.view.actions.ActionExecutor;
@@ -22,9 +25,13 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.List;
 
+import static cz.encircled.eplayer.util.LocalizedMessages.*;
+
+// TODO Youtube tab
 
 public class Application {
 
@@ -47,59 +54,8 @@ public class Application {
         return isVlcAvailable;
     }
 
-    private void waitAndShowMessage(final String text, final String title, final int messageLevel){
-        new Thread(() -> {
-            boolean retry = true;
-            int i = 0;
-            while(retry && i++ < 10){
-                if(frame != null){
-                    JOptionPane.showMessageDialog(frame, text, title, messageLevel);
-                    retry = false;
-                } else {
-                    try{
-                        Thread.sleep(500);
-                    } catch (InterruptedException e){
-                        retry = false;
-                        log.warn("waitAndShowMessage thread", e);
-                    }
-                }
-            }
-        }).start();
-    }
-
-
-
-    private void addCloseHook(){
-        Runtime.getRuntime().addShutdownHook(new Thread() {
-            @Override
-            public void run() {
-                if(frame != null) {
-                    frame.updateCurrentPlayableInCache();
-                    frame.releasePlayer();
-                }
-            }
-        });
-        log.trace("Close hook added");
-    }
-
-	private void initializeVLCLib(){
-		NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "vlc-2.1.3");
-		try {
-			Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
-            isVlcAvailable = true;
-            log.trace("VLCLib successfully initialized");
-		} catch(UnsatisfiedLinkError e){
-            isVlcAvailable = false;
-            e.printStackTrace();
-			waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_VLC_LIBS_FAIL), MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
-			log.error("Failed to load vlc libs from specified path {}", "vlc-2.1.3");
-		} 
-	}
-
-	public Map<Integer, Playable> getPlayableCache(){
-        if(playableCache == null)
-            playableCache = new HashMap<>();
-        return playableCache;
+	public Collection<Playable> getPlayableCache(){
+        return playableCache.values();
 	}
 
     public void play(@NotNull String path){
@@ -115,35 +71,29 @@ public class Application {
             if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
                 getPlayableCache().remove(p.getPath().hashCode());
                 p.readPath(fc.getSelectedFile().getAbsolutePath());
-                getPlayableCache().put(p.getPath().hashCode(), p);
+                playableCache.put(p.getPath().hashCode(), p);
                 play(p);
             }
 		}
     }
 
     public Playable getOrCreatePlayable(@NotNull String path){
-        int hash = path.hashCode();
-        Playable p = getPlayableCache().get(hash);
-        if(p == null){
-            p = new Playable(path);
-            getPlayableCache().put(hash, p);
-        }
-        return p;
+        return playableCache.computeIfAbsent(path.hashCode(), hash -> new Playable(path));
     }
 
     public void updatePlayableCache(int hash, long time){
-        Playable p = getPlayableCache().get(hash);
+        Playable p = playableCache.get(hash);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
         savePlayable();
     }
 
-    public void deletePlayableCache(int hash){
-        Playable deleted = getPlayableCache().remove(hash);
+    public void deletePlayable(int hash){
+        Playable deleted = playableCache.remove(hash);
         if(deleted == null){
             log.warn("Playable with hash {} not exists", hash);
         } else {
-            if (deleted.exists() && JOptionPane.showConfirmDialog(frame, "delete file?", "title", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION){
+            if (deleted.exists() && userConfirm(CONFIRM_DELETE_FILE)){
                 boolean wasDeleted =     new File(deleted.getPath()).delete();
                 log.debug("Playable {} was deleted: {}", deleted.getName() ,wasDeleted);
             }
@@ -151,6 +101,10 @@ public class Application {
             frame.repaintQuickNavi(); // TODO
             savePlayable();
         }
+    }
+
+    private boolean userConfirm(String confirmMessage) {
+        return JOptionPane.showConfirmDialog(frame, MessagesProvider.get(confirmMessage), MessagesProvider.get(CONFIRM_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }
 
     public void playLast(){
@@ -162,7 +116,6 @@ public class Application {
     @Nullable
     private Playable getLastPlayable(){
         Playable p = getPlayableCache()
-                            .values()
                             .stream()
                             .max((p1, p2) -> Long.compare(p1.getWatchDate(), p2.getWatchDate())).get();
         log.debug("Last played: {}", p);
@@ -179,7 +132,7 @@ public class Application {
     public synchronized void savePlayable(){
         new Thread(() -> {
             try {
-                IOUtil.storeJson(getPlayableCache(), QUICK_NAVI_PATH);
+                IOUtil.storeJson(playableCache, QUICK_NAVI_PATH);
                 log.debug("Json successfully saved");
             } catch (IOException e) {
                 log.error("Failed to save playable to {}, msg {}", QUICK_NAVI_PATH, e);
@@ -221,6 +174,8 @@ public class Application {
 
     private void initializeGui(String openWhenReady){
         SwingUtilities.invokeLater(() -> {
+
+            // TODO move it
             Font font = new Font("Dialog", Font.BOLD,  12);
             UIManager.put("Label.font", font);
             UIManager.put("Button.font", font);
@@ -251,6 +206,11 @@ public class Application {
         });
     }
 
+    public void showMessage(String text, String title, int level){
+        JOptionPane.showMessageDialog(frame, MessagesProvider.get(text),
+                MessagesProvider.get(title), level);
+    }
+
     private void initializePlayable(){
         new Thread(() -> {
             log.trace("Init playable cache");
@@ -260,26 +220,43 @@ public class Application {
                 }
             } catch (IOException e) {
                 log.error("Failed to create QuickNavi data file at {}", QUICK_NAVI_PATH);
-                waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_CREATE_QN_FILE_FAIL),
-                        MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+                showMessage(MSG_CREATE_QN_FILE_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
                 playableCache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
             } catch (IOException e) {
                 log.error("Failed to read playableCache data from {} with default type token. Message: {}",
-                        PropertyProvider.get(QUICK_NAVI_PATH), e.getMessage());
-                waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_IO_FAIL),
-                        MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+                                            PropertyProvider.get(QUICK_NAVI_PATH), e.getMessage());
+                showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
             } catch (JsonSyntaxException e){
                 log.error("JSON syntax error. Message: {}", e.getMessage());
-                waitAndShowMessage(MessagesProvider.get(LocalizedMessages.MSG_QN_FILE_CORRUPTED),
-                        MessagesProvider.get(LocalizedMessages.ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+                showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
             }
             if(playableCache == null)
                 playableCache = new HashMap<>();
+            ;
+
             checkHashes();
         }).start();
+    }
+    FileVisitorManager d = new FileVisitorManager();
+    public Map<Integer, Playable> getTest(){
+        return d.getPaths().get(Paths.get("D:\\video"));
+    }
+
+    private void initializeVLCLib(){
+        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), "vlc-2.1.3");
+        try {
+            Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+            isVlcAvailable = true;
+            log.trace("VLCLib successfully initialized");
+        } catch(UnsatisfiedLinkError e){
+            isVlcAvailable = false;
+            e.printStackTrace();
+            showMessage(MessagesProvider.get(MSG_VLC_LIBS_FAIL), MessagesProvider.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+            log.error("Failed to load vlc libs from specified path {}", "vlc-2.1.3");
+        }
     }
 
     private void checkHashes() {
@@ -293,12 +270,26 @@ public class Application {
         corruptedHashes.forEach((oldHash) -> playableCache.put(playableCache.get(oldHash).getPath().hashCode(), playableCache.remove(oldHash)));
     }
 
+    private void addCloseHook(){
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                if(frame != null) {
+                    frame.updateCurrentPlayableInCache();
+                    frame.releasePlayer();
+                }
+            }
+        });
+        log.trace("Close hook added");
+    }
+
     public static void main(final String[] args) {
         System.setProperty("file.encoding", "UTF-8");
         try {
             new Application().initialize(args);
         } catch (Throwable e) {
             log.error(e);
+            e.printStackTrace();
             System.exit(-1);
         }
     }
