@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.util;
 
-import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.view.listeners.BackgroundFocusListener;
 import cz.encircled.eplayer.view.listeners.HoverMouseListener;
 import org.jetbrains.annotations.NotNull;
@@ -10,10 +10,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static cz.encircled.eplayer.util.LocalizedMessages.CONFIRM_TITLE;
+
 /**
  * Created by Encircled on 7/06/2014.
  */
-public class GUIConstants {
+public class GUIUtil {
+
+    private static JFrame frame;
 
     public static final MouseAdapter FILE_CHOOSER_MOUSE_ADAPTER = new MouseAdapter() {
         @Override
@@ -30,5 +34,21 @@ public class GUIConstants {
     public static final HoverMouseListener HOVER_MOUSE_LISTENER = new HoverMouseListener();
 
     public static final BackgroundFocusListener BACKGROUND_FOCUS_LISTENER = new BackgroundFocusListener();
+
+    public static void showMessage(String text, String title, int level){
+        JOptionPane.showMessageDialog(frame, MessagesProvider.get(text),
+                MessagesProvider.get(title), level);
+    }
+
+    public static boolean userConfirmed(String confirmMessage) {
+        return JOptionPane.showConfirmDialog(frame, MessagesProvider.get(confirmMessage),
+                                MessagesProvider.get(CONFIRM_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
+    }
+
+    public static void setFrame(JFrame frame){
+        GUIUtil.frame = frame;
+    }
+
+
 
 }

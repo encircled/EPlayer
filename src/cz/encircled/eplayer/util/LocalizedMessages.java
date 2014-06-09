@@ -46,4 +46,6 @@ public class LocalizedMessages {
 
     public static final String CONFIRM_DELETE_FILE = "confirm_delete_file";
 
+    public static final String SUBTITLES = "subtitles";
+
 }

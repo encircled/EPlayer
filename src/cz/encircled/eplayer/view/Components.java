@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.view;
 
-import cz.encircled.eplayer.util.GUIConstants;
+import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.componensts.EPlayerJButton;
@@ -45,7 +45,7 @@ public class Components {
     
     @NotNull
     public static EPlayerJButton getButton(String text, String actionCommand, int width, int height){
-        return getButton(text, actionCommand, width, height, GUIConstants.DEFAULT_ACTION_LISTENER);
+        return getButton(text, actionCommand, width, height, GUIUtil.DEFAULT_ACTION_LISTENER);
     }
 
     @NotNull
@@ -62,7 +62,7 @@ public class Components {
         b.setBackground(Components.MAIN_LIGHT_GRAY_COLOR);
         b.setBorderPainted(false);
         b.addActionListener(actionListener);
-        b.addMouseListener(GUIConstants.HOVER_MOUSE_LISTENER);
+        b.addMouseListener(GUIUtil.HOVER_MOUSE_LISTENER);
         return b;
     }
     
@@ -71,7 +71,7 @@ public class Components {
         JTextField f = new JTextField(value);
         f.setName(name);
         f.setPreferredSize(new Dimension(width, height));
-        f.addFocusListener(GUIConstants.BACKGROUND_FOCUS_LISTENER);
+        f.addFocusListener(GUIUtil.BACKGROUND_FOCUS_LISTENER);
 
         Border bottomBorder = BorderFactory.createMatteBorder(0, 0, 1, 0, Components.MAIN_BLUE_COLOR);
         f.setBorder(new CompoundBorder(bottomBorder, new EmptyBorder(0, 6, 0, 0)));
@@ -83,7 +83,7 @@ public class Components {
     public static JMenuItem getMenuItem(@NotNull String textToLocalize, String actionCommand){
     	JMenuItem i = new JMenuItem(MessagesProvider.get(textToLocalize));
     	i.setActionCommand(actionCommand);
-    	i.addActionListener(GUIConstants.DEFAULT_ACTION_LISTENER);
+    	i.addActionListener(GUIUtil.DEFAULT_ACTION_LISTENER);
     	return i;
     }
 

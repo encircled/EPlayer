@@ -1,6 +1,7 @@
 package cz.encircled.eplayer.view.listeners;
 
-import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.core.Application;
+import cz.encircled.eplayer.view.actions.ActionExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -19,13 +20,13 @@ public class KeyDispatcher implements KeyEventDispatcher {
 
     private static final Logger log = LogManager.getLogger(KeyDispatcher.class);
 
-    private final Application app;
+    private final ActionExecutor actionExecutor;
 
     private Map<Integer, Set<String>> codeBinds;
 
 
-    public KeyDispatcher(Application app) {
-        this.app = app;
+    public KeyDispatcher(ActionExecutor actionExecutor) {
+        this.actionExecutor = actionExecutor;
         codeBinds = new HashMap<>();
     }
 
@@ -44,7 +45,7 @@ public class KeyDispatcher implements KeyEventDispatcher {
     private boolean onKeyPressed(KeyEvent e){
         log.debug("Dispatch key pressed event with code {}", e.getKeyCode());
         if(codeBinds.containsKey(e.getKeyCode())) {
-            codeBinds.get(e.getKeyCode()).forEach(command -> app.getActionExecutor().execute(command));
+            codeBinds.get(e.getKeyCode()).forEach(command -> actionExecutor.execute(command));
             return true;
         }
         return false;

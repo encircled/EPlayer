@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.view.actions;
 
-import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.util.PropertyProvider;
 import cz.encircled.eplayer.view.SettingsDialog;
 import org.apache.logging.log4j.LogManager;
@@ -153,7 +153,7 @@ public class ActionExecutor {
 
     @SuppressWarnings("UnusedDeclaration")
     public void playLast(){
-        new Thread(() -> app.playLast()).start();
+        new Thread(app::playLast).start();
     }
 
 }

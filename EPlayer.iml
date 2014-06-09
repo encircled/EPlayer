@@ -18,18 +18,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
-    <orderEntry type="module-library">
-      <library name="JTattoo-1.6.9.jar">
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/JTattoo-1.6.9.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/JTattoo-1.6.9-sources.zip!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="module-library">
       <library name="log4j-api-2.0-beta8.jar">
         <CLASSES>
@@ -64,7 +53,6 @@
     <orderEntry type="library" name="xuggle-xuggler-5.4" level="project" />
     <orderEntry type="library" name="org.slf4j:slf4j-api:1.7.4" level="project" />
     <orderEntry type="library" name="annotations" level="application" />
-    <orderEntry type="library" name="gson-2.2.4" level="project" />
     <orderEntry type="library" name="jna-3.5.2" level="project" />
     <orderEntry type="library" name="weblaf-1.27" level="project" />
   </component>

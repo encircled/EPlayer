@@ -7,21 +7,42 @@
   </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/messages_ru.properties" line="16" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" line="135" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b59403b-677a-4dfe-868f-54ef79a1779b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/app/FileVisitorManager.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/WrapLayout.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/common/Constants.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/common/Constants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/service/CacheService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/service/JsonCacheService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/service/MediaService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/SwingViewService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/service/VLCMediaService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/service/ViewService.java" />
+      <change type="DELETED" beforePath="D:\projects\EPlayer\lib\JTattoo-1.6.9-sources.zip" afterPath="" />
+      <change type="DELETED" beforePath="D:\projects\EPlayer\lib\JTattoo-1.6.9.jar" afterPath="" />
+      <change type="DELETED" beforePath="D:\projects\EPlayer\lib\libvlc.dll" afterPath="" />
+      <change type="DELETED" beforePath="D:\projects\EPlayer\lib\libvlccore.dll" afterPath="" />
+      <change type="DELETED" beforePath="D:\projects\EPlayer\lib\vlcj-2.4.1-sources.jar" afterPath="" />
+      <change type="DELETED" beforePath="D:\projects\EPlayer\lib\vlcj-2.4.1.jar" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Components.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Components.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EPlayer.iml" afterPath="$PROJECT_DIR$/EPlayer.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/listeners/KeyDispatcher.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/listeners/KeyDispatcher.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/util/LocalizedMessages.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/util/LocalizedMessages.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/util/MessagesProvider.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/util/MessagesProvider.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/util/PropertyProvider.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/util/PropertyProvider.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/QuickNaviButton.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/QuickNaviButton.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/SettingsDialog.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/view/SettingsDialog.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/jna_3_5_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/jna_3_5_2.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log.log" afterPath="$PROJECT_DIR$/log.log" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/messages_en.properties" afterPath="$PROJECT_DIR$/src/messages_en.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/messages_ru.properties" afterPath="$PROJECT_DIR$/src/messages_ru.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="D:\projects\EPlayer\src\cz\encircled\eplayer\app\Application.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/core/Application.java" />
+      <change type="MOVED" beforePath="D:\projects\EPlayer\src\cz\encircled\eplayer\app\FileVisitorManager.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/core/FileVisitorManager.java" />
+      <change type="MOVED" beforePath="D:\projects\EPlayer\src\cz\encircled\eplayer\app\ShutdownManager.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/core/ShutdownManager.java" />
+      <change type="MOVED" beforePath="D:\projects\EPlayer\src\cz\encircled\eplayer\app\UTF8Control.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/core/UTF8Control.java" />
+      <change type="MOVED" beforePath="D:\projects\EPlayer\src\cz\encircled\eplayer\util\GUIConstants.java" afterPath="$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIUtil.java" />
     </list>
     <ignored path="EPlayer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -75,8 +96,8 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties converted="true" />
     <breakpoint_rules converted="true" />
+    <ui_properties converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
@@ -84,51 +105,84 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Application.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="624" max-vertical-offset="4454">
-              <caret line="83" column="19" selection-start-line="83" selection-start-column="19" selection-end-line="83" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FileVisitorManager.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/FileVisitorManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1887">
-              <caret line="88" column="75" selection-start-line="88" selection-start-column="75" selection-end-line="88" selection-end-column="75" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Frame.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="4710" max-vertical-offset="5797">
-              <caret line="336" column="63" selection-start-line="336" selection-start-column="63" selection-end-line="336" selection-end-column="63" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="2091" max-vertical-offset="2771">
+              <caret line="185" column="67" selection-start-line="185" selection-start-column="61" selection-end-line="185" selection-end-column="67" />
+              <folding>
+                <element signature="e#2687#2688#0" expanded="true" />
+                <element signature="e#2729#2730#0" expanded="true" />
+                <element signature="e#3370#3371#0" expanded="true" />
+                <element signature="e#3425#3426#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SwingViewService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/SwingViewService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="392" max-vertical-offset="4505">
+              <caret line="36" column="45" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#3220#3221#0" expanded="true" />
+                <element signature="e#3270#3271#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ViewService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/ViewService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+              <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="QuickNaviButton.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MediaService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/MediaService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="323">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="VLCMediaService.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/VLCMediaService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.8515206" vertical-offset="323" max-vertical-offset="1343">
+              <caret line="51" column="23" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="23" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CacheService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/CacheService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="19" max-vertical-offset="612">
+              <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QuickNaviButton.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/QuickNaviButton.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6073529" vertical-offset="216" max-vertical-offset="1309">
-              <caret line="48" column="37" selection-start-line="48" selection-start-column="37" selection-end-line="48" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ActionExecutor.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1292" max-vertical-offset="2805">
-              <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1309">
+              <caret line="38" column="43" selection-start-line="38" selection-start-column="43" selection-end-line="38" selection-end-column="43" />
               <folding />
             </state>
           </provider>
@@ -157,9 +211,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/XugglerRtmpReferenceImpl.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/LocalizedMessages.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/model/SettingItem.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/DoS.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/test/HelloWorlder.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/test/Test.java" />
@@ -179,7 +230,6 @@
         <option value="$PROJECT_DIR$/src/messages_ru.properties" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/common/Constants.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/PlayerControls.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIUtil.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/KeyConstants.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/exception/InitializeException.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/ShutdownManager.java" />
@@ -189,26 +239,37 @@
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIConstants.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Components.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/SettingsDialog.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/listeners/KeyDispatcher.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java" />
-        <option value="$PROJECT_DIR$/src/messages_en.properties" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/LocalizedMessages.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/DirectoryScaner.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/WrapLayout.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/DirectoryScanner.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" />
-        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/FilaVisitorManager.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/LocalizedMessages.java" />
+        <option value="$PROJECT_DIR$/src/messages_en.properties" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/FileVisitorManager.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/JsonCacheService.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/Wiring.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/Wire.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/MediaService.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/VLCMediaService.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/ViewService.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/core/Application.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIUtil.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/listeners/KeyDispatcher.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/SwingViewService.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/service/CacheService.java" />
         <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/QuickNaviButton.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/SwingViewService.java" />
+        <option value="$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1056" />
+    <option name="x" value="-4" />
+    <option name="y" value="-4" />
+    <option name="width" value="1688" />
+    <option name="height" value="1004" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -260,6 +321,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -355,32 +417,6 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="listeners" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="view" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
               <option name="myItemId" value="componensts" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -425,6 +461,28 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="service" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EPlayer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EPlayer" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="eplayer" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="model" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -446,6 +504,10 @@
               <option name="myItemId" value="eplayer" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -464,24 +526,33 @@
               <option name="myItemId" value="eplayer" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
+              <option name="myItemId" value="EPlayer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="EPlayer" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lib" />
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GoToFile.includeJavaFiles" value="false" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="Repository.Attach.JavaDocs" value="false" />
-    <property name="options.lastSelected" value="appearance" />
+    <property name="options.lastSelected" value="editor.preferences.appearance" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="recentsLimit" value="5" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/weblaf-javadoc-1.27.zip!/" />
@@ -513,13 +584,16 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Soft\EPlayer\src\META-INF" />
     </key>
+    <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="cz.encircled.eplayer.util.GUIConstants" />
+      <recent name="cz.encircled.eplayer.common.Constants" />
+    </key>
     <key name="IntroduceConstantDialog.RECENTS_KEY">
       <recent name="cz.encircled.eplayer.common.Constants" />
       <recent name="cz.encircled.eplayer.view.Frame" />
     </key>
-    <key name="MoveMembersDialog.RECENTS_KEY">
-      <recent name="cz.encircled.eplayer.util.GUIConstants" />
-      <recent name="cz.encircled.eplayer.common.Constants" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Soft\EPlayer\src" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="cz.encircled.eplayer.app" />
@@ -528,19 +602,16 @@
       <recent name="cz.encircled.eplayer.view.actions" />
       <recent name="cz.encircled.eplayer.common" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="D:\Soft\EPlayer\src" />
-    </key>
   </component>
   <component name="RunManager" selected="Application.Application">
     <configuration default="false" name="Application" type="Application" factoryName="Application" temporary="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
-          <option name="PATTERN" value="cz.encircled.eplayer.app.*" />
+          <option name="PATTERN" value="cz.encircled.eplayer.core.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="MAIN_CLASS_NAME" value="cz.encircled.eplayer.app.Application" />
+      <option name="MAIN_CLASS_NAME" value="cz.encircled.eplayer.core.Application" />
       <option name="VM_PARAMETERS" value="-Dvlcj.log=WARN" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
@@ -912,6 +983,7 @@
       <workItem from="1402087967695" duration="4951000" />
       <workItem from="1402148349021" duration="23581000" />
       <workItem from="1402217929390" duration="3124000" />
+      <workItem from="1402306327191" duration="15208000" />
     </task>
     <task id="LOCAL-00001" summary="ver 0.2">
       <created>1379107105335</created>
@@ -945,10 +1017,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="101050000" />
+    <option name="totallyTimeSpent" value="116258000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-4" y="-4" width="1688" height="1004" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -956,6 +1028,7 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32837528" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39822024" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -964,14 +1037,14 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32703003" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32608697" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17110874" sideWeight="0.6674082" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21245828" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17083333" sideWeight="0.6674082" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21167047" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Persistence" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -981,7 +1054,6 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
       <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35038933" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1020,6 +1092,22 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/QuickNaviButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="216" max-vertical-offset="1309">
+          <caret line="48" column="37" selection-start-line="48" selection-start-column="37" selection-end-line="48" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1292" max-vertical-offset="2805">
+          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1275" max-vertical-offset="2720">
@@ -1032,19 +1120,26 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2193" max-vertical-offset="7701">
           <caret line="129" column="52" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#2687#2688#0" expanded="true" />
+            <element signature="e#2729#2730#0" expanded="true" />
+            <element signature="e#3370#3371#0" expanded="true" />
+            <element signature="e#3425#3426#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/core/Application.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="7038">
           <caret line="195" column="17" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/UTF8Control.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/core/UTF8Control.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="442" max-vertical-offset="850">
           <caret line="26" column="28" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1081,28 +1176,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.7.0_25/src.zip!/java/util/TimerTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.3107798" vertical-offset="1325" max-vertical-offset="2397">
-          <caret line="85" column="14" selection-start-line="85" selection-start-column="14" selection-end-line="85" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_05/src.zip!/java/util/concurrent/TimeUnit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.42233858" vertical-offset="2291" max-vertical-offset="5899">
-          <caret line="182" column="22" selection-start-line="182" selection-start-column="22" selection-end-line="182" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_05/jre/lib/rt.jar!/sun/nio/fs/WindowsFileAttributeViews.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33214286" vertical-offset="273" max-vertical-offset="1037">
-          <caret line="28" column="17" selection-start-line="28" selection-start-column="17" selection-end-line="28" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/log.log">
       <provider editor-type-id="com.intellij.persistence.database.editor.CsvTableFileEditorProvider">
         <state />
@@ -1131,13 +1204,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
           <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/StringUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="782">
-          <caret line="6" column="16" selection-start-line="6" selection-start-column="16" selection-end-line="6" selection-end-column="16" />
         </state>
       </provider>
     </entry>
@@ -1178,52 +1244,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/lib/vlcj-2.4.1-sources.jar!/uk/co/caprica/vlcj/player/MediaPlayer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="3192" max-vertical-offset="27540">
-          <caret line="233" column="12" selection-start-line="233" selection-start-column="12" selection-end-line="233" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/vlcj-3.0.1.jar!/uk/co/caprica/vlcj/player/MediaPlayer.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34854016" vertical-offset="1713" max-vertical-offset="5423">
-          <caret line="113" column="12" selection-start-line="113" selection-start-column="12" selection-end-line="113" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/vlcj-3.0.1.jar!/uk/co/caprica/vlcj/player/events/MediaParsedChangedEvent.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1551095" vertical-offset="0" max-vertical-offset="548">
-          <caret line="6" column="29" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/messages_ru.properties">
-      <provider editor-type-id="ResourceBundle">
-        <state />
-      </provider>
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.65384614" vertical-offset="0" max-vertical-offset="546">
           <caret line="21" column="11" selection-start-line="21" selection-start-column="11" selection-end-line="21" selection-end-column="11" />
           <folding />
         </state>
       </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_05/src.zip!/java/awt/Container.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="5606" max-vertical-offset="83096">
-          <caret line="413" column="21" selection-start-line="413" selection-start-column="21" selection-end-line="413" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_05/src.zip!/javax/swing/JFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39267015" vertical-offset="11318" max-vertical-offset="15096">
-          <caret line="737" column="62" selection-start-line="737" selection-start-column="7" selection-end-line="737" selection-end-column="7" />
-          <folding />
-        </state>
+      <provider editor-type-id="ResourceBundle">
+        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionCommands.java">
@@ -1257,13 +1286,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_05/src.zip!/java/util/Properties.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17165354" vertical-offset="1642" max-vertical-offset="19686">
-          <caret line="138" column="11" selection-start-line="138" selection-start-column="11" selection-end-line="138" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/MessagesProvider.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.41391304" vertical-offset="0" max-vertical-offset="575">
@@ -1271,14 +1293,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/UTF8Control.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/core/UTF8Control.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.44347826" vertical-offset="0" max-vertical-offset="731">
           <caret line="26" column="28" selection-start-line="26" selection-start-column="21" selection-end-line="26" selection-end-column="21" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/ShutdownManager.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/core/ShutdownManager.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="394" max-vertical-offset="1326">
           <caret line="15" column="61" selection-start-line="15" selection-start-column="61" selection-end-line="15" selection-end-column="61" />
@@ -1321,52 +1343,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/listeners/KeyDispatcher.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="258" max-vertical-offset="833">
-          <caret line="46" column="65" selection-start-line="46" selection-start-column="65" selection-end-line="46" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="575">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="544">
-          <caret line="27" column="82" selection-start-line="27" selection-start-column="82" selection-end-line="27" selection-end-column="82" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/messages_en.properties">
-      <provider selected="true" editor-type-id="ResourceBundle">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="476">
-          <caret line="22" column="16" selection-start-line="22" selection-start-column="16" selection-end-line="22" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/LocalizedMessages.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.05" vertical-offset="0" max-vertical-offset="935">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="811" max-vertical-offset="2380">
-          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1377,35 +1357,162 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java">
+    <entry file="file://$PROJECT_DIR$/src/messages_en.properties">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="493">
+          <caret line="23" column="10" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="ResourceBundle">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/core/FileVisitorManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="4710" max-vertical-offset="5797">
-          <caret line="336" column="63" selection-start-line="336" selection-start-column="63" selection-end-line="336" selection-end-column="63" />
+        <state vertical-scroll-proportion="0.57781756" vertical-offset="459" max-vertical-offset="1921">
+          <caret line="62" column="33" selection-start-line="62" selection-start-column="33" selection-end-line="62" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/FileVisitorManager.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/LocalizedMessages.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1887">
-          <caret line="88" column="75" selection-start-line="88" selection-start-column="75" selection-end-line="88" selection-end-column="75" />
+        <state vertical-scroll-proportion="0.39177102" vertical-offset="410" max-vertical-offset="969">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/app/Application.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/StringUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="624" max-vertical-offset="4454">
-          <caret line="83" column="19" selection-start-line="83" selection-start-column="19" selection-end-line="83" selection-end-column="19" />
+        <state vertical-scroll-proportion="0.7906977" vertical-offset="0" max-vertical-offset="765">
+          <caret line="31" column="26" selection-start-line="31" selection-start-column="26" selection-end-line="31" selection-end-column="26" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$APPLICATION_HOME_DIR$/redist/annotations.jar!/org/jetbrains/annotations/Nullable.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.26103646" vertical-offset="0" max-vertical-offset="521">
+          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/JsonCacheService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="561" max-vertical-offset="2448">
+          <caret line="46" column="57" selection-start-line="46" selection-start-column="57" selection-end-line="46" selection-end-column="57" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/core/Application.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="612" max-vertical-offset="2499">
+          <caret line="59" column="13" selection-start-line="59" selection-start-column="13" selection-end-line="59" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/util/GUIUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="291" max-vertical-offset="850">
+          <caret line="47" column="18" selection-start-line="47" selection-start-column="18" selection-end-line="47" selection-end-column="18" />
+          <folding>
+            <element signature="e#1942#1943#0" expanded="true" />
+            <element signature="e#1979#1980#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/listeners/KeyDispatcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="121" max-vertical-offset="833">
+          <caret line="28" column="44" selection-start-line="28" selection-start-column="44" selection-end-line="28" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/actions/ActionExecutor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1675" max-vertical-offset="2380">
+          <caret line="127" column="14" selection-start-line="127" selection-start-column="14" selection-end-line="127" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/CacheService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="19" max-vertical-offset="612">
+          <caret line="15" column="27" selection-start-line="15" selection-start-column="27" selection-end-line="15" selection-end-column="27" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/componensts/QuickNaviButton.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6073529" vertical-offset="216" max-vertical-offset="1309">
-          <caret line="48" column="37" selection-start-line="48" selection-start-column="37" selection-end-line="48" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="255" max-vertical-offset="1309">
+          <caret line="38" column="43" selection-start-line="38" selection-start-column="43" selection-end-line="38" selection-end-column="43" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/Frame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2091" max-vertical-offset="2771">
+          <caret line="185" column="67" selection-start-line="185" selection-start-column="61" selection-end-line="185" selection-end-column="67" />
+          <folding>
+            <element signature="e#2687#2688#0" expanded="true" />
+            <element signature="e#2729#2730#0" expanded="true" />
+            <element signature="e#3370#3371#0" expanded="true" />
+            <element signature="e#3425#3426#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/view/SwingViewService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="392" max-vertical-offset="4505">
+          <caret line="36" column="45" selection-start-line="36" selection-start-column="45" selection-end-line="36" selection-end-column="45" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3220#3221#0" expanded="true" />
+            <element signature="e#3270#3271#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/ViewService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="255">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/MediaService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="17" max-vertical-offset="340">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/encircled/eplayer/service/VLCMediaService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8515206" vertical-offset="323" max-vertical-offset="1343">
+          <caret line="51" column="23" selection-start-line="51" selection-start-column="12" selection-end-line="51" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1476,7 +1583,7 @@
       </state>
       <state key="ProjectJDKs.UI">
         <settings>
-          <last-edited>1.6</last-edited>
+          <last-edited>1.8</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1488,7 +1595,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>weblaf-1.27</last-edited>
+          <last-edited>jna-3.5.2</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
