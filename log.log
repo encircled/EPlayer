@@ -11487,7 +11487,7 @@ java.lang.NullPointerException
 20:46:33.461 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
 20:46:34.242 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
 20:46:34.242 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
-20:47:03.196 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.view.actions.ActionExecutor - Failed to execute command [openMedia, null], msg:
+20:47:03.196 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.service.action.ActionExecutor - Failed to execute command [openMedia, null], msg:
 20:47:49.526 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
 20:47:49.542 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
 20:47:49.561 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
@@ -11500,7 +11500,7 @@ java.lang.NullPointerException
 20:48:51.786 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
 20:48:51.786 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
 20:48:57.769 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
-20:48:57.769 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.view.actions.ActionExecutor - Failed to execute command [openMedia, null], msg:
+20:48:57.769 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.service.action.ActionExecutor - Failed to execute command [openMedia, null], msg:
 20:50:07.290 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
 20:50:07.306 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
 20:50:07.328 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
@@ -11686,7 +11686,7 @@ More information may be available in the log, specify -Dvlcj.log=DEBUG on the co
 20:57:29.169 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
 20:57:29.169 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
 20:57:35.717 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
-20:57:35.718 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.view.actions.ActionExecutor - Failed to execute command [openMedia, null], msg:
+20:57:35.718 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.service.action.ActionExecutor - Failed to execute command [openMedia, null], msg:
 20:58:00.308 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
 20:58:00.329 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
 20:58:00.359 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
@@ -11721,7 +11721,7 @@ More information may be available in the log, specify -Dvlcj.log=DEBUG on the co
 21:07:32.733 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
 21:07:33.745 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 79
 21:07:36.231 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
-21:07:36.231 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.view.actions.ActionExecutor - Failed to execute command [openMedia, null], msg:
+21:07:36.231 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.service.action.ActionExecutor - Failed to execute command [openMedia, null], msg:
 21:07:37.448 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
 21:09:42.138 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
 21:09:42.150 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
@@ -11755,7 +11755,7 @@ java.lang.IllegalArgumentException: Window must not be null
 21:09:51.678 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
 21:09:53.312 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 79
 21:09:55.133 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
-21:09:55.133 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.view.actions.ActionExecutor - Failed to execute command [openMedia, null], msg:
+21:09:55.133 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.service.action.ActionExecutor - Failed to execute command [openMedia, null], msg:
 21:09:57.375 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
 21:10:10.391 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
 21:10:10.404 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
@@ -12242,3 +12242,643 @@ java.lang.IllegalArgumentException: Window must not be null
 21:52:29.302 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
 21:52:29.359 [DEBUG] [Thread-85] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
 21:52:30.013 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:13:51.927 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:13:51.940 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:13:51.957 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:13:52.132 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:13:52.173 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:13:52.857 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:13:52.857 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:13:52.858 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:13:52.858 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:13:52.858 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:13:52.858 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:13:52.858 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:13:52.858 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:13:52.858 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:13:53.080 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:13:53.080 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:13:55.176 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:13:55.179 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:13:55.179 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:13:55.286 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:13:55.288 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:13:56.364 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:13:56.553 [DEBUG] [Thread-44] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:14:34.600 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:14:34.614 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:14:34.631 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:14:34.806 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:14:34.843 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:14:35.534 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:14:35.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:14:35.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:14:35.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:14:35.536 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:14:35.536 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:14:35.536 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:14:35.536 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:14:35.536 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:14:35.730 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:14:35.730 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:14:38.014 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:14:38.017 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:14:38.018 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:14:38.129 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:14:38.131 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:14:39.356 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:14:39.534 [DEBUG] [Thread-47] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:14:40.586 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:14:40.590 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:14:40.658 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:14:40.658 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:14:41.612 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:14:41.786 [DEBUG] [Thread-88] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:14:42.945 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:14:42.949 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:14:43.012 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:14:43.012 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:14:46.571 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:14:46.828 [DEBUG] [Thread-169] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:16:03.007 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:16:03.021 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:16:03.039 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:16:03.217 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:16:03.252 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:16:03.961 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:16:03.961 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:16:03.962 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:16:03.962 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:16:03.962 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:16:03.962 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:16:03.962 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:16:03.962 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:16:03.962 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:16:04.154 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:16:04.155 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:16:07.219 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:16:07.223 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:16:07.223 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:16:07.323 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:16:07.325 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:16:15.267 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:16:15.540 [DEBUG] [Thread-124] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:16:17.218 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:16:45.127 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:16:45.140 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:16:45.158 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:16:45.324 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:16:45.360 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:16:46.047 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:16:46.048 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:16:46.240 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:16:46.240 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:16:47.585 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:16:47.588 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:16:47.589 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:16:47.694 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:16:47.696 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:16:48.691 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:16:48.781 [DEBUG] [Thread-39] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:16:50.284 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:16:50.289 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:16:50.353 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:16:50.354 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:16:50.970 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:16:51.419 [DEBUG] [Thread-73] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:16:52.002 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:16:52.006 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:16:52.072 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:16:52.072 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:16:52.666 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:16:52.986 [DEBUG] [Thread-109] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:16:53.594 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:16:53.597 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:16:53.659 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:16:53.659 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:16:54.611 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:16:59.195 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:16:59.394 [DEBUG] [Thread-175] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:17:02.666 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:17:04.198 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:17:04.201 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:17:04.261 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:17:04.261 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:17:05.170 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:17:05.658 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:17:06.074 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:17:06.962 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:17:07.364 [DEBUG] [Thread-213] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:17:08.114 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:17:35.694 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:17:35.708 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:17:35.724 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:17:35.892 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:17:35.929 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:17:36.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:17:36.610 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:17:36.610 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:17:36.610 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:17:36.610 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:17:36.610 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:17:36.610 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:17:36.610 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:17:36.611 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:17:36.821 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:17:36.822 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:17:38.274 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:17:38.278 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:17:38.278 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:17:38.383 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:17:38.386 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:17:39.651 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:17:40.541 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:17:40.951 [DEBUG] [Thread-50] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:17:42.232 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:17:42.236 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:17:42.301 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:17:42.301 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:17:43.042 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:17:46.443 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:17:46.626 [DEBUG] [Thread-108] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:18:09.730 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:18:13.743 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:18:13.757 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:18:13.775 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:18:13.980 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:18:14.014 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:18:14.731 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:18:14.732 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:18:14.732 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:18:14.732 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:18:14.732 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:18:14.732 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:18:14.733 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:18:14.733 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:18:14.733 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:18:14.937 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:18:14.938 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:18:15.692 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:18:15.696 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:18:15.696 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:18:15.805 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:18:15.807 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:18:16.474 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:18:23.274 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:18:23.563 [DEBUG] [Thread-82] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:18:25.434 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:21:43.556 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:21:43.569 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:21:43.587 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:21:43.758 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:21:43.793 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:21:44.484 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:21:44.485 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:21:44.485 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:21:44.485 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:21:44.485 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:21:44.485 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:21:44.485 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:21:44.486 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:21:44.486 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:21:44.704 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:21:44.704 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:21:45.925 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:21:45.928 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:21:45.928 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:21:46.039 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:21:46.041 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:21:47.025 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:21:47.204 [DEBUG] [Thread-40] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:21:47.878 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:21:47.882 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:21:47.945 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:21:47.946 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:21:48.496 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:21:48.548 [DEBUG] [Thread-70] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:21:49.248 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:21:49.251 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:21:49.314 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:21:49.314 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:21:49.888 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:21:50.664 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:21:51.053 [DEBUG] [Thread-108] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:21:52.095 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:21:52.099 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:21:52.167 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:21:52.167 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:21:53.281 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:21:53.393 [DEBUG] [Thread-147] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:21:54.401 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:21:54.404 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:21:54.467 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:21:54.467 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:21:56.041 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:21:57.985 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:21:58.139 [DEBUG] [Thread-205] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:22:00.000 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:22:59.545 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:22:59.558 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:22:59.576 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:22:59.755 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:22:59.794 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:23:00.534 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:23:00.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:23:00.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:23:00.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:23:00.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:23:00.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:23:00.535 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:23:00.536 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:23:00.536 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:23:00.884 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:23:00.885 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:23:01.933 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:23:01.936 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:23:01.936 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:23:02.049 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:23:02.051 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:23:05.241 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:23:05.242 [ERROR] [AWT-EventQueue-0] cz.encircled.eplayer.service.action.ReflectionActionExecutor - Failed to execute command [openQuickNavi, null], msg:
+22:23:11.968 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:23:12.011 [DEBUG] [Thread-64] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:23:13.496 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:23:13.498 [DEBUG] [Thread-65] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:23:33.746 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:23:33.759 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:23:33.776 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:23:34.017 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:23:34.050 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:23:34.715 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:23:34.716 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:23:34.901 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:23:34.901 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:23:35.896 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:23:35.900 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:23:35.900 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:23:36.000 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:23:36.002 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:23:42.792 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:23:43.148 [DEBUG] [Thread-126] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:23:43.960 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:23:43.991 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:23:44.050 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:23:44.050 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:24:02.816 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:24:02.894 [DEBUG] [Thread-301] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:24:28.089 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:24:28.104 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:24:28.122 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:24:28.293 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:24:28.328 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:24:29.020 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:24:29.021 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:24:29.021 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:24:29.021 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:24:29.022 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:24:29.022 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:24:29.022 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:24:29.022 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:24:29.022 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:24:29.212 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:24:29.212 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:24:33.456 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:24:36.896 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:24:36.908 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:24:36.926 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:24:37.094 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:24:37.133 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:24:37.800 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:24:37.801 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:24:38.003 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:24:38.003 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:24:39.951 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:24:39.954 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:24:39.954 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:24:40.056 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:24:40.057 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:24:41.424 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:24:41.697 [DEBUG] [Thread-50] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:24:42.351 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:24:42.356 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:24:42.420 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:24:42.421 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:24:44.447 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:24:44.695 [DEBUG] [Thread-81] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:24:45.183 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:24:45.204 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:24:45.277 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:24:45.277 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:24:46.048 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 70
+22:24:52.575 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:24:52.714 [DEBUG] [Thread-140] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:24:54.999 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:24:55.002 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:24:55.064 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:24:55.064 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:24:59.943 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:25:00.380 [DEBUG] [Thread-189] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:25:03.648 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:35:49.640 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:35:49.654 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:35:49.674 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:35:49.853 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:35:49.889 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:35:50.608 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:35:50.609 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:35:50.809 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:35:50.809 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:35:51.540 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 79
+22:35:53.363 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 27
+22:35:53.899 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:39:29.186 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:39:29.200 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:39:29.217 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:39:29.384 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:39:29.420 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:39:30.125 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:39:30.126 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:39:30.326 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:39:30.326 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:39:31.579 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:39:31.582 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:39:31.582 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:39:31.722 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:39:31.724 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:39:32.985 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 79
+22:39:36.073 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:39:36.073 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\CBGB.2013.L2.HDRip.avi is new
+22:39:36.145 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:39:36.145 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:39:43.241 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:39:43.291 [DEBUG] [Thread-162] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:39:44.607 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:39:44.628 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:39:44.628 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:39:44.688 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:39:44.689 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:39:45.473 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:39:45.759 [DEBUG] [Thread-201] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:39:46.407 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:39:46.411 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:39:46.472 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:39:46.472 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:39:47.025 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:39:47.186 [DEBUG] [Thread-236] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:39:47.891 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:39:47.895 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:39:47.895 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\CBGB.2013.L2.HDRip.avi is new
+22:39:47.952 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:39:47.952 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:39:48.425 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:39:48.475 [DEBUG] [Thread-283] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:39:48.989 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:39:48.992 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:39:49.050 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:39:49.051 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:39:50.528 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:39:50.575 [DEBUG] [Thread-355] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:39:51.345 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:39:51.348 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:39:51.406 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:39:51.406 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:39:52.472 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:39:52.527 [DEBUG] [Thread-421] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:39:54.880 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:40:17.728 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:40:17.741 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:40:17.760 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:40:17.945 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:40:17.977 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:40:18.681 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:40:18.682 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:40:18.682 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:40:18.683 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:40:18.683 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:40:18.683 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:40:18.683 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:40:18.683 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:40:18.683 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:40:18.885 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:40:18.885 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:40:19.893 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:40:19.897 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:40:19.897 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\CBGB.2013.L2.HDRip.avi is new
+22:40:19.994 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:40:19.995 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:40:20.953 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:40:21.018 [DEBUG] [Thread-55] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:40:21.665 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:40:21.669 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:40:21.740 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:40:21.741 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:40:23.041 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:40:23.082 [DEBUG] [Thread-123] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:40:23.879 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:40:23.883 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:40:23.945 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:40:23.946 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:40:25.464 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:40:25.506 [DEBUG] [Thread-191] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:40:26.474 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:40:26.478 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:40:26.546 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:40:26.547 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:40:27.568 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:40:27.618 [DEBUG] [Thread-255] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:40:28.574 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:40:28.578 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:40:28.631 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:40:28.632 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:40:36.425 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:40:36.458 [DEBUG] [Thread-452] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:40:39.590 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:40:39.594 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Breaking Bad S2\test22223.avi
+22:40:39.594 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Breaking Bad S2\test22223.avi is new
+22:40:39.642 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 0
+22:40:39.643 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:40:58.768 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:40:58.806 [DEBUG] [Thread-745] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:06.195 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:41:06.203 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Breaking Bad S2\test22223.avi
+22:41:06.220 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 0
+22:41:06.220 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:41:13.296 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:41:13.359 [DEBUG] [Thread-878] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:13.970 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:41:13.974 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Breaking Bad S2\test22223.avi
+22:41:13.991 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 0
+22:41:13.992 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:41:14.824 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:41:14.874 [DEBUG] [Thread-924] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:15.436 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:41:15.439 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:41:15.439 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\CBGB.2013.L2.HDRip.avi is new
+22:41:15.494 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:41:15.494 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:41:16.096 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:41:16.136 [DEBUG] [Thread-973] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:16.680 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:41:16.683 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\The.grand.budapest.hotel.2014.D.HDRip.2.18GB.NNM-CLUB.GIU.mkv
+22:41:16.683 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\The.grand.budapest.hotel.2014.D.HDRip.2.18GB.NNM-CLUB.GIU.mkv is new
+22:41:16.733 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 5995072
+22:41:16.734 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 5
+22:41:17.336 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:41:17.475 [DEBUG] [Thread-1004] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:18.022 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:41:18.025 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:41:18.025 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:41:18.080 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:41:18.081 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:41:18.624 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:41:18.814 [DEBUG] [Thread-1041] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:31.965 [DEBUG] [Thread-1042] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:33.918 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:41:33.926 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:41:33.926 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\CBGB.2013.L2.HDRip.avi is new
+22:41:33.982 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:41:33.983 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:41:34.352 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:41:34.440 [DEBUG] [Thread-1087] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:41:36.392 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 79
+22:41:45.489 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:41:45.492 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Breaking Bad S2\test22223.avi
+22:41:45.492 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Breaking Bad S2\test22223.avi is new
+22:41:45.507 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 0
+22:41:45.508 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:41:56.496 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:41:56.541 [DEBUG] [Thread-1212] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:42:00.480 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:42:46.833 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:42:46.846 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:42:46.863 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:42:47.022 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:42:47.057 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:42:47.751 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:42:47.752 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:42:47.752 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:42:47.752 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:42:47.753 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:42:47.753 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:42:47.753 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:42:47.753 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:42:47.753 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:42:47.952 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:42:47.952 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:42:54.944 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 79
+22:42:58.136 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:42:58.138 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Breaking Bad S2\Breaking.Bad.S02E02.rus.LostFilm.TV.avi
+22:42:58.138 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Breaking Bad S2\Breaking.Bad.S02E02.rus.LostFilm.TV.avi is new
+22:42:58.375 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 2883000
+22:42:58.377 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:43:01.191 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:43:01.249 [DEBUG] [Thread-72] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:43:02.871 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 79
+22:43:05.565 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:43:05.571 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Breaking Bad S2\Breaking.Bad.S02E11.rus.LostFilm.TV.avi
+22:43:05.571 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Breaking Bad S2\Breaking.Bad.S02E11.rus.LostFilm.TV.avi is new
+22:43:05.673 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 2735000
+22:43:05.674 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:43:08.632 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:43:08.665 [DEBUG] [Thread-154] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:45:23.166 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:46:37.688 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:46:37.701 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:46:37.718 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:46:37.912 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:46:37.946 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:46:38.622 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:46:38.623 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:46:38.820 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:46:38.821 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:46:52.190 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:47:37.391 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:47:37.406 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:47:37.426 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:47:37.676 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:47:37.710 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:47:38.414 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:47:38.415 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:47:38.611 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:47:38.612 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete
+22:47:44.239 [DEBUG] [Thread-7] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:47:45.337 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:47:45.341 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\Saw_01.mkv
+22:47:45.341 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\Saw_01.mkv is new
+22:47:45.441 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6166218
+22:47:45.443 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 3
+22:47:46.214 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:47:46.557 [DEBUG] [Thread-48] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:47:47.530 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.SwingViewService - Add player to frame
+22:47:47.534 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - play: D:\video\CBGB.2013.L2.HDRip.avi
+22:47:47.534 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.service.VLCMediaService - Path D:\video\CBGB.2013.L2.HDRip.avi is new
+22:47:47.610 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.componensts.PlayerControls - Reinitializing controls panel. New length is 6154000
+22:47:47.610 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.Frame - Set subtitles, count 0
+22:47:48.174 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 78
+22:47:48.202 [DEBUG] [Thread-95] cz.encircled.eplayer.service.JsonCacheService - Json successfully saved
+22:47:49.430 [DEBUG] [AWT-EventQueue-0] cz.encircled.eplayer.view.listeners.KeyDispatcher - Dispatch key pressed event with code 81
+22:47:52.762 [TRACE] [main] cz.encircled.eplayer.core.Application - App init
+22:47:52.775 [TRACE] [main] cz.encircled.eplayer.core.Application - Properties init success
+22:47:52.792 [TRACE] [main] cz.encircled.eplayer.core.Application - Messages init success
+22:47:52.947 [TRACE] [main] cz.encircled.eplayer.service.VLCMediaService - VLCLib successfully initialized
+22:47:52.983 [TRACE] [Thread-2] cz.encircled.eplayer.service.JsonCacheService - Init playable cache
+22:47:53.661 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 10 to playLast
+22:47:53.662 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 32 to togglePlayer
+22:47:53.662 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 27 to cancelDialog
+22:47:53.662 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 67 to playLast
+22:47:53.662 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 81 to exit
+22:47:53.663 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 79 to openMedia
+22:47:53.663 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 78 to openQuickNavi
+22:47:53.663 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 70 to toggleFullScreen
+22:47:53.663 [DEBUG] [main] cz.encircled.eplayer.view.listeners.KeyDispatcher - Bind 83 to settings
+22:47:53.859 [TRACE] [main] cz.encircled.eplayer.core.Application - Close hook added
+22:47:53.860 [TRACE] [main] cz.encircled.eplayer.core.Application - Init complete

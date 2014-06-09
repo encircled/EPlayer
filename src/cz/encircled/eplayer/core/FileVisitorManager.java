@@ -33,7 +33,7 @@ public class FileVisitorManager {
 
     public FileVisitorManager(){
         paths = new HashMap<>();
-        paths.put(Paths.get("C:\\"), new HashMap<>());
+        paths.put(Paths.get("D:\\video"), new HashMap<>());
         initialize();
     }
 

@@ -33,8 +33,6 @@ public interface ViewService {
 
     void setCacheService(CacheService cacheService);
 
-    void setActionExecutor(ActionExecutor actionExecutor);
-
     void setMediaService(MediaService mediaService);
 
     void initialize();

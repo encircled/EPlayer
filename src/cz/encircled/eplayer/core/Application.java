@@ -1,11 +1,12 @@
 package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.service.*;
+import cz.encircled.eplayer.service.action.ActionExecutor;
 import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.util.PropertyProvider;
 import cz.encircled.eplayer.view.SwingViewService;
-import cz.encircled.eplayer.view.actions.ReflectionActionExecutor;
+import cz.encircled.eplayer.service.action.ReflectionActionExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,7 +59,6 @@ public class Application {
         mediaService = new VLCMediaService();
 
         viewService.setMediaService(mediaService);
-        viewService.setActionExecutor(actionExecutor);
         viewService.setCacheService(cacheService);
 
         mediaService.setCacheService(cacheService);
@@ -73,7 +73,7 @@ public class Application {
         mediaService.initialize();
         viewService.showQuickNavi();
         addCloseHook();
-//        d = new FileVisitorManager();
+        d = new FileVisitorManager();
 //        initializeGui(arguments.length > 0 ? arguments[0] : null);
         log.trace("Init complete");
     }

@@ -8,8 +8,9 @@ import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
-import cz.encircled.eplayer.view.actions.ActionCommands;
+import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
+import cz.encircled.eplayer.view.componensts.QuickNaviButton;
 import cz.encircled.eplayer.view.componensts.WrapLayout;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -58,21 +59,17 @@ public class Frame extends JFrame {
         tabs.setVisible(false);
         wrapper.add(mediaService.getPlayerComponent(), BorderLayout.CENTER);
         wrapper.add(playerControls, BorderLayout.SOUTH);
-        wrapper.repaint();
     }
 
     void showQuickNavi(Collection<MediaType> mediaType) {
         tabs.setVisible(true);
-        wrapper.repaint();
         setTitle(TITLE);
         repaintQuickNavi(mediaType);
     }
 
     void repaintQuickNavi(Collection<MediaType> mediaType){
-//        naviPanel.removeAll();
-//        naviPanel.revalidate();
-//        mediaType.forEach((media) -> naviPanel.add(new QuickNaviButton(viewService, mediaService, media)));
-//        naviPanel.repaint(); // TODO check if we need this
+        naviPanel.removeAll();
+        mediaType.forEach((media) -> naviPanel.add(new QuickNaviButton(viewService, mediaService, media)));
     }
 
     void onMediaTimeChange(long newTime){

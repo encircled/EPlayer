@@ -1,4 +1,4 @@
-package cz.encircled.eplayer.view.actions;
+package cz.encircled.eplayer.service.action;
 
 public class ActionCommands {
 	

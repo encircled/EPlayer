@@ -1,11 +1,12 @@
 package cz.encircled.eplayer.view;
 
-import cz.encircled.eplayer.service.ActionExecutor;
+import cz.encircled.eplayer.core.Application;
+import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
+import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.util.GUIUtil;
-import cz.encircled.eplayer.view.actions.ActionCommands;
 import cz.encircled.eplayer.view.listeners.KeyDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +25,6 @@ public class SwingViewService implements ViewService {
     private static final Logger log = LogManager.getLogger();
 
     private CacheService cacheService;
-
-    private ActionExecutor actionExecutor;
 
     private MediaService mediaService;
 
@@ -47,7 +46,14 @@ public class SwingViewService implements ViewService {
 
     @Override
     public void deleteMedia(int hashCode){
-        cacheService.deleteEntry(hashCode);
+        new SwingWorker<MediaType, Object>(){
+            @Override
+            protected MediaType doInBackground() throws Exception {
+                MediaType media = cacheService.deleteEntry(hashCode);
+                cacheService.save();
+                return media;
+            }
+        }.execute();
     }
 
     @Override
@@ -118,18 +124,13 @@ public class SwingViewService implements ViewService {
     }
 
     @Override
-    public void setActionExecutor(ActionExecutor actionExecutor) {
-        this.actionExecutor = actionExecutor;
-    }
-
-    @Override
     public void setMediaService(MediaService mediaService) {
         this.mediaService = mediaService;
     }
 
     private void initializeHotKeys(){
         // TODO frame dependency
-        KeyDispatcher dispatcher = new KeyDispatcher(actionExecutor);
+        KeyDispatcher dispatcher = new KeyDispatcher(Application.getActionExecutor());
         dispatcher.bind(KeyEvent.VK_ENTER, ActionCommands.PLAY_LAST);
         dispatcher.bind(KeyEvent.VK_SPACE, ActionCommands.TOGGLE_PLAYER);
         dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.CANCEL);

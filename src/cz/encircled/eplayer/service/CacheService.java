@@ -19,7 +19,7 @@ public interface CacheService {
 
     MediaType deleteEntry(int hash);
 
-    CacheService updateEntry(int hash, long time);
+    MediaType updateEntry(int hash, long time);
 
     void save();
 

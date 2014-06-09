@@ -5,7 +5,7 @@ import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.util.PropertyProvider;
-import cz.encircled.eplayer.view.actions.ActionCommands;
+import cz.encircled.eplayer.service.action.ActionCommands;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;

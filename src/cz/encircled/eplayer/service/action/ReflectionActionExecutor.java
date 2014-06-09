@@ -1,7 +1,6 @@
-package cz.encircled.eplayer.view.actions;
+package cz.encircled.eplayer.service.action;
 
 import cz.encircled.eplayer.common.Constants;
-import cz.encircled.eplayer.service.ActionExecutor;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
@@ -67,6 +66,7 @@ public class ReflectionActionExecutor implements ActionExecutor {
         fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
     }
 
+    @Override
     public void execute(String command){
         try {
             commands.get(command).invoke(ReflectionActionExecutor.this);
@@ -138,7 +138,10 @@ public class ReflectionActionExecutor implements ActionExecutor {
 
     @SuppressWarnings("UnusedDeclaration")
     public void openQuickNavi(){
+        mediaService.pause();
         viewService.showQuickNavi();
+        if(mediaService.isFullScreen())
+            mediaService.exitFullScreen();
         mediaService.updateCurrentMediaInCache();
         mediaService.stop();
         cacheService.save();

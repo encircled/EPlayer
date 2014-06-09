@@ -49,11 +49,11 @@ public class JsonCacheService implements CacheService {
     }
 
     @Override
-    public CacheService updateEntry(int hash, long time){
+    public MediaType updateEntry(int hash, long time){
         MediaType p = cache.get(hash);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
-        return this;// TODO save!
+        return p;
     }
 
     @Override
