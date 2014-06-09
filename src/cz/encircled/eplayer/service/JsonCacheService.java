@@ -2,8 +2,7 @@ package cz.encircled.eplayer.service;
 
 import com.google.gson.JsonSyntaxException;
 import cz.encircled.eplayer.core.Application;
-import cz.encircled.eplayer.model.Playable;
-import cz.encircled.eplayer.util.GUIUtil;
+import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.util.PropertyProvider;
 import org.apache.logging.log4j.LogManager;
@@ -12,14 +11,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Consumer;
 
-import static cz.encircled.eplayer.util.GUIUtil.*;
+import static cz.encircled.eplayer.util.GUIUtil.showMessage;
 import static cz.encircled.eplayer.util.LocalizedMessages.*;
-import static cz.encircled.eplayer.util.LocalizedMessages.ERROR_TITLE;
-import static cz.encircled.eplayer.util.LocalizedMessages.MSG_QN_FILE_CORRUPTED;
 
 /**
  * Created by Administrator on 9.6.2014.
@@ -28,31 +25,39 @@ public class JsonCacheService implements CacheService {
 
     public static final String QUICK_NAVI_PATH = Application.APP_DOCUMENTS_ROOT + "quicknavi.json";
 
-    private Map<Integer, Playable> cache;
+    private Map<Integer, MediaType> cache;
 
     private static final Logger log = LogManager.getLogger();
 
+    public JsonCacheService(){
 
-    @Override
-    public Playable createIfAbsent(@NotNull String path){
-        return cache.computeIfAbsent(path.hashCode(), hash -> new Playable(path));
     }
 
     @Override
-    public Playable getEntry(Integer hashCode){
+    public void forEach(Consumer<MediaType> action) {
+        getCache().forEach(action);
+    }
+
+    @Override
+    public MediaType createIfAbsent(@NotNull String path){
+        return cache.computeIfAbsent(path.hashCode(), hash -> new MediaType(path));
+    }
+
+    @Override
+    public MediaType getEntry(Integer hashCode){
         return cache.get(hashCode);
     }
 
     @Override
     public CacheService updateEntry(int hash, long time){
-        Playable p = cache.get(hash);
+        MediaType p = cache.get(hash);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
         return this;// TODO save!
     }
 
     @Override
-    public Playable deleteEntry(int hash){
+    public MediaType deleteEntry(int hash){
         return cache.remove(hash);
     }
 
@@ -73,13 +78,13 @@ public class JsonCacheService implements CacheService {
 //    }
 
     @Override
-    public Collection<Playable> getCache(){
+    public Collection<MediaType> getCache(){
         return cache.values();
     }
 
     @Nullable
-    private Playable getLastByWatchDate(){
-        Playable p = getCache()
+    private MediaType getLastByWatchDate(){
+        MediaType p = getCache()
                 .stream()
                 .max((p1, p2) -> Long.compare(p1.getWatchDate(), p2.getWatchDate())).get();
         log.debug("Last played: {}", p);
@@ -101,7 +106,7 @@ public class JsonCacheService implements CacheService {
         }).start();
     }
 
-    private void initialize(){
+    public void initialize(){
         new Thread(() -> {
             log.trace("Init playable cache");
             try {
@@ -130,7 +135,7 @@ public class JsonCacheService implements CacheService {
         }).start();
     }
 
-    private static void checkHashes(Map<Integer, Playable> playableCache) {
+    private static void checkHashes(Map<Integer, MediaType> playableCache) {
         List<Integer> corruptedHashes = new ArrayList<>();
         playableCache.forEach((key, value) -> {
             if (value.getPath().hashCode() != key) {

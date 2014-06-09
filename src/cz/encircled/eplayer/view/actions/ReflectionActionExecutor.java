@@ -1,6 +1,11 @@
 package cz.encircled.eplayer.view.actions;
 
-import cz.encircled.eplayer.core.Application;
+import cz.encircled.eplayer.common.Constants;
+import cz.encircled.eplayer.service.ActionExecutor;
+import cz.encircled.eplayer.service.CacheService;
+import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.service.ViewService;
+import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.util.PropertyProvider;
 import cz.encircled.eplayer.view.SettingsDialog;
 import org.apache.logging.log4j.LogManager;
@@ -13,36 +18,45 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
 
-public class ActionExecutor {
+public class ReflectionActionExecutor implements ActionExecutor {
 
-	private cz.encircled.eplayer.view.Frame frame;
-	
 	private SettingsDialog settingsDialog;
 	
 	private String fileChooserLastPath;
 
-    private final static Logger log = LogManager.getLogger(ActionExecutor.class);
+    private final static Logger log = LogManager.getLogger(ReflectionActionExecutor.class);
 
     private TreeMap<String, Method> commands;
 
-    private final Application app;
+    private MediaService mediaService;
 
-    public ActionExecutor(Application app){
-        this.app = app;
+    private CacheService cacheService;
+
+    private ViewService viewService;
+
+    public ReflectionActionExecutor() {
         initializeCommandsTree();
         setDefaultFileChooserPath();
     }
 
-	public void setFrame(cz.encircled.eplayer.view.Frame frame){
-		this.frame = frame;
-	}
+    public void setViewService(ViewService viewService) {
+        this.viewService = viewService;
+    }
+
+    public void setMediaService(MediaService mediaService) {
+        this.mediaService = mediaService;
+    }
+
+    public void setCacheService(CacheService cacheService) {
+        this.cacheService = cacheService;
+    }
 
     private void initializeCommandsTree(){
         commands = new TreeMap<>();
         Field[] commandFields = ActionCommands.class.getDeclaredFields();
         for(Field f : commandFields){
             try {
-                commands.put((String) f.get(null), ActionExecutor.class.getMethod((String) f.get(null)));
+                commands.put((String) f.get(null), ReflectionActionExecutor.class.getMethod((String) f.get(null)));
             } catch (Exception e) {
                 log.warn("error reading command field {} ", f.getName());
             }
@@ -55,7 +69,7 @@ public class ActionExecutor {
 
     public void execute(String command){
         try {
-            commands.get(command).invoke(ActionExecutor.this);
+            commands.get(command).invoke(ReflectionActionExecutor.this);
         } catch (Throwable e) {
             log.error("Failed to execute command {}, msg:", command, e.getMessage());
         }
@@ -63,20 +77,18 @@ public class ActionExecutor {
 
     @SuppressWarnings("UnusedDeclaration")
     public void exit() {
-        app.exit();
+        System.exit(Constants.ZERO);
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public void openMedia() {
-        SwingUtilities.invokeLater(() -> {
-            JFileChooser fc = new JFileChooser(fileChooserLastPath);
-            int res = fc.showOpenDialog(frame);
-            if (res == JFileChooser.APPROVE_OPTION) {
-                fileChooserLastPath = fc.getSelectedFile().getPath();
-                frame.updateCurrentPlayableInCache();
-                app.play(fileChooserLastPath);
-            }
-        });
+        JFileChooser fc = new JFileChooser(fileChooserLastPath);
+        int res = fc.showOpenDialog(null); // TODO
+        if (res == JFileChooser.APPROVE_OPTION) {
+            fileChooserLastPath = fc.getSelectedFile().getPath();
+            mediaService.updateCurrentMediaInCache();
+            mediaService.play(fileChooserLastPath);
+        }
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -93,14 +105,15 @@ public class ActionExecutor {
             try {
                 PropertyProvider.save();
             } catch (IOException e1) {
-                JOptionPane.showMessageDialog(frame, "Failed to save settings", "error", JOptionPane.ERROR_MESSAGE);
+                GUIUtil.showMessage("Failed to save settings", "error", JOptionPane.ERROR_MESSAGE); // TODO message l
             }
-            try {
-                app.reinitialize();
-            } catch (IOException io){
-                log.error("Failed to reinitialize application");
-                System.exit(-1);
-            }
+//            try {
+//                app.reinitialize();
+//            TODO
+//            } catch (IOException io){
+//                log.error("Failed to reinitialize application");
+//                System.exit(-1);
+//            }
         }).start();
     }
 
@@ -114,46 +127,50 @@ public class ActionExecutor {
 
     @SuppressWarnings("UnusedDeclaration")
     public void showShutdownTimeChooser(){
-        frame.showShutdownTimeChooser();
+//        frame.showShutdownTimeChooser(); TODO
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public void settings() {
-        settingsDialog = new SettingsDialog(frame);
-        settingsDialog.setVisible(true);
+//        settingsDialog = new SettingsDialog(frame);
+//        settingsDialog.setVisible(true); TODO
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public void openQuickNavi(){
-        frame.showQuickNavi();
+        viewService.showQuickNavi();
+        mediaService.updateCurrentMediaInCache();
+        mediaService.stop();
+        cacheService.save();
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public void togglePlayer(){
-        frame.togglePlayer();
+        mediaService.togglePlayer();
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public void toggleFullScreen(){
-        frame.toggleFullScreen();
+        mediaService.toggleFullScreen();
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public void back(){
-        if(frame.isPlayerState()){
-            if(frame.isFullScreen()){
-                frame.exitFullScreen();
-                frame.updateCurrentPlayableInCache();
+        if(viewService.isPlayerState()){
+            if(mediaService.isFullScreen()){
+                mediaService.exitFullScreen();
+                mediaService.updateCurrentMediaInCache();
             }
             else
                 execute(ActionCommands.OPEN_QUICK_NAVI);
-        } else if(frame.isQuickNaviState())
+        } else if(viewService.isQuickNaviState())
             execute(ActionCommands.EXIT);
     }
 
     @SuppressWarnings("UnusedDeclaration")
     public void playLast(){
-        new Thread(app::playLast).start();
+//        new Thread(app::playLast).start();
+        // TODO
     }
 
 }

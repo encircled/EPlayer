@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.core;
 
-import cz.encircled.eplayer.model.Playable;
+import cz.encircled.eplayer.model.MediaType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +23,7 @@ public class FileVisitorManager {
 
     private static final Logger log = LogManager.getLogger();
 
-    private Map<Path, Map<Integer, Playable>> paths;
+    private Map<Path, Map<Integer, MediaType>> paths;
 
     private static WatchService watcher;
 
@@ -37,7 +37,7 @@ public class FileVisitorManager {
         initialize();
     }
 
-    public Map<Path, Map<Integer, Playable>> getPaths() {
+    public Map<Path, Map<Integer, MediaType>> getPaths() {
         return paths;
     }
 
@@ -92,9 +92,9 @@ public class FileVisitorManager {
 
     private static class PlayableFileVisitor implements FileVisitor<Path> {
 
-        private Map<Integer, Playable> playable;
+        private Map<Integer, MediaType> playable;
 
-        public void setCurrentPlayable(Map<Integer, Playable> playable){
+        public void setCurrentPlayable(Map<Integer, MediaType> playable){
             this.playable = playable;
         }
 
@@ -107,7 +107,7 @@ public class FileVisitorManager {
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             String name = file.toAbsolutePath().toString();
             if(Arrays.binarySearch(SUPPORTED_FORMATS, name.toLowerCase().substring(name.lastIndexOf(DOT) + ONE)) >= ZERO){
-                playable.putIfAbsent(name.hashCode(), new Playable(name));
+                playable.putIfAbsent(name.hashCode(), new MediaType(name));
                 log.debug("Supported File {}", name);
             }
 

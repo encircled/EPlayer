@@ -1,11 +1,11 @@
 package cz.encircled.eplayer.view.componensts;
 
 import cz.encircled.eplayer.common.Constants;
+import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.util.PropertyProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,8 +27,7 @@ public class PlayerControls extends JPanel {
 
     private static final String LENGTH_LABEL_PREFIX = "/  ";
 
-    @NotNull
-    private final EmbeddedMediaPlayer player;
+    private final MediaService mediaService;
 
     private JSlider positionSlider;
 
@@ -46,18 +45,19 @@ public class PlayerControls extends JPanel {
 
     private static final String TIME_SEPARATOR = ":";
 
-    public PlayerControls(@NotNull EmbeddedMediaPlayer player){
-        this.player = player;
+    public PlayerControls(MediaService mediaService){
+        this.mediaService = mediaService;
         initialize();
     }
 
     public void reinitialize(){
-        log.debug("Reinitializing controls panel. New length is {}", player.getLength());
-        lengthLabel.setText(LENGTH_LABEL_PREFIX + buildTimeTextLabel((int) player.getLength()));
-        positionSlider.setMaximum((int) player.getLength());
+        log.debug("Reinitializing controls panel. New length is {}", mediaService.getMediaLength());
+        lengthLabel.setText(LENGTH_LABEL_PREFIX + buildTimeTextLabel(mediaService.getMediaLength()));
+        positionSlider.setMaximum(mediaService.getMediaLength());
         positionSlider.setEnabled(true);
-        if(player.getTime() > Constants.ZERO)
-            positionSlider.setValue((int) player.getTime());
+        if(mediaService.getCurrentTime() > Constants.ZERO)
+            positionSlider.setValue(mediaService.getCurrentTime());
+        volumeSlider.setValue(mediaService.getVolume() >= Constants.ZERO ? mediaService.getVolume() : Constants.HUNDRED);
     }
 
     private static void setSliderToCursorPosition(@NotNull MouseEvent e, @NotNull JSlider slider){
@@ -131,7 +131,7 @@ public class PlayerControls extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(volumeButton.isSelected()){
-                    lastVolume = player.getVolume();
+                    lastVolume = mediaService.getVolume();
                     volumeSlider.setValue(0);
                 }  else
                     volumeSlider.setValue(lastVolume);
@@ -155,9 +155,8 @@ public class PlayerControls extends JPanel {
         volumeSlider.setFocusable(false);
         volumeSlider.setPreferredSize(new Dimension(100, 20));
         volumeSlider.setSize(new Dimension(100, 20));
-        volumeSlider.setValue(player.getVolume() >= Constants.ZERO ? player.getVolume() : Constants.HUNDRED);
         volumeSlider.addChangeListener(e -> {
-            player.setVolume(volumeSlider.getValue());
+            mediaService.setVolume(volumeSlider.getValue());
             volumeLabel.setText(volumeSlider.getValue() + " %");
             if(volumeSlider.getValue() == Constants.ZERO){
                 volumeButton.setSelected(true);
@@ -191,14 +190,14 @@ public class PlayerControls extends JPanel {
             @Override
             public void mouseReleased(MouseEvent e) {
                 positionLabel.setVisible(false);
-                player.setTime(Math.min(positionSlider.getValue(), player.getLength() - Constants.ONE));
-                player.start();
+                mediaService.setTime(Math.min(positionSlider.getValue(), mediaService.getMediaLength() - Constants.ONE));
+                mediaService.start();
             }
 
             @Override
             public void mousePressed(@NotNull MouseEvent e) {
                 positionLabel.setVisible(true);
-                player.pause();
+                mediaService.pause();
                 setSliderToCursorPosition(e, positionSlider);
             }
 

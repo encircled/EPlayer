@@ -1,46 +1,29 @@
 package cz.encircled.eplayer.view;
 
+import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.tabbedpane.WebTabbedPane;
-import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.common.Constants;
-import cz.encircled.eplayer.model.Playable;
+import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
-import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.view.actions.ActionCommands;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
-import cz.encircled.eplayer.view.componensts.QuickNaviButton;
 import cz.encircled.eplayer.view.componensts.WrapLayout;
-import cz.encircled.eplayer.view.listeners.KeyDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
-import uk.co.caprica.vlcj.player.MediaPlayer;
-import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 import uk.co.caprica.vlcj.player.TrackDescription;
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
-import uk.co.caprica.vlcj.player.embedded.windows.Win32FullScreenStrategy;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-
-import static cz.encircled.eplayer.util.GUIUtil.*;
 
 // TODO swing worker
 
-public class Frame extends JFrame implements Runnable {
+public class Frame extends JFrame {
 
     private static final String TITLE = "EPlayer";
 
@@ -56,49 +39,48 @@ public class Frame extends JFrame implements Runnable {
 
     private WebTabbedPane tabs;
 
-    private final SwingViewService swingViewService;
+    private final ViewService viewService;
+
+    private final MediaService mediaService;
 
     private final Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
                             new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
     private final static Logger log = LogManager.getLogger(Frame.class);
 
-    public Frame(SwingViewService swingViewService) {
-        this.swingViewService = swingViewService;
+    public Frame(ViewService viewService, MediaService mediaService) {
+        this.viewService = viewService;
+        this.mediaService = mediaService;
         initialize();
-        initializeWrapper();
-        initializeMenu();
-        initializeQuickNavi();
-        initializeTabs();
-        wrapper.add(tabs);
     }
 
-    @Override
-    public void run() {
-        setVisible(true);
+    void showPlayer() {
+        tabs.setVisible(false);
+        wrapper.add(mediaService.getPlayerComponent(), BorderLayout.CENTER);
+        wrapper.add(playerControls, BorderLayout.SOUTH);
+        wrapper.repaint();
     }
 
-    public void enableSpuMenu(boolean enable){
-        spuMenu.setEnabled(enable);
+    void showQuickNavi(Collection<MediaType> mediaType) {
+        tabs.setVisible(true);
+        wrapper.repaint();
+        setTitle(TITLE);
+        repaintQuickNavi(mediaType);
     }
 
-    void showShutdownTimeChooser(){
-        ShutdownChooserDialog chooserDialog = new ShutdownChooserDialog(this);
-        log.debug("result: {}, {}", chooserDialog.getTime(), chooserDialog.getShutdownParam());
-//        if(chooserDialog.getTime() != null)
-//            core.shutdown(chooserDialog.getTime(), chooserDialog.getShutdownParam()); TODO
-    }
-
-
-    void repaintQuickNavi(Collection<Playable> playable){
-        naviPanel.removeAll();
-        naviPanel.revalidate();
-        playable.forEach(() -> naviPanel.add(new ));
-        naviPanel.repaint(); // TODO check if we need this
+    void repaintQuickNavi(Collection<MediaType> mediaType){
+//        naviPanel.removeAll();
+//        naviPanel.revalidate();
+//        mediaType.forEach((media) -> naviPanel.add(new QuickNaviButton(viewService, mediaService, media)));
+//        naviPanel.repaint(); // TODO check if we need this
     }
 
     void onMediaTimeChange(long newTime){
         playerControls.fireTimeChanged(newTime);
+    }
+
+    void reinitializeControls(){
+        playerControls.reinitialize();
     }
 
     void enterFullScreen(){
@@ -107,18 +89,63 @@ public class Frame extends JFrame implements Runnable {
         playerControls.setVisible(false);
     }
 
-    public void exitFullScreen(){
+    void exitFullScreen(){
         setCursor(Cursor.getDefaultCursor());
         setJMenuBar(jMenuBar);
         playerControls.setVisible(true);
     }
 
+    void showShutdownTimeChooser(){
+        ShutdownChooserDialog chooserDialog = new ShutdownChooserDialog(this);
+        log.debug("result: {}, {}", chooserDialog.getTime(), chooserDialog.getShutdownParam());
+//        if(chooserDialog.getCurrentTime() != null)
+//            core.shutdown(chooserDialog.getCurrentTime(), chooserDialog.getShutdownParam()); TODO
+    }
+
+    void enableSubtitlesMenu(boolean isEnabled){
+        spuMenu.setEnabled(isEnabled);
+    }
+
+    void updateSubtitlesMenu(List<TrackDescription> spuDescriptions){
+        log.debug("Set subtitles, count {}", spuDescriptions.size());
+        spuMenu.removeAll();
+        spuDescriptions.forEach((desc) -> {
+            JMenuItem subtitle = new JMenuItem(desc.description());
+            subtitle.addActionListener(e -> mediaService.setSubtitlesById(desc.id()));
+            spuMenu.add(subtitle);
+        });
+        spuMenu.setEnabled(spuDescriptions.size() > Constants.ZERO);
+        spuMenu.revalidate();
+    }
+
     private void initialize(){
+        if(!WebLookAndFeel.install()){
+            log.error("Failed to initialize weblaf");
+        }
         setTitle(TITLE);
         setMinimumSize(new Dimension(1130, 700));
         setExtendedState(Frame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
+        setupBasicUI();
+
+        playerControls = new PlayerControls(mediaService);
+
+        initializeWrapper();
+        initializeMenu();
+        initializeQuickNavi();
+        initializeTabs();
+    }
+
+    private static void setupBasicUI() {
+        Font font = new Font("Dialog", Font.BOLD,  12);
+        UIManager.put("Label.font", font);
+        UIManager.put("Button.font", font);
+        UIManager.put("TextField.font", new Font("Dialog", Font.BOLD,  14));
+
+        UIManager.put("Label.foreground", Components.MAIN_GRAY_COLOR);
+        UIManager.put("Button.foreground", Components.MAIN_GRAY_COLOR);
+        UIManager.put("TextField.foreground", Components.MAIN_GRAY_COLOR);
     }
 
     private void initializeWrapper(){
@@ -128,11 +155,11 @@ public class Frame extends JFrame implements Runnable {
             if(playerControls != null){
                 if(e.getWheelRotation() < Constants.ZERO){
                     playerControls.setVisible(true);
-                    if(swingViewService.isFullScreen())
+                    if(mediaService.isFullScreen())
                         setCursor(Cursor.getDefaultCursor());
                 } else{
                     playerControls.setVisible(false);
-                    if(swingViewService.isFullScreen())
+                    if(mediaService.isFullScreen())
                         setCursor(blankCursor);
                 }
             }
@@ -176,22 +203,12 @@ public class Frame extends JFrame implements Runnable {
 //        new HashMap<>(app.getTest()).values().forEach(p -> test.add(new QuickNaviButton(app, p, false)));
         tabs.add(new JScrollPane(naviPanel), "Navi");
         tabs.add(new JScrollPane(test), "Video");
-    }
-
-    private void setSubtitlesToMenu(List<TrackDescription> spuDescriptions){
-        log.debug("Set subtitles, count {}", spuDescriptions.size());
-        spuMenu.removeAll();
-        spuDescriptions.forEach((desc) -> {
-            JMenuItem subtitle = new JMenuItem(desc.description());
-            subtitle.addActionListener(e -> swingViewService.setSpu(desc.id()));
-            spuMenu.add(subtitle);
-        });
-        spuMenu.setEnabled(spuDescriptions.size() > Constants.ZERO);
-        spuMenu.revalidate();
+        wrapper.add(tabs);
     }
 
     private void initializeQuickNavi(){
         naviPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
     }
+
 
 }

@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.regex.Pattern;
 
-public class Playable {
+public class MediaType {
 
 	private static final String TO_STRING_FORMAT = "Playable %d. name: %s, path: %s, time: %d, watchDate: %d";
 
@@ -18,7 +18,7 @@ public class Playable {
 
     private static final Pattern FILENAME_PATTERN = Pattern.compile("^.*\\.*\\..*$");
 	
-	public Playable(@NotNull String path){
+	public MediaType(@NotNull String path){
 		readPath(path);
         time = 0;
 	}

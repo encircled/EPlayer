@@ -1,9 +1,43 @@
 package cz.encircled.eplayer.service;
 
+import uk.co.caprica.vlcj.player.TrackDescription;
+
+import java.awt.*;
+
 /**
  * Created by Administrator on 9.6.2014.
  */
 public interface ViewService {
 
-    void play(String path, long time);
+    boolean isQuickNaviState();
+
+    boolean isPlayerState();
+
+    void deleteMedia(int hashCode);
+
+    void enterFullScreen();
+
+    void exitFullScreen();
+
+    void showPlayer();
+
+    void onPlayStart();
+
+    void updateSubtitlesMenu(java.util.List<TrackDescription> spuDescriptions);
+
+    void enableSubtitlesMenu(boolean isEnabled);
+
+    void showQuickNavi();
+
+    void onMediaTimeChange(long newTime);
+
+    void setCacheService(CacheService cacheService);
+
+    void setActionExecutor(ActionExecutor actionExecutor);
+
+    void setMediaService(MediaService mediaService);
+
+    void initialize();
+
+    Window getWindow();
 }

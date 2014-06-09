@@ -2,7 +2,7 @@ package cz.encircled.eplayer.util;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import cz.encircled.eplayer.model.Playable;
+import cz.encircled.eplayer.model.MediaType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +18,7 @@ public class IOUtil {
 
     private static final Logger log = LogManager.getLogger();
 
-	private final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, Playable>>(){}.getType();
+	private final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, MediaType>>(){}.getType();
 	
 	public static <T> T getPlayableJson(@NotNull String filePath) throws IOException {
 		return new Gson().fromJson(new String(Files.readAllBytes(Paths.get(filePath))), DEFAULT_TYPE_TOKEN);

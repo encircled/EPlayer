@@ -1,31 +1,15 @@
 package cz.encircled.eplayer.core;
 
-import com.alee.laf.WebLookAndFeel;
-import com.sun.jna.Native;
-import com.sun.jna.NativeLibrary;
-import cz.encircled.eplayer.model.Playable;
-import cz.encircled.eplayer.service.CacheService;
-import cz.encircled.eplayer.service.MediaService;
-import cz.encircled.eplayer.util.*;
-import cz.encircled.eplayer.view.Components;
-import cz.encircled.eplayer.view.Frame;
-import cz.encircled.eplayer.view.actions.ActionExecutor;
+import cz.encircled.eplayer.service.*;
+import cz.encircled.eplayer.util.IOUtil;
+import cz.encircled.eplayer.util.MessagesProvider;
+import cz.encircled.eplayer.util.PropertyProvider;
+import cz.encircled.eplayer.view.SwingViewService;
+import cz.encircled.eplayer.view.actions.ReflectionActionExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import uk.co.caprica.vlcj.binding.LibVlc;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.*;
-
-import static cz.encircled.eplayer.util.LocalizedMessages.*;
 
 // TODO Youtube tab
 
@@ -43,12 +27,7 @@ public class Application {
 
     private MediaService mediaService;
 
-    @Nullable
-    private Frame frame;
-
-    public void exit() {
-        System.exit(0);
-    }
+    private ViewService viewService;
 
     public static ActionExecutor getActionExecutor(){
         return actionExecutor;
@@ -57,12 +36,11 @@ public class Application {
     public void reinitialize() throws IOException {
         log.trace("App init");
         // TODO what do we need here?
-        if(frame != null){
-            frame.stopPlayer();
-            frame.dispose();
-            frame = null;
-        }
-        initializeGui(null);
+//        if(frame != null){
+//            frame.stop();
+//            frame.dispose();
+//            frame = null;
+//        }
         log.trace("Reinitializing completed");
     }
 
@@ -73,61 +51,65 @@ public class Application {
         log.trace("Properties init success");
         MessagesProvider.initialize();
         log.trace("Messages init success");
-        GUIUtil.setFrame(frame);
-        actionExecutor = new ActionExecutor(this);
+
+        actionExecutor = new ReflectionActionExecutor();
+        cacheService = new JsonCacheService();
+        viewService = new SwingViewService();
+        mediaService = new VLCMediaService();
+
+        viewService.setMediaService(mediaService);
+        viewService.setActionExecutor(actionExecutor);
+        viewService.setCacheService(cacheService);
+
+        mediaService.setCacheService(cacheService);
+        mediaService.setViewService(viewService);
+
+        actionExecutor.setCacheService(cacheService);
+        actionExecutor.setMediaService(mediaService);
+        actionExecutor.setViewService(viewService);
+
+        cacheService.initialize();
+        viewService.initialize();
+        mediaService.initialize();
+        viewService.showQuickNavi();
         addCloseHook();
-        d = new FileVisitorManager();
-        initializeGui(arguments.length > 0 ? arguments[0] : null);
+//        d = new FileVisitorManager();
+//        initializeGui(arguments.length > 0 ? arguments[0] : null);
         log.trace("Init complete");
     }
 
-    private void initializeGui(String openWhenReady){
-        SwingUtilities.invokeLater(() -> {
-
-            // TODO move it
-            Font font = new Font("Dialog", Font.BOLD,  12);
-            UIManager.put("Label.font", font);
-            UIManager.put("Button.font", font);
-            UIManager.put("TextField.font", new Font("Dialog", Font.BOLD,  14));
-
-            UIManager.put("Label.foreground", Components.MAIN_GRAY_COLOR);
-            UIManager.put("Button.foreground", Components.MAIN_GRAY_COLOR);
-            UIManager.put("TextField.foreground", Components.MAIN_GRAY_COLOR);
-            if(!WebLookAndFeel.install()){
-                log.error("Failed to initialize weblaf");
-            }
-            frame = new Frame(this);
-            actionExecutor.setFrame(frame);
-
-            if(StringUtil.isSet(openWhenReady)){
-                frame.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowActivated(WindowEvent e) {
-                        play(openWhenReady);
-                        frame.removeWindowListener(this);
-                    }
-                });
-            } else {
-                frame.showQuickNavi();
-            }
-
-            frame.run();
-        });
-    }
+//    private void initializeGui(String openWhenReady){
+//        SwingUtilities.invokeLater(() -> {
+//
+//            TODO
+//
+//            if(StringUtil.isSet(openWhenReady)){
+//                frame.addWindowListener(new WindowAdapter() {
+//                    @Override
+//                    public void windowActivated(WindowEvent e) {
+//                        mediaService.play(openWhenReady);
+//                        frame.removeWindowListener(this);
+//                    }
+//                });
+//            } else {
+//                viewService.showQuickNavi();
+//            }
+//
+//            frame.run();
+//        });
+//    }
 
 
-    public Map<Integer, Playable> getTest(){
-        return d.getPaths().get(Paths.get("C:\\"));
-    }
+//    public Map<Integer, MediaType> getTest(){
+//        return d.getPaths().get(Paths.get("C:\\"));
+//    }
 
     private void addCloseHook(){
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
-                if(frame != null) {
-                    frame.updateCurrentPlayableInCache();
-                    frame.releasePlayer();
-                }
+                mediaService.updateCurrentMediaInCache();
+                mediaService.releasePlayer();
             }
         });
         log.trace("Close hook added");
