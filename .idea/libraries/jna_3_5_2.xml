@@ -1,12 +1,12 @@
 <component name="libraryTable">
   <library name="jna-3.5.2">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/jna-3.5.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/platform-3.5.2.jar!/" />
-      <root url="jar://$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/vlcj-3.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/vlcj-3.0.1/jna-3.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/vlcj-3.0.1/platform-3.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/vlcj-3.0.1/vlcj-3.0.1.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/../vlcj-3.0.1-dist/vlcj-3.0.1/vlcj-3.0.1-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/vlcj-3.0.1/vlcj-3.0.1-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES />
   </library>

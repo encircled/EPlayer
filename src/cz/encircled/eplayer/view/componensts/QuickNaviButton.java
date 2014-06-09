@@ -1,8 +1,10 @@
 package cz.encircled.eplayer.view.componensts;
 
-import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.Playable;
-import cz.encircled.eplayer.util.GUIConstants;
+import cz.encircled.eplayer.service.CacheService;
+import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.view.Components;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,21 +25,21 @@ public class QuickNaviButton extends JButton {
 
     private final Playable playable;
 
-    private final Application app;
+    private final CacheService cacheService;
 
     private boolean canBeDeleted = true;
 
-	public QuickNaviButton(Application app, Playable p){
-        this.app = app;
-        CLICK_LISTENER = e -> app.play(((QuickNaviButton)e.getSource()).getPlayable());
+	public QuickNaviButton(MediaService mediaService, CacheService cacheService, Playable p){
+        this.cacheService = cacheService;
+        CLICK_LISTENER = e -> mediaService.play(((QuickNaviButton)e.getSource()).getPlayable());
 		playable = p;
 		initialize();
 	}
 
-    public QuickNaviButton(Application app, Playable p, boolean canBeDeleted){
-        this.app = app;
+    public QuickNaviButton(MediaService mediaService, CacheService cacheService, Playable p, boolean canBeDeleted){
+        this.cacheService = cacheService;
         this.canBeDeleted = canBeDeleted;
-        CLICK_LISTENER = e -> app.play(((QuickNaviButton)e.getSource()).getPlayable().getPath());
+        CLICK_LISTENER = e -> mediaService.play(((QuickNaviButton)e.getSource()).getPlayable().getPath());
         playable = p;
         initialize();
     }
@@ -50,12 +52,12 @@ public class QuickNaviButton extends JButton {
         setBorder(Components.QUICK_NAVI_BUTTON_BORDER);
         setBackground(BACKGROUND);
         addActionListener(CLICK_LISTENER); // TODO move
-        addMouseListener(GUIConstants.HOVER_MOUSE_LISTENER);
+        addMouseListener(GUIUtil.HOVER_MOUSE_LISTENER);
         setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
         setToolTipText("At " + playable.getPath());
 
         if(canBeDeleted) {
-            ActionListener deleteListener = e -> app.deletePlayable(playable.getPath().hashCode());
+            ActionListener deleteListener = e -> cacheService.deleteEntry(playable.getPath().hashCode());
             JButton deleteButton = Components.getButton("x", "", 25, 25, deleteListener, new Color(255, 81, 81));
             deleteButton.setBackground(new Color(253, 253, 253));
             deleteButton.setBorder(new LineBorder(new Color(235, 235, 235)));

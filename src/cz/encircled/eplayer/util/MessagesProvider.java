@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.util;
 
-import cz.encircled.eplayer.app.UTF8Control;
+import cz.encircled.eplayer.core.UTF8Control;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

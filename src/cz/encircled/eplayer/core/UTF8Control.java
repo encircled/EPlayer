@@ -1,4 +1,4 @@
-package cz.encircled.eplayer.app;
+package cz.encircled.eplayer.core;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

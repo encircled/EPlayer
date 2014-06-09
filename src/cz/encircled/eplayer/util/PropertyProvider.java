@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.util;
 
-import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.core.Application;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;

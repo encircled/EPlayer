@@ -1,4 +1,4 @@
-package cz.encircled.eplayer.app;
+package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.model.Playable;
 import org.apache.logging.log4j.LogManager;
@@ -7,11 +7,13 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import static cz.encircled.eplayer.common.Constants.DOT;
 import static cz.encircled.eplayer.common.Constants.ONE;
+import static cz.encircled.eplayer.common.Constants.ZERO;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
@@ -25,13 +27,13 @@ public class FileVisitorManager {
 
     private static WatchService watcher;
 
-    private static final String SUPPORTED_FORMATS = "avi mkv mp3 wav wmv";
+    private static final String[] SUPPORTED_FORMATS = new String[]{"avi", "mkv", "mp3", "wav", "wmv"};
 
     private static final PlayableFileVisitor visitor = new PlayableFileVisitor();
 
     public FileVisitorManager(){
         paths = new HashMap<>();
-        paths.put(Paths.get("D:\\video"), new HashMap<>());
+        paths.put(Paths.get("C:\\"), new HashMap<>());
         initialize();
     }
 
@@ -40,20 +42,22 @@ public class FileVisitorManager {
     }
 
     private void initialize() {
-        try {
-            watcher = FileSystems.getDefault().newWatchService();
-        } catch (IOException e){
-            log.error("DirectoryScanner Initialize exception", e);
-        }
-        paths.forEach((path, playable) -> {
+        new Thread(() ->{
             try {
-                path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-            } catch (IOException e) {
-                log.error("Failed to register watcher on {}", path.toString());
+                watcher = FileSystems.getDefault().newWatchService();
+            } catch (IOException e){
+                log.error("DirectoryScanner Initialize exception", e);
             }
-        });
-        scanDirectories();
-        startWatcher();
+            paths.forEach((path, playable) -> {
+                try {
+                    path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+                } catch (IOException e) {
+                    log.error("Failed to register watcher on {}", path.toString());
+                }
+            });
+            scanDirectories();
+            startWatcher();
+        }).start();
     }
 
     private void startWatcher() {
@@ -102,7 +106,7 @@ public class FileVisitorManager {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
             String name = file.toAbsolutePath().toString();
-            if(SUPPORTED_FORMATS.contains(name.toLowerCase().substring(name.lastIndexOf(DOT) + ONE))){
+            if(Arrays.binarySearch(SUPPORTED_FORMATS, name.toLowerCase().substring(name.lastIndexOf(DOT) + ONE)) >= ZERO){
                 playable.putIfAbsent(name.hashCode(), new Playable(name));
                 log.debug("Supported File {}", name);
             }

@@ -1,7 +1,7 @@
 package cz.encircled.eplayer.view;
 
 import cz.encircled.eplayer.model.SettingItem;
-import cz.encircled.eplayer.util.GUIConstants;
+import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.util.PropertyProvider;
@@ -147,7 +147,7 @@ public class SettingsDialog extends JDialog {
                                     break;
                                 case SettingItem.INPUT_TEXT_ELEMENT_WITH_CHOOSER:
                                     componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);
-                                    componentToAdd.addMouseListener(GUIConstants.FILE_CHOOSER_MOUSE_ADAPTER);
+                                    componentToAdd.addMouseListener(GUIUtil.FILE_CHOOSER_MOUSE_ADAPTER);
                                     break;
                                 case SettingItem.INPUT_TEXT_ELEMENT:
                                 	componentToAdd = Components.getInput(item.getSettingName(), PropertyProvider.get(item.getSettingName(), ""), WIDTH_55, INPUT_HEIGHT);

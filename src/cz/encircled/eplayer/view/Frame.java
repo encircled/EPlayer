@@ -1,8 +1,11 @@
 package cz.encircled.eplayer.view;
 
 import com.alee.laf.tabbedpane.WebTabbedPane;
-import cz.encircled.eplayer.app.Application;
+import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.common.Constants;
+import cz.encircled.eplayer.model.Playable;
+import cz.encircled.eplayer.service.ViewService;
+import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.view.actions.ActionCommands;
@@ -29,16 +32,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+
+import static cz.encircled.eplayer.util.GUIUtil.*;
+
+// TODO swing worker
 
 public class Frame extends JFrame implements Runnable {
 
     private static final String TITLE = "EPlayer";
-    private static final int MEDIA_PARSED_STATUS = 9;
-
-    private EmbeddedMediaPlayerComponent mediaPlayerComponent;
-
-    private EmbeddedMediaPlayer player;
 
     private PlayerControls playerControls;
 
@@ -52,34 +56,20 @@ public class Frame extends JFrame implements Runnable {
 
     private WebTabbedPane tabs;
 
-    @Nullable
-    private String current;
-
-    private long currentTime;
-
-    private volatile int wrapperState = -1;
-
-    private final static int QUICK_NAVI_STATE = 0;
-
-    private final static int PLAYER_STATE = 1;
+    private final SwingViewService swingViewService;
 
     private final Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
                             new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
     private final static Logger log = LogManager.getLogger(Frame.class);
 
-    private final Application app;
-
-    public Frame(Application app) {
-        this.app = app;
+    public Frame(SwingViewService swingViewService) {
+        this.swingViewService = swingViewService;
         initialize();
         initializeWrapper();
         initializeMenu();
         initializeQuickNavi();
-        if(app.isVlcAvailable())
-            initializePlayer();
         initializeTabs();
-        initializeHotKeys();
         wrapper.add(tabs);
     }
 
@@ -88,131 +78,39 @@ public class Frame extends JFrame implements Runnable {
         setVisible(true);
     }
 
-    public void play(@NotNull String path, long time){
-        if(!showPlayerInternal()){
-            app.showMessage(LocalizedMessages.MSG_VLC_LIBS_FAIL, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if(!path.equals(current)){
-            log.debug("Playing new path {}", path);
-        	current = path;
-        	player.prepareMedia(path);
-        }
-        player.start();
-        setSubtitlesToMenu(player.getSpuDescriptions());
-        player.setTime(Math.min(time, player.getLength()));
-        playerControls.reinitialize();
+    public void enableSpuMenu(boolean enable){
+        spuMenu.setEnabled(enable);
     }
 
-    public void releasePlayer(){
-        if(player != null){
-            player.stop();
-            player.release();
-            current = null;
-        }
-    }
-
-    public void stopPlayer(){
-        if(player != null){
-            player.stop();
-            spuMenu.setEnabled(false);
-        }
-    }
-
-    public void updateCurrentPlayableInCache(){
-        if(current != null)
-            app.updatePlayableCache(current.hashCode(), currentTime);
-    }
-
-    public void togglePlayer() {
-        if(player != null && current != null)
-            player.pause();
-    }
-
-    public void showQuickNavi(){
-        SwingUtilities.invokeLater(() -> {
-            if(wrapperState != QUICK_NAVI_STATE){
-                updateCurrentPlayableInCache();
-                if(player != null && player.isFullScreen())
-                    exitFullScreen();
-                stopPlayer();
-                current = null;
-                wrapperState = QUICK_NAVI_STATE;
-
-                tabs.setVisible(true);
-                wrapper.repaint();
-                setTitle(TITLE);
-                repaintQuickNavi(); // TODO swing invoke
-            }
-        });
-
-    }
-
-    public void showShutdownTimeChooser(){
+    void showShutdownTimeChooser(){
         ShutdownChooserDialog chooserDialog = new ShutdownChooserDialog(this);
         log.debug("result: {}, {}", chooserDialog.getTime(), chooserDialog.getShutdownParam());
 //        if(chooserDialog.getTime() != null)
-//            app.shutdown(chooserDialog.getTime(), chooserDialog.getShutdownParam()); TODO
+//            core.shutdown(chooserDialog.getTime(), chooserDialog.getShutdownParam()); TODO
     }
 
-    private boolean showPlayerInternal(){
-        if(!app.isVlcAvailable() || player == null)
-            return false;
-        if(wrapperState != PLAYER_STATE){
-            log.debug("Add player to frame");
-            wrapperState = PLAYER_STATE;
-            tabs.setVisible(false);
-            wrapper.add(mediaPlayerComponent, BorderLayout.CENTER); // TODO or not
-            wrapper.add(playerControls, BorderLayout.SOUTH);
-        }
-        return true;
+
+    void repaintQuickNavi(Collection<Playable> playable){
+        naviPanel.removeAll();
+        naviPanel.revalidate();
+        playable.forEach(() -> naviPanel.add(new ));
+        naviPanel.repaint(); // TODO check if we need this
     }
 
-    public void repaintQuickNavi(){
-        final List<QuickNaviButton> naviButtons = new ArrayList<>();
-        app.getPlayableCache().forEach((value) -> naviButtons.add(new QuickNaviButton(app, value)));
-
-        SwingUtilities.invokeLater(() -> {
-            naviPanel.removeAll();
-            naviPanel.revalidate();
-            naviButtons.forEach(naviPanel::add);
-            naviPanel.repaint(); // TODO check if we need this
-        });
+    void onMediaTimeChange(long newTime){
+        playerControls.fireTimeChanged(newTime);
     }
 
-    public void enterFullScreen(){
+    void enterFullScreen(){
         setCursor(blankCursor);
         setJMenuBar(null);
         playerControls.setVisible(false);
-        player.setFullScreen(true);
     }
 
     public void exitFullScreen(){
         setCursor(Cursor.getDefaultCursor());
         setJMenuBar(jMenuBar);
         playerControls.setVisible(true);
-        player.setFullScreen(false);
-    }
-
-    public void toggleFullScreen() {
-        if(player != null && current != null){
-            if(player.isFullScreen())
-                exitFullScreen();
-            else
-                enterFullScreen();
-        }
-    }
-
-    public boolean isQuickNaviState(){
-        return wrapperState == QUICK_NAVI_STATE;
-    }
-
-    public boolean isPlayerState(){
-        return wrapperState == PLAYER_STATE;
-    }
-
-    public boolean isFullScreen(){
-        return player.isFullScreen();
     }
 
     private void initialize(){
@@ -230,75 +128,15 @@ public class Frame extends JFrame implements Runnable {
             if(playerControls != null){
                 if(e.getWheelRotation() < Constants.ZERO){
                     playerControls.setVisible(true);
-                    if(player.isFullScreen())
+                    if(swingViewService.isFullScreen())
                         setCursor(Cursor.getDefaultCursor());
                 } else{
                     playerControls.setVisible(false);
-                    if(player.isFullScreen())
+                    if(swingViewService.isFullScreen())
                         setCursor(blankCursor);
                 }
             }
         });
-    }
-
-    private void initializePlayer(){
-        try {
-            mediaPlayerComponent = new EmbeddedMediaPlayerComponent() {
-                @Override
-                protected FullScreenStrategy onGetFullScreenStrategy() {
-                    return new Win32FullScreenStrategy(Frame.this);
-                }
-            };
-            player = mediaPlayerComponent.getMediaPlayer();
-            player.setEnableMouseInputHandling(false);
-            player.setEnableKeyInputHandling(false);
-
-            mediaPlayerComponent.getVideoSurface().addMouseListener(new MouseAdapter() {
-
-                @Override
-                public void mouseClicked(@NotNull MouseEvent e) {
-                    if(e.getClickCount() == Constants.ONE){
-                        togglePlayer();
-                    } else {
-                        togglePlayer();
-                        toggleFullScreen();
-                    }
-                }
-            });
-
-            player.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
-                @Override
-                public void finished(MediaPlayer mediaPlayer) {
-                    app.updatePlayableCache(current.hashCode(), Constants.ZERO_LONG);
-                    current = null;
-                    stopPlayer();
-                    showQuickNavi();
-                }
-
-                @Override
-                public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
-                    currentTime = newTime;
-                    playerControls.fireTimeChanged(newTime);
-                }
-
-                @Override
-                public void error(MediaPlayer mediaPlayer) {
-                    app.showMessage(LocalizedMessages.FILE_OPEN_FAILED, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-                    if(current != null) {
-                        app.deletePlayable(current.hashCode());
-                        current = null;
-                    }
-                    showQuickNavi();
-                }
-
-            });
-            playerControls = new PlayerControls(player);
-        } catch(Exception e){
-            log.error("Player initialization failed", e);
-            JOptionPane.showMessageDialog(Frame.this, "VLC library not found", "Error title", JOptionPane.ERROR_MESSAGE);
-        } catch (NoClassDefFoundError re){
-            log.error("Player initialization failed", re);
-        }
     }
 
     private void initializeMenu(){
@@ -308,7 +146,7 @@ public class Frame extends JFrame implements Runnable {
         JMenu autoShutdown = new JMenu(MessagesProvider.get(LocalizedMessages.AUTO_SHUTDOWN));
         JMenu mediaMenu = new JMenu(MessagesProvider.get(LocalizedMessages.MEDIA));
 
-        spuMenu = new JMenu("SPU"); // TODO
+        spuMenu = new JMenu(MessagesProvider.get(LocalizedMessages.SUBTITLES));
         spuMenu.setEnabled(false);
 
         autoShutdown.add(Components.getMenuItem(LocalizedMessages.AUTO_SHUTDOWN, ActionCommands.SHUTDOWN_TIME_CHOOSER));
@@ -335,7 +173,7 @@ public class Frame extends JFrame implements Runnable {
     private void initializeTabs(){
         tabs = new WebTabbedPane();
         JPanel test = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
-        app.getTest().values().forEach(p -> test.add(new QuickNaviButton(app, p, false)));
+//        new HashMap<>(app.getTest()).values().forEach(p -> test.add(new QuickNaviButton(app, p, false)));
         tabs.add(new JScrollPane(naviPanel), "Navi");
         tabs.add(new JScrollPane(test), "Video");
     }
@@ -345,7 +183,7 @@ public class Frame extends JFrame implements Runnable {
         spuMenu.removeAll();
         spuDescriptions.forEach((desc) -> {
             JMenuItem subtitle = new JMenuItem(desc.description());
-            subtitle.addActionListener(e -> player.setSpu(desc.id()));
+            subtitle.addActionListener(e -> swingViewService.setSpu(desc.id()));
             spuMenu.add(subtitle);
         });
         spuMenu.setEnabled(spuDescriptions.size() > Constants.ZERO);
@@ -354,21 +192,6 @@ public class Frame extends JFrame implements Runnable {
 
     private void initializeQuickNavi(){
         naviPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
-    }
-
-    private void initializeHotKeys(){
-        // TODO frame dependency
-        KeyDispatcher dispatcher = new KeyDispatcher(app);
-        dispatcher.bind(KeyEvent.VK_ENTER, ActionCommands.PLAY_LAST);
-        dispatcher.bind(KeyEvent.VK_SPACE, ActionCommands.TOGGLE_PLAYER);
-        dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.CANCEL);
-        dispatcher.bind(KeyEvent.VK_C, ActionCommands.PLAY_LAST);
-        dispatcher.bind(KeyEvent.VK_Q, ActionCommands.EXIT);
-        dispatcher.bind(KeyEvent.VK_O, ActionCommands.OPEN);
-        dispatcher.bind(KeyEvent.VK_N, ActionCommands.OPEN_QUICK_NAVI);
-        dispatcher.bind(KeyEvent.VK_F, ActionCommands.TOGGLE_FULL_SCREEN);
-        dispatcher.bind(KeyEvent.VK_S, ActionCommands.SETTINGS);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher);
     }
 
 }
