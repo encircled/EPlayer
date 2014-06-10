@@ -18,7 +18,7 @@ public class QuickNaviButton extends JButton {
 
     public static final Color BACKGROUND = new Color(245, 245, 245);
 
-	private static final Dimension DIMENSION =  new Dimension(350, 190);
+	private static final Dimension DIMENSION =  new Dimension(360, 190);
 
     private static ActionListener CLICK_LISTENER;
 

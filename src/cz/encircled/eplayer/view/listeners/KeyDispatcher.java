@@ -36,9 +36,7 @@ public class KeyDispatcher implements KeyEventDispatcher {
 
     @Override
     public boolean dispatchKeyEvent(@NotNull KeyEvent e) {
-        if(e.getID() == KeyEvent.KEY_PRESSED)
-            return onKeyPressed(e);
-        return false;
+        return e.getID() == KeyEvent.KEY_PRESSED && onKeyPressed(e);
     }
 
     private boolean onKeyPressed(@NotNull KeyEvent e){

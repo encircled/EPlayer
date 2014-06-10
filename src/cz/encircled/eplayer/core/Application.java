@@ -2,15 +2,16 @@ package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.service.*;
 import cz.encircled.eplayer.service.action.ActionExecutor;
+import cz.encircled.eplayer.service.action.ReflectionActionExecutor;
 import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.util.MessagesProvider;
 import cz.encircled.eplayer.util.PropertyProvider;
 import cz.encircled.eplayer.view.SwingViewService;
-import cz.encircled.eplayer.service.action.ReflectionActionExecutor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 // TODO Youtube tab
 
@@ -45,7 +46,7 @@ public class Application {
         log.trace("Reinitializing completed");
     }
 
-    private void initialize(String[] arguments) throws IOException {
+    private void initialize(String[] arguments) throws IOException, InterruptedException {
         log.trace("App init");
         IOUtil.createIfMissing(APP_DOCUMENTS_ROOT, true);
         PropertyProvider.initialize();
@@ -68,11 +69,28 @@ public class Application {
         actionExecutor.setMediaService(mediaService);
         actionExecutor.setViewService(viewService);
 
-        viewService.initialize().onReady(mediaService::initialize);
-        cacheService.initialize().onReady(viewService::showQuickNavi);
+        CountDownLatch viewCountDown = new CountDownLatch(1);
+
+        viewService.initialize(viewCountDown);
+        viewCountDown.await();
+        
+        final CountDownLatch countDownLatch = new CountDownLatch(2);
+        new Thread(() -> cacheService.initialize(countDownLatch)).start();
+        mediaService.initialize(countDownLatch);
+
+        countDownLatch.await();
+        if(arguments.length == 0)
+            viewService.showQuickNavi();
+        else
+            mediaService.play(arguments[0]);
+
+        new Thread(() -> {
+            d = new FileVisitorManager(cacheService);
+            d.getPaths().forEach((path, result) -> viewService.addTabForFolder(path.toString(), result.values()));
+        }).start();
+
         addCloseHook();
-//        d = new FileVisitorManager();
-//        initializeGui(arguments.length > 0 ? arguments[0] : null); TODO
+
         log.trace("Init complete");
     }
 

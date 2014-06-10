@@ -1,6 +1,7 @@
 package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.service.CacheService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -24,17 +25,21 @@ public class FileVisitorManager {
 
     private static final Logger log = LogManager.getLogger();
 
+    private final CacheService cacheService;
+
     private Map<Path, Map<Integer, MediaType>> paths;
 
     private static WatchService watcher;
 
     private static final String[] SUPPORTED_FORMATS = new String[]{"avi", "mkv", "mp3", "wav", "wmv"};
 
-    private static final PlayableFileVisitor visitor = new PlayableFileVisitor();
+    private final PlayableFileVisitor visitor = new PlayableFileVisitor();
 
-    public FileVisitorManager(){
+    public FileVisitorManager(CacheService cacheService){
+        this.cacheService = cacheService;
         paths = new HashMap<>();
-        paths.put(Paths.get("C:\\Program Files\\"), new HashMap<>());
+        paths.put(Paths.get("D:\\video\\"), new HashMap<>());
+        paths.put(Paths.get("D:\\House.of.Cards.S02.1080p.WEBRip.Rus.Eng.HDCLUB"), new HashMap<>());
         initialize();
     }
 
@@ -43,22 +48,20 @@ public class FileVisitorManager {
     }
 
     private void initialize() {
-        new Thread(() ->{
+        try {
+            watcher = FileSystems.getDefault().newWatchService();
+        } catch (IOException e){
+            log.error("DirectoryScanner Initialize exception", e);
+        }
+        paths.forEach((path, playable) -> {
             try {
-                watcher = FileSystems.getDefault().newWatchService();
-            } catch (IOException e){
-                log.error("DirectoryScanner Initialize exception", e);
+                path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+            } catch (IOException e) {
+                log.error("Failed to register watcher on {}", path.toString());
             }
-            paths.forEach((path, playable) -> {
-                try {
-                    path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
-                } catch (IOException e) {
-                    log.error("Failed to register watcher on {}", path.toString());
-                }
-            });
-            scanDirectories();
-            startWatcher();
-        }).start();
+        });
+        scanDirectories();
+        startWatcher();
     }
 
     private void startWatcher() {
@@ -91,7 +94,7 @@ public class FileVisitorManager {
         });
     }
 
-    private static class PlayableFileVisitor implements FileVisitor<Path> {
+    private class PlayableFileVisitor implements FileVisitor<Path> {
 
         private Map<Integer, MediaType> playable;
 
@@ -108,10 +111,13 @@ public class FileVisitorManager {
         @NotNull
         @Override
         public FileVisitResult visitFile(@NotNull Path file, BasicFileAttributes attrs) throws IOException {
-            String name = file.toAbsolutePath().toString();
-            if(Arrays.binarySearch(SUPPORTED_FORMATS, name.toLowerCase().substring(name.lastIndexOf(DOT) + ONE)) >= ZERO){
-                playable.putIfAbsent(name.hashCode(), new MediaType(name));
-                log.debug("Supported File {}", name);
+            String fullPath = file.toAbsolutePath().toString();
+            if(Arrays.binarySearch(SUPPORTED_FORMATS, fullPath.toLowerCase().substring(fullPath.lastIndexOf(DOT) + ONE)) >= ZERO){
+                MediaType media = cacheService.getEntry(fullPath.hashCode());
+                if(media == null)
+                    media = new MediaType(fullPath);
+                playable.putIfAbsent(fullPath.hashCode(), media);
+                log.debug("Supported File {}", fullPath);
             }
 
             return FileVisitResult.CONTINUE;

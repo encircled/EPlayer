@@ -1,14 +1,13 @@
 package cz.encircled.eplayer.view;
 
 import com.alee.laf.WebLookAndFeel;
-import com.alee.laf.tabbedpane.WebTabbedPane;
 import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
+import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
-import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
 import cz.encircled.eplayer.view.componensts.WrapLayout;
@@ -26,6 +25,7 @@ import java.util.List;
 public class Frame extends JFrame {
 
     private static final String TITLE = "EPlayer";
+    private static final int SCROLL_BAR_SPEED = 16;
 
     private PlayerControls playerControls;
 
@@ -60,6 +60,14 @@ public class Frame extends JFrame {
         tabs.setVisible(false);
         wrapper.add(mediaService.getPlayerComponent(), BorderLayout.CENTER);
         wrapper.add(playerControls, BorderLayout.SOUTH);
+    }
+
+    void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
+        JPanel tabPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
+        mediaType.forEach((media) -> tabPanel.add(new QuickNaviButton(viewService, mediaService, media, false)));
+        JScrollPane scrollPane = new JScrollPane(tabPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_BAR_SPEED);
+        tabs.add(scrollPane, tabName);
     }
 
     void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
@@ -196,10 +204,7 @@ public class Frame extends JFrame {
 
     private void initializeTabs(){
         tabs = new JTabbedPane();
-        JPanel test = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
-//        new HashMap<>(app.getTest()).values().forEach(p -> test.add(new QuickNaviButton(app, p, false)));
         tabs.add(new JScrollPane(naviPanel), "Navi");
-        tabs.add(new JScrollPane(test), "Video");
         wrapper.add(tabs);
     }
 

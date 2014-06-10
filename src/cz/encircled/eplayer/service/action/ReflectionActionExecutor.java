@@ -69,10 +69,22 @@ public class ReflectionActionExecutor implements ActionExecutor {
         fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
     }
 
+    // TODO: create Object for commands with type. When command is GUI only - do not manipulate with threads
     @Override
     public void execute(String command){
         try {
-            commands.get(command).invoke(ReflectionActionExecutor.this);
+            if(EventQueue.isDispatchThread()){
+                log.debug("Execute is called from EDT, creating SwingWorker");
+                new SwingWorker<Object, Object>(){
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        return commands.get(command).invoke(ReflectionActionExecutor.this);
+                    }
+                }.execute();
+            } else {
+                commands.get(command).invoke(ReflectionActionExecutor.this);
+            }
+
         } catch (Throwable e) {
             log.error("Failed to execute command {}, msg:", command, e.getMessage());
         }
@@ -86,7 +98,7 @@ public class ReflectionActionExecutor implements ActionExecutor {
     @SuppressWarnings("UnusedDeclaration")
     public void openMedia() {
         JFileChooser fc = new JFileChooser(fileChooserLastPath);
-        int res = fc.showOpenDialog(null); // TODO
+        int res = fc.showOpenDialog(viewService.getWindow());
         if (res == JFileChooser.APPROVE_OPTION) {
             fileChooserLastPath = fc.getSelectedFile().getPath();
             mediaService.updateCurrentMediaInCache();

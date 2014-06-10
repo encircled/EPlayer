@@ -17,8 +17,9 @@ import uk.co.caprica.vlcj.player.TrackDescription;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Administrator on 9.6.2014.
@@ -39,12 +40,9 @@ public class SwingViewService implements ViewService {
 
     private final static int PLAYER_STATE = 1;
 
-    private Runnable runWhenReady;
-
-    private boolean isReady = false;
 
     @Override
-    public ViewService initialize(){
+    public void initialize(@NotNull CountDownLatch countDownLatch){
         invokeInEDT(() -> {
             long start = System.currentTimeMillis();
             log.trace("SwingViewService init start");
@@ -54,18 +52,8 @@ public class SwingViewService implements ViewService {
             GUIUtil.setFrame(frame);
             initializeHotKeys();
             log.trace("SwingViewService init complete in {} ms", System.currentTimeMillis() - start);
-            isReady = true;
-            if(runWhenReady != null) {
-                new SwingWorker<Object, Object>() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        runWhenReady.run();
-                        return null;
-                    }
-                }.execute();
-            }
+            countDownLatch.countDown();
         });
-        return this;
     }
 
     @Override
@@ -100,6 +88,12 @@ public class SwingViewService implements ViewService {
         return wrapperState == PLAYER_STATE;
     }
 
+
+    @Override
+    public void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
+        invokeInEDT(() -> frame.addTabForFolder(tabName, mediaType));
+    }
+
     @Override
     public void showQuickNavi(){
         if(wrapperState != QUICK_NAVI_STATE){
@@ -109,11 +103,11 @@ public class SwingViewService implements ViewService {
     }
 
     @Override
-    public void showPlayer(){
+    public void showPlayer(CountDownLatch countDownLatch){
         if(wrapperState != PLAYER_STATE){
             wrapperState = PLAYER_STATE;
             log.debug("Add player to frame");
-            invokeInEDT(frame::showPlayer);
+            invokeInEDT(frame::showPlayer, countDownLatch);
         }
     }
 
@@ -143,14 +137,6 @@ public class SwingViewService implements ViewService {
     }
 
     @Override
-    public void onReady(Runnable runnable) {
-        if(isReady)
-            runnable.run();
-        else
-            runWhenReady = runnable;
-    }
-
-    @Override
     public void setCacheService(CacheService cacheService) {
         this.cacheService = cacheService;
     }
@@ -160,11 +146,24 @@ public class SwingViewService implements ViewService {
         this.mediaService = mediaService;
     }
 
-    private static void invokeInEDT(Runnable runnable){
+    private static void invokeInEDT(@NotNull Runnable runnable){
         if(EventQueue.isDispatchThread()){
             runnable.run();
         } else {
             SwingUtilities.invokeLater(runnable);
+        }
+    }
+
+    private static void invokeInEDT(@NotNull Runnable runnable, @NotNull CountDownLatch countDownLatch){
+        if(EventQueue.isDispatchThread()){
+            runnable.run();
+            countDownLatch.countDown();
+        } else {
+            Runnable wrapRunnable = () -> {
+                    runnable.run();
+                    countDownLatch.countDown();
+            };
+            SwingUtilities.invokeLater(wrapRunnable);
         }
     }
 

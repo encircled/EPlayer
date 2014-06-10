@@ -24,6 +24,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.concurrent.CountDownLatch;
 
 import static cz.encircled.eplayer.util.GUIUtil.showMessage;
 import static cz.encircled.eplayer.util.LocalizedMessages.ERROR_TITLE;
@@ -99,7 +100,13 @@ public class VLCMediaService implements MediaService {
 
     private void play(@NotNull String path, long time){
         // showMessage(LocalizedMessages.MSG_VLC_LIBS_FAIL, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE); TODO
-        viewService.showPlayer();
+        CountDownLatch playerCountDown = new CountDownLatch(1);
+        viewService.showPlayer(playerCountDown);
+        try {
+            playerCountDown.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         log.debug("play: {}", path);
         if(!path.equals(current)){
             log.debug("Path {} is new", path);
@@ -107,11 +114,12 @@ public class VLCMediaService implements MediaService {
             player.prepareMedia(path);
         }
         player.start();
-//        player.getSnapshot();// TODO
         player.setTime(Math.min(time, player.getLength()));
         viewService.onPlayStart();
         viewService.updateSubtitlesMenu(player.getSpuDescriptions());
+
     }
+
 
     @Override
     public void play(@NotNull String path){
@@ -188,7 +196,8 @@ public class VLCMediaService implements MediaService {
 
     @Override
     public void pause() {
-        player.pause();
+        if (player.isPlaying())
+             player.pause();
     }
 
     @Override
@@ -206,7 +215,7 @@ public class VLCMediaService implements MediaService {
     }
 
     @Override
-    public void initialize(){
+    public void initialize(@NotNull CountDownLatch countDownLatch){
         long start = System.currentTimeMillis();
         initializeLibs();
         log.trace("VLCMediaService init start");
@@ -270,6 +279,7 @@ public class VLCMediaService implements MediaService {
             log.error("Player initialization failed", re);
         }
         log.trace("VLCMediaService init complete in {} ms", System.currentTimeMillis() - start);
+        countDownLatch.countDown();
     }
 
     private void initializeLibs(){

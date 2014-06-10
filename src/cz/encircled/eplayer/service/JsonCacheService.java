@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 import static cz.encircled.eplayer.util.GUIUtil.showMessage;
@@ -29,13 +30,6 @@ public class JsonCacheService implements CacheService {
 
     private static final Logger log = LogManager.getLogger();
 
-    private Runnable runWhenReady;
-
-    private boolean isReady = false;
-
-    public JsonCacheService(){
-
-    }
 
     @Override
     public void forEach(Consumer<MediaType> action) {
@@ -112,7 +106,7 @@ public class JsonCacheService implements CacheService {
         }).start();
     }
 
-    public CacheService initialize(){
+    public void initialize(@NotNull CountDownLatch countDownLatch){
         long start = System.currentTimeMillis();
         log.trace("JsonCacheService init start");
         try {
@@ -122,7 +116,7 @@ public class JsonCacheService implements CacheService {
         } catch (IOException e) {
             log.error("Failed to create QuickNavi data file at {}", QUICK_NAVI_PATH);
             showMessage(MSG_CREATE_QN_FILE_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-            return this;
+            return;
         }
         try {
             cache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
@@ -139,20 +133,7 @@ public class JsonCacheService implements CacheService {
 
         checkHashes(cache);
         log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start);
-        isReady = true;
-        if(runWhenReady != null){
-            runWhenReady.run();
-            runWhenReady = null;
-        }
-        return this;
-    }
-
-    @Override
-    public void onReady(Runnable runnable) {
-        if(isReady)
-            runnable.run();
-        else
-            runWhenReady = runnable;
+        countDownLatch.countDown();
     }
 
     private static void checkHashes(@NotNull Map<Integer, MediaType> playableCache) {

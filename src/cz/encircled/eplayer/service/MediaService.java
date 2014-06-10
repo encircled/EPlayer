@@ -4,6 +4,7 @@ import cz.encircled.eplayer.model.MediaType;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Administrator on 9.6.2014.
@@ -52,5 +53,5 @@ public interface MediaService {
 
     void stop();
 
-    void initialize();
+    void initialize(CountDownLatch countDownLatch);
 }
