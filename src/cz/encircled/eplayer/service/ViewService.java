@@ -35,7 +35,10 @@ public interface ViewService {
 
     void setMediaService(MediaService mediaService);
 
-    void initialize();
+    ViewService initialize();
 
     Window getWindow();
+
+    void onReady(Runnable runnable);
+
 }

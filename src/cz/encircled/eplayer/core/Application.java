@@ -68,13 +68,11 @@ public class Application {
         actionExecutor.setMediaService(mediaService);
         actionExecutor.setViewService(viewService);
 
-        cacheService.initialize();
-        viewService.initialize();
-        mediaService.initialize();
-        viewService.showQuickNavi();
+        viewService.initialize().onReady(mediaService::initialize);
+        cacheService.initialize().onReady(viewService::showQuickNavi);
         addCloseHook();
-        d = new FileVisitorManager();
-//        initializeGui(arguments.length > 0 ? arguments[0] : null);
+//        d = new FileVisitorManager();
+//        initializeGui(arguments.length > 0 ? arguments[0] : null); TODO
         log.trace("Init complete");
     }
 

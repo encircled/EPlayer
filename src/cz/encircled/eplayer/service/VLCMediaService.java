@@ -35,6 +35,7 @@ import static cz.encircled.eplayer.util.LocalizedMessages.MSG_VLC_LIBS_FAIL;
 public class VLCMediaService implements MediaService {
 
     private static final Logger log = LogManager.getLogger();
+    public static final String X64 = "64";
 
     private CacheService cacheService;
 
@@ -49,11 +50,9 @@ public class VLCMediaService implements MediaService {
     @Nullable
     private String current;
 
-    public static final String VLC_LIB_PATH = "vlc-2.1.3_x64";
+    public static final String VLC_LIB_PATH_64 = "vlc-2.1.3_x64";
 
-    public VLCMediaService() {
-        initializeLibs();
-    }
+    public static final String VLC_LIB_PATH = "vlc-2.1.3";
 
     @Override
     public void enterFullScreen(){
@@ -108,6 +107,7 @@ public class VLCMediaService implements MediaService {
             player.prepareMedia(path);
         }
         player.start();
+//        player.getSnapshot();// TODO
         player.setTime(Math.min(time, player.getLength()));
         viewService.onPlayStart();
         viewService.updateSubtitlesMenu(player.getSpuDescriptions());
@@ -207,8 +207,12 @@ public class VLCMediaService implements MediaService {
 
     @Override
     public void initialize(){
+        long start = System.currentTimeMillis();
+        initializeLibs();
+        log.trace("VLCMediaService init start");
         try {
             mediaPlayerComponent = new EmbeddedMediaPlayerComponent() {
+                @NotNull
                 @Override
                 protected FullScreenStrategy onGetFullScreenStrategy() {
                     return new Win32FullScreenStrategy(viewService.getWindow());
@@ -265,16 +269,23 @@ public class VLCMediaService implements MediaService {
         } catch (NoClassDefFoundError re){
             log.error("Player initialization failed", re);
         }
+        log.trace("VLCMediaService init complete in {} ms", System.currentTimeMillis() - start);
     }
 
     private void initializeLibs(){
-        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
+        long start = System.currentTimeMillis();
+        log.trace("Initialize VLC libs");
+        if(System.getProperty("sun.arch.data.model").equals(X64)) {
+            NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH_64);
+        } else {
+            NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
+        }
         try {
             Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
-            log.trace("VLCLib successfully initialized");
+            log.trace("VLCLib successfully initialized in {} ms", System.currentTimeMillis() - start);
         } catch(UnsatisfiedLinkError e){
             GUIUtil.showMessage(MessagesProvider.get(MSG_VLC_LIBS_FAIL), MessagesProvider.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
-            log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH);
+            log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH_64);
             // TODO exit?
         }
     }

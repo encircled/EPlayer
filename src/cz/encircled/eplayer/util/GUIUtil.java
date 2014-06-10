@@ -35,12 +35,12 @@ public class GUIUtil {
 
     public static final BackgroundFocusListener BACKGROUND_FOCUS_LISTENER = new BackgroundFocusListener();
 
-    public static void showMessage(String text, String title, int level){
+    public static void showMessage(@NotNull String text, @NotNull String title, int level){
         JOptionPane.showMessageDialog(frame, MessagesProvider.get(text),
                 MessagesProvider.get(title), level);
     }
 
-    public static boolean userConfirmed(String confirmMessage) {
+    public static boolean userConfirmed(@NotNull String confirmMessage) {
         return JOptionPane.showConfirmDialog(frame, MessagesProvider.get(confirmMessage),
                                 MessagesProvider.get(CONFIRM_TITLE), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION;
     }

@@ -14,6 +14,7 @@ import cz.encircled.eplayer.view.componensts.QuickNaviButton;
 import cz.encircled.eplayer.view.componensts.WrapLayout;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
@@ -21,8 +22,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.List;
-
-// TODO swing worker
 
 public class Frame extends JFrame {
 
@@ -38,7 +37,7 @@ public class Frame extends JFrame {
 
     private JMenu spuMenu;
 
-    private WebTabbedPane tabs;
+    private JTabbedPane tabs;
 
     private final ViewService viewService;
 
@@ -56,18 +55,21 @@ public class Frame extends JFrame {
     }
 
     void showPlayer() {
+        if(playerControls == null)
+            playerControls = new PlayerControls(mediaService);
         tabs.setVisible(false);
         wrapper.add(mediaService.getPlayerComponent(), BorderLayout.CENTER);
         wrapper.add(playerControls, BorderLayout.SOUTH);
     }
 
-    void showQuickNavi(Collection<MediaType> mediaType) {
+    void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
         tabs.setVisible(true);
         setTitle(TITLE);
         repaintQuickNavi(mediaType);
+        tabs.repaint();
     }
 
-    void repaintQuickNavi(Collection<MediaType> mediaType){
+    void repaintQuickNavi(@NotNull Collection<MediaType> mediaType){
         naviPanel.removeAll();
         mediaType.forEach((media) -> naviPanel.add(new QuickNaviButton(viewService, mediaService, media)));
     }
@@ -103,7 +105,7 @@ public class Frame extends JFrame {
         spuMenu.setEnabled(isEnabled);
     }
 
-    void updateSubtitlesMenu(List<TrackDescription> spuDescriptions){
+    void updateSubtitlesMenu(@NotNull List<TrackDescription> spuDescriptions){
         log.debug("Set subtitles, count {}", spuDescriptions.size());
         spuMenu.removeAll();
         spuDescriptions.forEach((desc) -> {
@@ -125,8 +127,6 @@ public class Frame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         setupBasicUI();
-
-        playerControls = new PlayerControls(mediaService);
 
         initializeWrapper();
         initializeMenu();
@@ -195,7 +195,7 @@ public class Frame extends JFrame {
     }
 
     private void initializeTabs(){
-        tabs = new WebTabbedPane();
+        tabs = new JTabbedPane();
         JPanel test = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
 //        new HashMap<>(app.getTest()).values().forEach(p -> test.add(new QuickNaviButton(app, p, false)));
         tabs.add(new JScrollPane(naviPanel), "Navi");

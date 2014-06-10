@@ -29,6 +29,10 @@ public class JsonCacheService implements CacheService {
 
     private static final Logger log = LogManager.getLogger();
 
+    private Runnable runWhenReady;
+
+    private boolean isReady = false;
+
     public JsonCacheService(){
 
     }
@@ -77,13 +81,15 @@ public class JsonCacheService implements CacheService {
 //        }
 //    }
 
+    @NotNull
     @Override
     public Collection<MediaType> getCache(){
         return cache.values();
     }
 
     @Nullable
-    private MediaType getLastByWatchDate(){
+    @Override
+    public MediaType getLastByWatchDate(){
         MediaType p = getCache()
                 .stream()
                 .max((p1, p2) -> Long.compare(p1.getWatchDate(), p2.getWatchDate())).get();
@@ -106,36 +112,50 @@ public class JsonCacheService implements CacheService {
         }).start();
     }
 
-    public void initialize(){
-        new Thread(() -> {
-            log.trace("Init playable cache");
-            try {
-                if(IOUtil.createIfMissing(QUICK_NAVI_PATH)){
-                    log.debug("QuickNavi file was created");
-                }
-            } catch (IOException e) {
-                log.error("Failed to create QuickNavi data file at {}", QUICK_NAVI_PATH);
-                showMessage(MSG_CREATE_QN_FILE_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-                return;
+    public CacheService initialize(){
+        long start = System.currentTimeMillis();
+        log.trace("JsonCacheService init start");
+        try {
+            if(IOUtil.createIfMissing(QUICK_NAVI_PATH)){
+                log.debug("QuickNavi file was created");
             }
-            try {
-                cache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
-            } catch (IOException e) {
-                log.error("Failed to read cache data from {} with default type token. Message: {}",
-                        PropertyProvider.get(QUICK_NAVI_PATH), e.getMessage());
-                showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-            } catch (JsonSyntaxException e){
-                log.error("JSON syntax error. Message: {}", e.getMessage());
-                showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-            }
-            if(cache == null)
-                cache = new HashMap<>();
+        } catch (IOException e) {
+            log.error("Failed to create QuickNavi data file at {}", QUICK_NAVI_PATH);
+            showMessage(MSG_CREATE_QN_FILE_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+            return this;
+        }
+        try {
+            cache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
+        } catch (IOException e) {
+            log.error("Failed to read cache data from {} with default type token. Message: {}",
+                    PropertyProvider.get(QUICK_NAVI_PATH), e.getMessage());
+            showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+        } catch (JsonSyntaxException e){
+            log.error("JSON syntax error. Message: {}", e.getMessage());
+            showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+        }
+        if(cache == null)
+            cache = new HashMap<>();
 
-            checkHashes(cache);
-        }).start();
+        checkHashes(cache);
+        log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start);
+        isReady = true;
+        if(runWhenReady != null){
+            runWhenReady.run();
+            runWhenReady = null;
+        }
+        return this;
     }
 
-    private static void checkHashes(Map<Integer, MediaType> playableCache) {
+    @Override
+    public void onReady(Runnable runnable) {
+        if(isReady)
+            runnable.run();
+        else
+            runWhenReady = runnable;
+    }
+
+    private static void checkHashes(@NotNull Map<Integer, MediaType> playableCache) {
         List<Integer> corruptedHashes = new ArrayList<>();
         playableCache.forEach((key, value) -> {
             if (value.getPath().hashCode() != key) {

@@ -1,6 +1,7 @@
 package cz.encircled.eplayer.service.action;
 
 import cz.encircled.eplayer.common.Constants;
+import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
@@ -34,8 +35,10 @@ public class ReflectionActionExecutor implements ActionExecutor {
     private ViewService viewService;
 
     public ReflectionActionExecutor() {
+        log.trace("ReflectionActionExecutor init start");
         initializeCommandsTree();
         setDefaultFileChooserPath();
+        log.trace("ReflectionActionExecutor init complete");
     }
 
     public void setViewService(ViewService viewService) {
@@ -172,8 +175,9 @@ public class ReflectionActionExecutor implements ActionExecutor {
 
     @SuppressWarnings("UnusedDeclaration")
     public void playLast(){
-//        new Thread(app::playLast).start();
-        // TODO
+        MediaType media = cacheService.getLastByWatchDate();
+        if(media != null)
+            mediaService.play(media);
     }
 
 }

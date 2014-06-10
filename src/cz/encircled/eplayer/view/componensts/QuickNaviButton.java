@@ -28,14 +28,14 @@ public class QuickNaviButton extends JButton {
 
     private final ViewService viewService;
 
-    public QuickNaviButton(ViewService viewService, MediaService mediaService, MediaType p){
+    public QuickNaviButton(ViewService viewService, @NotNull MediaService mediaService, MediaType p){
         this.viewService = viewService;
         CLICK_LISTENER = e -> mediaService.play(((QuickNaviButton)e.getSource()).getMediaType());
 		mediaType = p;
 		initialize();
 	}
 
-    public QuickNaviButton(ViewService viewService, MediaService mediaService, MediaType p, boolean canBeDeleted){
+    public QuickNaviButton(ViewService viewService, @NotNull MediaService mediaService, MediaType p, boolean canBeDeleted){
         this.viewService = viewService;
         this.canBeDeleted = canBeDeleted;
         CLICK_LISTENER = e -> mediaService.play(((QuickNaviButton)e.getSource()).getMediaType().getPath());

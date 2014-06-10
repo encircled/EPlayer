@@ -35,13 +35,13 @@ public class KeyDispatcher implements KeyEventDispatcher {
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent e) {
+    public boolean dispatchKeyEvent(@NotNull KeyEvent e) {
         if(e.getID() == KeyEvent.KEY_PRESSED)
             return onKeyPressed(e);
         return false;
     }
 
-    private boolean onKeyPressed(KeyEvent e){
+    private boolean onKeyPressed(@NotNull KeyEvent e){
         log.debug("Dispatch key pressed event with code {}", e.getKeyCode());
         if(codeBinds.containsKey(e.getKeyCode())) {
             codeBinds.get(e.getKeyCode()).forEach(command -> actionExecutor.execute(command));

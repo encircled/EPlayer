@@ -1,5 +1,7 @@
 package cz.encircled.eplayer.view.componensts;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -55,8 +57,9 @@ public class WrapLayout extends FlowLayout
      * @return the preferred dimensions to lay out the
      * subcomponents of the specified container
      */
+    @NotNull
     @Override
-    public Dimension preferredLayoutSize(Container target)
+    public Dimension preferredLayoutSize(@NotNull Container target)
     {
         return layoutSize(target, true);
     }
@@ -68,8 +71,9 @@ public class WrapLayout extends FlowLayout
      * @return the minimum dimensions to lay out the
      * subcomponents of the specified container
      */
+    @NotNull
     @Override
-    public Dimension minimumLayoutSize(Container target)
+    public Dimension minimumLayoutSize(@NotNull Container target)
     {
         Dimension minimum = layoutSize(target, false);
         minimum.width -= (getHgap() + 1);
@@ -84,7 +88,8 @@ public class WrapLayout extends FlowLayout
      * @param preferred should preferred size be calculated
      * @return the dimension to layout the target container
      */
-    private Dimension layoutSize(Container target, boolean preferred)
+    @NotNull
+    private Dimension layoutSize(@NotNull Container target, boolean preferred)
     {
         synchronized (target.getTreeLock())
         {
@@ -169,7 +174,7 @@ public class WrapLayout extends FlowLayout
      *  @param rowWidth the width of the row to add
      *  @param rowHeight the height of the row to add
      */
-    private void addRow(Dimension dim, int rowWidth, int rowHeight)
+    private void addRow(@NotNull Dimension dim, int rowWidth, int rowHeight)
     {
         dim.width = Math.max(dim.width, rowWidth);
 

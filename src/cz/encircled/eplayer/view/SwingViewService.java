@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.view;
 
+import com.sun.java.swing.SwingUtilities3;
 import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
@@ -10,11 +11,13 @@ import cz.encircled.eplayer.util.GUIUtil;
 import cz.encircled.eplayer.view.listeners.KeyDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 /**
@@ -36,12 +39,33 @@ public class SwingViewService implements ViewService {
 
     private final static int PLAYER_STATE = 1;
 
+    private Runnable runWhenReady;
+
+    private boolean isReady = false;
+
     @Override
-    public void initialize(){
-        frame = new Frame(this, mediaService);
-        GUIUtil.setFrame(frame);
-        initializeHotKeys();
-        frame.setVisible(true);
+    public ViewService initialize(){
+        invokeInEDT(() -> {
+            long start = System.currentTimeMillis();
+            log.trace("SwingViewService init start");
+            frame = new Frame(this, mediaService);
+            frame.setVisible(true);
+            SwingUtilities3.setVsyncRequested(frame, true);// TODO check
+            GUIUtil.setFrame(frame);
+            initializeHotKeys();
+            log.trace("SwingViewService init complete in {} ms", System.currentTimeMillis() - start);
+            isReady = true;
+            if(runWhenReady != null) {
+                new SwingWorker<Object, Object>() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        runWhenReady.run();
+                        return null;
+                    }
+                }.execute();
+            }
+        });
+        return this;
     }
 
     @Override
@@ -58,12 +82,12 @@ public class SwingViewService implements ViewService {
 
     @Override
     public void enterFullScreen(){
-        SwingUtilities.invokeLater(frame::enterFullScreen);
+        invokeInEDT(frame::enterFullScreen);
     }
 
     @Override
     public void exitFullScreen(){
-        SwingUtilities.invokeLater(frame::exitFullScreen);
+        invokeInEDT(frame::exitFullScreen);
     }
 
     @Override
@@ -80,7 +104,7 @@ public class SwingViewService implements ViewService {
     public void showQuickNavi(){
         if(wrapperState != QUICK_NAVI_STATE){
             wrapperState = QUICK_NAVI_STATE;
-            SwingUtilities.invokeLater(() -> frame.showQuickNavi(cacheService.getCache()));
+            invokeInEDT(() -> frame.showQuickNavi(cacheService.getCache()));
         }
     }
 
@@ -89,33 +113,41 @@ public class SwingViewService implements ViewService {
         if(wrapperState != PLAYER_STATE){
             wrapperState = PLAYER_STATE;
             log.debug("Add player to frame");
-            frame.showPlayer();
+            invokeInEDT(frame::showPlayer);
         }
     }
 
     @Override
-    public void updateSubtitlesMenu(List<TrackDescription> subtitlesDescriptions){
-        SwingUtilities.invokeLater(() -> frame.updateSubtitlesMenu(subtitlesDescriptions));
+    public void updateSubtitlesMenu(@NotNull List<TrackDescription> subtitlesDescriptions){
+        invokeInEDT(() -> frame.updateSubtitlesMenu(subtitlesDescriptions));
     }
 
     @Override
     public void enableSubtitlesMenu(boolean isEnabled){
-        SwingUtilities.invokeLater(() -> frame.enableSubtitlesMenu(isEnabled));
+        invokeInEDT(() -> frame.enableSubtitlesMenu(isEnabled));
     }
 
     @Override
     public void onMediaTimeChange(long newTime) {
-        SwingUtilities.invokeLater(() -> frame.onMediaTimeChange(newTime));
+        invokeInEDT(() -> frame.onMediaTimeChange(newTime));
     }
 
     @Override
     public void onPlayStart(){
-        SwingUtilities.invokeLater(() -> frame.reinitializeControls());
+        invokeInEDT(frame::reinitializeControls);
     }
 
     @Override
     public Window getWindow(){
         return frame;
+    }
+
+    @Override
+    public void onReady(Runnable runnable) {
+        if(isReady)
+            runnable.run();
+        else
+            runWhenReady = runnable;
     }
 
     @Override
@@ -126,6 +158,14 @@ public class SwingViewService implements ViewService {
     @Override
     public void setMediaService(MediaService mediaService) {
         this.mediaService = mediaService;
+    }
+
+    private static void invokeInEDT(Runnable runnable){
+        if(EventQueue.isDispatchThread()){
+            runnable.run();
+        } else {
+            SwingUtilities.invokeLater(runnable);
+        }
     }
 
     private void initializeHotKeys(){

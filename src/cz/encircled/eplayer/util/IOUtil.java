@@ -31,11 +31,11 @@ public class IOUtil {
     /**
      * @return true if file was created
      */
-    public static boolean createIfMissing(String pathToFile) throws IOException {
+    public static boolean createIfMissing(@NotNull String pathToFile) throws IOException {
         return createIfMissing(pathToFile, false);
     }
 
-    public static boolean createIfMissing(String pathTo, boolean isDirectory) throws IOException {
+    public static boolean createIfMissing(@NotNull String pathTo, boolean isDirectory) throws IOException {
         Path path = Paths.get(pathTo);
         if(!Files.exists(path)) {
             if(isDirectory) {

@@ -3,6 +3,7 @@ package cz.encircled.eplayer.core;
 import cz.encircled.eplayer.model.MediaType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -33,7 +34,7 @@ public class FileVisitorManager {
 
     public FileVisitorManager(){
         paths = new HashMap<>();
-        paths.put(Paths.get("D:\\video"), new HashMap<>());
+        paths.put(Paths.get("C:\\Program Files\\"), new HashMap<>());
         initialize();
     }
 
@@ -98,13 +99,15 @@ public class FileVisitorManager {
             this.playable = playable;
         }
 
+        @NotNull
         @Override
         public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
             return FileVisitResult.CONTINUE;
         }
 
+        @NotNull
         @Override
-        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        public FileVisitResult visitFile(@NotNull Path file, BasicFileAttributes attrs) throws IOException {
             String name = file.toAbsolutePath().toString();
             if(Arrays.binarySearch(SUPPORTED_FORMATS, name.toLowerCase().substring(name.lastIndexOf(DOT) + ONE)) >= ZERO){
                 playable.putIfAbsent(name.hashCode(), new MediaType(name));
@@ -114,11 +117,13 @@ public class FileVisitorManager {
             return FileVisitResult.CONTINUE;
         }
 
+        @NotNull
         @Override
         public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
             return FileVisitResult.CONTINUE;
         }
 
+        @NotNull
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
             return FileVisitResult.CONTINUE;

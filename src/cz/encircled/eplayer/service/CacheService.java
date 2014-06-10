@@ -2,6 +2,7 @@ package cz.encircled.eplayer.service;
 
 import cz.encircled.eplayer.model.MediaType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -21,9 +22,14 @@ public interface CacheService {
 
     MediaType updateEntry(int hash, long time);
 
+    @Nullable
+    MediaType getLastByWatchDate();
+
     void save();
 
     Collection<MediaType> getCache();
 
-    void initialize();
+    CacheService initialize();
+
+    void onReady(Runnable runnable);
 }
