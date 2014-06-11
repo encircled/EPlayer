@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 
 public class PropertyProvider {
@@ -26,16 +27,26 @@ public class PropertyProvider {
 
     public final static String SETTING_MAX_VOLUME = "max_volume";
 
+    public final static String FOLDERS_TO_SCAN = "folders_to_scan";
+
+    public final static String FOLDER_SEPARATOR = "\\*";
+
     public static void initialize() throws IOException {
 		properties = new Properties();
 		try (FileInputStream stream = new FileInputStream(getPropertiesFile())){
 			properties.load(stream);
 		}
 	}
-	
-	public static String get(String key, String defaultValue){
-		return properties.getProperty(key, defaultValue);
-	}
+
+    public static String get(@NotNull String key, String defaultValue){
+        return properties.getProperty(key, defaultValue);
+    }
+
+    @NotNull
+    public static String[] getArray(@NotNull String key, @NotNull String separator){
+        String value = properties.getProperty(key);
+        return StringUtil.isSet(value) ? value.split(separator) : new String[]{};
+    }
 	
 	public static String get(@NotNull String key){
 		return properties.getProperty(key);
@@ -48,12 +59,16 @@ public class PropertyProvider {
 	public static Integer getInt(String key, int defaultValue){
 		return Integer.parseInt(properties.getProperty(key, String.valueOf(defaultValue)));
 	}
-	
-	public static void set(@NotNull String key, @Nullable Object value){
+
+    public static void set(@NotNull String key, @Nullable Object value){
         String stringValue = value == null ? null : value.toString();
         log.debug("set {} = {}", key, stringValue);
-		properties.setProperty(key, stringValue);
-	}
+        properties.setProperty(key, stringValue);
+    }
+
+    public static void setArray(@NotNull String key, @NotNull String[] value, @NotNull String separator){
+        set(key, String.join(separator, value));
+    }
 	
 	public static void save() throws IOException {
 		try(FileOutputStream stream = new FileOutputStream(PROPERTIES_FILE_PATH)){

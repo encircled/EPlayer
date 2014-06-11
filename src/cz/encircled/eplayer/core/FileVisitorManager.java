@@ -2,6 +2,7 @@ package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
+import cz.encircled.eplayer.util.PropertyProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -38,8 +39,9 @@ public class FileVisitorManager {
     public FileVisitorManager(CacheService cacheService){
         this.cacheService = cacheService;
         paths = new HashMap<>();
-        paths.put(Paths.get("D:\\video\\"), new HashMap<>());
-        paths.put(Paths.get("D:\\House.of.Cards.S02.1080p.WEBRip.Rus.Eng.HDCLUB"), new HashMap<>());
+        for(String folder : PropertyProvider.getArray(PropertyProvider.FOLDERS_TO_SCAN, PropertyProvider.FOLDER_SEPARATOR)){
+            paths.put(Paths.get(folder), new HashMap<>());
+        }
         initialize();
     }
 
@@ -70,6 +72,7 @@ public class FileVisitorManager {
                 try {
                     WatchKey key = watcher.take();
                     for (WatchEvent<?> e : key.pollEvents()) {
+                        log.debug("Path update {}", ((WatchEvent<Path>) e).context().toAbsolutePath().toString());
                         scanDirectories();
                         if (!key.reset())
                             break;
