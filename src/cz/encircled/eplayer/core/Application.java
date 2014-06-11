@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.core;
 
+import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.*;
 import cz.encircled.eplayer.service.action.ActionExecutor;
 import cz.encircled.eplayer.service.action.ReflectionActionExecutor;
@@ -11,9 +12,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-// TODO Youtube tab
+import static cz.encircled.eplayer.util.PropertyProvider.*;
+import static cz.encircled.eplayer.util.PropertyProvider.FOLDERS_TO_SCAN;
+
+// TODO Youtube tab and filtering
 
 public class Application {
 
@@ -21,7 +26,7 @@ public class Application {
 
     public static final String APP_DOCUMENTS_ROOT = System.getenv("APPDATA") + "\\EPlayer\\";
 
-    private FileVisitorManager d;
+    private FileVisitorScanService folderScanService;
 
     private static ActionExecutor actionExecutor;
 
@@ -30,6 +35,19 @@ public class Application {
     private MediaService mediaService;
 
     private ViewService viewService;
+
+    private FileScanListener fileScanListener = new FileScanListener() {
+
+        @Override
+        public void onFolderScanned(String path, Map<Integer, MediaType> media) {
+            viewService.addTabForFolder(path, media.values());
+        }
+
+        @Override
+        public void onFolderChange(String path, Map<Integer, MediaType> media) {
+            viewService.addTabForFolder(path, media.values());
+        }
+    };
 
     public static ActionExecutor getActionExecutor(){
         return actionExecutor;
@@ -85,8 +103,12 @@ public class Application {
             mediaService.play(arguments[0]);
 
         new Thread(() -> {
-            d = new FileVisitorManager(cacheService);
-            d.getPaths().forEach((path, result) -> viewService.addTabForFolder(path.toString(), result.values()));
+            folderScanService = new FileVisitorScanService(cacheService);
+            folderScanService.initialize()
+                                .addAllIfAbsent(getArray(FOLDERS_TO_SCAN, FOLDER_SEPARATOR))
+                                .addFiledScanListener(fileScanListener)
+                                .start();
+//            folderScanService.getPaths().forEach((path, result) -> viewService.addTabForFolder(path.toString(), result.values()));
         }).start();
 
         addCloseHook();
@@ -117,7 +139,7 @@ public class Application {
 
 
 //    public Map<Integer, MediaType> getTest(){
-//        return d.getPaths().get(Paths.get("C:\\"));
+//        return folderScanService.getPaths().get(Paths.get("C:\\"));
 //    }
 
     private void addCloseHook(){

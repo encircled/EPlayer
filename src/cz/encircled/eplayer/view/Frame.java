@@ -63,11 +63,20 @@ public class Frame extends JFrame {
     }
 
     void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
+        if(tabs.getComponents().length > 1 && tabs.getComponentAt(1).getName().equals(tabName)){
+            log.debug("UPDATE COMPONENT NAME {}", tabName);
+            JPanel tab = (JPanel) tabs.getComponentAt(1);
+            tab.removeAll();
+            mediaType.forEach((media) -> tab.add(new QuickNaviButton(viewService, mediaService, media, false)));
+            tab.repaint();
+            return;
+        }
         JPanel tabPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
         mediaType.forEach((media) -> tabPanel.add(new QuickNaviButton(viewService, mediaService, media, false)));
         JScrollPane scrollPane = new JScrollPane(tabPanel);
+        scrollPane.setName(tabName);
         scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_BAR_SPEED);
-        tabs.add(scrollPane, tabName);
+        tabs.add(scrollPane);
     }
 
     void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
