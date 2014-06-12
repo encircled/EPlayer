@@ -8,21 +8,27 @@ import cz.encircled.eplayer.service.ViewService;
 import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
+import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
 import cz.encircled.eplayer.view.componensts.WrapLayout;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.regex.Pattern;
+
+import static cz.encircled.eplayer.common.Constants.REGEX_ALL;
+import static cz.encircled.eplayer.common.Constants.SPACE;
 
 public class Frame extends JFrame {
 
@@ -39,6 +45,8 @@ public class Frame extends JFrame {
 
     private JMenu spuMenu;
 
+    private JTextField filterInput;
+
     private JTabbedPane tabs;
 
     private final ViewService viewService;
@@ -46,9 +54,9 @@ public class Frame extends JFrame {
     private final MediaService mediaService;
 
     private final Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-                            new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
+            new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
-    private Map<String, JPanel> folderTabs = new HashMap<>();
+    private Map<String, FolderTab> folderTabs = new HashMap<>();
 
     private final static Logger log = LogManager.getLogger(Frame.class);
 
@@ -68,7 +76,7 @@ public class Frame extends JFrame {
 
     void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
         if(folderTabs.containsKey(tabName)){
-            JPanel tabPanel = folderTabs.get(tabName);
+            JPanel tabPanel = folderTabs.get(tabName).panel;
             tabPanel.removeAll();
             mediaType.forEach((media) -> tabPanel.add(new QuickNaviButton(viewService, mediaService, media, false)));
             return;
@@ -78,7 +86,7 @@ public class Frame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(tabPanel);
         scrollPane.setName(tabName);
         scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_BAR_SPEED);
-        folderTabs.put(tabName, tabPanel);
+        folderTabs.put(tabName, new FolderTab(tabName, folderTabs.size(), tabPanel));
         tabs.add(scrollPane);
     }
 
@@ -136,6 +144,11 @@ public class Frame extends JFrame {
         });
         spuMenu.setEnabled(spuDescriptions.size() > Constants.ZERO);
         spuMenu.revalidate();
+    }
+
+    void showFilterInput(){
+        filterInput.setVisible(true);
+
     }
 
     private void initialize(){
@@ -213,6 +226,44 @@ public class Frame extends JFrame {
         jMenuBar.add(file);
         jMenuBar.add(mediaMenu);
         jMenuBar.add(tools);
+
+        filterInput = new JTextField();
+        filterInput.setPreferredSize(new Dimension(100, 20));
+        filterInput.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                log.debug("Filter key pressed {}", filterInput.getText());
+                int selectedIndex = tabs.getModel().getSelectedIndex();
+                JPanel selectedPanel = null;
+                switch (selectedIndex) {
+                    case -1:
+                        break;
+                    case 0:
+                        selectedPanel = naviPanel;
+                        break;
+                    default:
+                        FolderTab folderTab = getFolderTab(selectedIndex - 1);
+                        if(folderTab != null)
+                            selectedPanel = folderTab.panel;
+                }
+                if(selectedPanel != null) {
+                    Pattern pattern = Pattern.compile(buildFilterPattern(filterInput.getText()));
+                    for (Component component : selectedPanel.getComponents()) {
+                        QuickNaviButton naviButton = (QuickNaviButton) component;
+                        naviButton.setVisible(pattern.matcher(naviButton.getMediaType().getName().toLowerCase()).matches());
+                    }
+                    selectedPanel.repaint();
+                }
+            }
+        });
+        jMenuBar.add(filterInput);
+    }
+
+    private String buildFilterPattern(String text) {
+        StringBuilder sb = new StringBuilder(REGEX_ALL);
+        if(StringUtil.isBlank(text))
+            return sb.toString();
+        return sb.append(filterInput.getText().toLowerCase().replaceAll(SPACE, REGEX_ALL)).append(REGEX_ALL).toString();
     }
 
     private void initializeTabs(){
@@ -225,5 +276,28 @@ public class Frame extends JFrame {
         naviPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
     }
 
+    @Nullable
+    private FolderTab getFolderTab(int index){
+        for(FolderTab tab : folderTabs.values()) {
+            if (tab.index == index)
+                return tab;
+        }
+        return null;
+    }
+
+    class FolderTab {
+
+        String name;
+
+        int index;
+
+        JPanel panel;
+
+        FolderTab(String name, int index, JPanel panel) {
+            this.name = name;
+            this.index = index;
+            this.panel = panel;
+        }
+    }
 
 }

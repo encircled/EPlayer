@@ -18,6 +18,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
 
+@SuppressWarnings("UnusedDeclaration")
 public class ReflectionActionExecutor implements ActionExecutor {
 
 	private SettingsDialog settingsDialog;
@@ -90,12 +91,10 @@ public class ReflectionActionExecutor implements ActionExecutor {
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void exit() {
         System.exit(Constants.ZERO);
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void openMedia() {
         JFileChooser fc = new JFileChooser(fileChooserLastPath);
         int res = fc.showOpenDialog(viewService.getWindow());
@@ -106,7 +105,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void saveSettings() {
         Component[] components = settingsDialog.getValuesPanel().getComponents();
         for(Component c : components){
@@ -132,7 +130,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
         }).start();
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void cancelDialog() {
         for (Window w : JDialog.getWindows()){
             if (w instanceof JDialog)
@@ -140,18 +137,15 @@ public class ReflectionActionExecutor implements ActionExecutor {
         }
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void showShutdownTimeChooser(){
 //        frame.showShutdownTimeChooser(); TODO
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void settings() {
 //        settingsDialog = new SettingsDialog(frame);
 //        settingsDialog.setVisible(true); TODO
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void openQuickNavi(){
         mediaService.pause();
         viewService.showQuickNavi();
@@ -162,18 +156,15 @@ public class ReflectionActionExecutor implements ActionExecutor {
         cacheService.save();
     }
 
-    @SuppressWarnings("UnusedDeclaration")
     public void togglePlayer(){
         mediaService.togglePlayer();
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void toggleFullScreen(){
+    void toggleFullScreen(){
         mediaService.toggleFullScreen();
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void back(){
+    void back(){
         if(viewService.isPlayerState()){
             if(mediaService.isFullScreen()){
                 mediaService.exitFullScreen();
@@ -185,11 +176,14 @@ public class ReflectionActionExecutor implements ActionExecutor {
             execute(ActionCommands.EXIT);
     }
 
-    @SuppressWarnings("UnusedDeclaration")
-    public void playLast(){
+    void playLast(){
         MediaType media = cacheService.getLastByWatchDate();
         if(media != null)
             mediaService.play(media);
+    }
+
+    public void mediaFiltering(){
+        viewService.initMediaFiltering();
     }
 
 }

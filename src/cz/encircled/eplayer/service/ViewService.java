@@ -47,4 +47,5 @@ public interface ViewService {
 
     Window getWindow();
 
+    void initMediaFiltering();
 }

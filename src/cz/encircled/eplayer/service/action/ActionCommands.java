@@ -24,4 +24,5 @@ public class ActionCommands {
 
     public static final String SHUTDOWN_TIME_CHOOSER = "showShutdownTimeChooser";
 
+    public static final String MEDIA_FILTERING = "mediaFiltering";
 }

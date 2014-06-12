@@ -18,8 +18,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -157,6 +155,14 @@ public class SwingViewService implements ViewService {
         this.mediaService = mediaService;
     }
 
+    @Override
+    public void initMediaFiltering(){
+        if(isQuickNaviState()){
+            log.debug("Show filter input");
+            invokeInEDT(frame::showFilterInput);
+        }
+    }
+
     private static void invokeInEDT(@NotNull Runnable runnable){
         if(EventQueue.isDispatchThread()){
             runnable.run();
@@ -185,12 +191,12 @@ public class SwingViewService implements ViewService {
         dispatcher.bind(KeyEvent.VK_SPACE, ActionCommands.TOGGLE_PLAYER);
         dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.CANCEL);
         dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.BACK);
-        dispatcher.bind(KeyEvent.VK_C, ActionCommands.PLAY_LAST);
-        dispatcher.bind(KeyEvent.VK_Q, ActionCommands.EXIT);
-        dispatcher.bind(KeyEvent.VK_O, ActionCommands.OPEN);
-        dispatcher.bind(KeyEvent.VK_N, ActionCommands.OPEN_QUICK_NAVI);
-        dispatcher.bind(KeyEvent.VK_F, ActionCommands.TOGGLE_FULL_SCREEN);
-        dispatcher.bind(KeyEvent.VK_S, ActionCommands.SETTINGS);
+        dispatcher.bind(KeyEvent.VK_Q, ActionCommands.EXIT, true);
+        dispatcher.bind(KeyEvent.VK_O, ActionCommands.OPEN, true);
+        dispatcher.bind(KeyEvent.VK_N, ActionCommands.OPEN_QUICK_NAVI, true);
+        dispatcher.bind(KeyEvent.VK_F, ActionCommands.TOGGLE_FULL_SCREEN, true);
+        dispatcher.bind(KeyEvent.VK_S, ActionCommands.SETTINGS, true);
+        dispatcher.bind(KeyEvent.VK_F, ActionCommands.MEDIA_FILTERING, false, true);
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher);
     }
 

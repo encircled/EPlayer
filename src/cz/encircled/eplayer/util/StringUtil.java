@@ -24,6 +24,10 @@ public class StringUtil {
         return s!= null && !s.isEmpty();
     }
 
+    public static boolean isBlank(@Nullable String s){
+        return s == null || s.trim().isEmpty();
+    }
+
     public static boolean notSet(String s){
     	return !isSet(s);
     }

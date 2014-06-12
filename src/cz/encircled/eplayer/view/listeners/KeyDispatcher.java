@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * Created by Encircled on 6/06/2014.
@@ -21,17 +21,45 @@ public class KeyDispatcher implements KeyEventDispatcher {
 
     private final ActionExecutor actionExecutor;
 
-    private Map<Integer, Set<String>> codeBinds;
+    private Map<Integer, Set<String>> binds;
+
+    private Map<Integer, Set<String>> controlBinds;
+
+    private Map<Integer, Set<String>> altBinds;
 
 
     public KeyDispatcher(ActionExecutor actionExecutor) {
         this.actionExecutor = actionExecutor;
-        codeBinds = new HashMap<>();
+        binds = new HashMap<>();
+        controlBinds = new HashMap<>();
+        altBinds = new HashMap<>();
     }
 
     public void bind(@NotNull Integer code, @NotNull String command){
+        bind(code, command, false, false);
+    }
+
+    public void bind(@NotNull Integer code, @NotNull String command, boolean isControl){
         log.debug("Bind {} to {}", code, command);
-        codeBinds.computeIfAbsent(code, c -> new TreeSet<>()).add(command);
+        if(isControl)
+            controlBinds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
+        else
+            binds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
+    }
+
+    /**
+     * If is alt or control (may be both), then wont be added to normal binds
+     */
+    public void bind(@NotNull Integer code, @NotNull String command, boolean isControl, boolean isAlt){
+        log.debug("Bind {} to {}", code, command);
+        if(isControl || isAlt) {
+            if (isControl)
+                controlBinds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
+            if (isAlt)
+                controlBinds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
+        }
+        else
+            binds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
     }
 
     @Override
@@ -41,11 +69,21 @@ public class KeyDispatcher implements KeyEventDispatcher {
 
     private boolean onKeyPressed(@NotNull KeyEvent e){
         log.debug("Dispatch key pressed event with code {}", e.getKeyCode());
-        if(codeBinds.containsKey(e.getKeyCode())) {
-            codeBinds.get(e.getKeyCode()).forEach(command -> actionExecutor.execute(command));
-            return true;
+
+        boolean found = false;
+        if(e.isControlDown() && controlBinds.containsKey(e.getKeyCode())) {
+            controlBinds.get(e.getKeyCode()).forEach(actionExecutor::execute);
+            found = true;
         }
-        return false;
+        if(e.isAltDown() && altBinds.containsKey(e.getKeyCode())) {
+            altBinds.get(e.getKeyCode()).forEach(actionExecutor::execute);
+            found = true;
+        }
+        if(binds.containsKey(e.getKeyCode())) {
+            binds.get(e.getKeyCode()).forEach(actionExecutor::execute);
+            found = true;
+        }
+        return found;
     }
 
 }

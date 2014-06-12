@@ -285,17 +285,14 @@ public class VLCMediaService implements MediaService {
     private void initializeLibs(){
         long start = System.currentTimeMillis();
         log.trace("Initialize VLC libs");
-        if(System.getProperty("sun.arch.data.model").equals(X64)) {
-            NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH_64);
-        } else {
-            NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
-        }
+        String vlcLibPath = System.getProperty("sun.arch.data.model").equals(X64) ? VLC_LIB_PATH_64 : VLC_LIB_PATH;
+        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), vlcLibPath);
         try {
             Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
             log.trace("VLCLib successfully initialized in {} ms", System.currentTimeMillis() - start);
         } catch(UnsatisfiedLinkError e){
             GUIUtil.showMessage(MessagesProvider.get(MSG_VLC_LIBS_FAIL), MessagesProvider.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
-            log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH_64);
+            log.error("Failed to load vlc libs from specified path {}", vlcLibPath);
             // TODO exit?
         }
     }

@@ -19,4 +19,6 @@ public class Constants {
     public static final int ONE = 1;
     public static final char DOT = '.';
     public static final String SLASH = "\\";
+    public static final String REGEX_ALL = ".*";
+    public static final String SPACE = " ";
 }
