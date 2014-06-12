@@ -7,6 +7,7 @@ import cz.encircled.eplayer.service.FolderScanService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -108,19 +109,23 @@ public class FileVisitorScanService implements FolderScanService {
                     WatchKey key = watcher.take();
                     for (WatchEvent<?> e : key.pollEvents()) {
                         WatchEvent<Path> event = (WatchEvent<Path>) e;
-                        String absolutePath = event.context().toAbsolutePath().toString();
 
-                        getFoldersForPath(absolutePath).forEach((folder) -> {
-                            if(event.kind() == ENTRY_DELETE) {
+                        Path folderPath = (Path) key.watchable();
+                        String absolutePath = folderPath + "\\" + event.context().toString();
+
+                        log.debug("File {} has changed, kind is {}", absolutePath, event.kind());
+                        ScanFolder folder = getScanFolder(folderPath);
+                        if(folder != null){
+                            if (event.kind() == ENTRY_DELETE) {
                                 folder.media.remove(absolutePath.hashCode());
                             } else {
                                 MediaType media = cacheService.getEntry(absolutePath.hashCode());
-                                if(media == null)
+                                if (media == null)
                                     media = new MediaType(absolutePath);
                                 folder.media.putIfAbsent(absolutePath.hashCode(), media);
                             }
-                            fireFolderChanged(absolutePath, folder);
-                        });
+                            fireFolderChanged(folderPath.toAbsolutePath().toString(), folder);
+                        }
 
                         if (!key.reset())
                             break;
@@ -133,13 +138,13 @@ public class FileVisitorScanService implements FolderScanService {
         }).start();
     }
 
-    private Collection<ScanFolder> getFoldersForPath(String path){
-        Collection<ScanFolder> result = new ArrayList<>();
-        foldersToScan.values().forEach((folder) -> {
-            if(folder.absolutePath.contains(path))
-                result.add(folder);
-        });
-        return result;
+    @Nullable
+    private ScanFolder getScanFolder(Path path){
+        for(ScanFolder folder : foldersToScan.values()){
+            if(folder.path.equals(path))
+                return folder;
+        }
+        return null;
     }
 
     private void scanDirectories(){
@@ -155,8 +160,8 @@ public class FileVisitorScanService implements FolderScanService {
         });
     }
 
-    private void fireFolderScanned(String path, ScanFolder folder){
-        listeners.stream().parallel().forEach((l) -> l.onFolderScanned(path, folder.media));
+    private void fireFolderScanned(String folderPath, ScanFolder folder){
+        listeners.stream().parallel().forEach((l) -> l.onFolderScanned(folderPath, folder.media));
     }
 
     private void fireFolderChanged(String path, ScanFolder folder){
@@ -218,7 +223,7 @@ public class FileVisitorScanService implements FolderScanService {
 
         ScanFolder(String absolutePath){
             this.absolutePath = absolutePath;
-            media = new HashMap<>();
+            media = new LinkedHashMap<>();
         }
 
         ScanFolder build() throws IOException {

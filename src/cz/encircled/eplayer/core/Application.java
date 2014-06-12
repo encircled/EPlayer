@@ -45,7 +45,7 @@ public class Application {
 
         @Override
         public void onFolderChange(String path, Map<Integer, MediaType> media) {
-            viewService.addTabForFolder(path, media.values());
+            viewService.updateTabForFolder(path, media.values());
         }
     };
 

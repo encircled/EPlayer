@@ -18,6 +18,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -91,6 +93,15 @@ public class SwingViewService implements ViewService {
 
     @Override
     public void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
+        log.debug("Add tab for folder {}", tabName);
+
+        invokeInEDT(() -> frame.addTabForFolder(tabName, mediaType));
+    }
+
+    @Override
+    public void updateTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
+        log.debug("Add tab for folder {}", tabName);
+
         invokeInEDT(() -> frame.addTabForFolder(tabName, mediaType));
     }
 
@@ -137,12 +148,12 @@ public class SwingViewService implements ViewService {
     }
 
     @Override
-    public void setCacheService(CacheService cacheService) {
+    public void setCacheService(@NotNull CacheService cacheService) {
         this.cacheService = cacheService;
     }
 
     @Override
-    public void setMediaService(MediaService mediaService) {
+    public void setMediaService(@NotNull MediaService mediaService) {
         this.mediaService = mediaService;
     }
 
@@ -173,6 +184,7 @@ public class SwingViewService implements ViewService {
         dispatcher.bind(KeyEvent.VK_ENTER, ActionCommands.PLAY_LAST);
         dispatcher.bind(KeyEvent.VK_SPACE, ActionCommands.TOGGLE_PLAYER);
         dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.CANCEL);
+        dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.BACK);
         dispatcher.bind(KeyEvent.VK_C, ActionCommands.PLAY_LAST);
         dispatcher.bind(KeyEvent.VK_Q, ActionCommands.EXIT);
         dispatcher.bind(KeyEvent.VK_O, ActionCommands.OPEN);

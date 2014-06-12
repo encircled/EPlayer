@@ -20,7 +20,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Frame extends JFrame {
 
@@ -46,6 +48,8 @@ public class Frame extends JFrame {
     private final Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
                             new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank cursor");
 
+    private Map<String, JPanel> folderTabs = new HashMap<>();
+
     private final static Logger log = LogManager.getLogger(Frame.class);
 
     public Frame(ViewService viewService, MediaService mediaService) {
@@ -63,12 +67,10 @@ public class Frame extends JFrame {
     }
 
     void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
-        if(tabs.getComponents().length > 1 && tabs.getComponentAt(1).getName().equals(tabName)){
-            log.debug("UPDATE COMPONENT NAME {}", tabName);
-            JPanel tab = (JPanel) tabs.getComponentAt(1);
-            tab.removeAll();
-            mediaType.forEach((media) -> tab.add(new QuickNaviButton(viewService, mediaService, media, false)));
-            tab.repaint();
+        if(folderTabs.containsKey(tabName)){
+            JPanel tabPanel = folderTabs.get(tabName);
+            tabPanel.removeAll();
+            mediaType.forEach((media) -> tabPanel.add(new QuickNaviButton(viewService, mediaService, media, false)));
             return;
         }
         JPanel tabPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
@@ -76,8 +78,10 @@ public class Frame extends JFrame {
         JScrollPane scrollPane = new JScrollPane(tabPanel);
         scrollPane.setName(tabName);
         scrollPane.getVerticalScrollBar().setUnitIncrement(SCROLL_BAR_SPEED);
+        folderTabs.put(tabName, tabPanel);
         tabs.add(scrollPane);
     }
+
 
     void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
         tabs.setVisible(true);

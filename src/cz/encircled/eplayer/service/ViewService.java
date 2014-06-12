@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import uk.co.caprica.vlcj.player.TrackDescription;
 
 import java.awt.*;
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -23,7 +23,7 @@ public interface ViewService {
 
     void exitFullScreen();
 
-    void showPlayer(CountDownLatch countDownLatch);
+    void showPlayer(@NotNull CountDownLatch countDownLatch);
 
     void onPlayStart();
 
@@ -31,17 +31,19 @@ public interface ViewService {
 
     void enableSubtitlesMenu(boolean isEnabled);
 
-    void addTabForFolder(String tabName, @NotNull Collection<MediaType> mediaType);
+    void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType);
+
+    void updateTabForFolder(@NotNull String path, @NotNull Collection<MediaType> values);
 
     void showQuickNavi();
 
     void onMediaTimeChange(long newTime);
 
-    void setCacheService(CacheService cacheService);
+    void setCacheService(@NotNull CacheService cacheService);
 
-    void setMediaService(MediaService mediaService);
+    void setMediaService(@NotNull MediaService mediaService);
 
-    void initialize(CountDownLatch countDownLatch);
+    void initialize(@NotNull CountDownLatch countDownLatch);
 
     Window getWindow();
 
