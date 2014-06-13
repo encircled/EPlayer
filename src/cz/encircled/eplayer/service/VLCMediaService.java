@@ -137,7 +137,7 @@ public class VLCMediaService implements MediaService {
 //            JFileChooser fc = new JFileChooser();
 //            if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
 //                cacheService.deleteEntry(p.getPath().hashCode());
-//                p.readPath(fc.getSelectedFile().getAbsolutePath());
+//                p.updatePath(fc.getSelectedFile().getAbsolutePath());
 //                playableCache.put(p.getPath().hashCode(), p);
 //                play(p);
 //            }
@@ -209,6 +209,7 @@ public class VLCMediaService implements MediaService {
     @Override
     public void stop(){
         if(player != null){
+            current = null;
             player.stop();
             viewService.enableSubtitlesMenu(false);
         }

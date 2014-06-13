@@ -35,6 +35,8 @@ public interface ViewService {
 
     void updateTabForFolder(@NotNull String path, @NotNull Collection<MediaType> values);
 
+    void nextFolderTab();
+
     void showQuickNavi();
 
     void onMediaTimeChange(long newTime);
@@ -48,4 +50,7 @@ public interface ViewService {
     Window getWindow();
 
     void initMediaFiltering();
+
+    void stopMediaFiltering();
+
 }

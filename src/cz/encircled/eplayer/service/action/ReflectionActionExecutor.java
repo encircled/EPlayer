@@ -160,11 +160,12 @@ public class ReflectionActionExecutor implements ActionExecutor {
         mediaService.togglePlayer();
     }
 
-    void toggleFullScreen(){
+    public void toggleFullScreen(){
         mediaService.toggleFullScreen();
     }
 
-    void back(){
+    public void back(){
+        log.debug("Execute back");
         if(viewService.isPlayerState()){
             if(mediaService.isFullScreen()){
                 mediaService.exitFullScreen();
@@ -176,7 +177,7 @@ public class ReflectionActionExecutor implements ActionExecutor {
             execute(ActionCommands.EXIT);
     }
 
-    void playLast(){
+    public void playLast(){
         MediaType media = cacheService.getLastByWatchDate();
         if(media != null)
             mediaService.play(media);
@@ -184,6 +185,14 @@ public class ReflectionActionExecutor implements ActionExecutor {
 
     public void mediaFiltering(){
         viewService.initMediaFiltering();
+    }
+
+    public void stopMediaFiltering(){
+        viewService.stopMediaFiltering();
+    }
+
+    public void nextFolderTab(){
+        viewService.nextFolderTab();
     }
 
 }

@@ -2,6 +2,7 @@ package cz.encircled.eplayer.view;
 
 import com.alee.laf.WebLookAndFeel;
 import cz.encircled.eplayer.common.Constants;
+import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
@@ -12,6 +13,8 @@ import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
 import cz.encircled.eplayer.view.componensts.WrapLayout;
+import cz.encircled.eplayer.view.listeners.KeyBinding;
+import cz.encircled.eplayer.view.listeners.KeyDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +23,7 @@ import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -27,8 +31,12 @@ import java.util.*;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static cz.encircled.eplayer.common.Constants.*;
 import static cz.encircled.eplayer.common.Constants.REGEX_ALL;
 import static cz.encircled.eplayer.common.Constants.SPACE;
+import static cz.encircled.eplayer.service.action.ActionCommands.*;
+import static cz.encircled.eplayer.view.listeners.KeyDispatcher.*;
+import static java.awt.event.KeyEvent.*;
 
 public class Frame extends JFrame {
 
@@ -39,7 +47,7 @@ public class Frame extends JFrame {
 
     private JPanel wrapper;
 
-    private JPanel naviPanel;
+    private FolderTab naviTab;
 
     private JMenuBar jMenuBar;
 
@@ -74,6 +82,10 @@ public class Frame extends JFrame {
         wrapper.add(playerControls, BorderLayout.SOUTH);
     }
 
+    void addTabForFolder(@NotNull String tabName){
+        addTabForFolder(tabName, Collections.emptyList());
+    }
+
     void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
         if(folderTabs.containsKey(tabName)){
             JPanel tabPanel = folderTabs.get(tabName).panel;
@@ -99,6 +111,7 @@ public class Frame extends JFrame {
     }
 
     void repaintQuickNavi(@NotNull Collection<MediaType> mediaType){
+        JPanel naviPanel = naviTab.panel;
         naviPanel.removeAll();
         mediaType.forEach((media) -> naviPanel.add(new QuickNaviButton(viewService, mediaService, media)));
     }
@@ -142,13 +155,27 @@ public class Frame extends JFrame {
             subtitle.addActionListener(e -> mediaService.setSubtitlesById(desc.id()));
             spuMenu.add(subtitle);
         });
-        spuMenu.setEnabled(spuDescriptions.size() > Constants.ZERO);
+        spuMenu.setEnabled(spuDescriptions.size() > ZERO);
         spuMenu.revalidate();
     }
 
     void showFilterInput(){
         filterInput.setVisible(true);
+        filterInput.requestFocus();
+    }
 
+    void hideFilterInput(){
+        filterInput.transferFocus();
+        filterInput.setVisible(false);
+    }
+
+    void nextTab(){
+        if(folderTabs.isEmpty())
+            return;
+
+        int current = tabs.getModel().getSelectedIndex();
+        int next = current < ZERO || current == folderTabs.size() ? 0 : current + 1;
+        tabs.getModel().setSelectedIndex(next);
     }
 
     private void initialize(){
@@ -164,8 +191,32 @@ public class Frame extends JFrame {
 
         initializeWrapper();
         initializeMenu();
-        initializeQuickNavi();
         initializeTabs();
+        addTabForFolder("Navi");
+        naviTab = getFolderTab(ZERO);
+        initializeHotKeys();
+    }
+
+    private void initializeHotKeys(){
+        // TODO frame dependency
+        KeyDispatcher dispatcher = new KeyDispatcher(Application.getActionExecutor());
+
+        dispatcher.bind(focusedOnlyKey(VK_ESCAPE, STOP_MEDIA_FILTERING, filterInput));
+        dispatcher.bind(globalKey(VK_ENTER, PLAY_LAST));
+        dispatcher.bind(globalKey(VK_SPACE, TOGGLE_PLAYER));
+        dispatcher.bind(globalKey(VK_ESCAPE, CANCEL));
+        dispatcher.bind(globalKey(VK_ESCAPE, BACK));
+
+        dispatcher.bind(globalControlKey(VK_Q, EXIT));
+        dispatcher.bind(globalControlKey(VK_O, OPEN));
+        dispatcher.bind(globalControlKey(VK_N, OPEN_QUICK_NAVI));
+        dispatcher.bind(globalControlKey(VK_S, SETTINGS));
+        dispatcher.bind(globalControlKey(VK_F, MEDIA_FILTERING));
+
+        dispatcher.bind(globalAltKey(VK_M, NEXT_FOLDER_TAB));
+
+        dispatcher.bind(globalKey(VK_F, TOGGLE_FULL_SCREEN));
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher);
     }
 
     private static void setupBasicUI() {
@@ -184,7 +235,7 @@ public class Frame extends JFrame {
         getContentPane().add(wrapper, BorderLayout.CENTER);
         addMouseWheelListener(e -> {
             if(playerControls != null){
-                if(e.getWheelRotation() < Constants.ZERO){
+                if(e.getWheelRotation() < ZERO){
                     playerControls.setVisible(true);
                     if(mediaService.isFullScreen())
                         setCursor(Cursor.getDefaultCursor());
@@ -207,16 +258,16 @@ public class Frame extends JFrame {
         spuMenu = new JMenu(MessagesProvider.get(LocalizedMessages.SUBTITLES));
         spuMenu.setEnabled(false);
 
-        autoShutdown.add(Components.getMenuItem(LocalizedMessages.AUTO_SHUTDOWN, ActionCommands.SHUTDOWN_TIME_CHOOSER));
+        autoShutdown.add(Components.getMenuItem(LocalizedMessages.AUTO_SHUTDOWN, SHUTDOWN_TIME_CHOOSER));
 
-        tools.add(Components.getMenuItem(LocalizedMessages.OPEN_QUICK_NAVI, ActionCommands.OPEN_QUICK_NAVI));
-        tools.add(Components.getMenuItem(LocalizedMessages.SETTINGS, ActionCommands.SETTINGS));
+        tools.add(Components.getMenuItem(LocalizedMessages.OPEN_QUICK_NAVI, OPEN_QUICK_NAVI));
+        tools.add(Components.getMenuItem(LocalizedMessages.SETTINGS, SETTINGS));
         tools.add(autoShutdown);
 
         file.add(new JSeparator());
-        file.add(Components.getMenuItem(LocalizedMessages.OPEN, ActionCommands.OPEN));
+        file.add(Components.getMenuItem(LocalizedMessages.OPEN, OPEN));
         file.add(new JSeparator());
-        file.add(Components.getMenuItem(LocalizedMessages.EXIT, ActionCommands.EXIT));
+        file.add(Components.getMenuItem(LocalizedMessages.EXIT, EXIT));
         file.add(new JSeparator());
 
         mediaMenu.add(spuMenu);
@@ -228,25 +279,22 @@ public class Frame extends JFrame {
         jMenuBar.add(tools);
 
         filterInput = new JTextField();
+        filterInput.setVisible(false);
         filterInput.setPreferredSize(new Dimension(100, 20));
         filterInput.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
                 log.debug("Filter key pressed {}", filterInput.getText());
-                int selectedIndex = tabs.getModel().getSelectedIndex();
                 JPanel selectedPanel = null;
-                switch (selectedIndex) {
-                    case -1:
-                        break;
-                    case 0:
-                        selectedPanel = naviPanel;
-                        break;
-                    default:
-                        FolderTab folderTab = getFolderTab(selectedIndex - 1);
-                        if(folderTab != null)
-                            selectedPanel = folderTab.panel;
+
+                int selectedIndex = tabs.getModel().getSelectedIndex();
+                if (selectedIndex >= ZERO) {
+                    FolderTab folderTab = getFolderTab(selectedIndex);
+                    if (folderTab != null)
+                        selectedPanel = folderTab.panel;
                 }
-                if(selectedPanel != null) {
+
+                if (selectedPanel != null) {
                     Pattern pattern = Pattern.compile(buildFilterPattern(filterInput.getText()));
                     for (Component component : selectedPanel.getComponents()) {
                         QuickNaviButton naviButton = (QuickNaviButton) component;
@@ -268,12 +316,7 @@ public class Frame extends JFrame {
 
     private void initializeTabs(){
         tabs = new JTabbedPane();
-        tabs.add(new JScrollPane(naviPanel), "Navi");
         wrapper.add(tabs);
-    }
-
-    private void initializeQuickNavi(){
-        naviPanel = new JPanel(new WrapLayout(FlowLayout.LEFT, 15, 15));
     }
 
     @Nullable

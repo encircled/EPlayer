@@ -25,4 +25,9 @@ public class ActionCommands {
     public static final String SHUTDOWN_TIME_CHOOSER = "showShutdownTimeChooser";
 
     public static final String MEDIA_FILTERING = "mediaFiltering";
+
+    public static final String STOP_MEDIA_FILTERING = "stopMediaFiltering";
+
+    public static final String NEXT_FOLDER_TAB = "nextFolderTab";
+
 }

@@ -138,13 +138,13 @@ public class JsonCacheService implements CacheService {
 
     private static void checkHashes(@NotNull Map<Integer, MediaType> playableCache) {
         List<Integer> corruptedHashes = new ArrayList<>();
-        playableCache.forEach((key, value) -> {
-            if (value.getHash() != key) {
+        playableCache.forEach((key, media) -> {
+            if (media.hashCode() != key) {
                 corruptedHashes.add(key);
-                log.warn("Playable {} has wrong hash code, updating...", value.getName());
+                log.warn("Playable {} has wrong hash code, updating...", media.getName());
             }
         });
-        corruptedHashes.forEach((oldHash) -> playableCache.put(playableCache.get(oldHash).getHash(), playableCache.remove(oldHash)));
+        corruptedHashes.forEach((oldHash) -> playableCache.put(playableCache.get(oldHash).hashCode(), playableCache.remove(oldHash)));
     }
 
 }

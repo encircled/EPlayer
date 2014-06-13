@@ -7,10 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Encircled on 6/06/2014.
@@ -21,69 +20,66 @@ public class KeyDispatcher implements KeyEventDispatcher {
 
     private final ActionExecutor actionExecutor;
 
-    private Map<Integer, Set<String>> binds;
-
-    private Map<Integer, Set<String>> controlBinds;
-
-    private Map<Integer, Set<String>> altBinds;
-
+    private Map<Integer, List<KeyBinding>> bindings;
 
     public KeyDispatcher(ActionExecutor actionExecutor) {
         this.actionExecutor = actionExecutor;
-        binds = new HashMap<>();
-        controlBinds = new HashMap<>();
-        altBinds = new HashMap<>();
+        bindings = new HashMap<>();
     }
 
-    public void bind(@NotNull Integer code, @NotNull String command){
-        bind(code, command, false, false);
+    public void bind(@NotNull KeyBinding keyBinding){
+        bindings.computeIfAbsent(keyBinding.getCode(), c -> new ArrayList<>()).add(keyBinding);
     }
 
-    public void bind(@NotNull Integer code, @NotNull String command, boolean isControl){
-        log.debug("Bind {} to {}", code, command);
-        if(isControl)
-            controlBinds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
-        else
-            binds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
+    public static KeyBinding globalControlKey(@NotNull Integer code, @NotNull String command){
+        return new KeyBinding(code, command, null, true, false, false);
     }
 
-    /**
-     * If is alt or control (may be both), then wont be added to normal binds
-     */
-    public void bind(@NotNull Integer code, @NotNull String command, boolean isControl, boolean isAlt){
-        log.debug("Bind {} to {}", code, command);
-        if(isControl || isAlt) {
-            if (isControl)
-                controlBinds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
-            if (isAlt)
-                controlBinds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
-        }
-        else
-            binds.computeIfAbsent(code, c -> new HashSet<>()).add(command);
+    public static KeyBinding globalAltKey(@NotNull Integer code, @NotNull String command) {
+        return new KeyBinding(code, command, null, false, true, false);
+    }
+
+    public static KeyBinding globalKey(@NotNull Integer code, @NotNull String command){
+        return new KeyBinding(code, command, null, false, false, true);
+    }
+
+    public static KeyBinding focusedOnlyKey(@NotNull Integer code, @NotNull String command, @NotNull Component component){
+        return new KeyBinding(code, command, component, false, false, false);
     }
 
     @Override
     public boolean dispatchKeyEvent(@NotNull KeyEvent e) {
-        return e.getID() == KeyEvent.KEY_PRESSED && onKeyPressed(e);
+        boolean propagate = true;
+        if(e.getID() == KeyEvent.KEY_PRESSED)
+            propagate = onKeyPressed(e);
+        return false;
     }
 
     private boolean onKeyPressed(@NotNull KeyEvent e){
         log.debug("Dispatch key pressed event with code {}", e.getKeyCode());
 
-        boolean found = false;
-        if(e.isControlDown() && controlBinds.containsKey(e.getKeyCode())) {
-            controlBinds.get(e.getKeyCode()).forEach(actionExecutor::execute);
-            found = true;
+        if(bindings.containsKey(e.getKeyCode())) {
+            for(KeyBinding binding : filterKeyBindings(bindings.get(e.getKeyCode()), e)){
+                actionExecutor.execute(binding.getCommand());
+                if(!binding.isPropagateEvent())
+                    break;
+            }
         }
-        if(e.isAltDown() && altBinds.containsKey(e.getKeyCode())) {
-            altBinds.get(e.getKeyCode()).forEach(actionExecutor::execute);
-            found = true;
-        }
-        if(binds.containsKey(e.getKeyCode())) {
-            binds.get(e.getKeyCode()).forEach(actionExecutor::execute);
-            found = true;
-        }
-        return found;
+        return false;
+    }
+
+    private List<KeyBinding> filterKeyBindings(List<KeyBinding> bindings, KeyEvent event){
+        return bindings.stream()
+                .filter(binding ->{
+                    boolean matches = true;
+                    if(binding.isAlt() && !event.isAltDown())
+                        matches = false;
+                    else if(binding.isControl() && !event.isControlDown())
+                        matches = false;
+                    else if(binding.getComponent() != null && !binding.getComponent().equals(event.getComponent()))
+                        matches = false;
+                    return matches;
+                }).collect(Collectors.toList());
     }
 
 }

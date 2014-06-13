@@ -58,7 +58,7 @@ public class QuickNaviButton extends JButton {
         if(canBeDeleted) {
             ActionListener deleteListener = e -> {
                 getParent().remove(this);
-                viewService.deleteMedia(mediaType.getHash());
+                viewService.deleteMedia(mediaType.hashCode());
             };
             JButton deleteButton = Components.getButton("x", "", 25, 25, deleteListener, new Color(255, 81, 81));
             deleteButton.setBackground(new Color(253, 253, 253));

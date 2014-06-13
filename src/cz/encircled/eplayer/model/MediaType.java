@@ -3,8 +3,6 @@ package cz.encircled.eplayer.model;
 import cz.encircled.eplayer.common.Constants;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Pattern;
-
 public class MediaType {
 
     private static final String TO_STRING_FORMAT = "Playable %d. name: %s, path: %s, time: %d, watchDate: %d";
@@ -20,7 +18,7 @@ public class MediaType {
     private long watchDate;
 
 	public MediaType(@NotNull String path){
-		readPath(path);
+		updatePath(path);
         time = 0;
 	}
 
@@ -32,7 +30,8 @@ public class MediaType {
 		return path;
 	}
 
-    public int getHash() {
+    @Override
+    public int hashCode() {
         return hash;
     }
 
@@ -61,10 +60,9 @@ public class MediaType {
     	return String.format(TO_STRING_FORMAT, name.hashCode(), name, path, time, watchDate);
     }
 
-
-    public void readPath(@NotNull String path) {
+    public void updatePath(@NotNull String path) {
         this.path = path;
-        hash = path.hashCode();
-        name = path.substring(path.lastIndexOf(Constants.SLASH) + Constants.ONE, path.lastIndexOf(Constants.DOT));
+        this.hash = path.hashCode();
+        this.name = path.substring(path.lastIndexOf(Constants.SLASH) + Constants.ONE, path.lastIndexOf(Constants.DOT));
     }
 }

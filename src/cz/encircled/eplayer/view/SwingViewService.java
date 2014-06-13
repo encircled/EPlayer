@@ -50,7 +50,6 @@ public class SwingViewService implements ViewService {
             frame.setVisible(true);
             SwingUtilities3.setVsyncRequested(frame, true);// TODO check
             GUIUtil.setFrame(frame);
-            initializeHotKeys();
             log.trace("SwingViewService init complete in {} ms", System.currentTimeMillis() - start);
             countDownLatch.countDown();
         });
@@ -101,6 +100,11 @@ public class SwingViewService implements ViewService {
         log.debug("Add tab for folder {}", tabName);
 
         invokeInEDT(() -> frame.addTabForFolder(tabName, mediaType));
+    }
+
+    @Override
+    public void nextFolderTab(){
+        invokeInEDT(frame::nextTab);
     }
 
     @Override
@@ -163,6 +167,14 @@ public class SwingViewService implements ViewService {
         }
     }
 
+    @Override
+    public void stopMediaFiltering(){
+        if(isQuickNaviState()){
+            log.debug("Hide filter input");
+            invokeInEDT(frame::hideFilterInput);
+        }
+    }
+
     private static void invokeInEDT(@NotNull Runnable runnable){
         if(EventQueue.isDispatchThread()){
             runnable.run();
@@ -182,22 +194,6 @@ public class SwingViewService implements ViewService {
             };
             SwingUtilities.invokeLater(wrapRunnable);
         }
-    }
-
-    private void initializeHotKeys(){
-        // TODO frame dependency
-        KeyDispatcher dispatcher = new KeyDispatcher(Application.getActionExecutor());
-        dispatcher.bind(KeyEvent.VK_ENTER, ActionCommands.PLAY_LAST);
-        dispatcher.bind(KeyEvent.VK_SPACE, ActionCommands.TOGGLE_PLAYER);
-        dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.CANCEL);
-        dispatcher.bind(KeyEvent.VK_ESCAPE, ActionCommands.BACK);
-        dispatcher.bind(KeyEvent.VK_Q, ActionCommands.EXIT, true);
-        dispatcher.bind(KeyEvent.VK_O, ActionCommands.OPEN, true);
-        dispatcher.bind(KeyEvent.VK_N, ActionCommands.OPEN_QUICK_NAVI, true);
-        dispatcher.bind(KeyEvent.VK_F, ActionCommands.TOGGLE_FULL_SCREEN, true);
-        dispatcher.bind(KeyEvent.VK_S, ActionCommands.SETTINGS, true);
-        dispatcher.bind(KeyEvent.VK_F, ActionCommands.MEDIA_FILTERING, false, true);
-        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher);
     }
 
 }
