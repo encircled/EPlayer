@@ -76,9 +76,11 @@ public class Application {
         cacheService = new JsonCacheService();
         viewService = new SwingViewService();
         mediaService = new VLCMediaService();
+        folderScanService = new FileVisitorScanService(cacheService);
 
         viewService.setMediaService(mediaService);
         viewService.setCacheService(cacheService);
+        viewService.setFolderScanService(folderScanService);
 
         mediaService.setCacheService(cacheService);
         mediaService.setViewService(viewService);
@@ -103,7 +105,6 @@ public class Application {
             mediaService.play(arguments[0]);
 
         new Thread(() -> {
-            folderScanService = new FileVisitorScanService(cacheService);
             folderScanService.initialize()
                                 .addAllIfAbsent(getArray(FOLDERS_TO_SCAN, FOLDER_SEPARATOR))
                                 .addFiledScanListener(fileScanListener)

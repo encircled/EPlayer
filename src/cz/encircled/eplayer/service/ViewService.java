@@ -17,6 +17,9 @@ public interface ViewService {
 
     boolean isPlayerState();
 
+    /**
+     * GUI method
+     */
     void deleteMedia(int hashCode);
 
     void enterFullScreen();
@@ -35,13 +38,13 @@ public interface ViewService {
 
     void updateTabForFolder(@NotNull String path, @NotNull Collection<MediaType> values);
 
-    void nextFolderTab();
-
     void showQuickNavi();
 
     void onMediaTimeChange(long newTime);
 
     void setCacheService(@NotNull CacheService cacheService);
+
+    void setFolderScanService(@NotNull FolderScanService folderScanService);
 
     void setMediaService(@NotNull MediaService mediaService);
 
@@ -53,4 +56,10 @@ public interface ViewService {
 
     void stopMediaFiltering();
 
+    /**
+     * GUI method
+     */
+    void createNewTab(String absolutePath);
+
+    void openMedia();
 }

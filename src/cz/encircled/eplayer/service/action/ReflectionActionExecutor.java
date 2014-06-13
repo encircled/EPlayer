@@ -23,8 +23,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
 
 	private SettingsDialog settingsDialog;
 	
-	private String fileChooserLastPath;
-
     private final static Logger log = LogManager.getLogger(ReflectionActionExecutor.class);
 
     private TreeMap<String, Method> commands;
@@ -38,7 +36,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
     public ReflectionActionExecutor() {
         log.trace("ReflectionActionExecutor init start");
         initializeCommandsTree();
-        setDefaultFileChooserPath();
         log.trace("ReflectionActionExecutor init complete");
     }
 
@@ -64,10 +61,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
                 log.warn("error reading command field {} ", f.getName());
             }
         }
-    }
-
-    public void setDefaultFileChooserPath(){
-        fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
     }
 
     // TODO: create Object for commands with type. When command is GUI only - do not manipulate with threads
@@ -96,13 +89,7 @@ public class ReflectionActionExecutor implements ActionExecutor {
     }
 
     public void openMedia() {
-        JFileChooser fc = new JFileChooser(fileChooserLastPath);
-        int res = fc.showOpenDialog(viewService.getWindow());
-        if (res == JFileChooser.APPROVE_OPTION) {
-            fileChooserLastPath = fc.getSelectedFile().getPath();
-            mediaService.updateCurrentMediaInCache();
-            mediaService.play(fileChooserLastPath);
-        }
+        viewService.openMedia();
     }
 
     public void saveSettings() {
@@ -189,10 +176,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
 
     public void stopMediaFiltering(){
         viewService.stopMediaFiltering();
-    }
-
-    public void nextFolderTab(){
-        viewService.nextFolderTab();
     }
 
 }

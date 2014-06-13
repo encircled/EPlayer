@@ -21,7 +21,7 @@ public class IOUtil {
 	private final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, MediaType>>(){}.getType();
 	
 	public static <T> T getPlayableJson(@NotNull String filePath) throws IOException {
-		return new Gson().fromJson(new String(Files.readAllBytes(Paths.get(filePath))), DEFAULT_TYPE_TOKEN);
+		return new Gson().fromJson(new String(Files.readAllBytes(Paths.get(filePath)), "UTF-8"), DEFAULT_TYPE_TOKEN);
 	}
 	
 	public static void storeJson(@NotNull Object obj, @NotNull String path) throws IOException {

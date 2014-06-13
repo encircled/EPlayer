@@ -18,4 +18,7 @@ public interface FolderScanService {
     FolderScanService initialize();
 
     void start();
+
+    // TODO not nice
+    void scanDirectories();
 }

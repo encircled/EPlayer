@@ -28,6 +28,4 @@ public class ActionCommands {
 
     public static final String STOP_MEDIA_FILTERING = "stopMediaFiltering";
 
-    public static final String NEXT_FOLDER_TAB = "nextFolderTab";
-
 }

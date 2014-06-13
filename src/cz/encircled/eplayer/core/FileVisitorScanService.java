@@ -147,15 +147,19 @@ public class FileVisitorScanService implements FolderScanService {
         return null;
     }
 
-    private void scanDirectories(){
+    @Override // TODO not nice
+    public void scanDirectories(){
         foldersToScan.forEach((directoryPath, folder) -> {
-            visitor.setCurrentFolder(folder);
-            folder.media.clear();
-            try {
-                Files.walkFileTree(folder.path, visitor);
-                fireFolderScanned(directoryPath, folder);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(!folder.scanned){
+                visitor.setCurrentFolder(folder);
+                folder.media.clear();
+                try {
+                    Files.walkFileTree(folder.path, visitor);
+                    fireFolderScanned(directoryPath, folder);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                folder.scanned = true;
             }
         });
     }
@@ -213,6 +217,8 @@ public class FileVisitorScanService implements FolderScanService {
 
     private class ScanFolder {
 
+        boolean scanned;
+
         String absolutePath;
 
         Path path;
@@ -224,6 +230,7 @@ public class FileVisitorScanService implements FolderScanService {
         ScanFolder(String absolutePath){
             this.absolutePath = absolutePath;
             media = new LinkedHashMap<>();
+            scanned = false;
         }
 
         ScanFolder build() throws IOException {

@@ -21,4 +21,5 @@ public class Constants {
     public static final String SLASH = "\\";
     public static final String REGEX_ALL = ".*";
     public static final String SPACE = " ";
+    public static final String EMPTY = "";
 }

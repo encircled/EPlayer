@@ -51,4 +51,10 @@ public class KeyBinding {
     public Component getComponent() {
         return component;
     }
+
+    public KeyBinding setPropagateEvent(boolean propagate){
+        this.propagateEvent = propagate;
+        return this;
+    }
+
 }

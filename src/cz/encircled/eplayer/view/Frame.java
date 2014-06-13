@@ -1,19 +1,17 @@
 package cz.encircled.eplayer.view;
 
 import com.alee.laf.WebLookAndFeel;
-import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
-import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
+import cz.encircled.eplayer.util.PropertyProvider;
 import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
 import cz.encircled.eplayer.view.componensts.WrapLayout;
-import cz.encircled.eplayer.view.listeners.KeyBinding;
 import cz.encircled.eplayer.view.listeners.KeyDispatcher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,17 +21,17 @@ import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Pattern;
 
 import static cz.encircled.eplayer.common.Constants.*;
-import static cz.encircled.eplayer.common.Constants.REGEX_ALL;
-import static cz.encircled.eplayer.common.Constants.SPACE;
 import static cz.encircled.eplayer.service.action.ActionCommands.*;
 import static cz.encircled.eplayer.view.listeners.KeyDispatcher.*;
 import static java.awt.event.KeyEvent.*;
@@ -166,16 +164,10 @@ public class Frame extends JFrame {
 
     void hideFilterInput(){
         filterInput.transferFocus();
+        filterInput.setText(EMPTY);
+        filterCurrentTab();
+
         filterInput.setVisible(false);
-    }
-
-    void nextTab(){
-        if(folderTabs.isEmpty())
-            return;
-
-        int current = tabs.getModel().getSelectedIndex();
-        int next = current < ZERO || current == folderTabs.size() ? 0 : current + 1;
-        tabs.getModel().setSelectedIndex(next);
     }
 
     private void initialize(){
@@ -195,7 +187,30 @@ public class Frame extends JFrame {
         addTabForFolder("Navi");
         naviTab = getFolderTab(ZERO);
         initializeHotKeys();
+        tabs.setTransferHandler(handler);
     }
+
+    private TransferHandler handler = new TransferHandler() {
+        public boolean canImport(TransferHandler.TransferSupport support) {
+            return true;
+        }
+
+        public boolean importData(TransferHandler.TransferSupport support) {
+            Transferable t = support.getTransferable();
+            try {
+                List<File> folders = (java.util.List<File>)t.getTransferData(DataFlavor.javaFileListFlavor);
+                for (File folder : folders) {
+                    log.debug("DnD file path {}", folder.getAbsolutePath());
+                    if(folder.isDirectory()){
+                        viewService.createNewTab(folder.getAbsolutePath());
+                    }
+                }
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }
+    };
 
     private void initializeHotKeys(){
         // TODO frame dependency
@@ -205,15 +220,12 @@ public class Frame extends JFrame {
         dispatcher.bind(globalKey(VK_ENTER, PLAY_LAST));
         dispatcher.bind(globalKey(VK_SPACE, TOGGLE_PLAYER));
         dispatcher.bind(globalKey(VK_ESCAPE, CANCEL));
-        dispatcher.bind(globalKey(VK_ESCAPE, BACK));
 
         dispatcher.bind(globalControlKey(VK_Q, EXIT));
         dispatcher.bind(globalControlKey(VK_O, OPEN));
         dispatcher.bind(globalControlKey(VK_N, OPEN_QUICK_NAVI));
         dispatcher.bind(globalControlKey(VK_S, SETTINGS));
         dispatcher.bind(globalControlKey(VK_F, MEDIA_FILTERING));
-
-        dispatcher.bind(globalAltKey(VK_M, NEXT_FOLDER_TAB));
 
         dispatcher.bind(globalKey(VK_F, TOGGLE_FULL_SCREEN));
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(dispatcher);
@@ -223,7 +235,7 @@ public class Frame extends JFrame {
         Font font = new Font("Dialog", Font.BOLD,  12);
         UIManager.put("Label.font", font);
         UIManager.put("Button.font", font);
-        UIManager.put("TextField.font", new Font("Dialog", Font.BOLD,  14));
+        UIManager.put("TextField.font", new Font("Dialog", Font.BOLD, 14));
 
         UIManager.put("Label.foreground", Components.MAIN_GRAY_COLOR);
         UIManager.put("Button.foreground", Components.MAIN_GRAY_COLOR);
@@ -234,14 +246,14 @@ public class Frame extends JFrame {
         wrapper = new JPanel(new BorderLayout());
         getContentPane().add(wrapper, BorderLayout.CENTER);
         addMouseWheelListener(e -> {
-            if(playerControls != null){
-                if(e.getWheelRotation() < ZERO){
+            if (playerControls != null) {
+                if (e.getWheelRotation() < ZERO) {
                     playerControls.setVisible(true);
-                    if(mediaService.isFullScreen())
+                    if (mediaService.isFullScreen())
                         setCursor(Cursor.getDefaultCursor());
-                } else{
+                } else {
                     playerControls.setVisible(false);
-                    if(mediaService.isFullScreen())
+                    if (mediaService.isFullScreen())
                         setCursor(blankCursor);
                 }
             }
@@ -284,27 +296,31 @@ public class Frame extends JFrame {
         filterInput.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                log.debug("Filter key pressed {}", filterInput.getText());
-                JPanel selectedPanel = null;
-
-                int selectedIndex = tabs.getModel().getSelectedIndex();
-                if (selectedIndex >= ZERO) {
-                    FolderTab folderTab = getFolderTab(selectedIndex);
-                    if (folderTab != null)
-                        selectedPanel = folderTab.panel;
-                }
-
-                if (selectedPanel != null) {
-                    Pattern pattern = Pattern.compile(buildFilterPattern(filterInput.getText()));
-                    for (Component component : selectedPanel.getComponents()) {
-                        QuickNaviButton naviButton = (QuickNaviButton) component;
-                        naviButton.setVisible(pattern.matcher(naviButton.getMediaType().getName().toLowerCase()).matches());
-                    }
-                    selectedPanel.repaint();
-                }
+                filterCurrentTab();
             }
         });
         jMenuBar.add(filterInput);
+    }
+
+    private void filterCurrentTab() {
+        log.debug("Filter key pressed {}", filterInput.getText());
+        JPanel selectedPanel = null;
+
+        int selectedIndex = tabs.getModel().getSelectedIndex();
+        if (selectedIndex >= ZERO) {
+            FolderTab folderTab = getFolderTab(selectedIndex);
+            if (folderTab != null)
+                selectedPanel = folderTab.panel;
+        }
+
+        if (selectedPanel != null) {
+            Pattern pattern = Pattern.compile(buildFilterPattern(filterInput.getText()));
+            for (Component component : selectedPanel.getComponents()) {
+                QuickNaviButton naviButton = (QuickNaviButton) component;
+                naviButton.setVisible(pattern.matcher(naviButton.getMediaType().getName().toLowerCase()).matches());
+            }
+            selectedPanel.repaint();
+        }
     }
 
     private String buildFilterPattern(String text) {

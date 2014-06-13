@@ -1,14 +1,13 @@
 package cz.encircled.eplayer.view;
 
 import com.sun.java.swing.SwingUtilities3;
-import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
+import cz.encircled.eplayer.service.FolderScanService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
-import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.util.GUIUtil;
-import cz.encircled.eplayer.view.listeners.KeyDispatcher;
+import cz.encircled.eplayer.util.PropertyProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +15,6 @@ import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -32,7 +30,11 @@ public class SwingViewService implements ViewService {
 
     private MediaService mediaService;
 
+    private FolderScanService folderScanService;
+
     private Frame frame;
+
+    private String fileChooserLastPath;
 
     private volatile int wrapperState = -1;
 
@@ -40,13 +42,17 @@ public class SwingViewService implements ViewService {
 
     private final static int PLAYER_STATE = 1;
 
+    private JFileChooser mediaFileChooser;
+
 
     @Override
     public void initialize(@NotNull CountDownLatch countDownLatch){
+        setDefaultFileChooserPath();
         invokeInEDT(() -> {
             long start = System.currentTimeMillis();
             log.trace("SwingViewService init start");
             frame = new Frame(this, mediaService);
+            mediaFileChooser = new JFileChooser(fileChooserLastPath); // TODO move
             frame.setVisible(true);
             SwingUtilities3.setVsyncRequested(frame, true);// TODO check
             GUIUtil.setFrame(frame);
@@ -103,11 +109,6 @@ public class SwingViewService implements ViewService {
     }
 
     @Override
-    public void nextFolderTab(){
-        invokeInEDT(frame::nextTab);
-    }
-
-    @Override
     public void showQuickNavi(){
         if(wrapperState != QUICK_NAVI_STATE){
             wrapperState = QUICK_NAVI_STATE;
@@ -116,7 +117,7 @@ public class SwingViewService implements ViewService {
     }
 
     @Override
-    public void showPlayer(CountDownLatch countDownLatch){
+    public void showPlayer(@NotNull CountDownLatch countDownLatch){
         if(wrapperState != PLAYER_STATE){
             wrapperState = PLAYER_STATE;
             log.debug("Add player to frame");
@@ -155,6 +156,11 @@ public class SwingViewService implements ViewService {
     }
 
     @Override
+    public void setFolderScanService(@NotNull FolderScanService folderScanService){
+        this.folderScanService = folderScanService;
+    }
+
+    @Override
     public void setMediaService(@NotNull MediaService mediaService) {
         this.mediaService = mediaService;
     }
@@ -173,6 +179,39 @@ public class SwingViewService implements ViewService {
             log.debug("Hide filter input");
             invokeInEDT(frame::hideFilterInput);
         }
+    }
+
+    @Override
+    public void createNewTab(String absolutePath) {
+//      PropertyProvider.setArray();
+        new SwingWorker<MediaType, Object>(){
+            @Override
+            protected MediaType doInBackground() throws Exception {
+                folderScanService.addIfAbsent(absolutePath);
+                folderScanService.scanDirectories();
+                return null;
+            }
+        }.execute();
+
+    }
+
+
+
+    @Override
+    public void openMedia() {
+        invokeInEDT(()->{
+
+            int res = mediaFileChooser.showOpenDialog(getWindow());
+            if (res == JFileChooser.APPROVE_OPTION) {
+                fileChooserLastPath = mediaFileChooser.getSelectedFile().getPath();
+                mediaService.updateCurrentMediaInCache();
+                mediaService.play(fileChooserLastPath);
+            }
+        });
+    }
+
+    private void setDefaultFileChooserPath(){
+        fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
     }
 
     private static void invokeInEDT(@NotNull Runnable runnable){
