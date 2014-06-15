@@ -1,13 +1,11 @@
 package cz.encircled.eplayer.view;
 
-import com.sun.java.swing.SwingUtilities3;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.FolderScanService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
 import cz.encircled.eplayer.util.GUIUtil;
-import cz.encircled.eplayer.util.PropertyProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -34,27 +32,19 @@ public class SwingViewService implements ViewService {
 
     private Frame frame;
 
-    private String fileChooserLastPath;
-
-    private volatile int wrapperState = -1;
+    private int wrapperState = -1;
 
     private final static int QUICK_NAVI_STATE = 0;
 
     private final static int PLAYER_STATE = 1;
 
-    private JFileChooser mediaFileChooser;
-
-
     @Override
     public void initialize(@NotNull CountDownLatch countDownLatch){
-        setDefaultFileChooserPath();
         invokeInEDT(() -> {
             long start = System.currentTimeMillis();
             log.trace("SwingViewService init start");
             frame = new Frame(this, mediaService);
-            mediaFileChooser = new JFileChooser(fileChooserLastPath); // TODO move
             frame.setVisible(true);
-            SwingUtilities3.setVsyncRequested(frame, true);// TODO check
             GUIUtil.setFrame(frame);
             log.trace("SwingViewService init complete in {} ms", System.currentTimeMillis() - start);
             countDownLatch.countDown();
@@ -97,14 +87,12 @@ public class SwingViewService implements ViewService {
     @Override
     public void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
         log.debug("Add tab for folder {}", tabName);
-
         invokeInEDT(() -> frame.addTabForFolder(tabName, mediaType));
     }
 
     @Override
     public void updateTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType){
         log.debug("Add tab for folder {}", tabName);
-
         invokeInEDT(() -> frame.addTabForFolder(tabName, mediaType));
     }
 
@@ -183,7 +171,6 @@ public class SwingViewService implements ViewService {
 
     @Override
     public void createNewTab(String absolutePath) {
-//      PropertyProvider.setArray();
         new SwingWorker<MediaType, Object>(){
             @Override
             protected MediaType doInBackground() throws Exception {
@@ -199,19 +186,7 @@ public class SwingViewService implements ViewService {
 
     @Override
     public void openMedia() {
-        invokeInEDT(()->{
-
-            int res = mediaFileChooser.showOpenDialog(getWindow());
-            if (res == JFileChooser.APPROVE_OPTION) {
-                fileChooserLastPath = mediaFileChooser.getSelectedFile().getPath();
-                mediaService.updateCurrentMediaInCache();
-                mediaService.play(fileChooserLastPath);
-            }
-        });
-    }
-
-    private void setDefaultFileChooserPath(){
-        fileChooserLastPath = PropertyProvider.get(PropertyProvider.SETTING_DEFAULT_OPEN_LOCATION, System.getProperty("user.home"));
+        invokeInEDT(frame::openMedia);
     }
 
     private static void invokeInEDT(@NotNull Runnable runnable){

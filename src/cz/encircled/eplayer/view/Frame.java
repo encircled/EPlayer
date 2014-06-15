@@ -39,6 +39,7 @@ import static java.awt.event.KeyEvent.*;
 public class Frame extends JFrame {
 
     private static final String TITLE = "EPlayer";
+
     private static final int SCROLL_BAR_SPEED = 16;
 
     private PlayerControls playerControls;
@@ -65,6 +66,8 @@ public class Frame extends JFrame {
     private Map<String, FolderTab> folderTabs = new HashMap<>();
 
     private final static Logger log = LogManager.getLogger(Frame.class);
+
+    private JFileChooser mediaFileChooser;
 
     public Frame(ViewService viewService, MediaService mediaService) {
         this.viewService = viewService;
@@ -188,6 +191,7 @@ public class Frame extends JFrame {
         naviTab = getFolderTab(ZERO);
         initializeHotKeys();
         tabs.setTransferHandler(handler);
+        mediaFileChooser = new JFileChooser();
     }
 
     private TransferHandler handler = new TransferHandler() {
@@ -342,6 +346,14 @@ public class Frame extends JFrame {
                 return tab;
         }
         return null;
+    }
+
+    void openMedia() {
+        int res = mediaFileChooser.showOpenDialog(this);
+        if (res == JFileChooser.APPROVE_OPTION) {
+            mediaService.updateCurrentMediaInCache();
+            mediaService.play(mediaFileChooser.getSelectedFile().getPath());
+        }
     }
 
     class FolderTab {
