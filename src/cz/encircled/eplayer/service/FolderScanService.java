@@ -1,5 +1,7 @@
 package cz.encircled.eplayer.service;
 
+import java.util.List;
+
 /**
  * Created by Encircled on 11/06/2014.
  */
@@ -9,7 +11,7 @@ public interface FolderScanService {
 
     FolderScanService addFiledScanListener(FileScanListener listener);
 
-    FolderScanService addAllIfAbsent(String[] absolutePaths);
+    FolderScanService addAllIfAbsent(List<String> absolutePaths);
 
     boolean removeFolder(String absolutePath);
 
@@ -19,6 +21,4 @@ public interface FolderScanService {
 
     void start();
 
-    // TODO not nice
-    void scanDirectories();
 }

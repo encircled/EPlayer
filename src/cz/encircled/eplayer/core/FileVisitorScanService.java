@@ -65,19 +65,21 @@ public class FileVisitorScanService implements FolderScanService {
     public boolean addIfAbsent(String absolutePath) {
         if(!foldersToScan.containsKey(absolutePath)){
             try {
-                foldersToScan.put(absolutePath, new ScanFolder(absolutePath).build());
+                ScanFolder newFolder = new ScanFolder(absolutePath).build();
+                foldersToScan.put(absolutePath, newFolder);
+                scanDirectory(absolutePath, newFolder);
                 return true;
             } catch (IOException e) {
                 log.error("Failed to register watcher on {}", absolutePath);
             }
         }
+        log.debug("{} is already watching", absolutePath);
         return false;
     }
 
     @Override
-    public FolderScanService addAllIfAbsent(String[] absolutePaths){
-        for(String path : absolutePaths)
-            addIfAbsent(path);
+    public FolderScanService addAllIfAbsent(List<String> absolutePaths){
+        absolutePaths.forEach(this::addIfAbsent);
         return this;
     }
 
@@ -93,7 +95,7 @@ public class FileVisitorScanService implements FolderScanService {
 
     @Override
     public void start(){
-        scanDirectories();
+        scanAllDirectories();
         startWatcher();
     }
 
@@ -147,21 +149,23 @@ public class FileVisitorScanService implements FolderScanService {
         return null;
     }
 
-    @Override // TODO not nice
-    public void scanDirectories(){
-        foldersToScan.forEach((directoryPath, folder) -> {
-            if(!folder.scanned){
-                visitor.setCurrentFolder(folder);
-                folder.media.clear();
-                try {
-                    Files.walkFileTree(folder.path, visitor);
-                    fireFolderScanned(directoryPath, folder);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                folder.scanned = true;
+    private void scanAllDirectories(){
+        foldersToScan.forEach(this::scanDirectory);
+    }
+
+    private void scanDirectory(@NotNull String directoryPath, @NotNull ScanFolder folder){
+        if(!folder.scanned){
+            log.debug("Scanning {}", directoryPath);
+            visitor.setCurrentFolder(folder);
+            folder.media.clear();
+            try {
+                Files.walkFileTree(folder.path, visitor);
+                fireFolderScanned(directoryPath, folder);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+            folder.scanned = true;
+        }
     }
 
     private void fireFolderScanned(String folderPath, ScanFolder folder){

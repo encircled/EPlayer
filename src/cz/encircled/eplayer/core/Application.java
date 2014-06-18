@@ -47,6 +47,7 @@ public class Application {
         public void onFolderChange(String path, Map<Integer, MediaType> media) {
             viewService.updateTabForFolder(path, media.values());
         }
+
     };
 
     public static ActionExecutor getActionExecutor(){
@@ -106,10 +107,9 @@ public class Application {
 
         new Thread(() -> {
             folderScanService.initialize()
-                                .addAllIfAbsent(getArray(FOLDERS_TO_SCAN, FOLDER_SEPARATOR))
                                 .addFiledScanListener(fileScanListener)
+                                .addAllIfAbsent(getList(FOLDERS_TO_SCAN, FOLDER_SEPARATOR))
                                 .start();
-//            folderScanService.getPaths().forEach((path, result) -> viewService.addTabForFolder(path.toString(), result.values()));
         }).start();
 
         addCloseHook();

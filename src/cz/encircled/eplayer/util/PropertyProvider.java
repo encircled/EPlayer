@@ -10,8 +10,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Properties;
+import java.util.*;
 
 public class PropertyProvider {
 	
@@ -43,9 +42,9 @@ public class PropertyProvider {
     }
 
     @NotNull
-    public static String[] getArray(@NotNull String key, @NotNull String separator){
+    public static List<String> getList(@NotNull String key, @NotNull String separator){
         String value = properties.getProperty(key);
-        return StringUtil.isSet(value) ? value.split(separator) : new String[]{};
+        return StringUtil.isSet(value) ? new ArrayList<>(Arrays.asList(value.split(separator))) : Collections.emptyList(); // TODO Array creation
     }
 	
 	public static String get(@NotNull String key){
@@ -66,7 +65,7 @@ public class PropertyProvider {
         properties.setProperty(key, stringValue);
     }
 
-    public static void setArray(@NotNull String key, @NotNull String[] value, @NotNull String separator){
+    public static void setList(@NotNull String key, @NotNull List<String> value, @NotNull String separator){
         set(key, String.join(separator, value));
     }
 	

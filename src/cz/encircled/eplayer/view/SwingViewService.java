@@ -6,6 +6,7 @@ import cz.encircled.eplayer.service.FolderScanService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
 import cz.encircled.eplayer.util.GUIUtil;
+import cz.encircled.eplayer.util.PropertyProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -174,15 +175,16 @@ public class SwingViewService implements ViewService {
         new SwingWorker<MediaType, Object>(){
             @Override
             protected MediaType doInBackground() throws Exception {
-                folderScanService.addIfAbsent(absolutePath);
-                folderScanService.scanDirectories();
+                if(folderScanService.addIfAbsent(absolutePath)){
+                    List<String> tabs = PropertyProvider.getList(PropertyProvider.FOLDERS_TO_SCAN, PropertyProvider.FOLDER_SEPARATOR);
+                    tabs.add(absolutePath);
+                    PropertyProvider.setList(PropertyProvider.FOLDERS_TO_SCAN, tabs, PropertyProvider.FOLDER_SEPARATOR);
+                    PropertyProvider.save();
+                }
                 return null;
             }
         }.execute();
-
     }
-
-
 
     @Override
     public void openMedia() {

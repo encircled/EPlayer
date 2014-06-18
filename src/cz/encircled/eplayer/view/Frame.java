@@ -7,7 +7,6 @@ import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.ViewService;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.MessagesProvider;
-import cz.encircled.eplayer.util.PropertyProvider;
 import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.componensts.PlayerControls;
 import cz.encircled.eplayer.view.componensts.QuickNaviButton;
@@ -105,6 +104,7 @@ public class Frame extends JFrame {
 
 
     void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
+
         tabs.setVisible(true);
         setTitle(TITLE);
         repaintQuickNavi(mediaType);
@@ -223,7 +223,7 @@ public class Frame extends JFrame {
         dispatcher.bind(focusedOnlyKey(VK_ESCAPE, STOP_MEDIA_FILTERING, filterInput));
         dispatcher.bind(globalKey(VK_ENTER, PLAY_LAST));
         dispatcher.bind(globalKey(VK_SPACE, TOGGLE_PLAYER));
-        dispatcher.bind(globalKey(VK_ESCAPE, CANCEL));
+        dispatcher.bind(globalKey(VK_ESCAPE, BACK));
 
         dispatcher.bind(globalControlKey(VK_Q, EXIT));
         dispatcher.bind(globalControlKey(VK_O, OPEN));
