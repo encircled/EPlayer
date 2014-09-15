@@ -1,16 +1,10 @@
 package cz.encircled.eplayer.service.action;
 
 public class ActionCommands {
-	
-	public final static String SAVE_SETTINGS = "saveSettings";
-	
-	public final static String CANCEL = "cancelDialog";
-	
-	public final static String EXIT = "exit";
-	
-	public final static String SETTINGS = "settings";
 
-	public final static String OPEN = "openMedia";
+    public final static String EXIT = "exit";
+
+    public final static String OPEN = "openMedia";
 
     public static final String OPEN_QUICK_NAVI = "openQuickNavi";
 

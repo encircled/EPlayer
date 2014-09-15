@@ -2,13 +2,15 @@ package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
-import cz.encircled.eplayer.service.FileScanListener;
 import cz.encircled.eplayer.service.FolderScanService;
+import cz.encircled.eplayer.service.event.Event;
+import cz.encircled.eplayer.service.event.EventObserver;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -24,7 +26,11 @@ public class FileVisitorScanService implements FolderScanService {
 
     private static final Logger log = LogManager.getLogger();
 
-    private final CacheService cacheService;
+    @Resource
+    protected CacheService cacheService;
+
+    @Resource
+    private EventObserver eventObserver;
 
     private Map<String, ScanFolder> foldersToScan;
 
@@ -34,36 +40,21 @@ public class FileVisitorScanService implements FolderScanService {
 
     private final PlayableFileVisitor visitor = new PlayableFileVisitor();
 
-    private final List<FileScanListener> listeners;
-
     private boolean interrupted = false;
 
-    public FileVisitorScanService(CacheService cacheService){
-        this.cacheService = cacheService;
+    public FileVisitorScanService() {
         foldersToScan = new HashMap<>();
-        listeners = new ArrayList<>();
-    }
-
-    @Override
-    public FolderScanService initialize() {
         try {
             watcher = FileSystems.getDefault().newWatchService();
-        } catch (IOException e){
+        } catch (IOException e) {
             log.error("DirectoryScanner Initialize exception", e);
             throw new RuntimeException("Can't start watcher service");
         }
-        return this;
-    }
-
-    @Override
-    public FolderScanService addFiledScanListener(FileScanListener listener) {
-        listeners.add(listener);
-        return this;
     }
 
     @Override
     public boolean addIfAbsent(String absolutePath) {
-        if(!foldersToScan.containsKey(absolutePath)){
+        if (!foldersToScan.containsKey(absolutePath)) {
             try {
                 ScanFolder newFolder = new ScanFolder(absolutePath).build();
                 foldersToScan.put(absolutePath, newFolder);
@@ -78,7 +69,7 @@ public class FileVisitorScanService implements FolderScanService {
     }
 
     @Override
-    public FolderScanService addAllIfAbsent(List<String> absolutePaths){
+    public FolderScanService addAllIfAbsent(List<String> absolutePaths) {
         absolutePaths.forEach(this::addIfAbsent);
         return this;
     }
@@ -86,7 +77,7 @@ public class FileVisitorScanService implements FolderScanService {
     @Override
     public boolean removeFolder(String absolutePath) {
         ScanFolder folder = foldersToScan.remove(absolutePath);
-        if(folder != null){
+        if (folder != null) {
             folder.key.cancel();
             return true;
         }
@@ -94,13 +85,13 @@ public class FileVisitorScanService implements FolderScanService {
     }
 
     @Override
-    public void start(){
+    public void start() {
         scanAllDirectories();
         startWatcher();
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         interrupted = true;
     }
 
@@ -117,7 +108,7 @@ public class FileVisitorScanService implements FolderScanService {
 
                         log.debug("File {} has changed, kind is {}", absolutePath, event.kind());
                         ScanFolder folder = getScanFolder(folderPath);
-                        if(folder != null){
+                        if (folder != null) {
                             if (event.kind() == ENTRY_DELETE) {
                                 folder.media.remove(absolutePath.hashCode());
                             } else {
@@ -126,14 +117,14 @@ public class FileVisitorScanService implements FolderScanService {
                                     media = new MediaType(absolutePath);
                                 folder.media.putIfAbsent(absolutePath.hashCode(), media);
                             }
-                            fireFolderChanged(folderPath.toAbsolutePath().toString(), folder);
+                            eventObserver.fire(Event.FolderChanged, folderPath.toAbsolutePath().toString(), folder.media);
                         }
 
                         if (!key.reset())
                             break;
                     }
                     Thread.sleep(1000);
-                } catch(Exception e){
+                } catch (Exception e) {
                     log.error("Watcher error: ", e);
                 }
             }
@@ -141,26 +132,26 @@ public class FileVisitorScanService implements FolderScanService {
     }
 
     @Nullable
-    private ScanFolder getScanFolder(Path path){
-        for(ScanFolder folder : foldersToScan.values()){
-            if(folder.path.equals(path))
+    private ScanFolder getScanFolder(Path path) {
+        for (ScanFolder folder : foldersToScan.values()) {
+            if (folder.path.equals(path))
                 return folder;
         }
         return null;
     }
 
-    private void scanAllDirectories(){
+    private void scanAllDirectories() {
         foldersToScan.forEach(this::scanDirectory);
     }
 
-    private void scanDirectory(@NotNull String directoryPath, @NotNull ScanFolder folder){
-        if(!folder.scanned){
+    private void scanDirectory(@NotNull String directoryPath, @NotNull ScanFolder folder) {
+        if (!folder.scanned) {
             log.debug("Scanning {}", directoryPath);
             visitor.setCurrentFolder(folder);
             folder.media.clear();
             try {
                 Files.walkFileTree(folder.path, visitor);
-                fireFolderScanned(directoryPath, folder);
+                eventObserver.fire(Event.FolderChanged, directoryPath, folder.media);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -168,19 +159,11 @@ public class FileVisitorScanService implements FolderScanService {
         }
     }
 
-    private void fireFolderScanned(String folderPath, ScanFolder folder){
-        listeners.stream().parallel().forEach((l) -> l.onFolderScanned(folderPath, folder.media));
-    }
-
-    private void fireFolderChanged(String path, ScanFolder folder){
-        listeners.stream().parallel().forEach((l) -> l.onFolderChange(path, folder.media));
-    }
-
     private class PlayableFileVisitor implements FileVisitor<Path> {
 
         private ScanFolder folder;
 
-        public void setCurrentFolder(ScanFolder folder){
+        public void setCurrentFolder(ScanFolder folder) {
             this.folder = folder;
         }
 
@@ -194,9 +177,9 @@ public class FileVisitorScanService implements FolderScanService {
         @Override
         public FileVisitResult visitFile(@NotNull Path file, BasicFileAttributes attrs) throws IOException {
             String absolutePath = file.toAbsolutePath().toString();
-            if(Arrays.binarySearch(SUPPORTED_FORMATS, absolutePath.toLowerCase().substring(absolutePath.lastIndexOf(DOT) + ONE)) >= ZERO){
+            if (Arrays.binarySearch(SUPPORTED_FORMATS, absolutePath.toLowerCase().substring(absolutePath.lastIndexOf(DOT) + ONE)) >= ZERO) {
                 MediaType media = cacheService.getEntry(absolutePath.hashCode());
-                if(media == null)
+                if (media == null)
                     media = new MediaType(absolutePath);
                 folder.media.putIfAbsent(absolutePath.hashCode(), media);
                 log.debug("Supported File {}", absolutePath);
@@ -231,7 +214,7 @@ public class FileVisitorScanService implements FolderScanService {
 
         Map<Integer, MediaType> media;
 
-        ScanFolder(String absolutePath){
+        ScanFolder(String absolutePath) {
             this.absolutePath = absolutePath;
             media = new LinkedHashMap<>();
             scanned = false;

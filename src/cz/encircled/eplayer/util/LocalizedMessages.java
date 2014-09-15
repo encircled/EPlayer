@@ -1,22 +1,22 @@
 package cz.encircled.eplayer.util;
 
 public class LocalizedMessages {
-	
-	public final static String FILE = "file";
-	
-	public final static String LANGUAGE = "language";
-	
-	public final static String SAVE = "save";
-	
-	public final static String CANCEL = "cancel";
-	
-	public final static String SETTINGS = "settings";
 
-	public final static String TOOLS = "tools";
+    public final static String FILE = "file";
 
-	public static final String OPEN = "open";
+    public final static String LANGUAGE = "language";
 
-	public static final String EXIT = "exit";
+    public final static String SAVE = "save";
+
+    public final static String CANCEL = "cancel";
+
+    public final static String SETTINGS = "settings";
+
+    public final static String TOOLS = "tools";
+
+    public static final String OPEN = "open";
+
+    public static final String EXIT = "exit";
 
     public static final String OPEN_QUICK_NAVI = "openQuickNavi";
 
@@ -47,5 +47,7 @@ public class LocalizedMessages {
     public static final String CONFIRM_DELETE_FILE = "confirm_delete_file";
 
     public static final String SUBTITLES = "subtitles";
+
+    public static final String AUDIO_TRACK = "audioTrack";
 
 }

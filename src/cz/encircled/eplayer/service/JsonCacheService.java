@@ -3,20 +3,18 @@ package cz.encircled.eplayer.service;
 import com.google.gson.JsonSyntaxException;
 import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.util.IOUtil;
-import cz.encircled.eplayer.util.PropertyProvider;
+import cz.encircled.eplayer.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Resource;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
-import static cz.encircled.eplayer.util.GUIUtil.showMessage;
 import static cz.encircled.eplayer.util.LocalizedMessages.*;
 
 /**
@@ -30,6 +28,34 @@ public class JsonCacheService implements CacheService {
 
     private static final Logger log = LogManager.getLogger();
 
+    @Resource
+    private GuiUtil guiUtil;
+
+    @Resource
+    private Settings settings;
+
+    public JsonCacheService() {
+        long start = System.currentTimeMillis();
+        log.trace("JsonCacheService init start");
+        if (IOUtil.createIfMissing(QUICK_NAVI_PATH, false, true)) {
+            log.debug("QuickNavi file was created");
+        }
+        try {
+            cache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
+        } catch (IOException e) {
+            log.error("Failed to read cache data from {} with default type token. Message: {}",
+                    settings.get(QUICK_NAVI_PATH), e.getMessage());
+            guiUtil.showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+        } catch (JsonSyntaxException e) {
+            log.error("JSON syntax error. Message: {}", e.getMessage());
+            guiUtil.showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+        }
+        if (cache == null)
+            cache = new HashMap<>();
+
+        checkHashes(cache);
+        log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start);
+    }
 
     @Override
     public void forEach(Consumer<MediaType> action) {
@@ -59,22 +85,6 @@ public class JsonCacheService implements CacheService {
         return cache.remove(hash);
     }
 
-    // TODO
-//    public void deletePlayableOld(int hash){
-//        Playable deleted = cache.remove(hash);
-//        if(deleted == null){
-//            log.warn("Playable with hash {} not exists", hash);
-//        } else {
-//            if (deleted.exists() && userConfirm(CONFIRM_DELETE_FILE)){
-//                boolean wasDeleted =     new File(deleted.getPath()).delete();
-//                log.debug("Playable {} was deleted: {}", deleted.getName() ,wasDeleted);
-//            }
-//            actionExecutor.setDefaultFileChooserPath();
-//            frame.repaintQuickNavi(); // TODO
-//            savePlayable();
-//        }
-//    }
-
     @NotNull
     @Override
     public Collection<MediaType> getCache(){
@@ -96,6 +106,7 @@ public class JsonCacheService implements CacheService {
      */
     @Override
     public synchronized void save(){
+        log.trace("Save json cache");
         new Thread(() -> {
             try {
                 IOUtil.storeJson(cache, QUICK_NAVI_PATH);
@@ -104,36 +115,6 @@ public class JsonCacheService implements CacheService {
                 log.error("Failed to save playable to {}, msg {}", QUICK_NAVI_PATH, e);
             }
         }).start();
-    }
-
-    public void initialize(@NotNull CountDownLatch countDownLatch){
-        long start = System.currentTimeMillis();
-        log.trace("JsonCacheService init start");
-        try {
-            if(IOUtil.createIfMissing(QUICK_NAVI_PATH)){
-                log.debug("QuickNavi file was created");
-            }
-        } catch (IOException e) {
-            log.error("Failed to create QuickNavi data file at {}", QUICK_NAVI_PATH);
-            showMessage(MSG_CREATE_QN_FILE_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        try {
-            cache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
-        } catch (IOException e) {
-            log.error("Failed to read cache data from {} with default type token. Message: {}",
-                    PropertyProvider.get(QUICK_NAVI_PATH), e.getMessage());
-            showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-        } catch (JsonSyntaxException e){
-            log.error("JSON syntax error. Message: {}", e.getMessage());
-            showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
-        }
-        if(cache == null)
-            cache = new HashMap<>();
-
-        checkHashes(cache);
-        log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start);
-        countDownLatch.countDown();
     }
 
     private static void checkHashes(@NotNull Map<Integer, MediaType> playableCache) {

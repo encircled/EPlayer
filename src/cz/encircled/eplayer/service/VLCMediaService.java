@@ -4,9 +4,12 @@ import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.util.GUIUtil;
+import cz.encircled.eplayer.service.event.*;
+import cz.encircled.eplayer.service.event.Event;
+import cz.encircled.eplayer.service.gui.ViewService;
+import cz.encircled.eplayer.util.GuiUtil;
+import cz.encircled.eplayer.util.Localizations;
 import cz.encircled.eplayer.util.LocalizedMessages;
-import cz.encircled.eplayer.util.MessagesProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -20,13 +23,14 @@ import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
 import uk.co.caprica.vlcj.player.embedded.windows.Win32FullScreenStrategy;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.concurrent.CountDownLatch;
 
-import static cz.encircled.eplayer.util.GUIUtil.showMessage;
 import static cz.encircled.eplayer.util.LocalizedMessages.ERROR_TITLE;
 import static cz.encircled.eplayer.util.LocalizedMessages.MSG_VLC_LIBS_FAIL;
 
@@ -38,7 +42,17 @@ public class VLCMediaService implements MediaService {
     private static final Logger log = LogManager.getLogger();
     public static final String X64 = "64";
 
+    @Resource
     private CacheService cacheService;
+
+    @Resource
+    private GuiUtil guiUtil;
+
+    @Resource
+    private Localizations localizations;
+
+    @Resource
+    private EventObserver eventObserver;
 
     private long currentTime;
 
@@ -46,30 +60,15 @@ public class VLCMediaService implements MediaService {
 
     private EmbeddedMediaPlayer player;
 
+    @Resource
     private ViewService viewService;
 
     @Nullable
     private String current;
 
-    public static final String VLC_LIB_PATH_64 = "vlc-2.1.3_x64";
+    public static final String VLC_LIB_PATH_64 = "vlc-2.1.5_x64";
 
-    public static final String VLC_LIB_PATH = "vlc-2.1.3";
-
-    @Override
-    public void enterFullScreen(){
-        player.setFullScreen(true);
-        viewService.enterFullScreen();
-    }
-
-    @Override
-    public void setCacheService(CacheService cacheService) {
-        this.cacheService = cacheService;
-    }
-
-    @Override
-    public void setViewService(ViewService viewService) {
-        this.viewService = viewService;
-    }
+    public static final String VLC_LIB_PATH = "vlc-2.1.5";
 
     @Override
     public boolean isFullScreen(){
@@ -99,7 +98,6 @@ public class VLCMediaService implements MediaService {
     }
 
     private void play(@NotNull String path, long time){
-        // showMessage(LocalizedMessages.MSG_VLC_LIBS_FAIL, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE); TODO
         CountDownLatch playerCountDown = new CountDownLatch(1);
         viewService.showPlayer(playerCountDown);
         try {
@@ -107,7 +105,7 @@ public class VLCMediaService implements MediaService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        log.debug("play: {}", path);
+        log.debug("play: {}", EventQueue.isDispatchThread());
         if(!path.equals(current)){
             log.debug("Path {} is new", path);
             current = path;
@@ -115,11 +113,10 @@ public class VLCMediaService implements MediaService {
         }
         player.start();
         player.setTime(Math.min(time, player.getLength()));
-        viewService.onPlayStart();
-        viewService.updateSubtitlesMenu(player.getSpuDescriptions());
-
+        eventObserver.fire(Event.SubtitlesUpdated, player.getSpuDescriptions());
+        eventObserver.fire(Event.AudioTracksUpdated, player.getAudioDescriptions());
+        eventObserver.fire(Event.PlayStart);
     }
-
 
     @Override
     public void play(@NotNull String path){
@@ -128,20 +125,7 @@ public class VLCMediaService implements MediaService {
 
     @Override
     public void play(@NotNull MediaType p){
-
         play(p.getPath(), p.getTime());
-
-//        if(p.exists()){
-//            viewService.play(p.getPath(), p.getCurrentTime());
-//        } else { // TODO
-//            JFileChooser fc = new JFileChooser();
-//            if (fc.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION){
-//                cacheService.deleteEntry(p.getPath().hashCode());
-//                p.updatePath(fc.getSelectedFile().getAbsolutePath());
-//                playableCache.put(p.getPath().hashCode(), p);
-//                play(p);
-//            }
-//        }
     }
 
     @Override
@@ -155,8 +139,13 @@ public class VLCMediaService implements MediaService {
     }
 
     @Override
-    public void setSubtitlesById(int id) {
+    public void setSubtitles(int id) {
         player.setSpu(id);
+    }
+
+    @Override
+    public void setAudioTrack(int trackId) {
+        player.setAudioTrack(trackId);
     }
 
     @Override
@@ -215,8 +204,8 @@ public class VLCMediaService implements MediaService {
         }
     }
 
-    @Override
-    public void initialize(@NotNull CountDownLatch countDownLatch){
+    @PostConstruct
+    private void init() {
         long start = System.currentTimeMillis();
         initializeLibs();
         log.trace("VLCMediaService init start");
@@ -249,7 +238,9 @@ public class VLCMediaService implements MediaService {
             player.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
                 @Override
                 public void finished(MediaPlayer mediaPlayer) {
-                    cacheService.updateEntry(current.hashCode(), Constants.ZERO_LONG);
+                    if (current != null) {
+                        cacheService.updateEntry(current.hashCode(), Constants.ZERO_LONG);
+                    }
                     current = null;
                     stop();
                     viewService.showQuickNavi();
@@ -258,12 +249,13 @@ public class VLCMediaService implements MediaService {
                 @Override
                 public void timeChanged(MediaPlayer mediaPlayer, long newTime) {
                     currentTime = newTime;
-                    viewService.onMediaTimeChange(newTime);
+                    eventObserver.fire(Event.MediaTimeChange, newTime);
                 }
 
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
-                    showMessage(LocalizedMessages.FILE_OPEN_FAILED, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+                    log.error("Failed to open media {} ", current);
+                    guiUtil.showMessage(LocalizedMessages.FILE_OPEN_FAILED, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
                     if(current != null) {
                         cacheService.deleteEntry(current.hashCode());
                         current = null;
@@ -275,12 +267,11 @@ public class VLCMediaService implements MediaService {
 
         } catch(Exception e){
             log.error("Player initialization failed", e);
-            showMessage("VLC library not found", "Error title", JOptionPane.ERROR_MESSAGE);
+            guiUtil.showMessage("VLC library not found", "Error title", JOptionPane.ERROR_MESSAGE);
         } catch (NoClassDefFoundError re){
             log.error("Player initialization failed", re);
         }
         log.trace("VLCMediaService init complete in {} ms", System.currentTimeMillis() - start);
-        countDownLatch.countDown();
     }
 
     private void initializeLibs(){
@@ -292,10 +283,15 @@ public class VLCMediaService implements MediaService {
             Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
             log.trace("VLCLib successfully initialized in {} ms", System.currentTimeMillis() - start);
         } catch(UnsatisfiedLinkError e){
-            GUIUtil.showMessage(MessagesProvider.get(MSG_VLC_LIBS_FAIL), MessagesProvider.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+            guiUtil.showMessage(localizations.get(MSG_VLC_LIBS_FAIL), localizations.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
             log.error("Failed to load vlc libs from specified path {}", vlcLibPath);
             // TODO exit?
         }
+    }
+
+    private void enterFullScreen() {
+        player.setFullScreen(true);
+        viewService.enterFullScreen();
     }
 
 }

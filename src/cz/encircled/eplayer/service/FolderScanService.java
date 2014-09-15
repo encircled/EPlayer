@@ -7,18 +7,14 @@ import java.util.List;
  */
 public interface FolderScanService {
 
-    void stop();
+    void start();
 
-    FolderScanService addFiledScanListener(FileScanListener listener);
+    void stop();
 
     FolderScanService addAllIfAbsent(List<String> absolutePaths);
 
     boolean removeFolder(String absolutePath);
 
     boolean addIfAbsent(String absolutePath);
-
-    FolderScanService initialize();
-
-    void start();
 
 }

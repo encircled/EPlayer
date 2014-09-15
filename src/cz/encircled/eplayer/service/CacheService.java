@@ -5,7 +5,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
-import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 /**
@@ -29,7 +28,5 @@ public interface CacheService {
     void save();
 
     Collection<MediaType> getCache();
-
-    void initialize(CountDownLatch countDownLatch);
 
 }
