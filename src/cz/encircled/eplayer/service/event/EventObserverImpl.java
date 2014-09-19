@@ -3,6 +3,7 @@ package cz.encircled.eplayer.service.event;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Map;
 /**
  * Created by Encircled on 13/09/2014.
  */
+@Resource
 public class EventObserverImpl implements EventObserver {
 
     private static final Logger log = LogManager.getLogger();

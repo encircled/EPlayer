@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Resource
 public class Settings {
 
     private final static String PROPERTIES_FILE_PATH = Application.APP_DOCUMENTS_ROOT + "eplayer.properties.json";

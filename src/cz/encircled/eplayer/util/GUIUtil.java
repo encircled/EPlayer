@@ -13,6 +13,7 @@ import static cz.encircled.eplayer.util.LocalizedMessages.CONFIRM_TITLE;
 /**
  * Created by Encircled on 7/06/2014.
  */
+@Resource
 public class GuiUtil {
 
     private static JFrame frame;

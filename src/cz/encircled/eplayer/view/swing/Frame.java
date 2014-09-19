@@ -1,46 +1,10 @@
 package cz.encircled.eplayer.view.swing;
 
-import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.service.MediaService;
-import cz.encircled.eplayer.service.gui.FromGuiViewService;
-import cz.encircled.eplayer.util.LocalizedMessages;
-import cz.encircled.eplayer.util.Settings;
-import cz.encircled.eplayer.util.StringUtil;
-import cz.encircled.eplayer.view.dnd.DndHandler;
-import cz.encircled.eplayer.view.swing.componensts.PlayerControls;
-import cz.encircled.eplayer.view.swing.componensts.QuickNaviButton;
-import cz.encircled.eplayer.view.swing.componensts.WrapLayout;
-import cz.encircled.eplayer.view.swing.listeners.KeyDispatcher;
-import cz.encircled.eplayer.view.swing.menu.MenuBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import uk.co.caprica.vlcj.player.TrackDescription;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.*;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import static cz.encircled.eplayer.common.Constants.*;
-import static cz.encircled.eplayer.service.action.ActionCommands.*;
-import static cz.encircled.eplayer.view.swing.listeners.KeyDispatcher.*;
-import static java.awt.event.KeyEvent.*;
-
 // TODO media groups
-public class Frame extends JFrame {
+public class Frame {
+}
+        /*
+        extends JFrame implements AppView {
 
     private static final String TITLE = "EPlayer";
 
@@ -90,17 +54,20 @@ public class Frame extends JFrame {
 
     private JFileChooser mediaFileChooser;
 
-    void showPlayer() {
+    @Override
+    public void showPlayer() {
         tabs.setVisible(false);
         wrapper.add(mediaService.getPlayerComponent(), BorderLayout.CENTER);
         wrapper.add(playerControls, BorderLayout.SOUTH);
     }
 
-    void addTabForFolder(@NotNull String tabName) {
+    @Override
+    public void addTabForFolder(@NotNull String tabName) {
         addTabForFolder(tabName, Collections.emptyList());
     }
 
-    void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType) {
+    @Override
+    public void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType) {
         if (folderTabs.containsKey(tabName)) {
             JPanel tabPanel = folderTabs.get(tabName).panel;
             tabPanel.removeAll();
@@ -129,51 +96,56 @@ public class Frame extends JFrame {
     }
 
 
-    void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
+    @Override
+    public void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
         tabs.setVisible(true);
         setTitle(TITLE);
         repaintQuickNavi(mediaType);
         tabs.repaint();
     }
 
-    void repaintQuickNavi(@NotNull Collection<MediaType> mediaType) {
+    public void repaintQuickNavi(@NotNull Collection<MediaType> mediaType) {
         JPanel naviPanel = naviTab.panel;
         naviPanel.removeAll();
         mediaType.forEach((media) -> naviPanel.add(new QuickNaviButton(fromGuiViewService, media, true)));
     }
 
-    void onMediaTimeChange(long newTime) {
+    public void onMediaTimeChange(long newTime) {
         playerControls.fireTimeChanged(newTime);
     }
 
-    void reinitializeControls() {
+    public void reinitializeControls() {
         playerControls.reinitialize();
     }
 
-    void enterFullScreen() {
+    @Override
+    public void enterFullScreen() {
         setCursor(blankCursor);
         setJMenuBar(null);
         playerControls.setVisible(false);
     }
 
-    void exitFullScreen() {
+    @Override
+    public void exitFullScreen() {
         setCursor(Cursor.getDefaultCursor());
         setJMenuBar(jMenuBar);
         playerControls.setVisible(true);
     }
 
-    void showShutdownTimeChooser() {
+    @Override
+    public void showShutdownTimeChooser() {
         ShutdownChooserDialog chooserDialog = new ShutdownChooserDialog(this);
         log.debug("result: {}, {}", chooserDialog.getTime(), chooserDialog.getShutdownParam());
 //        if(chooserDialog.getCurrentTime() != null)
 //            core.shutdown(chooserDialog.getCurrentTime(), chooserDialog.getShutdownParam()); TODO
     }
 
-    void enableSubtitlesMenu(boolean isEnabled) {
+    @Override
+    public void enableSubtitlesMenu(boolean isEnabled) {
         spuMenu.setEnabled(isEnabled);
     }
 
-    void updateSubtitlesMenu(@NotNull List<TrackDescription> spuDescriptions) {
+    public void updateSubtitlesMenu(@NotNull List<TrackDescription> spuDescriptions) {
         log.debug("Set subtitles, count {}", spuDescriptions.size());
         spuMenu.removeAll();
         spuDescriptions.forEach((desc) -> {
@@ -185,7 +157,7 @@ public class Frame extends JFrame {
         spuMenu.revalidate();
     }
 
-    void updateAudioTracksMenu(@NotNull List<TrackDescription> tracks) {
+    public void updateAudioTracksMenu(@NotNull List<TrackDescription> tracks) {
         log.debug("Set audio tracks, count {}", tracks.size());
         audioTracksMenu.removeAll();
         tracks.forEach((desc) -> {
@@ -197,14 +169,16 @@ public class Frame extends JFrame {
         audioTracksMenu.revalidate();
     }
 
-    void showFilterInput() {
+    @Override
+    public void showFilterInput() {
         filterInput.setVisible(true);
         filterInput.requestFocus();
         jMenuBar.repaint();
         jMenuBar.revalidate();
     }
 
-    void hideFilterInput() {
+    @Override
+    public void hideFilterInput() {
         filterInput.transferFocus();
         filterInput.setText(EMPTY);
         filterCurrentTab();
@@ -364,7 +338,8 @@ public class Frame extends JFrame {
         return null;
     }
 
-    void openMedia() {
+    @Override
+    public void openMedia() {
         int res = mediaFileChooser.showOpenDialog(this);
         if (res == JFileChooser.APPROVE_OPTION) {
             new Thread(() -> {
@@ -394,3 +369,4 @@ public class Frame extends JFrame {
     }
 
 }
+                      */

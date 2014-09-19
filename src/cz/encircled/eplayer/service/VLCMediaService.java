@@ -1,34 +1,40 @@
 package cz.encircled.eplayer.service;
 
+import com.sun.jna.Memory;
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.service.event.*;
 import cz.encircled.eplayer.service.event.Event;
+import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.service.gui.ViewService;
 import cz.encircled.eplayer.util.GuiUtil;
 import cz.encircled.eplayer.util.Localizations;
 import cz.encircled.eplayer.util.LocalizedMessages;
+import cz.encircled.eplayer.view.AppView;
+import javafx.application.Platform;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritablePixelFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import uk.co.caprica.vlcj.binding.LibVlc;
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
+import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
-import uk.co.caprica.vlcj.player.embedded.FullScreenStrategy;
-import uk.co.caprica.vlcj.player.embedded.windows.Win32FullScreenStrategy;
+import uk.co.caprica.vlcj.player.direct.BufferFormat;
+import uk.co.caprica.vlcj.player.direct.BufferFormatCallback;
+import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
+import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 
 import static cz.encircled.eplayer.util.LocalizedMessages.ERROR_TITLE;
@@ -37,6 +43,7 @@ import static cz.encircled.eplayer.util.LocalizedMessages.MSG_VLC_LIBS_FAIL;
 /**
  * Created by Administrator on 9.6.2014.
  */
+@Resource
 public class VLCMediaService implements MediaService {
 
     private static final Logger log = LogManager.getLogger();
@@ -56,9 +63,58 @@ public class VLCMediaService implements MediaService {
 
     private long currentTime;
 
-    private EmbeddedMediaPlayerComponent mediaPlayerComponent;
+    private DirectMediaPlayerComponent mediaPlayerComponent;
 
-    private EmbeddedMediaPlayer player;
+    private DirectMediaPlayer player;
+
+    private WritablePixelFormat<ByteBuffer> pixelFormat;
+
+    @Resource
+    private AppView appView;
+
+    /**
+     * Implementation of a direct rendering media player component that renders
+     * the video to a JavaFX canvas.
+     */
+    private class TestMediaPlayerComponent extends DirectMediaPlayerComponent {
+
+        @Override
+        public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, BufferFormat bufferFormat) {
+            Memory nativeBuffer = nativeBuffers[0];
+            ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
+            PixelWriter pixelWriter = appView.getPixelWriter();
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    pixelWriter.setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+                }
+            });
+
+        }
+
+        public TestMediaPlayerComponent() {
+            super(new TestBufferFormatCallback());
+        }
+    }
+
+    private class TestBufferFormatCallback implements BufferFormatCallback {
+
+        @Override
+        public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
+            /* TODO event
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    canvas.setWidth(width);
+                    canvas.setHeight(height);
+                    stage.setWidth(width);
+                    stage.setHeight(height);
+                }
+            });          */
+
+            return new RV32BufferFormat(sourceWidth, sourceHeight);
+        }
+    }
 
     @Resource
     private ViewService viewService;
@@ -71,18 +127,13 @@ public class VLCMediaService implements MediaService {
     public static final String VLC_LIB_PATH = "vlc-2.1.5";
 
     @Override
-    public boolean isFullScreen(){
-        return player.isFullScreen();
-    }
-
-    @Override
     public void releasePlayer(){
-        if(player != null){
-            player.stop();
-            player.release();
-            current = null;
-            currentTime = 0;
-        }
+//        if(player != null){
+//            player.stop();
+//            player.release();
+//            current = null;
+//            currentTime = 0;
+//        }
     }
 
     @Override
@@ -91,13 +142,8 @@ public class VLCMediaService implements MediaService {
             cacheService.updateEntry(current.hashCode(), currentTime);
     }
 
-    @Override
-    public void exitFullScreen(){
-        player.setFullScreen(false);
-        viewService.exitFullScreen();
-    }
-
     private void play(@NotNull String path, long time){
+
         CountDownLatch playerCountDown = new CountDownLatch(1);
         viewService.showPlayer(playerCountDown);
         try {
@@ -129,16 +175,6 @@ public class VLCMediaService implements MediaService {
     }
 
     @Override
-    public void toggleFullScreen() {
-        if(player != null && current != null){
-            if(player.isFullScreen())
-                exitFullScreen();
-            else
-                enterFullScreen();
-        }
-    }
-
-    @Override
     public void setSubtitles(int id) {
         player.setSpu(id);
     }
@@ -146,11 +182,6 @@ public class VLCMediaService implements MediaService {
     @Override
     public void setAudioTrack(int trackId) {
         player.setAudioTrack(trackId);
-    }
-
-    @Override
-    public Component getPlayerComponent() {
-        return mediaPlayerComponent;
     }
 
     @Override
@@ -208,20 +239,15 @@ public class VLCMediaService implements MediaService {
     private void init() {
         long start = System.currentTimeMillis();
         initializeLibs();
+        pixelFormat = PixelFormat.getByteBgraInstance();
         log.trace("VLCMediaService init start");
         try {
-            mediaPlayerComponent = new EmbeddedMediaPlayerComponent() {
-                @NotNull
-                @Override
-                protected FullScreenStrategy onGetFullScreenStrategy() {
-                    return new Win32FullScreenStrategy(viewService.getWindow());
-                }
-            };
+            mediaPlayerComponent = new TestMediaPlayerComponent();
 
             player = mediaPlayerComponent.getMediaPlayer();
-            player.setEnableMouseInputHandling(false);
-            player.setEnableKeyInputHandling(false);
-
+//            player.setEnableMouseInputHandling(false);
+//            player.setEnableKeyInputHandling(false);
+                                    /*
             mediaPlayerComponent.getVideoSurface().addMouseListener(new MouseAdapter() { // TODO move
 
                 @Override
@@ -230,10 +256,9 @@ public class VLCMediaService implements MediaService {
                         togglePlayer();
                     } else {
                         togglePlayer();
-                        toggleFullScreen();
                     }
                 }
-            });
+            });            */
 
             player.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
                 @Override
@@ -287,11 +312,6 @@ public class VLCMediaService implements MediaService {
             log.error("Failed to load vlc libs from specified path {}", vlcLibPath);
             // TODO exit?
         }
-    }
-
-    private void enterFullScreen() {
-        player.setFullScreen(true);
-        viewService.enterFullScreen();
     }
 
 }

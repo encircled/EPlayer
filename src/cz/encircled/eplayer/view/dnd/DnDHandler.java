@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Created by Encircled on 11/09/2014.
  */
+@Resource
 public class DndHandler {
 
     private static final Logger log = LogManager.getLogger();

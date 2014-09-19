@@ -1,31 +1,11 @@
-package cz.encircled.eplayer.view.swing;
-
-import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.service.CacheService;
-import cz.encircled.eplayer.service.FolderScanService;
-import cz.encircled.eplayer.service.event.Event;
-import cz.encircled.eplayer.service.event.EventObserver;
-import cz.encircled.eplayer.service.gui.ViewService;
-import cz.encircled.eplayer.util.GuiUtil;
-import cz.encircled.eplayer.util.Settings;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-import uk.co.caprica.vlcj.player.TrackDescription;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.swing.*;
-import java.awt.*;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
+package cz.encircled.eplayer.service.gui;
 
 /**
  * Created by Administrator on 9.6.2014.
  */
-public class SwingViewService implements ViewService {
+
+public class SwingViewService {
+} /* implements ViewService {
 
     private static final Logger log = LogManager.getLogger();
 
@@ -161,3 +141,4 @@ public class SwingViewService implements ViewService {
     }
 
 }
+                                   */

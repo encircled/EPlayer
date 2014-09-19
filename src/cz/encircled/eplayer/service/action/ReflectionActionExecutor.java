@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.TreeMap;
 
-@SuppressWarnings("UnusedDeclaration")
+@Resource
 public class ReflectionActionExecutor implements ActionExecutor {
 
     private final static Logger log = LogManager.getLogger(ReflectionActionExecutor.class);
@@ -81,8 +81,8 @@ public class ReflectionActionExecutor implements ActionExecutor {
     public void openQuickNavi() {
         mediaService.pause();
         viewService.showQuickNavi();
-        if (mediaService.isFullScreen())
-            mediaService.exitFullScreen();
+//        if (mediaService.isFullScreen())
+//            mediaService.exitFullScreen();
         mediaService.updateCurrentMediaInCache();
         mediaService.stop();
         cacheService.save();
@@ -93,18 +93,18 @@ public class ReflectionActionExecutor implements ActionExecutor {
     }
 
     public void toggleFullScreen() {
-        mediaService.toggleFullScreen();
+//        mediaService.toggleFullScreen();
     }
 
     public void back() {
         log.debug("Execute back");
-        if (viewService.isPlayerState()) {
-            if (mediaService.isFullScreen()) {
-                mediaService.exitFullScreen();
-                mediaService.updateCurrentMediaInCache();
-            } else
-                execute(ActionCommands.OPEN_QUICK_NAVI);
-        }
+//        if (viewService.isPlayerState()) {
+//            if (mediaService.isFullScreen()) {
+//                mediaService.exitFullScreen();
+//                mediaService.updateCurrentMediaInCache();
+//            } else
+//                execute(ActionCommands.OPEN_QUICK_NAVI);
+//        }
     }
 
     public void playLast() {

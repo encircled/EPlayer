@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+@Resource
 public class Localizations {
 
     private static final String DEFAULT_LANGUAGE = "ru";

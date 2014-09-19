@@ -20,6 +20,7 @@ import static cz.encircled.eplayer.util.LocalizedMessages.*;
 /**
  * Created by Administrator on 9.6.2014.
  */
+@Resource
 public class JsonCacheService implements CacheService {
 
     public static final String QUICK_NAVI_PATH = Application.APP_DOCUMENTS_ROOT + "quicknavi.json";
@@ -63,17 +64,17 @@ public class JsonCacheService implements CacheService {
     }
 
     @Override
-    public MediaType createIfAbsent(@NotNull String path){
+    public MediaType createIfAbsent(@NotNull String path) {
         return cache.computeIfAbsent(path.hashCode(), hash -> new MediaType(path));
     }
 
     @Override
-    public MediaType getEntry(Integer hashCode){
+    public MediaType getEntry(Integer hashCode) {
         return cache.get(hashCode);
     }
 
     @Override
-    public MediaType updateEntry(int hash, long time){
+    public MediaType updateEntry(int hash, long time) {
         MediaType p = cache.get(hash);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
@@ -81,19 +82,19 @@ public class JsonCacheService implements CacheService {
     }
 
     @Override
-    public MediaType deleteEntry(int hash){
+    public MediaType deleteEntry(int hash) {
         return cache.remove(hash);
     }
 
     @NotNull
     @Override
-    public Collection<MediaType> getCache(){
+    public Collection<MediaType> getCache() {
         return cache.values();
     }
 
     @Nullable
     @Override
-    public MediaType getLastByWatchDate(){
+    public MediaType getLastByWatchDate() {
         MediaType p = getCache()
                 .stream()
                 .max((p1, p2) -> Long.compare(p1.getWatchDate(), p2.getWatchDate())).get();
@@ -105,7 +106,7 @@ public class JsonCacheService implements CacheService {
      * Async save playable map to file in JSON format
      */
     @Override
-    public synchronized void save(){
+    public synchronized void save() {
         log.trace("Save json cache");
         new Thread(() -> {
             try {

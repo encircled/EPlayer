@@ -1,6 +1,5 @@
 package cz.encircled.eplayer.core;
 
-import cz.encircled.eplayer.ioc.Container;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.gui.ViewService;
@@ -13,6 +12,7 @@ import javax.annotation.Resource;
 
 // TODO Youtube tab and filtering
 
+@Resource
 public class Application {
 
     private static final Logger log = LogManager.getLogger();
@@ -35,6 +35,7 @@ public class Application {
 
     @PostConstruct
     private void start() {
+        log.trace("App post construct");
         viewService.showQuickNavi();
         addCloseHook();
     }
@@ -49,17 +50,6 @@ public class Application {
             }
         });
         log.trace("Close hook added");
-    }
-
-    public static void main(final String[] args) {
-        System.setProperty("file.encoding", "UTF-8");
-        try {
-            new Container().init();
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            e.printStackTrace();
-            System.exit(-1);
-        }
     }
 
 }
