@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.view.fx;
 
-import cz.encircled.eplayer.ioc.core.Container;
+import cz.encircled.eplayer.ioc.core.container.Container;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.view.AppView;

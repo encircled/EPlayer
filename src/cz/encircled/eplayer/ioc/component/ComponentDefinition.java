@@ -3,6 +3,7 @@ package cz.encircled.eplayer.ioc.component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -18,7 +19,7 @@ public class ComponentDefinition {
 
     public ComponentDefinition(Class<?> clazz) {
         this.clazz = clazz;
-        modifiers = Collections.emptyMap();
+        modifiers = new HashMap<>();
     }
 
     public ComponentDefinition(@NotNull Class<?> clazz, @NotNull Map<DefinitionModifier, Object> modifiers) {
