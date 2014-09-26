@@ -1,12 +1,14 @@
 /bin/
 /build/
 
-.settings/
+/vlc/
 
+.settings/
+target/
 .idea/
+idea/
 *.iws
-workspace.xml
+*/workspace.xml
 
 *.jar
-
-
+*.log
