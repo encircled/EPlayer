@@ -9,98 +9,104 @@
     <bookmark url="file://$PROJECT_DIR$/src/main/resources/messages_ru.properties" line="16" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8b59403b-677a-4dfe-868f-54ef79a1779b" name="Default" comment="upd">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/pom.xml" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\.idea\libraries\jna_3_5_2.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\.idea\libraries\org_slf4j_slf4j_api_1_7_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\.idea\libraries\weblaf_1_27.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\.idea\libraries\xuggle_xuggler_5_4.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\META-INF\MANIFEST.MF" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\common\Constants.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\core\Application.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\core\FileVisitorScanService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\core\ShutdownManager.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\core\UTF8Control.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\component\ComponentDefinition.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\component\ComponentFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\component\DefinitionModifier.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\component\annotation\Scope.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\ClassLookUp.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\DefinitionBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\InstanceCreator.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\MethodInvoker.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\ResourceInjector.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\ScopeAware.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\container\AbstractContainer.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\container\Container.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\container\Context.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\factory\FxFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\model\MediaType.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\CacheService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\FolderScanService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\JsonCacheService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\MediaService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\VLCMediaService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\action\ActionCommands.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\action\ActionExecutor.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\action\ReflectionActionExecutor.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\event\Event.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\event\EventListener.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\event\EventObserver.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\event\EventObserverImpl.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\gui\FromGuiViewService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\gui\FxFromGuiViewService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\gui\FxViewService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\gui\SwingViewService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\service\gui\ViewService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\CollectionUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\GuiUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\IOUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\Localizations.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\LocalizedMessages.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\ReflectionUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\Settings.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\util\StringUtil.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\AppView.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\FX.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\dnd\DndHandler.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\fx\FxTest.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\fx\FxView.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\fx\PlayerScene.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\fx\QuickNaviScene.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\Components.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\Frame.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\JSBridge.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\JavaFXDirectRenderingTest.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\ShutdownChooserDialog.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\SwingFromGuiViewService.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\componensts\ColorOnHover.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\componensts\EPlayerJButton.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\componensts\JLine.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\componensts\PlayerControls.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\componensts\QuickNaviButton.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\componensts\WrapLayout.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\listeners\BackgroundFocusListener.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\listeners\HoverMouseListener.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\listeners\KeyBinding.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\listeners\KeyDispatcher.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\view\swing\menu\MenuBuilder.java" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\icons\Volume.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\icons\volume-mute.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\icons\volume-mute_small.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\icons\volume_small.png" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\log4j2.xml" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\menubar.json" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\messages_en.properties" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\messages_ru.properties" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\stylesheet.css" afterPath="" />
-      <change type="DELETED" beforePath="D:\Soft\EPlayer\src\view.html" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/EPlayer.iml" afterPath="$PROJECT_DIR$/EPlayer.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/EPlayer_jar.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/EPlayer_jar.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/compiler.xml" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
+    <list default="true" id="8b59403b-677a-4dfe-868f-54ef79a1779b" name="Default" comment="FX ver">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/pause.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/pause_hover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/play.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/play_hover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/volume.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/volume_hover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/volume_mute.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/icons/volume_mute_hover.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/action/ActionCommands.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/action/ActionExecutor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/AppView.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/Application.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/listeners/BackgroundFocusListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/CacheService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/ClassLookUp.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/CollectionUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/componensts/ColorOnHover.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/component/ComponentDefinition.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/factory/ComponentFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/runner/ComponentRunner.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/Components.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/common/Constants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/container/Container.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/container/Context.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/DefinitionBuilder.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/component/DefinitionModifier.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/dnd/DndHandler.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/componensts/EPlayerJButton.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/event/Event.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/event/EventListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/event/EventObserver.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/event/EventObserverImpl.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/component/annotation/Factory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/FileVisitorScanService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/components/FolderMediaTab.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/FolderScanService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/gui/FromGuiViewService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/factory/FxFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/gui/FxFromGuiViewService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/runner/FxRunner.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/FxTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/FxUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/FxView.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/gui/FxViewService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/GuiUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/listeners/HoverMouseListener.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/IOUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/InstanceCreator.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/componensts/JLine.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/JSBridge.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/JavaFXDirectRenderingTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/JsonCacheService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/listeners/KeyBinding.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/listeners/KeyDispatcher.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/Localizations.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/LocalizedMessages.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/MediaService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/components/MediaTab.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/model/MediaType.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/menu/MenuBuilder.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/MethodInvoker.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/OnDemandFolderScanner.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/components/PlayerControls.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/componensts/PlayerControls.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/PlayerScene.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/components/QuickNaviButton.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/componensts/QuickNaviButton.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/components/QuickNaviMediaTab.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/components/QuickNaviMenuButton.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/fx/QuickNaviScene.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/action/ReflectionActionExecutor.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/ReflectionUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/ResourceInjector.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/component/annotation/Runner.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/ScopeAware.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/SeriesFinder.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/model/SeriesVideo.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/Settings.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/ShutdownChooserDialog.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/ShutdownManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/util/StringUtil.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/SwingFromGuiViewService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/gui/SwingViewService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/UTF8Control.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/VLCMediaService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/service/gui/ViewService.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/view/swing/componensts/WrapLayout.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/log4j2.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/menubar.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/messages_en.properties" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/messages_ru.properties" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/resources/stylesheet.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/log.log" afterPath="$PROJECT_DIR$/log.log" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MOVED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\component\Scope.java" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/component/annotation/Scope.java" />
+      <change type="MOVED" beforePath="D:\Soft\EPlayer\src\cz\encircled\eplayer\ioc\core\container\AbstractContext.java" afterPath="$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/ioc/core/container/AbstractContainer.java" />
     </list>
     <ignored path="EPlayer.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -154,36 +160,15 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <ui_properties converted="true" />
     <breakpoint_rules converted="true" />
+    <ui_properties converted="true" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="EPlayer" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/common/Constants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="629">
-              <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Application.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/Application.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.14285715" vertical-offset="34" max-vertical-offset="884">
-              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -338,7 +323,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -419,94 +403,9 @@
               <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="EPlayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="eplayer" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -1022,7 +921,8 @@
       <workItem from="1411202230698" duration="40205000" />
       <workItem from="1411315524655" duration="48955000" />
       <workItem from="1411492950476" duration="10627000" />
-      <workItem from="1411665749625" duration="5687000" />
+      <workItem from="1411665749625" duration="5843000" />
+      <workItem from="1411750119747" duration="777000" />
     </task>
     <task id="LOCAL-00001" summary="ver 0.2">
       <created>1379107105335</created>
@@ -1096,11 +996,15 @@
       <created>1411108747770</created>
       <updated>1411108747770</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="FX ver">
+      <created>1411681507235</created>
+      <updated>1411681507235</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="384890000" />
+    <option name="totallyTimeSpent" value="385823000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1111,7 +1015,6 @@
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32703003" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39822024" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1125,10 +1028,10 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17963752" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18123667" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Debug with VisualVM" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1748401" sideWeight="0.6674082" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1748401" sideWeight="0.6674082" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3070078" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Persistence" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1139,9 +1042,10 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32703003" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
-      <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35038933" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Duplicates" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="18" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1169,7 +1073,8 @@
     <MESSAGE value="ver 0.8" />
     <MESSAGE value="ver 0.9" />
     <MESSAGE value="upd" />
-    <option name="LAST_COMMIT_MESSAGE" value="upd" />
+    <MESSAGE value="FX ver" />
+    <option name="LAST_COMMIT_MESSAGE" value="FX ver" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -1261,7 +1166,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.44705883" vertical-offset="1774" max-vertical-offset="3655">
           <caret line="173" column="47" selection-start-line="173" selection-start-column="47" selection-end-line="173" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1269,7 +1173,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.25714287" vertical-offset="0" max-vertical-offset="595">
           <caret line="11" column="8" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="8" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1284,7 +1187,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="159" max-vertical-offset="1054">
           <caret line="28" column="24" selection-start-line="28" selection-start-column="24" selection-end-line="28" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1299,12 +1201,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33277312" vertical-offset="652" max-vertical-offset="2567">
           <caret line="84" column="31" selection-start-line="84" selection-start-column="31" selection-end-line="84" selection-end-column="31" />
-          <folding>
-            <element signature="e#4555#4556#0" expanded="false" />
-            <element signature="e#4624#4625#0" expanded="false" />
-            <element signature="e#4664#4665#0" expanded="false" />
-            <element signature="e#4734#4735#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1333,10 +1229,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.17142858" vertical-offset="0" max-vertical-offset="680">
           <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding>
-            <element signature="e#763#764#0" expanded="false" />
-            <element signature="e#809#810#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1358,7 +1250,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="340" max-vertical-offset="1343">
           <caret line="41" column="70" selection-start-line="41" selection-start-column="70" selection-end-line="41" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1373,7 +1264,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33277312" vertical-offset="8557" max-vertical-offset="37196">
           <caret line="554" column="18" selection-start-line="554" selection-start-column="18" selection-end-line="554" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1388,7 +1278,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="754" max-vertical-offset="1989">
           <caret line="73" column="0" selection-start-line="73" selection-start-column="0" selection-end-line="73" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1396,7 +1285,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="697">
           <caret line="29" column="18" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1404,7 +1292,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="136" max-vertical-offset="1139">
           <caret line="37" column="43" selection-start-line="37" selection-start-column="43" selection-end-line="38" selection-end-column="43" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1412,7 +1299,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="748">
           <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1420,7 +1306,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="131" max-vertical-offset="1122">
           <caret line="25" column="21" selection-start-line="25" selection-start-column="21" selection-end-line="25" selection-end-column="21" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1428,7 +1313,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="256" max-vertical-offset="833">
           <caret line="43" column="91" selection-start-line="43" selection-start-column="91" selection-end-line="43" selection-end-column="91" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1436,7 +1320,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="114" max-vertical-offset="782">
           <caret line="26" column="27" selection-start-line="26" selection-start-column="27" selection-end-line="26" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1444,7 +1327,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="425">
           <caret line="10" column="16" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1452,7 +1334,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.31428573" vertical-offset="0" max-vertical-offset="595">
           <caret line="16" column="38" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="43" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1460,7 +1341,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.25714287" vertical-offset="0" max-vertical-offset="714">
           <caret line="11" column="24" selection-start-line="11" selection-start-column="24" selection-end-line="11" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1468,7 +1348,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33277312" vertical-offset="193" max-vertical-offset="1241">
           <caret line="33" column="17" selection-start-line="33" selection-start-column="17" selection-end-line="33" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1476,7 +1355,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="782">
           <caret line="22" column="24" selection-start-line="22" selection-start-column="24" selection-end-line="22" selection-end-column="24" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1484,7 +1362,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="357" max-vertical-offset="1037">
           <caret line="47" column="3" selection-start-line="47" selection-start-column="3" selection-end-line="47" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1492,7 +1369,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1207" max-vertical-offset="1819">
           <caret line="95" column="23" selection-start-line="95" selection-start-column="23" selection-end-line="95" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1508,7 +1384,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1383" max-vertical-offset="10047">
           <caret line="137" column="13" selection-start-line="137" selection-start-column="13" selection-end-line="137" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1516,7 +1391,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.31428573" vertical-offset="0" max-vertical-offset="595">
           <caret line="34" column="17" selection-start-line="34" selection-start-column="17" selection-end-line="34" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1524,7 +1398,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.34829444" vertical-offset="758" max-vertical-offset="5389">
           <caret line="57" column="16" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1532,7 +1405,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3877193" vertical-offset="255" max-vertical-offset="4437">
           <caret line="29" column="11" selection-start-line="29" selection-start-column="11" selection-end-line="29" selection-end-column="11" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1540,7 +1412,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.54285717" vertical-offset="0" max-vertical-offset="1853">
           <caret line="37" column="15" selection-start-line="37" selection-start-column="15" selection-end-line="37" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1548,7 +1419,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.27563027" vertical-offset="57" max-vertical-offset="1445">
           <caret line="32" column="18" selection-start-line="32" selection-start-column="18" selection-end-line="32" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1556,22 +1426,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.74285716" vertical-offset="170" max-vertical-offset="884">
           <caret line="49" column="0" selection-start-line="49" selection-start-column="0" selection-end-line="49" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/common/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="629">
-          <caret line="29" column="0" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.4" vertical-offset="0" max-vertical-offset="629">
+          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/cz/encircled/eplayer/core/Application.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14285715" vertical-offset="34" max-vertical-offset="884">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.45714286" vertical-offset="34" max-vertical-offset="884">
+          <caret line="26" column="31" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding />
         </state>
       </provider>

@@ -1,0 +1,54 @@
+[
+    {
+        "label": "FILE",
+        "items": [
+            {
+                "label": "OPEN",
+                "action": "OPEN"
+            },
+            {
+                "label": "EXIT",
+                "action": "EXIT"
+            }
+
+        ]
+    },
+    {
+
+        "label": "MEDIA",
+        "items": [
+            {
+                "label": "SUBTITLES",
+                "name": "subtitles",
+                "enabled": 0,
+                "isMenu": 1
+            },
+            {
+                "label": "AUDIO_TRACK",
+                "name": "audioTrack",
+                "enabled": 0,
+                "isMenu": 1
+            }
+        ]
+    },
+    {
+        "label": "TOOLS",
+        "items": [
+            {
+                "label": "OPEN_QUICK_NAVI",
+                "action": "OPEN_QUICK_NAVI"
+            },
+            {
+                "label": "AUTO_SHUTDOWN",
+                "item": {
+                    "label": "AUTO_SHUTDOWN",
+                    "action": "SHUTDOWN_TIME_CHOOSER",
+                    "enabled": 0
+                }
+            }
+
+        ]
+    }
+
+]
+

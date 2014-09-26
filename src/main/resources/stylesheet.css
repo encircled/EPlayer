@@ -1,0 +1,102 @@
+.root {
+    -fx-font-family: "Tahoma";
+}
+
+.player_controls .slider .track {
+    -fx-background-color: rgb(180, 180, 180);
+}
+
+.player_controls #play {
+    -fx-min-width: 16px;
+    -fx-min-height: 16px;
+    -fx-background-color: transparent;
+    -fx-background-position: 0 5;
+    -fx-background-image: url('./icons/play.png');
+    -fx-background-repeat: no-repeat;
+}
+
+.player_controls #play:hover {
+    -fx-background-image: url('./icons/play_hover.png');
+}
+
+.player_controls #play:selected {
+    -fx-background-image: url('./icons/pause.png');
+}
+
+.player_controls #play:selected:hover {
+    -fx-background-image: url('./icons/pause_hover.png');
+}
+
+.player_controls #mute {
+    -fx-min-width: 18px;
+    -fx-min-height: 15px;
+    -fx-background-color: transparent;
+    -fx-background-position: 0 5;
+    -fx-background-image: url('./icons/volume.png');
+    -fx-background-repeat: no-repeat;
+}
+
+.player_controls #mute:hover {
+    -fx-background-image: url('./icons/volume_hover.png');
+}
+
+.player_controls .text {
+    -fx-fill: red;
+}
+
+.player_controls #mute:selected {
+    -fx-background-image: url('./icons/volume_mute.png');
+}
+
+.player_controls #mute:selected:hover {
+    -fx-background-image: url('./icons/volume_mute_hover.png');
+}
+
+.player_controls {
+    -fx-effect: innershadow(three-pass-box, rgb(80, 80, 80), 4, 0.5, 1, 1);
+}
+
+/* Quick navi */
+
+.qn_video {
+    -fx-background-color: rgb(211, 211, 211);
+    -fx-border-color: rgb(111, 177, 250);
+    -fx-border-style: solid;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4;
+}
+
+.qn_video:hover {
+    -fx-background-color: rgb(230, 230, 230);
+    -fx-border-color: rgb(123, 137, 250);
+}
+
+.qn_video .title {
+    -fx-background-color: #444;
+    -fx-text-fill: rgb(250, 250, 250);
+    -fx-padding: 6px 0 6px 10px;
+    -fx-font-size: 15px;
+}
+
+.tabs {
+    -fx-background-color: rgb(250, 250, 250);
+}
+
+/* Side menu */
+
+.side_menu {
+    -fx-background-color: rgb(250, 250, 250);
+}
+
+.side_menu .menu_button {
+    -fx-padding: 5px 0 5px 20px;
+    -fx-min-width: 120px;
+    -fx-background-color: transparent;
+    -fx-text-fill: rgb(100, 100, 100);
+    -fx-font-size: 14px;
+}
+
+.side_menu .menu_button:hover {
+    -fx-background-color: #444;
+    -fx-text-fill: rgb(250, 250, 250);
+}
