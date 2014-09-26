@@ -1,5 +1,12 @@
 /bin/
 /build/
-.idea/
-*.jar
+
 .settings/
+
+.idea/
+*.iws
+workspace.xml
+
+*.jar
+
+
