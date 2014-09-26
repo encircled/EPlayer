@@ -6,9 +6,6 @@
 .settings/
 target/
 .idea/
-idea/
-*.iws
-.idea/workspace.xml
 
 *.jar
 *.log
