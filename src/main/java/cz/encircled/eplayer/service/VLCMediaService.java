@@ -65,9 +65,9 @@ public class VLCMediaService implements MediaService {
     @Nullable
     private String current;
 
-    public static final String VLC_LIB_PATH_64 = "vlc-2.1.5_x64";
+    public static final String VLC_LIB_PATH_64 = "vlc/vlc-2.1.5_x64";
 
-    public static final String VLC_LIB_PATH = "vlc-2.1.5";
+    public static final String VLC_LIB_PATH = "vlc/vlc-2.1.5";
 
     public VLCMediaService() {
         initializeLibs();
@@ -257,6 +257,7 @@ public class VLCMediaService implements MediaService {
             Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
             log.trace("VLCLib successfully initialized in {} ms", System.currentTimeMillis() - start);
         } catch (UnsatisfiedLinkError e) {
+            // TODO NPE
             guiUtil.showMessage(localizations.get(MSG_VLC_LIBS_FAIL), localizations.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
             log.error("Failed to load vlc libs from specified path {}", vlcLibPath);
             // TODO exit?
