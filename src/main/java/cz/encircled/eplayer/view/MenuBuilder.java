@@ -1,4 +1,4 @@
-package cz.encircled.eplayer.view.swing.menu;
+package cz.encircled.eplayer.view;
 
 import com.google.gson.reflect.TypeToken;
 import cz.encircled.eplayer.service.action.ActionCommands;
