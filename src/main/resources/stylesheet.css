@@ -11,20 +11,20 @@
     -fx-min-height: 16px;
     -fx-background-color: transparent;
     -fx-background-position: 0 5;
-    -fx-background-image: url('./icons/play.png');
+    -fx-background-image: url('icons/pause.png');
     -fx-background-repeat: no-repeat;
 }
 
 .player_controls #play:hover {
-    -fx-background-image: url('./icons/play_hover.png');
+    -fx-background-image: url('icons/pause_hover.png');
 }
 
 .player_controls #play:selected {
-    -fx-background-image: url('./icons/pause.png');
+    -fx-background-image: url('icons/play.png');
 }
 
 .player_controls #play:selected:hover {
-    -fx-background-image: url('./icons/pause_hover.png');
+    -fx-background-image: url('icons/play_hover.png');
 }
 
 .player_controls #mute {
@@ -32,12 +32,12 @@
     -fx-min-height: 15px;
     -fx-background-color: transparent;
     -fx-background-position: 0 5;
-    -fx-background-image: url('./icons/volume.png');
+    -fx-background-image: url('icons/volume.png');
     -fx-background-repeat: no-repeat;
 }
 
 .player_controls #mute:hover {
-    -fx-background-image: url('./icons/volume_hover.png');
+    -fx-background-image: url('icons/volume_hover.png');
 }
 
 .player_controls .text {
@@ -45,11 +45,11 @@
 }
 
 .player_controls #mute:selected {
-    -fx-background-image: url('./icons/volume_mute.png');
+    -fx-background-image: url('icons/volume_mute.png');
 }
 
 .player_controls #mute:selected:hover {
-    -fx-background-image: url('./icons/volume_mute_hover.png');
+    -fx-background-image: url('icons/volume_mute_hover.png');
 }
 
 .player_controls {
@@ -94,9 +94,38 @@
     -fx-background-color: transparent;
     -fx-text-fill: rgb(100, 100, 100);
     -fx-font-size: 14px;
+    -fx-background-radius: 0;
+    -fx-text-alignment: left;
 }
 
 .side_menu .menu_button:hover {
     -fx-background-color: #444;
+    -fx-text-fill: rgb(250, 250, 250);
+}
+
+.side_menu .menu_button:selected {
+    -fx-background-color: #364d76;
+    -fx-text-fill: rgb(216, 216, 216);
+}
+
+/* Menu bar */
+
+.menu:hover, .menu:showing {
+    -fx-background-color: #444;
+}
+
+.menu:hover .label, .menu:showing .label {
+    -fx-text-fill: rgb(250, 250, 250);
+}
+
+.menu .menu-item .label {
+    -fx-text-fill: rgb(30, 30, 30);
+}
+
+.menu .menu-item:hover, .menu .menu-item:showing, .menu .menu-item:focused {
+    -fx-background-color: #444;
+}
+
+.menu .menu-item:hover .label, .menu .menu-item:showing .label, .menu .menu-item:focused .label {
     -fx-text-fill: rgb(250, 250, 250);
 }

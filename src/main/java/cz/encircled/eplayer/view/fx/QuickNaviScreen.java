@@ -6,17 +6,14 @@ import cz.encircled.eplayer.ioc.core.container.Context;
 import cz.encircled.eplayer.ioc.factory.FxFactory;
 import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.util.Settings;
-import cz.encircled.eplayer.view.fx.components.FolderMediaTab;
-import cz.encircled.eplayer.view.fx.components.MediaTab;
-import cz.encircled.eplayer.view.fx.components.QuickNaviMediaTab;
-import cz.encircled.eplayer.view.fx.components.QuickNaviMenuButton;
-import cz.encircled.eplayer.view.swing.menu.MenuBuilder;
+import cz.encircled.eplayer.view.fx.components.*;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -27,19 +24,16 @@ import javax.annotation.Resource;
 @Resource
 @Factory(FxFactory.class)
 @Runner(FxRunner.class)
-public class QuickNaviScene extends Scene {
+public class QuickNaviScreen extends BorderPane {
+
+    private Logger log = LogManager.getLogger();
 
     @Resource
-    private MenuBuilder menuBuilder;
+    private FxView appView;
 
     private VBox sideMenu;
 
-    private StackPane topPane;
-
     private TabPane centerTabPane;
-
-    @Resource
-    private Settings settings;
 
     @Resource
     private Context context;
@@ -49,8 +43,7 @@ public class QuickNaviScene extends Scene {
 
     @PostConstruct
     private void initialize() {
-        getStylesheets().add("/stylesheet.css");
-        BorderPane borderPane = (BorderPane) getRoot();
+        centerTabPane = new TabPane();
 
         sideMenu = new VBox(0);
         sideMenu.setPadding(new Insets(40, 0, 0, 0));
@@ -58,14 +51,13 @@ public class QuickNaviScene extends Scene {
 
         sideMenu.setPrefWidth(120);
         sideMenu.setMaxWidth(120);
-        sideMenu.getChildren().addAll(new QuickNaviMenuButton("All"), new QuickNaviMenuButton("Series"));
-
-        topPane = new StackPane();
-        topPane.getChildren().add(menuBuilder.getFxMenu());
+        ToggleGroup sideMenuGroup = new ToggleGroup();
+        sideMenu.getChildren().addAll(new QuickNaviMenuButton("All", sideMenuGroup), new QuickNaviMenuButton("Series", sideMenuGroup),
+                new QuickNaviMenuButton("Films", sideMenuGroup));
 
         centerTabPane.getStyleClass().add("tabs");
         quickNaviMediaTab.getStyleClass().add("tabs");
-        borderPane.getStyleClass().add("tabs");
+        getStyleClass().add("tabs");
 
         quickNaviMediaTab.onShow();
         centerTabPane.getTabs().add(quickNaviMediaTab);
@@ -77,21 +69,17 @@ public class QuickNaviScene extends Scene {
                 }
         );
 
-        settings.getList(Settings.FOLDERS_TO_SCAN).forEach(path -> {
+        Settings.getList(Settings.FOLDERS_TO_SCAN).forEach(path -> {
             FolderMediaTab tab = context.getComponent(FolderMediaTab.class);
             tab.setPath(path);
             tab.setText(path);
             centerTabPane.getTabs().add(tab);
         });
 
-        borderPane.setCenter(centerTabPane);
-        borderPane.setTop(topPane);
-        borderPane.setLeft(sideMenu);
-    }
+        setTop(context.getComponent(AppMenuBar.class).getMenuBar());
+        setCenter(centerTabPane);
+        setLeft(sideMenu);
 
-    public QuickNaviScene() {
-        super(new BorderPane());
-        centerTabPane = new TabPane();
     }
 
 

@@ -1,8 +1,6 @@
 package cz.encircled.eplayer.service.gui;
 
-import cz.encircled.eplayer.service.CacheService;
-import cz.encircled.eplayer.service.event.EventObserver;
-import cz.encircled.eplayer.view.fx.FxTest;
+import cz.encircled.eplayer.view.fx.FxView;
 import javafx.application.Platform;
 
 import javax.annotation.PostConstruct;
@@ -16,20 +14,11 @@ import java.util.concurrent.CountDownLatch;
 public class FxViewService implements ViewService {
 
     @Resource
-    private FxTest fxTest;
-
-    @Resource
-    private CacheService cacheService;
-
-    @Resource
-    private EventObserver eventObserver;
+    private FxView appView;
 
     @PostConstruct
     private void initialize() {
-//        eventObserver.listen(Event.ContextInitialized, (event, args) -> {
-//            Collection<MediaType> mediaTypes = cacheService.getCache();
-//            runInFxThread(() -> fxTest.switchToQuickNavi(mediaTypes));
-//        });
+
     }
 
     @Override
@@ -49,7 +38,7 @@ public class FxViewService implements ViewService {
 
     @Override
     public void showPlayer(CountDownLatch countDownLatch) {
-        runInFxThread(fxTest::showPlayerScene, countDownLatch);
+        runInFxThread(appView::showPlayer, countDownLatch);
     }
 
     @Override
@@ -59,22 +48,7 @@ public class FxViewService implements ViewService {
 
     @Override
     public void switchToQuickNavi() {
-        runInFxThread(fxTest::showPlayerScene);
-    }
-
-    @Override
-    public void initMediaFiltering() {
-
-    }
-
-    @Override
-    public void stopMediaFiltering() {
-
-    }
-
-    @Override
-    public void openMedia() {
-
+        runInFxThread(appView::showQuickNavi);
     }
 
     private void runInFxThread(Runnable runnable) {

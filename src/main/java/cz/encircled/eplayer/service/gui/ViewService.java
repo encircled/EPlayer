@@ -20,10 +20,4 @@ public interface ViewService {
 
     void switchToQuickNavi();
 
-    void initMediaFiltering();
-
-    void stopMediaFiltering();
-
-    void openMedia();
-
 }

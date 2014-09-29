@@ -1,12 +1,15 @@
 package cz.encircled.eplayer.view.fx.components;
 
+import cz.encircled.eplayer.ioc.component.annotation.Scope;
 import cz.encircled.eplayer.ioc.core.container.Context;
 import cz.encircled.eplayer.model.MediaType;
-import javafx.concurrent.Task;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.FlowPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -16,7 +19,10 @@ import java.util.Collection;
  * Created by Encircled on 20/09/2014.
  */
 @Resource
+@Scope(Scope.PROTOTYPE)
 public abstract class MediaTab extends Tab {
+
+    private final static Logger log = LogManager.getLogger();
 
     protected FlowPane mainPane;
 
@@ -39,25 +45,21 @@ public abstract class MediaTab extends Tab {
     }
 
     public void onShow() {
-        Task<Collection<QuickNaviButton>> cacheTask = new Task<Collection<QuickNaviButton>>() {
-            @Override
-            protected Collection<QuickNaviButton> call() throws Exception {
-                Collection<MediaType> mediaTypes = getMediaTypes();
-                Collection<QuickNaviButton> buttons = new ArrayList<>(mediaTypes.size());
-                mediaTypes.forEach(media -> {
-                    QuickNaviButton button = context.getComponent(QuickNaviButton.class);
-                    button.setMediaType(media);
-                    buttons.add(button);
-                });
-                return buttons;
-            }
-        };
-        cacheTask.setOnSucceeded(event -> {
-            Collection<QuickNaviButton> buttons = cacheTask.getValue();
-            buttons.forEach(QuickNaviButton::initialize);
-            mainPane.getChildren().setAll(buttons);
-        });
-        cacheTask.run();
+        // TODO cache if needed
+        new Thread(() -> {
+            Collection<MediaType> mediaTypes = getMediaTypes();
+            final Collection<QuickNaviButton> buttons = new ArrayList<>(mediaTypes.size());
+            mediaTypes.forEach(media -> {
+                QuickNaviButton button = context.getComponent(QuickNaviButton.class);
+                button.setMediaType(media);
+                buttons.add(button);
+            });
+            Platform.runLater(() -> {
+                log.debug("Media tab on show, add {} buttons", buttons.size());
+                buttons.forEach(QuickNaviButton::initialize);
+                mainPane.getChildren().setAll(buttons);
+            });
+        }).start();
     }
 
     protected abstract Collection<MediaType> getMediaTypes();

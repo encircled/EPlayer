@@ -32,9 +32,6 @@ public class JsonCacheService implements CacheService {
     @Resource
     private GuiUtil guiUtil;
 
-    @Resource
-    private Settings settings;
-
     public JsonCacheService() {
         long start = System.currentTimeMillis();
         log.trace("JsonCacheService init start");
@@ -45,7 +42,7 @@ public class JsonCacheService implements CacheService {
             cache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
         } catch (IOException e) {
             log.error("Failed to read cache data from {} with default type token. Message: {}",
-                    settings.get(QUICK_NAVI_PATH), e.getMessage());
+                    Settings.get(QUICK_NAVI_PATH), e.getMessage());
             guiUtil.showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
         } catch (JsonSyntaxException e) {
             log.error("JSON syntax error. Message: {}", e.getMessage());
@@ -66,6 +63,11 @@ public class JsonCacheService implements CacheService {
     @Override
     public MediaType createIfAbsent(@NotNull String path) {
         return cache.computeIfAbsent(path.hashCode(), hash -> new MediaType(path));
+    }
+
+    @Override
+    public MediaType addIfAbsent(@NotNull MediaType mediaType) {
+        return cache.putIfAbsent(mediaType.getPath().hashCode(), mediaType);
     }
 
     @Override

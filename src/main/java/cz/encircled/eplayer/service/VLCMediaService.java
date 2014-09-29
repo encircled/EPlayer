@@ -11,7 +11,7 @@ import cz.encircled.eplayer.util.GuiUtil;
 import cz.encircled.eplayer.util.Localizations;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.view.AppView;
-import cz.encircled.eplayer.view.fx.PlayerScene;
+import cz.encircled.eplayer.view.fx.PlayerScreen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,6 @@ import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.swing.*;
-
 import java.util.concurrent.CountDownLatch;
 
 import static cz.encircled.eplayer.util.LocalizedMessages.ERROR_TITLE;
@@ -38,6 +37,7 @@ import static cz.encircled.eplayer.util.LocalizedMessages.MSG_VLC_LIBS_FAIL;
 public class VLCMediaService implements MediaService {
 
     private static final Logger log = LogManager.getLogger();
+
     public static final String X64 = "64";
 
     @Resource
@@ -45,9 +45,6 @@ public class VLCMediaService implements MediaService {
 
     @Resource
     private GuiUtil guiUtil;
-
-    @Resource
-    private Localizations localizations;
 
     @Resource
     private EventObserver eventObserver;
@@ -65,9 +62,9 @@ public class VLCMediaService implements MediaService {
     @Nullable
     private String current;
 
-    public static final String VLC_LIB_PATH_64 = "vlc/vlc-2.1.5_x64";
+    public static final String VLC_LIB_PATH_64 = "vlc";
 
-    public static final String VLC_LIB_PATH = "vlc/vlc-2.1.5";
+    public static final String VLC_LIB_PATH = "vlc";
 
     public VLCMediaService() {
         initializeLibs();
@@ -88,6 +85,7 @@ public class VLCMediaService implements MediaService {
     }
 
     private void play(@NotNull String path, long time) {
+        log.debug("Play {}, start time is {}", path, time);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         viewService.showPlayer(countDownLatch);
         try {
@@ -101,9 +99,8 @@ public class VLCMediaService implements MediaService {
             player.prepareMedia(path);
         }
         player.start();
-        player.setTime(Math.min(time, player.getLength()));
-        eventObserver.fire(Event.subtitlesUpdated, player.getSpuDescriptions());
-        eventObserver.fire(Event.audioTracksUpdated, player.getAudioDescriptions());
+        setTime(Math.min(time, player.getLength()));
+        log.debug("Playing started");
     }
 
     @Override
@@ -113,12 +110,23 @@ public class VLCMediaService implements MediaService {
 
     @Override
     public void play(@NotNull MediaType p) {
+        cacheService.addIfAbsent(p);
         play(p.getPath(), p.getTime());
     }
 
     @Override
     public void setSubtitles(int id) {
         player.setSpu(id);
+    }
+
+    @Override
+    public int getSubtitles() {
+        return player.getSpu();
+    }
+
+    @Override
+    public int getAudioTrack() {
+        return player.getAudioTrack();
     }
 
     @Override
@@ -137,8 +145,8 @@ public class VLCMediaService implements MediaService {
     }
 
     @Override
-    public int getCurrentTime() {
-        return (int) player.getTime();
+    public long getCurrentTime() {
+        return currentTime;
     }
 
     @Override
@@ -162,20 +170,26 @@ public class VLCMediaService implements MediaService {
     }
 
     @Override
+    public void toggle() {
+        player.pause();
+    }
+
+    @Override
     public void pause() {
-        if (player.canPause())
+        if (player.isPlaying())
             player.pause();
     }
 
     @Override
     public void stop() {
+        log.debug("Stop player");
         current = null;
         player.stop();
         viewService.enableSubtitlesMenu(false);
     }
 
     @Resource
-    private PlayerScene playerScene;
+    private PlayerScreen playerScreen;
 
     @PostConstruct
     private void init() {
@@ -183,7 +197,7 @@ public class VLCMediaService implements MediaService {
 
         log.trace("VLCMediaService init start");
         try {
-            player = playerScene.getMediaPlayerComponent().getMediaPlayer();
+            player = playerScreen.getMediaPlayerComponent().getMediaPlayer();
                                     /*
             mediaPlayerComponent.getVideoSurface().addMouseListener(new MouseAdapter() { // TODO move
 
@@ -209,10 +223,16 @@ public class VLCMediaService implements MediaService {
                 }
 
                 @Override
+                public void mediaParsedChanged(MediaPlayer mediaPlayer, int newStatus) {
+                    log.debug("Media parsed - {}", current);
+                    eventObserver.fire(Event.subtitlesUpdated, player.getSpuDescriptions());
+                    eventObserver.fire(Event.audioTracksUpdated, player.getAudioDescriptions());
+                }
+
+                @Override
                 public void finished(MediaPlayer mediaPlayer) {
-                    if (current != null) {
+                    if (current != null)
                         cacheService.updateEntry(current.hashCode(), Constants.ZERO_LONG);
-                    }
                     current = null;
                     stop();
                     viewService.switchToQuickNavi();
@@ -258,7 +278,7 @@ public class VLCMediaService implements MediaService {
             log.trace("VLCLib successfully initialized in {} ms", System.currentTimeMillis() - start);
         } catch (UnsatisfiedLinkError e) {
             // TODO NPE
-            guiUtil.showMessage(localizations.get(MSG_VLC_LIBS_FAIL), localizations.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+            guiUtil.showMessage(Localizations.get(MSG_VLC_LIBS_FAIL), Localizations.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
             log.error("Failed to load vlc libs from specified path {}", vlcLibPath);
             // TODO exit?
         }

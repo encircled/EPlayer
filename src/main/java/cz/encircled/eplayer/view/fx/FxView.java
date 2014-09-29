@@ -1,174 +1,120 @@
 package cz.encircled.eplayer.view.fx;
 
+import cz.encircled.eplayer.ioc.component.annotation.Runner;
 import cz.encircled.eplayer.ioc.core.container.Container;
-import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.service.action.ActionExecutor;
+import cz.encircled.eplayer.service.event.Event;
+import cz.encircled.eplayer.service.event.EventObserver;
+import cz.encircled.eplayer.util.Localizations;
+import cz.encircled.eplayer.util.LocalizedMessages;
+import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.AppView;
 import javafx.application.Application;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.File;
 
 /**
- * Created by Encircled on 16/09/2014.
+ * Created by Encircled on 18/09/2014.
  */
+@Runner(FxRunner.class)
 public class FxView extends Application implements AppView {
 
-    private static final Logger log = LogManager.getLogger();
+    private Logger log = LogManager.getLogger();
+
+    public static final int MIN_WIDTH = 860;
+
+    public static final int MIN_HEIGHT = 600;
+
+    public Rectangle2D screenBounds;
+
+    private FileChooser mediaFileChooser;
+
+    @Resource
+    private QuickNaviScreen quickNaviScreen;
+
+    @Resource
+    private PlayerScreen playerScreen;
+
+    @Resource
+    private EventObserver eventObserver;
 
     @Resource
     private MediaService mediaService;
 
-    @Override
-    public void showPlayer() {
-        BorderPane borderPane = new BorderPane();
-        Scene scene = new Scene(borderPane, 400, 350);
-
-        borderPane.setCenter(canvas);
-
-        canvas.setWidth(400);
-        canvas.setHeight(300);
-
-        scene.getAccelerators().put(
-                new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN),
-                () -> showQuickNavi(new ArrayList<>())
-        );
-
-        primaryStage.setScene(scene);
-    }
-
-    @Override
-    public void addTabForFolder(@NotNull String tabName) {
-
-    }
-
-    @Override
-    public void addTabForFolder(@NotNull String tabName, @NotNull Collection<MediaType> mediaType) {
-        Tab newTab = new Tab(tabName);
-        FlowPane flowPane = new FlowPane();
-        mediaType.forEach(medit -> {
-            flowPane.getChildren().add(new Button(medit.getName()));
-        });
-        newTab.setContent(flowPane);
-    }
-
-    @Override
-    public void showQuickNavi(@NotNull Collection<MediaType> mediaType) {
-        log.debug("Show quick navi, media count {}", mediaType.size());
-        Scene scene = new Scene(new VBox(), 400, 350);
-        primaryStage.setScene(scene);
-
-        FlowPane flow = new FlowPane();
-        flow.setVgap(8);
-        flow.setHgap(4);
-        mediaType.stream().forEach(media -> {
-            Button button = new Button(media.getName());
-            button.setMinWidth(50.0);
-            button.setMinHeight(50.0);
-            flow.getChildren().add(button);
-        });
-        naviTab.setContent(flow);
-        tabPane.requestLayout();
-    }
-
-    @Override
-    public void enterFullScreen() {
-
-    }
-
-    @Override
-    public void exitFullScreen() {
-
-    }
-
-    @Override
-    public void showShutdownTimeChooser() {
-
-    }
-
-    @Override
-    public void enableSubtitlesMenu(boolean isEnabled) {
-
-    }
-
-    @Override
-    public void showFilterInput() {
-
-    }
-
-    @Override
-    public void hideFilterInput() {
-
-    }
-
-    @Override
-    public void openMedia() {
-
-    }
-
-    private TabPane tabPane;
-
-    private Tab naviTab;
+    @Resource
+    private ActionExecutor actionExecutor;
 
     private Stage primaryStage;
 
+    private Scene primaryScene;
+
+    private StringProperty screenChangeProperty;
+
+    public static final String QUICK_NAVI_SCREEN = "quickNavi";
+
+    public static final String PLAYER_SCREEN = "player";
+
+    @Override
+    public void showQuickNavi() {
+        primaryScene.setRoot(quickNaviScreen);
+        screenChangeProperty.setValue(QUICK_NAVI_SCREEN);
+    }
+
+    @Override
+    public void showPlayer() {
+        primaryScene.setRoot(playerScreen);
+        screenChangeProperty.setValue(PLAYER_SCREEN);
+    }
+
+    public StringProperty screenChangeProperty() {
+        return screenChangeProperty;
+    }
+
+    @Override
+    public void setFullScreen(boolean fullScreen) {
+        primaryStage.setFullScreen(fullScreen);
+    }
+
+    public void toggleFullScreen() {
+        primaryStage.setFullScreen(!primaryStage.isFullScreen());
+    }
+
+    public boolean isFullScreen() {
+        return primaryStage.isFullScreen();
+    }
+
+    public void maximize() {
+        primaryStage.setX(screenBounds.getMinX());
+        primaryStage.setY(screenBounds.getMinY());
+        primaryStage.setWidth(screenBounds.getWidth());
+        primaryStage.setHeight(screenBounds.getHeight());
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        System.setProperty("file.encoding", "UTF-8");
-
+        screenBounds = Screen.getPrimary().getVisualBounds();
+        screenChangeProperty = new SimpleStringProperty();
         this.primaryStage = primaryStage;
-
-        Scene scene = new Scene(new VBox(), 400, 350);
-        primaryStage.setScene(scene);
-
-        MenuBar menuBar = new MenuBar();
-        scene.getStylesheets().add("/stylesheet.css");
-
-        Menu menuFile = new Menu("File");
-        Menu menuEdit = new Menu("Edit");
-        Menu menuView = new Menu("View");
-
-        MenuItem open = new MenuItem("Open");
-        open.addEventHandler(EventType.ROOT, new EventHandler<Event>() {
-            @Override
-            public void handle(Event event) {
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Open Resource File");
-                mediaService.play(fileChooser.showOpenDialog(primaryStage).getPath());
-            }
-        });
-
-        menuFile.getItems().add(open);
-        menuBar.getMenus().addAll(menuFile, menuEdit, menuView);
-        ((VBox) scene.getRoot()).getChildren().addAll(menuBar);
-
-        tabPane = new TabPane();
-        naviTab = new Tab("Navi");
-        naviTab.setClosable(false);
-        tabPane.getTabs().add(naviTab);
-
-        ((VBox) scene.getRoot()).getChildren().add(tabPane);
-
-        primaryStage.show();
+        initializePrimaryStage();
+        maximize();
+        setFullScreen(true);
 
         new Thread(() -> {
             Container c = new Container();
@@ -179,16 +125,52 @@ public class FxView extends Application implements AppView {
                 e.printStackTrace();
                 System.exit(-1);
             }
+            eventObserver.fire(Event.contextInitialized);
         }).start();
     }
 
-    @Override
-    public PixelWriter getPixelWriter() {
-
-        return canvas.getGraphicsContext2D().getPixelWriter();
+    private void initializePrimaryStage() {
+        primaryStage.setTitle(TITLE);
+        primaryStage.setMinHeight(MIN_HEIGHT);
+        primaryStage.setMinWidth(MIN_WIDTH);
+        primaryStage.setFullScreenExitHint("");
     }
 
-    private Canvas canvas = new Canvas(400, 300);
+    @Override
+    public void openMedia() {
+        File file = mediaFileChooser.showOpenDialog(primaryStage);
+        if (file != null) {
+            mediaService.play(file.getAbsolutePath());
+            new Thread(() -> {
+                mediaFileChooser.setInitialDirectory(file.getParentFile());
+                Settings.set(Settings.FC_OPEN_LOCATION, file.getParentFile().getAbsolutePath());
+                Settings.save();
+            }).run();
+        }
+    }
+
+    @PostConstruct
+    private void initialize() {
+        primaryScene = new Scene(quickNaviScreen);
+        screenChangeProperty.set(QUICK_NAVI_SCREEN);
+        primaryScene.getStylesheets().add("/stylesheet.css");
+
+        initializeMediaFileChoose();
+
+        primaryStage.setScene(primaryScene);
+        primaryStage.show();
+    }
+
+    private void initializeMediaFileChoose() {
+        mediaFileChooser = new FileChooser();
+        mediaFileChooser.setTitle(Localizations.get(LocalizedMessages.OPEN));
+        String initialLocation = Settings.get(Settings.FC_OPEN_LOCATION);
+        if (initialLocation != null) {
+            File initialDirectory = new File(initialLocation);
+            if (initialDirectory.exists())
+                mediaFileChooser.setInitialDirectory(initialDirectory);
+        }
+    }
 
     public static void main(String[] args) {
         launch();

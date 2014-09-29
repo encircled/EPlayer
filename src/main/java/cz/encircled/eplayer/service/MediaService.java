@@ -14,11 +14,14 @@ public interface MediaService {
 
     void play(@NotNull String path);
 
+    /**
+     * @param p
+     */
     void play(@NotNull MediaType p);
 
     int getMediaLength();
 
-    int getCurrentTime();
+    long getCurrentTime();
 
     int getVolume();
 
@@ -28,11 +31,17 @@ public interface MediaService {
 
     void start();
 
+    void toggle();
+
     void pause();
 
     void stop();
 
     void setSubtitles(int id);
+
+    int getSubtitles();
+
+    int getAudioTrack();
 
     void setAudioTrack(int trackID);
 

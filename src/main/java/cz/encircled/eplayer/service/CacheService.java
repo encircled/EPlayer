@@ -16,6 +16,8 @@ public interface CacheService {
 
     MediaType createIfAbsent(@NotNull String path);
 
+    MediaType addIfAbsent(@NotNull MediaType mediaType);
+
     MediaType getEntry(Integer hashCode);
 
     MediaType deleteEntry(int hash);

@@ -7,7 +7,7 @@ import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.util.Settings;
-import cz.encircled.eplayer.view.fx.FxTest;
+import cz.encircled.eplayer.view.fx.FxView;
 import cz.encircled.eplayer.view.fx.FxUtil;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -30,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 @Runner(FxRunner.class)
 public class PlayerControls extends GridPane {
 
+    private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger();
+
     public static final double HEIGHT = 53;
 
     private Slider timeSlider;
@@ -51,10 +53,7 @@ public class PlayerControls extends GridPane {
     private ToggleButton playerToggleButton;
 
     @Resource
-    private Settings settings = new Settings();
-
-    @Resource
-    private FxTest fxTest;
+    private FxView appView;
 
     @Resource
     private EventObserver eventObserver;
@@ -75,8 +74,8 @@ public class PlayerControls extends GridPane {
         initializeVolumeControls();
         initializeButtons();
         getStyleClass().add("player_controls");
-        setPrefSize(fxTest.screenBounds.getWidth(), HEIGHT);
-        setMaxSize(fxTest.screenBounds.getWidth(), HEIGHT);
+        setPrefSize(appView.screenBounds.getWidth(), HEIGHT);
+        setMaxSize(appView.screenBounds.getWidth(), HEIGHT);
         setPadding(new Insets(2, 20, 0, 20));
         setStyle("-fx-background-color: rgb(40,40,40)");
         setHgap(3);
@@ -108,8 +107,8 @@ public class PlayerControls extends GridPane {
         volumeButton = new ToggleButton();
 
         playerToggleButton.setId("play");
-        playerToggleButton.setOnAction(e -> mediaService.pause());
-        eventObserver.listen(Event.playingChanged, (event, arg, arg2) -> playerToggleButton.setSelected(!arg));
+        playerToggleButton.setOnAction(e -> mediaService.toggle());
+        eventObserver.listenFxThread(Event.playingChanged, (event, arg, arg2) -> playerToggleButton.setSelected(!arg));
 
         volumeButton.setId("mute");
         volumeButton.setFocusTraversable(false);
@@ -144,7 +143,7 @@ public class PlayerControls extends GridPane {
 
     private void initializeVolumeControls() {
 
-        volumeSlider = new Slider(0, settings.getInt(Settings.MAX_VOLUME, 150), settings.getInt(Settings.LAST_VOLUME, 100));
+        volumeSlider = new Slider(0, Settings.getInt(Settings.MAX_VOLUME, 150), Settings.getInt(Settings.LAST_VOLUME, 100));
         volumeSlider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
             if (Boolean.FALSE.equals(newValue)) {
                 saveLastVolumeToSettings();
@@ -160,55 +159,52 @@ public class PlayerControls extends GridPane {
             mediaService.setVolume(volume);
         });
         int volume = (int) volumeSlider.getValue();
-        mediaService.setVolume(volume);
         volumeText.setText(volume + " %");
     }
 
     private void saveLastVolumeToSettings() {
         FxUtil.workInNormalThread(() -> {
-            settings.set(Settings.LAST_VOLUME, (int) volumeSlider.getValue());
-            settings.save();
+            Settings.set(Settings.LAST_VOLUME, (int) volumeSlider.getValue());
+            Settings.save();
         });
     }
 
     private void initializeTimeControls() {
         timeSlider = new Slider();
+
+        // Flying label
         timeSlider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
-            mediaService.pause(); // TODO real pause
             timeFlyingText.setVisible(Boolean.TRUE.equals(newValue));
         });
-
-        timeSlider.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                mediaService.pause();
-                mediaService.setTime((long) timeSlider.getValue());
-                mediaService.pause();
-            }
-        });
-
         EventHandler<MouseEvent> handler = event -> {
             timeFlyingText.setX(event.getX() - 20);
-            String timeTextLabel = msToTimeLabel((long) timeSlider.getValue());
-            timeFlyingText.setText(timeTextLabel);
-            timeText.setText(timeTextLabel);
+            timeFlyingText.setText(msToTimeLabel((long) timeSlider.getValue()));
         };
         timeSlider.setOnMouseMoved(handler);
         timeSlider.setOnMouseDragged(handler);
 
-//        timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-//
-//            if(timeSlider.isValueChanging())
-//                mediaService.setTime(newValue.longValue());
-//        });
-
+        // Max label
         timeSlider.maxProperty().addListener((observable, oldValue, newValue) -> totalTimeText.setText(msToTimeLabel(newValue.longValue())));
-        timeSlider.setMax(1000000);
+        eventObserver.listenFxThread(Event.mediaDurationChange, (event, newTime, arg2) -> timeSlider.setMax(newTime));
+
+        // Current time and scrolling
+        timeSlider.setOnMousePressed(event -> {
+            double valueUnderCursor = event.getX() / timeSlider.getWidth() * timeSlider.getMax();
+            mediaService.setTime((long) valueUnderCursor);
+        });
+
+        timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (timeSlider.isValueChanging()) {
+                mediaService.setTime(newValue.longValue());
+            }
+        });
 
         eventObserver.listenFxThread(Event.mediaTimeChange, (event, newTime, arg2) -> {
-            timeSlider.setValue(newTime);
+            if (!timeSlider.isValueChanging()) {
+                timeSlider.setValue(newTime);
+                timeText.setText(msToTimeLabel(newTime));
+            }
         });
-        eventObserver.listenFxThread(Event.mediaDurationChange, (event, newTime, arg2) -> timeSlider.setMax(newTime));
 
     }
 

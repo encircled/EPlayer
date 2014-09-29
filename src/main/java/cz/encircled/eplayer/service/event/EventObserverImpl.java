@@ -63,7 +63,7 @@ public class EventObserverImpl implements EventObserver {
 
     @Override
     public <A, A2> void fire(Event<A, A2> event, A arg, A2 arg2) {
-        log.debug("Fire event {} with args (arg1:{}, arg2: {}) ", event, arg, arg2);
+//        log.debug("Fire event {} with args (arg1:{}, arg2: {}) ", event, arg, arg2);
         checkEvent(event);
         checkFxEvent(event);
         events.get(event).stream().forEach(l -> l.handle(event, arg, arg2));

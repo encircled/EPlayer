@@ -16,28 +16,25 @@ public class FxFactory implements ComponentFactory {
 
     @Override
     public Object getInstance(Class<?> clazz) {
+        return Platform.isFxApplicationThread() ? ReflectionUtil.instance(clazz) : createInFxThread(clazz);
+    }
+
+    private Object createInFxThread(Class<?> clazz) {
         final Object[] instance = {null};
         CountDownLatch countDownLatch = new CountDownLatch(1);
-        boolean isFxThread = Platform.isFxApplicationThread();
-        log.debug("Fx create {}, is FX thread {}", clazz, isFxThread);
-        if (isFxThread) {
-            instance[0] = ReflectionUtil.instance(clazz);
-        } else {
-            Platform.runLater(() -> {
-                log.debug("Platform run");
-                try {
-                    instance[0] = ReflectionUtil.instance(clazz);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                log.debug("{} created ", clazz);
-                countDownLatch.countDown();
-            });
+        Platform.runLater(() -> {
             try {
-                countDownLatch.await();
-            } catch (InterruptedException e) {
-                log.error(e);
+                instance[0] = ReflectionUtil.instance(clazz);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            log.debug("{} created in FX factory and FX thread", clazz);
+            countDownLatch.countDown();
+        });
+        try {
+            countDownLatch.await();
+        } catch (InterruptedException e) {
+            log.error(e);
         }
         return instance[0];
     }

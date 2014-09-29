@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Resource
 public class Settings {
 
     private final static String PROPERTIES_FILE_PATH = Application.APP_DOCUMENTS_ROOT + "eplayer.properties.json";
@@ -38,7 +36,7 @@ public class Settings {
 
     public final static String FOLDERS_TO_SCAN = "folders_to_scan";
 
-    public Settings() {
+    static {
         try {
             properties = IOUtil.createIfMissing(PROPERTIES_FILE_PATH, false, true) ? new HashMap<>() : IOUtil.getFromJson(PROPERTIES_FILE_PATH, TYPE_TOKEN);
         } catch (IOException e) {
@@ -46,44 +44,44 @@ public class Settings {
         }
     }
 
-    public String get(@NotNull String key, String defaultValue) {
+    public static String get(@NotNull String key, String defaultValue) {
         return properties.containsKey(key) ? get(key, String.class) : defaultValue;
     }
 
     @NotNull
-    public List<String> getList(@NotNull String key) {
+    public static List<String> getList(@NotNull String key) {
         List<?> list = get(key, List.class);
         if (list == null)
             return new ArrayList<>(0);
         return list.stream().map(Object::toString).collect(Collectors.toList());
     }
 
-    public String get(@NotNull String key) {
+    public static String get(@NotNull String key) {
         return get(key, String.class);
     }
 
-    public Integer getInt(String key) {
+    public static Integer getInt(String key) {
         Number n = get(key, Number.class);
         return n == null ? null : n.intValue();
     }
 
-    public Integer getInt(String key, int defaultValue) {
+    public static Integer getInt(String key, int defaultValue) {
         Number n = get(key, Number.class);
         return n == null ? defaultValue : n.intValue();
     }
 
-    public void set(@NotNull String key, @Nullable Object value) {
+    public static void set(@NotNull String key, @Nullable Object value) {
         log.debug("Set property {} = {}", key, value);
         properties.put(key, value);
     }
 
-    public void addToList(@NotNull String key, @Nullable String value) {
+    public static void addToList(@NotNull String key, @Nullable String value) {
         List<String> list = getList(key);
         list.add(value);
         set(key, list);
     }
 
-    public void removeFromList(@NotNull String key, @Nullable String value) {
+    public static void removeFromList(@NotNull String key, @Nullable String value) {
         List<String> list = getList(key);
         if (list.contains(value)) {
             list.remove(value);
@@ -91,7 +89,7 @@ public class Settings {
         }
     }
 
-    public void save() {
+    public static void save() {
         try {
             IOUtil.storeJson(properties, PROPERTIES_FILE_PATH);
             log.debug("Properties saved");
@@ -100,7 +98,7 @@ public class Settings {
         }
     }
 
-    private <T> T get(String key, Class<T> clazz) {
+    private static <T> T get(String key, Class<T> clazz) {
         return (T) properties.get(key);
     }
 

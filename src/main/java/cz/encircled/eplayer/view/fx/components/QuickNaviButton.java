@@ -5,7 +5,6 @@ import cz.encircled.eplayer.ioc.component.annotation.Scope;
 import cz.encircled.eplayer.ioc.factory.FxFactory;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.MediaService;
-import cz.encircled.eplayer.view.fx.FxTest;
 import cz.encircled.eplayer.view.fx.FxUtil;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -25,9 +24,6 @@ public class QuickNaviButton extends StackPane {
     public static final int WIDTH = 410;
 
     public static final int HEIGHT = 350;
-
-    @Resource
-    private FxTest fxTest;
 
     @Resource
     private MediaService mediaService;

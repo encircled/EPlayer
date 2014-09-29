@@ -50,4 +50,12 @@ public class LocalizedMessages {
 
     public static final String AUDIO_TRACK = "audioTrack";
 
+    public static final String VIEW = "view";
+
+    public static final String FULL_SCREEN = "fullScreen";
+
+    public static final String PLAY = "play";
+
+    public static final String PAUSE = "pause";
+
 }

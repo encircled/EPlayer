@@ -11,8 +11,8 @@
         </Console>
     </appenders>
     <loggers>
-        <root level="TRACE">
-            <appender-ref ref="FILE"/>
+        <root level="INFO">
+            <!-- <appender-ref ref="FILE"/> -->
             <appender-ref ref="STDOUT"/>
         </root>
     </loggers>
