@@ -6,8 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +26,7 @@ public class SeriesFinder {
 
     private Matcher seriesMatcher = seriesPattern.matcher("");
 
-    public Map<String, SeriesVideo> findSeries(List<MediaType> mediaTypes) {
+    public Map<String, SeriesVideo> findSeries(Collection<MediaType> mediaTypes) {
         Map<String, SeriesVideo> result = new HashMap<>();
         mediaTypes.stream().forEach(mediaType -> {
             if (seriesMatcher.reset(mediaType.getName()).matches()) {
