@@ -68,3 +68,68 @@ public class ClassLookUp {
     }
 
 }
+
+
+/*
+private List<Class<?>> getComponentClassesFromPackage(String rootPackage)
+			throws IOException, ClassNotFoundException {
+		Enumeration<URL> root = Thread.currentThread().getContextClassLoader()
+				.getResources(rootPackage);
+		ArrayList<Class<?>> result = new ArrayList<Class<?>>();
+		while (root.hasMoreElements()) {
+			URL url = root.nextElement();
+			System.out.println("Next root " + url.getFile());
+
+			if (isJar(url.getProtocol())) {
+				System.out.println("JAR");
+				URLConnection con = url.openConnection();
+				JarFile jarFile = null;
+
+				if (con instanceof JarURLConnection) {
+					System.out.println("JAR con");
+					JarURLConnection jarCon = (JarURLConnection) con;
+					jarFile = jarCon.getJarFile();
+				} else {
+					throw new RuntimeException("Not supported yet");
+				}
+
+				Enumeration<JarEntry> entries = jarFile.entries();
+				while (entries.hasMoreElements()) {
+					System.out.println("Next jar entry "
+							+ entries.nextElement().getName());
+				}
+
+			} else {
+				System.out.println("FILE");
+				int pathPrefixLength = url.getFile().length()
+						- rootPackage.length() - 1;
+				File rootFile = new File(url.getFile());
+				recursiveList(rootFile, pathPrefixLength, result);
+			}
+
+		}
+		return result;
+	}
+
+	private void recursiveList(File rootFile, int pathPrefixLength,
+			Collection<Class<?>> result) throws ClassNotFoundException {
+		File[] files = rootFile.listFiles();
+		if (files != null) {
+			for (File f : files) {
+				if (f.isFile()) {
+					String className = rootFile
+							+ "."
+							+ f.getName()
+									.substring(0, f.getName().length() - 6);
+					className = className.substring(pathPrefixLength,
+							className.length());
+					className = className.replace(File.separator, ".");
+					result.add(Class.forName(className));
+				} else {
+					recursiveList(f, pathPrefixLength, result);
+				}
+			}
+		}
+	}
+
+*/
