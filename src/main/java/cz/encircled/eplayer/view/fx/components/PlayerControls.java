@@ -6,13 +6,19 @@ import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
+import cz.encircled.eplayer.util.Localizations;
+import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.Settings;
-import cz.encircled.eplayer.view.fx.FxView;
 import cz.encircled.eplayer.view.fx.FxUtil;
+import cz.encircled.eplayer.view.fx.FxView;
+import cz.encircled.eplayer.view.fx.PlayerScreen;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Slider;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -52,8 +58,13 @@ public class PlayerControls extends GridPane {
 
     private ToggleButton playerToggleButton;
 
+    private ToggleButton fitScreenToggleButton;
+
     @Resource
     private FxView appView;
+
+    @Resource
+    private PlayerScreen playerScreen;
 
     @Resource
     private EventObserver eventObserver;
@@ -90,6 +101,8 @@ public class PlayerControls extends GridPane {
         add(timeSlider, 4, 1);
         add(timeTextPane, 5, 1);
 
+        add(fitScreenToggleButton, 6, 1);
+
         getColumnConstraints().add(new ColumnConstraints(35));
         getColumnConstraints().add(new ColumnConstraints(30));
         getColumnConstraints().add(new ColumnConstraints(130));
@@ -97,7 +110,7 @@ public class PlayerControls extends GridPane {
         ColumnConstraints timeColumn = new ColumnConstraints(100, 100, Double.MAX_VALUE);
         timeColumn.setHgrow(Priority.ALWAYS);
         getColumnConstraints().add(timeColumn);
-        getColumnConstraints().add(new ColumnConstraints(100));
+        getColumnConstraints().add(new ColumnConstraints(130));
 
         getRowConstraints().add(new RowConstraints(12));
     }
@@ -105,14 +118,26 @@ public class PlayerControls extends GridPane {
     private void initializeButtons() {
         playerToggleButton = new ToggleButton();
         volumeButton = new ToggleButton();
+        fitScreenToggleButton = new ToggleButton();
+
+        fitScreenToggleButton.setId("fitScreen");
+        fitScreenToggleButton.setOnAction(event -> playerScreen.toggleFitToScreen());
+        playerScreen.fitToScreenProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                fitScreenToggleButton.setSelected(newValue);
+            }
+        });
+        fitScreenToggleButton.setSelected(playerScreen.fitToScreenProperty().get());
+        Tooltip tooltip = new Tooltip(Localizations.get(LocalizedMessages.FIT_SCREEN));
+
+        fitScreenToggleButton.setTooltip(tooltip);
 
         playerToggleButton.setId("play");
         playerToggleButton.setOnAction(e -> mediaService.toggle());
         eventObserver.listenFxThread(Event.playingChanged, (event, arg, arg2) -> playerToggleButton.setSelected(!arg));
 
         volumeButton.setId("mute");
-        volumeButton.setFocusTraversable(false);
-        volumeButton.setBorder(null);
         volumeButton.setOnAction(event -> {
             if (Boolean.TRUE.equals(volumeButton.isSelected())) {
                 lastVolumeSliderValue = volumeSlider.getValue();

@@ -7,6 +7,7 @@ import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.gui.ViewService;
 import cz.encircled.eplayer.util.ReflectionUtil;
 import cz.encircled.eplayer.view.AppView;
+import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,6 +54,7 @@ public class ReflectionActionExecutor implements ActionExecutor {
     }
 
     public void exit() {
+        Platform.exit();
         System.exit(Constants.ZERO);
     }
 
@@ -68,14 +70,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
             mediaService.stop();
             cacheService.save();
         }).start();
-    }
-
-    public void togglePlayer() {
-        mediaService.toggle();
-    }
-
-    public void toggleFullScreen() {
-//        mediaService.toggleFullScreen();
     }
 
     public void back() {

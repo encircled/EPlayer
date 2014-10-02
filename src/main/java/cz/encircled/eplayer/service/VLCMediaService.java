@@ -2,15 +2,14 @@ package cz.encircled.eplayer.service;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
-import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.service.action.ActionCommands;
+import cz.encircled.eplayer.service.action.ActionExecutor;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.service.gui.ViewService;
 import cz.encircled.eplayer.util.GuiUtil;
-import cz.encircled.eplayer.util.Localizations;
 import cz.encircled.eplayer.util.LocalizedMessages;
-import cz.encircled.eplayer.view.AppView;
 import cz.encircled.eplayer.view.fx.PlayerScreen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,9 +26,6 @@ import javax.annotation.Resource;
 import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
 
-import static cz.encircled.eplayer.util.LocalizedMessages.ERROR_TITLE;
-import static cz.encircled.eplayer.util.LocalizedMessages.MSG_VLC_LIBS_FAIL;
-
 /**
  * Created by Administrator on 9.6.2014.
  */
@@ -37,8 +33,6 @@ import static cz.encircled.eplayer.util.LocalizedMessages.MSG_VLC_LIBS_FAIL;
 public class VLCMediaService implements MediaService {
 
     private static final Logger log = LogManager.getLogger();
-
-    public static final String X64 = "64";
 
     @Resource
     private CacheService cacheService;
@@ -53,18 +47,17 @@ public class VLCMediaService implements MediaService {
 
     private DirectMediaPlayer player;
 
-    //    @Resource
-    private AppView appView;
-
     @Resource
     private ViewService viewService;
 
     @Nullable
     private String current;
 
-    public static final String VLC_LIB_PATH_64 = "vlc";
+    @Resource
+    private ActionExecutor actionExecutor;
 
-    public static final String VLC_LIB_PATH = "vlc";
+    // TODO smthing
+    public static final String VLC_LIB_PATH = "D:\\Soft\\EPlayer\\target\\vlc";
 
     public VLCMediaService() {
         initializeLibs();
@@ -72,10 +65,8 @@ public class VLCMediaService implements MediaService {
 
     @Override
     public void releasePlayer() {
-        player.stop();
+        stop();
         player.release();
-        current = null;
-        currentTime = 0L;
     }
 
     @Override
@@ -184,6 +175,7 @@ public class VLCMediaService implements MediaService {
     public void stop() {
         log.debug("Stop player");
         current = null;
+        currentTime = 0L;
         player.stop();
         viewService.enableSubtitlesMenu(false);
     }
@@ -194,22 +186,9 @@ public class VLCMediaService implements MediaService {
     @PostConstruct
     private void init() {
         long start = System.currentTimeMillis();
-
         log.trace("VLCMediaService init start");
         try {
             player = playerScreen.getMediaPlayerComponent().getMediaPlayer();
-                                    /*
-            mediaPlayerComponent.getVideoSurface().addMouseListener(new MouseAdapter() { // TODO move
-
-                @Override
-                public void mouseClicked(@NotNull MouseEvent e) {
-                    if(e.getClickCount() == Constants.ONE){
-                        togglePlayer();
-                    } else {
-                        togglePlayer();
-                    }
-                }
-            });            */
 
             player.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
                 @Override
@@ -231,11 +210,8 @@ public class VLCMediaService implements MediaService {
 
                 @Override
                 public void finished(MediaPlayer mediaPlayer) {
-                    if (current != null)
-                        cacheService.updateEntry(current.hashCode(), Constants.ZERO_LONG);
-                    current = null;
-                    stop();
-                    viewService.switchToQuickNavi();
+                    currentTime = 0L;
+                    actionExecutor.execute(ActionCommands.OPEN_QUICK_NAVI);
                 }
 
                 @Override
@@ -269,17 +245,15 @@ public class VLCMediaService implements MediaService {
     }
 
     private void initializeLibs() {
-        long start = System.currentTimeMillis();
         log.trace("Initialize VLC libs");
-        String vlcLibPath = System.getProperty("sun.arch.data.model").equals(X64) ? VLC_LIB_PATH_64 : VLC_LIB_PATH;
-        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), vlcLibPath);
+        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
         try {
             Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
-            log.trace("VLCLib successfully initialized in {} ms", System.currentTimeMillis() - start);
+            log.trace("VLCLib successfully initialized");
         } catch (UnsatisfiedLinkError e) {
             // TODO NPE
-            guiUtil.showMessage(Localizations.get(MSG_VLC_LIBS_FAIL), Localizations.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
-            log.error("Failed to load vlc libs from specified path {}", vlcLibPath);
+//            guiUtil.showMessage(Localizations.get(MSG_VLC_LIBS_FAIL), Localizations.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+            log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH);
             // TODO exit?
         }
     }

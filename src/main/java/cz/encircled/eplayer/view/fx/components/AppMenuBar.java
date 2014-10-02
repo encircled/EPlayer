@@ -1,6 +1,8 @@
 package cz.encircled.eplayer.view.fx.components;
 
 import cz.encircled.eplayer.ioc.component.annotation.Scope;
+import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.service.action.ActionExecutor;
@@ -9,6 +11,9 @@ import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.util.Localizations;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.view.fx.FxView;
+import cz.encircled.eplayer.view.fx.PlayerScreen;
+import cz.encircled.eplayer.view.fx.QuickNaviScreen;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -19,6 +24,7 @@ import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,7 +45,16 @@ public class AppMenuBar {
     private EventObserver eventObserver;
 
     @Resource
+    private PlayerScreen playerScreen;
+
+    @Resource
     private MediaService mediaService;
+
+    @Resource
+    private QuickNaviScreen quickNaviScreen;
+
+    @Resource
+    private CacheService cacheService;
 
     private Menu subtitles;
 
@@ -75,7 +90,13 @@ public class AppMenuBar {
         fullScreen.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN));
         fullScreen.setSelected(appView.isFullScreen());
 
-        view.getItems().add(fullScreen);
+        CheckMenuItem fitScreen = new CheckMenuItem(Localizations.get(LocalizedMessages.FIT_SCREEN));
+        playerScreen.fitToScreenProperty().addListener((observable, oldValue, newValue) -> fitScreen.setSelected(newValue));
+        fitScreen.setOnAction(event -> playerScreen.toggleFitToScreen());
+        fitScreen.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
+        fitScreen.setSelected(playerScreen.fitToScreenProperty().get());
+
+        view.getItems().addAll(fullScreen, fitScreen);
         return view;
     }
 
@@ -105,7 +126,19 @@ public class AppMenuBar {
         openQn.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
         openQn.setOnAction(event -> actionExecutor.execute(ActionCommands.OPEN_QUICK_NAVI));
 
-        tools.getItems().add(openQn);
+        MenuItem deleteMissing = new MenuItem(Localizations.get(LocalizedMessages.DELETE_MISSING));
+        deleteMissing.setOnAction(event -> new Thread(() -> {
+            Iterator<MediaType> iterator = cacheService.getCache().iterator();
+            while(iterator.hasNext()) {
+                MediaType m = iterator.next();
+                if(!m.exists())
+                    iterator.remove();
+            }
+            cacheService.save();
+            Platform.runLater(quickNaviScreen::refreshCurrentTab);
+        }).start());
+
+        tools.getItems().addAll(openQn, deleteMissing);
 
         return tools;
     }

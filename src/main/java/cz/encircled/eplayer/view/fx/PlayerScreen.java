@@ -11,11 +11,14 @@ import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import cz.encircled.eplayer.view.fx.components.PlayerControls;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelFormat;
@@ -65,11 +68,13 @@ public class PlayerScreen extends BorderPane {
 
     private Pane playerHolder;
 
-    private boolean areElementsShown = true;
-
     private PostponeTimer hideTimer;
 
     private FloatProperty videoSourceRatioProperty;
+
+    private BooleanProperty fitToScreen;
+
+    private ImageView imageView;
 
     @Resource
     private PlayerControls playerControls;
@@ -86,26 +91,37 @@ public class PlayerScreen extends BorderPane {
             hideTimer.cancel();
             menuBar.setVisible(true);
         } else {
+            if(menuBar.isVisible()) {
+                menuBar.setVisible(false);
+                menuBar.getMenus().stream().forEach(Menu::hide);
+            }
             hideTimer.postpone(600);
         }
     };
+
+    public void toggleFitToScreen() {
+        fitToScreen.set(!fitToScreen.get());
+    }
+
+    public BooleanProperty fitToScreenProperty() {
+        return fitToScreen;
+    }
+
+    public PlayerScreen() {
+        super(new BorderPane());
+        hideTimer = new PostponeTimer(() -> Platform.runLater(() -> setCursor(Cursor.NONE)));
+        fitToScreen = new SimpleBooleanProperty(false);
+        mediaPlayerComponent = new CanvasPlayerComponent();
+        videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
+    }
 
     public DirectMediaPlayerComponent getMediaPlayerComponent() {
         return mediaPlayerComponent;
     }
 
-    public PlayerScreen() {
-        super(new BorderPane());
-        hideTimer = new PostponeTimer(() -> Platform.runLater(() -> {
-            setCursor(Cursor.NONE);
-        }));
-        mediaPlayerComponent = new CanvasPlayerComponent();
-        videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
-    }
-
     @PostConstruct
     private void initialize() {
-        pixelFormat = PixelFormat.getByteBgraInstance();
+        pixelFormat = PixelFormat.getByteBgraPreInstance();
 
         playerHolder = new Pane();
         playerStackPane = new StackPane(playerHolder);
@@ -123,6 +139,7 @@ public class PlayerScreen extends BorderPane {
     }
 
     private void initializeListeners() {
+        fitToScreen.addListener(observable -> fitImageViewSize((float) playerHolder.getWidth(), (float) playerHolder.getHeight()));
         playerHolder.setOnMouseClicked(event -> {
             mediaService.toggle();
             if (event.getClickCount() > 1) {
@@ -130,7 +147,7 @@ public class PlayerScreen extends BorderPane {
             }
         });
 
-        // Platform.runLater is required, because elements must be removed after full screen repaint
+//        Platform.runLater is required, because elements must be removed after full screen repaint
         appView.getPrimaryStage().fullScreenProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
             if (newValue)
                 onFullScreen();
@@ -170,42 +187,48 @@ public class PlayerScreen extends BorderPane {
         menuBar.setVisible(false);
         playerControls.setVisible(false);
         playerControls.setOnMouseExited(event -> playerControls.setVisible(false));
-        menuBar.setOnMouseExited(event -> menuBar.setVisible(false));
     }
 
     private void initializeImageView() {
         writableImage = new WritableImage((int) appView.screenBounds.getWidth(), (int) appView.screenBounds.getHeight());
 
-        ImageView imageView = new ImageView(writableImage);
+        imageView = new ImageView(writableImage);
         playerHolder.getChildren().add(imageView);
 
         playerHolder.widthProperty().addListener((observable, oldValue, newValue) -> {
-            fitImageViewSize(imageView, newValue.floatValue(), (float) playerHolder.getHeight());
+            fitImageViewSize(newValue.floatValue(), (float) playerHolder.getHeight());
         });
 
         playerHolder.heightProperty().addListener((observable, oldValue, newValue) -> {
-            fitImageViewSize(imageView, (float) playerHolder.getWidth(), newValue.floatValue());
+            fitImageViewSize((float) playerHolder.getWidth(), newValue.floatValue());
         });
 
         videoSourceRatioProperty.addListener((observable, oldValue, newValue) -> {
-            fitImageViewSize(imageView, (float) playerHolder.getWidth(), (float) playerHolder.getHeight());
+            fitImageViewSize((float) playerHolder.getWidth(), (float) playerHolder.getHeight());
         });
     }
 
-    private void fitImageViewSize(ImageView imageView, float width, float height) {
+    private void fitImageViewSize(float width, float height) {
         Platform.runLater(() -> {
-            float fitHeight = videoSourceRatioProperty.get() * width;
-            if (fitHeight > height) {
-                imageView.setFitHeight(height);
-                double fitWidth = height / videoSourceRatioProperty.get();
-                imageView.setFitWidth(fitWidth);
-                imageView.setX((width - fitWidth) / 2);
-                imageView.setY(0);
-            } else {
-                imageView.setFitWidth(width);
-                imageView.setFitHeight(fitHeight);
-                imageView.setY((height - fitHeight) / 2);
+            if(fitToScreen.get()) {
                 imageView.setX(0);
+                imageView.setY(0);
+                imageView.setFitWidth(width);
+                imageView.setFitHeight(height);
+            } else {
+                float fitHeight = videoSourceRatioProperty.get() * width;
+                if (fitHeight > height) {
+                    imageView.setFitHeight(height);
+                    double fitWidth = height / videoSourceRatioProperty.get();
+                    imageView.setFitWidth(fitWidth);
+                    imageView.setX((width - fitWidth) / 2);
+                    imageView.setY(0);
+                } else {
+                    imageView.setFitWidth(width);
+                    imageView.setFitHeight(fitHeight);
+                    imageView.setY((height - fitHeight) / 2);
+                    imageView.setX(0);
+                }
             }
         });
     }
@@ -232,9 +255,7 @@ public class PlayerScreen extends BorderPane {
     private class CanvasBufferFormatCallback implements BufferFormatCallback {
         @Override
         public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
-            Platform.runLater(() -> {
-                videoSourceRatioProperty.set((float) sourceHeight / (float) sourceWidth);
-            });
+            Platform.runLater(() -> videoSourceRatioProperty.set((float) sourceHeight / (float) sourceWidth));
             return new RV32BufferFormat((int) appView.screenBounds.getWidth(), (int) appView.screenBounds.getHeight());
         }
     }

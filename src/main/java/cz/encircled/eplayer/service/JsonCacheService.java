@@ -78,6 +78,7 @@ public class JsonCacheService implements CacheService {
     @Override
     public MediaType updateEntry(int hash, long time) {
         MediaType p = cache.get(hash);
+        log.debug("Update cache entry {}, time {}", p, time);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
         return p;
@@ -90,8 +91,9 @@ public class JsonCacheService implements CacheService {
 
     @NotNull
     @Override
-    public Collection<MediaType> getCache() {
-        return cache.values();
+    public List<MediaType> getCache() {
+        log.debug("!!! " + new ArrayList<>(cache.values()) + " " + cache.values());
+        return new ArrayList<>(cache.values());
     }
 
     @Nullable
@@ -105,19 +107,17 @@ public class JsonCacheService implements CacheService {
     }
 
     /**
-     * Async save playable map to file in JSON format
+     * Save playable map to file in JSON format
      */
     @Override
     public synchronized void save() {
-        log.trace("Save json cache");
-        new Thread(() -> {
-            try {
-                IOUtil.storeJson(cache, QUICK_NAVI_PATH);
-                log.debug("Json successfully saved");
-            } catch (IOException e) {
-                log.error("Failed to save playable to {}, msg {}", QUICK_NAVI_PATH, e);
-            }
-        }).start();
+        log.debug("Save json cache");
+        try {
+            IOUtil.storeJson(cache, QUICK_NAVI_PATH);
+            log.debug("Json successfully saved");
+        } catch (IOException e) {
+            log.error("Failed to save playable to {}, msg {}", QUICK_NAVI_PATH, e);
+        }
     }
 
     private static void checkHashes(@NotNull Map<Integer, MediaType> playableCache) {

@@ -40,10 +40,6 @@
     -fx-background-image: url('icons/volume_hover.png');
 }
 
-.player_controls .text {
-    -fx-fill: red;
-}
-
 .player_controls #mute:selected {
     -fx-background-image: url('icons/volume_mute.png');
 }
@@ -52,15 +48,32 @@
     -fx-background-image: url('icons/volume_mute_hover.png');
 }
 
-.player_controls {
-    -fx-effect: innershadow(three-pass-box, rgb(80, 80, 80), 4, 0.5, 1, 1);
+.player_controls #fitScreen {
+    -fx-min-width: 20px;
+    -fx-min-height: 15px;
+    -fx-background-color: transparent;
+    -fx-background-position: 0 5;
+    -fx-background-image: url('icons/fit.png');
+    -fx-background-repeat: no-repeat;
+}
+
+.player_controls #fitScreen:hover {
+    -fx-background-image: url('icons/fit_hover.png');
+}
+
+.player_controls #fitScreen:selected {
+    -fx-background-image: url('icons/shrink.png');
+}
+
+.player_controls #fitScreen:selected:hover {
+    -fx-background-image: url('icons/shrink_hover.png');
 }
 
 /* Quick navi */
 
 .qn_video {
     -fx-background-color: rgb(211, 211, 211);
-    -fx-border-color: rgb(111, 177, 250);
+    -fx-border-color: #364d76;
     -fx-border-style: solid;
     -fx-border-width: 1px;
     -fx-border-radius: 4;
@@ -68,18 +81,41 @@
 
 .qn_video:hover {
     -fx-background-color: rgb(230, 230, 230);
-    -fx-border-color: rgb(123, 137, 250);
+    -fx-border-color: #364d76;
 }
 
 .qn_video .title {
+    -fx-padding: 6px 6px 6px 10px;
     -fx-background-color: #444;
+}
+
+.qn_video .title .text {
     -fx-text-fill: rgb(250, 250, 250);
-    -fx-padding: 6px 0 6px 10px;
     -fx-font-size: 15px;
+}
+
+.qn_video .title .remove {
+    -fx-min-height: 22px;
+    -fx-min-width: 15px;
+    -fx-background-image: url('icons/trash.png');
+}
+
+.qn_video .title .remove:hover {
+    -fx-background-image: url('icons/trash_hover.png');
 }
 
 .tabs {
     -fx-background-color: rgb(250, 250, 250);
+}
+
+.refresh_button {
+    -fx-min-width: 15px;
+    -fx-min-height: 16px;
+    -fx-background-image: url('icons/refresh.png');
+}
+
+.refresh_button:hover {
+    -fx-background-image: url('icons/refresh_hover.png');
 }
 
 /* Side menu */
@@ -106,6 +142,10 @@
 .side_menu .menu_button:selected {
     -fx-background-color: #364d76;
     -fx-text-fill: rgb(216, 216, 216);
+}
+
+.side_menu .search_input:focused {
+    -fx-background-insets: 0;
 }
 
 /* Menu bar */

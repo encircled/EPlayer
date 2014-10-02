@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 /**
  * Created by encircled on 9/19/14.
  */
+// TODO clean
 public class ClassLookUp {
 
     private static final Logger log = LogManager.getLogger();
@@ -51,45 +52,22 @@ public class ClassLookUp {
         return componentClasses;
     }
 
-    /**
-     * Find all resource-annotated classes non-abstract in <code>pathToPkg</code>
-     */
-    private List<Class<?>> getComponentClassesFromPackage(String pathToPkg) throws Exception {
-        List<Class<?>> componentClasses = new ArrayList<>();
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Enumeration<URL> resources = classLoader.getResources(pathToPkg.replaceAll(DOT, CLASS_SEPARATOR));
-
-        while (resources.hasMoreElements()) {
-            File dir = new File(resources.nextElement().getPath());
-            for (File f : dir.listFiles(FILE_FILTER)) {
-                if (f.isFile()) {
-                    String name = f.getName();
-                    Class<?> componentClass = Class.forName(pathToPkg + "." + name.subSequence(0, name.length() - 6));
-                    if (componentClass.getAnnotation(Resource.class) != null && !Modifier.isAbstract(componentClass.getModifiers())) {
-                        log.debug("New resource annotated class {}", componentClass.getName());
-                        componentClasses.add(componentClass);
-                    }
-                } else {
-                    componentClasses.addAll(getComponentClassesFromPackage(pathToPkg + "." + f.getName()));
-                }
-            }
-        }
-        return componentClasses;
-    }
-
-    private List<Class<?>> getComponentClassesFromPackage2(String rootPackage)
+    private List<Class<?>> getComponentClassesFromPackage(String rootPackage)
             throws IOException, ClassNotFoundException {
+        System.out.println("Get classes, root pkg is " + rootPackage);
+        rootPackage = rootPackage.replace(".", "/");
         Enumeration<URL> root = Thread.currentThread().getContextClassLoader()
                 .getResources(rootPackage);
         List<Class<?>> result = null;
         while (root.hasMoreElements()) {
             URL url = root.nextElement();
+            System.out.println("New root element " + url.getPath());
             System.out.println("Next root " + url.getFile());
 
             if (isJar(url.getProtocol())) {
                 System.out.println("JAR");
                 URLConnection con = url.openConnection();
-                JarFile jarFile = null;
+                JarFile jarFile;
 
                 if (con instanceof JarURLConnection) {
                     System.out.println("JAR con");
@@ -102,8 +80,17 @@ public class ClassLookUp {
                 Enumeration<JarEntry> entries = jarFile.entries();
 
                 while (entries.hasMoreElements()) {
+                    JarEntry jarEntry = entries.nextElement();
                     System.out.println("Next jar entry "
-                            + entries.nextElement().getName());
+                            + jarEntry.getName());
+                    if (jarEntry.getName().startsWith(rootPackage) && jarEntry.getName().endsWith(".class")) {
+                        String className = jarEntry.getName().replace("/", ".").substring(0, jarEntry.getName().length() - 6);
+                        Class componentClass = Class.forName(className);
+                        if (componentClass.getAnnotation(Resource.class) != null && !Modifier.isAbstract(componentClass.getModifiers())) {
+                            log.debug("New resource annotated class {}", componentClass.getName());
+                            result.add(componentClass);
+                        }
+                    }
                 }
 
             } else {
@@ -136,7 +123,14 @@ public class ClassLookUp {
                     className = className.substring(pathPrefixLength,
                             className.length());
                     className = className.replace(File.separator, ".");
-                    result.add(Class.forName(className));
+
+                    Class<?> componentClass = Class.forName(className);
+                    if (componentClass.getAnnotation(Resource.class) != null && !Modifier.isAbstract(componentClass.getModifiers())) {
+                        log.debug("New resource annotated class {}", componentClass.getName());
+                        result.add(componentClass);
+                    }
+
+
                 } else {
                     recursiveList(f, pathPrefixLength, result);
                 }

@@ -4,6 +4,7 @@ import cz.encircled.eplayer.ioc.component.annotation.Runner;
 import cz.encircled.eplayer.ioc.core.container.Container;
 import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.service.action.ActionExecutor;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
@@ -157,6 +158,18 @@ public class FxView extends Application implements AppView {
 
         initializeMediaFileChoose();
 
+        primaryStage.setOnCloseRequest(t -> {
+            actionExecutor.execute(ActionCommands.EXIT);
+        });
+
+        //  TODO search
+//        primaryScene.getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        });
+
         primaryStage.setScene(primaryScene);
         primaryStage.show();
     }
@@ -172,8 +185,22 @@ public class FxView extends Application implements AppView {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+//        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+//        Enumeration<URL> resources = classLoader.getResources("");
+//        System.getProperties().get("java.class.path");
+//        while(resources.hasMoreElements()) {
+//            URL url = resources.nextElement();
+//            URL url = new URL(System.getProperties().get("java.class.path").toString());
+//            URLConnection con = url.openConnection();
+//            if(con instanceof JarURLConnection) {
+//                System.out.println("JAR");
+//            }
+//            System.out.println(url.getPath());
+//        }
         launch();
+//        Container c = new Container();
+//        c.initializeContext();
     }
 
 }

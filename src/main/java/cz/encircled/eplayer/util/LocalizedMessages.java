@@ -58,4 +58,7 @@ public class LocalizedMessages {
 
     public static final String PAUSE = "pause";
 
+    public static final String FIT_SCREEN = "fitScreen";
+
+    public static final String DELETE_MISSING = "deleteMissing";
 }

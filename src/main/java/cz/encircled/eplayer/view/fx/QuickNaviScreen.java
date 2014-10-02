@@ -12,7 +12,6 @@ import cz.encircled.eplayer.view.fx.components.qn.QuickNaviViewButton;
 import cz.encircled.eplayer.view.fx.components.qn.tab.FolderMediaTab;
 import cz.encircled.eplayer.view.fx.components.qn.tab.MediaTab;
 import cz.encircled.eplayer.view.fx.components.qn.tab.QuickNaviMediaTab;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
@@ -138,10 +137,7 @@ public class QuickNaviScreen extends BorderPane {
         );
 
         filterProperty.addListener((observable, oldValue, newValue) -> {
-            Platform.runLater(() -> {
                 refreshCurrentTab();
-
-            });
         });
     }
 

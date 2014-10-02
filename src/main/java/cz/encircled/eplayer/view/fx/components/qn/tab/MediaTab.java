@@ -76,7 +76,7 @@ public abstract class MediaTab extends Tab {
 
     private Collection<MediaType> getAllMediaTypesFiltered() {
         Collection<MediaType> mediaTypes = getAllMediaTypes();
-//        log.debug(quickNaviScreen.filterProperty().get());
+        log.debug(quickNaviScreen.filterProperty().get());
         String filter = quickNaviScreen.filterProperty().get();
         if (StringUtil.isNotBlank(filter)) {
             StringBuilder sb = new StringBuilder("(?i).*");

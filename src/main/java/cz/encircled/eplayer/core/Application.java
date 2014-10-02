@@ -2,16 +2,13 @@ package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
-import cz.encircled.eplayer.service.gui.ViewService;
 import cz.encircled.eplayer.util.IOUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 // TODO Youtube tab and filtering
-
 @Resource
 public class Application {
 
@@ -25,17 +22,8 @@ public class Application {
     @Resource
     private MediaService mediaService;
 
-    @Resource
-    private ViewService viewService;
-
     public Application() {
-        log.trace("App init");
         IOUtil.createIfMissing(APP_DOCUMENTS_ROOT, true, false);
-    }
-
-    @PostConstruct
-    private void initizlize() {
-        log.trace("App post construct");
         addCloseHook();
     }
 
@@ -43,9 +31,11 @@ public class Application {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
+                log.debug("Close hook start");
                 mediaService.updateCurrentMediaInCache();
-                mediaService.releasePlayer();
                 cacheService.save();
+                mediaService.releasePlayer();
+                log.debug("Close hook finished");
             }
         });
         log.trace("Close hook added");

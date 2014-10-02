@@ -4,7 +4,7 @@ import cz.encircled.eplayer.model.MediaType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -29,6 +29,6 @@ public interface CacheService {
 
     void save();
 
-    Collection<MediaType> getCache();
+    List<MediaType> getCache();
 
 }
