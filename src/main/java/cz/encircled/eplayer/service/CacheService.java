@@ -18,11 +18,11 @@ public interface CacheService {
 
     MediaType addIfAbsent(@NotNull MediaType mediaType);
 
-    MediaType getEntry(Integer hashCode);
+    MediaType getEntry(String id);
 
-    MediaType deleteEntry(int hash);
+    MediaType deleteEntry(String id);
 
-    MediaType updateEntry(int hash, long time);
+    MediaType updateEntry(String id, long time);
 
     @Nullable
     MediaType getLastByWatchDate();

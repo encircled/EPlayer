@@ -5,13 +5,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class MediaType {
 
-    private static final String TO_STRING_FORMAT = "Playable %d. name: %s, path: %s, time: %d, watchDate: %d";
+    private static final String TO_STRING_FORMAT = "Playable name: %s, path: %s, time: %d, watchDate: %d";
 
     private String name;
 
     private boolean isSeries;
-
-    private int hash;
 
     private String path;
 
@@ -37,13 +35,12 @@ public class MediaType {
         return name;
     }
 
-    public String getPath() {
+    public String getId() {
         return path;
     }
 
-    @Override
-    public int hashCode() {
-        return hash;
+    public String getPath() {
+        return path;
     }
 
     public long getTime() {
@@ -68,12 +65,11 @@ public class MediaType {
 
     @Override
     public String toString() {
-        return String.format(TO_STRING_FORMAT, name.hashCode(), name, path, time, watchDate);
+        return String.format(TO_STRING_FORMAT, name, path, time, watchDate);
     }
 
     public void updatePath(@NotNull String path) {
         this.path = path;
-        this.hash = path.hashCode();
         this.name = path.substring(path.lastIndexOf(Constants.SLASH) + Constants.ONE, path.lastIndexOf(Constants.DOT));
     }
 }

@@ -3,14 +3,15 @@ package cz.encircled.eplayer.service;
 import com.google.gson.JsonSyntaxException;
 import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.util.*;
+import cz.encircled.eplayer.util.GuiUtil;
+import cz.encircled.eplayer.util.IOUtil;
+import cz.encircled.eplayer.util.Settings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Resource;
-import javax.swing.*;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -23,9 +24,9 @@ import static cz.encircled.eplayer.util.LocalizedMessages.*;
 @Resource
 public class JsonCacheService implements CacheService {
 
-    public static final String QUICK_NAVI_PATH = Application.APP_DOCUMENTS_ROOT + "quicknavi.json";
+    public static final String QUICK_NAVI_PATH = Application.APP_DOCUMENTS_ROOT + "quicknavi2.json";
 
-    private Map<Integer, MediaType> cache;
+    private Map<String, MediaType> cache;
 
     private static final Logger log = LogManager.getLogger();
 
@@ -43,15 +44,14 @@ public class JsonCacheService implements CacheService {
         } catch (IOException e) {
             log.error("Failed to read cache data from {} with default type token. Message: {}",
                     Settings.get(QUICK_NAVI_PATH), e.getMessage());
-            guiUtil.showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+            guiUtil.showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE);
         } catch (JsonSyntaxException e) {
             log.error("JSON syntax error. Message: {}", e.getMessage());
-            guiUtil.showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+            guiUtil.showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE);
         }
         if (cache == null)
             cache = new HashMap<>();
 
-        checkHashes(cache);
         log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start);
     }
 
@@ -62,22 +62,22 @@ public class JsonCacheService implements CacheService {
 
     @Override
     public MediaType createIfAbsent(@NotNull String path) {
-        return cache.computeIfAbsent(path.hashCode(), hash -> new MediaType(path));
+        return cache.computeIfAbsent(path, p -> new MediaType(path));
     }
 
     @Override
     public MediaType addIfAbsent(@NotNull MediaType mediaType) {
-        return cache.putIfAbsent(mediaType.getPath().hashCode(), mediaType);
+        return cache.putIfAbsent(mediaType.getPath(), mediaType);
     }
 
     @Override
-    public MediaType getEntry(Integer hashCode) {
-        return cache.get(hashCode);
+    public MediaType getEntry(String id) {
+        return cache.get(id);
     }
 
     @Override
-    public MediaType updateEntry(int hash, long time) {
-        MediaType p = cache.get(hash);
+    public MediaType updateEntry(String id, long time) {
+        MediaType p = cache.get(id);
         log.debug("Update cache entry {}, time {}", p, time);
         p.setTime(time);
         p.setWatchDate(new Date().getTime());
@@ -85,14 +85,13 @@ public class JsonCacheService implements CacheService {
     }
 
     @Override
-    public MediaType deleteEntry(int hash) {
-        return cache.remove(hash);
+    public MediaType deleteEntry(String id) {
+        return cache.remove(id);
     }
 
     @NotNull
     @Override
     public List<MediaType> getCache() {
-        log.debug("!!! " + new ArrayList<>(cache.values()) + " " + cache.values());
         return new ArrayList<>(cache.values());
     }
 
@@ -118,17 +117,6 @@ public class JsonCacheService implements CacheService {
         } catch (IOException e) {
             log.error("Failed to save playable to {}, msg {}", QUICK_NAVI_PATH, e);
         }
-    }
-
-    private static void checkHashes(@NotNull Map<Integer, MediaType> playableCache) {
-        List<Integer> corruptedHashes = new ArrayList<>();
-        playableCache.forEach((key, media) -> {
-            if (media.hashCode() != key) {
-                corruptedHashes.add(key);
-                log.warn("Playable {} has wrong hash code, updating...", media.getName());
-            }
-        });
-        corruptedHashes.forEach((oldHash) -> playableCache.put(playableCache.get(oldHash).hashCode(), playableCache.remove(oldHash)));
     }
 
 }

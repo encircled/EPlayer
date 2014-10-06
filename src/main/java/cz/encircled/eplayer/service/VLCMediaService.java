@@ -23,7 +23,6 @@ import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -57,7 +56,7 @@ public class VLCMediaService implements MediaService {
     private ActionExecutor actionExecutor;
 
     // TODO smthing
-    public static final String VLC_LIB_PATH = "D:\\Soft\\EPlayer\\target\\vlc";
+    public static final String VLC_LIB_PATH = "D:\\Soft\\EPlayer\\vlc";
 
     public VLCMediaService() {
         initializeLibs();
@@ -72,7 +71,7 @@ public class VLCMediaService implements MediaService {
     @Override
     public void updateCurrentMediaInCache() {
         if (current != null)
-            cacheService.updateEntry(current.hashCode(), currentTime);
+            cacheService.updateEntry(current, currentTime);
     }
 
     private void play(@NotNull String path, long time) {
@@ -228,9 +227,9 @@ public class VLCMediaService implements MediaService {
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
                     log.error("Failed to open media {} ", current);
-                    guiUtil.showMessage(LocalizedMessages.FILE_OPEN_FAILED, LocalizedMessages.ERROR_TITLE, JOptionPane.ERROR_MESSAGE);
+                    guiUtil.showMessage(LocalizedMessages.FILE_OPEN_FAILED, LocalizedMessages.ERROR_TITLE);
                     if (current != null) {
-                        cacheService.deleteEntry(current.hashCode());
+                        cacheService.deleteEntry(current);
                         current = null;
                     }
                     viewService.switchToQuickNavi();
@@ -239,7 +238,7 @@ public class VLCMediaService implements MediaService {
             });
         } catch (Exception e) {
             log.error("Player initialization failed", e);
-            guiUtil.showMessage("VLC library not found", "Error title", JOptionPane.ERROR_MESSAGE);
+            guiUtil.showMessage("VLC library not found", "Error title");
         }
         log.trace("VLCMediaService init complete in {} ms", System.currentTimeMillis() - start);
     }

@@ -1,6 +1,10 @@
 package cz.encircled.eplayer.util;
 
+import cz.encircled.eplayer.common.Constants;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,13 +15,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class StringUtil {
 
-    private static final String HTML_TAG = "<html>";
-
-    private static final String HTML_COSING_TAG = "</html>";
-
-    private static final String HTML_BR_TAG = "<br/>";
-
-    public static final String HTML_PADDING = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    private static final char TIME_SEPARATOR = ':';
 
     public static boolean isSet(@Nullable String s) {
         return s != null && !s.isEmpty();
@@ -34,4 +32,26 @@ public class StringUtil {
     public static boolean isNotBlank(String filter) {
         return !isBlank(filter);
     }
+
+    public static String msToTimeLabel(long ms) {
+        long h = TimeUnit.MILLISECONDS.toHours(ms);
+        long m = TimeUnit.MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(ms));
+        long s = TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms));
+
+        StringBuilder sb = new StringBuilder();
+        appendZeroIfMissing(sb, h);
+        sb.append(h).append(TIME_SEPARATOR);
+        appendZeroIfMissing(sb, m);
+        sb.append(m).append(TIME_SEPARATOR);
+        appendZeroIfMissing(sb, s);
+        sb.append(s);
+
+        return sb.toString();
+    }
+
+    private static void appendZeroIfMissing(@NotNull StringBuilder sb, long digit) {
+        if (digit < Constants.TEN)
+            sb.append(Constants.ZERO_STRING);
+    }
+
 }

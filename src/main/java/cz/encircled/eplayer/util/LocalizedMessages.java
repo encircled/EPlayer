@@ -61,4 +61,10 @@ public class LocalizedMessages {
     public static final String FIT_SCREEN = "fitScreen";
 
     public static final String DELETE_MISSING = "deleteMissing";
+
+    public static final String TODAY = "today";
+
+    public static final String YESTERDAY = "yesterday";
+
+    public static final String DAYS_AGO = "daysAgo";
 }

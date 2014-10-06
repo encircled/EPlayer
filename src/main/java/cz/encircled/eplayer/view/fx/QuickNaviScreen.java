@@ -7,7 +7,7 @@ import cz.encircled.eplayer.ioc.factory.FxFactory;
 import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
-import cz.encircled.eplayer.view.fx.components.ImageButton;
+import cz.encircled.eplayer.view.fx.components.SimpleButton;
 import cz.encircled.eplayer.view.fx.components.qn.QuickNaviViewButton;
 import cz.encircled.eplayer.view.fx.components.qn.tab.FolderMediaTab;
 import cz.encircled.eplayer.view.fx.components.qn.tab.MediaTab;
@@ -75,6 +75,7 @@ public class QuickNaviScreen extends BorderPane {
 
     @PostConstruct
     private void initialize() {
+
         filterProperty = new SimpleStringProperty();
         viewProperty = new SimpleStringProperty();
         viewProperty.addListener(observable -> refreshCurrentTab());
@@ -105,7 +106,7 @@ public class QuickNaviScreen extends BorderPane {
         statusBar.setPrefHeight(15);
         statusBar.setPadding(new Insets(5, 5, 5, 5));
 
-        ImageButton refreshButton = new ImageButton("refresh_button", event -> refreshCurrentTab());
+        SimpleButton refreshButton = new SimpleButton("refresh_button", event -> refreshCurrentTab());
 
         statusBar.getChildren().add(refreshButton);
         setBottom(statusBar);

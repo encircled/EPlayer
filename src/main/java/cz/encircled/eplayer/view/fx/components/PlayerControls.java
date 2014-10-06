@@ -1,6 +1,5 @@
 package cz.encircled.eplayer.view.fx.components;
 
-import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.ioc.component.annotation.Runner;
 import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.service.MediaService;
@@ -9,6 +8,7 @@ import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.util.Localizations;
 import cz.encircled.eplayer.util.LocalizedMessages;
 import cz.encircled.eplayer.util.Settings;
+import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.fx.FxUtil;
 import cz.encircled.eplayer.view.fx.FxView;
 import cz.encircled.eplayer.view.fx.PlayerScreen;
@@ -23,11 +23,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Encircled on 21/09/2014.
@@ -68,8 +66,6 @@ public class PlayerControls extends GridPane {
 
     @Resource
     private EventObserver eventObserver;
-
-    private static final char TIME_SEPARATOR = ':';
 
     @Resource
     private MediaService mediaService;
@@ -153,7 +149,7 @@ public class PlayerControls extends GridPane {
         timeFlyingText = new Text();
         timeTextSeparator = new Text(" / ");
         totalTimeText = new Text();
-        timeText = new Text(msToTimeLabel(0L));
+        timeText = new Text(StringUtil.msToTimeLabel(0L));
 
         volumeText.setFill(textColor);
         timeFlyingText.setFill(textColor);
@@ -203,13 +199,13 @@ public class PlayerControls extends GridPane {
         });
         EventHandler<MouseEvent> handler = event -> {
             timeFlyingText.setX(event.getX() - 20);
-            timeFlyingText.setText(msToTimeLabel((long) timeSlider.getValue()));
+            timeFlyingText.setText(StringUtil.msToTimeLabel((long) timeSlider.getValue()));
         };
         timeSlider.setOnMouseMoved(handler);
         timeSlider.setOnMouseDragged(handler);
 
         // Max label
-        timeSlider.maxProperty().addListener((observable, oldValue, newValue) -> totalTimeText.setText(msToTimeLabel(newValue.longValue())));
+        timeSlider.maxProperty().addListener((observable, oldValue, newValue) -> totalTimeText.setText(StringUtil.msToTimeLabel(newValue.longValue())));
         eventObserver.listenFxThread(Event.mediaDurationChange, (event, newTime, arg2) -> timeSlider.setMax(newTime));
 
         // Current time and scrolling
@@ -227,31 +223,10 @@ public class PlayerControls extends GridPane {
         eventObserver.listenFxThread(Event.mediaTimeChange, (event, newTime, arg2) -> {
             if (!timeSlider.isValueChanging()) {
                 timeSlider.setValue(newTime);
-                timeText.setText(msToTimeLabel(newTime));
+                timeText.setText(StringUtil.msToTimeLabel(newTime));
             }
         });
 
-    }
-
-    private static String msToTimeLabel(long ms) {
-        long h = TimeUnit.MILLISECONDS.toHours(ms);
-        long m = TimeUnit.MILLISECONDS.toMinutes(ms) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(ms));
-        long s = TimeUnit.MILLISECONDS.toSeconds(ms) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(ms));
-
-        StringBuilder sb = new StringBuilder();
-        appendZeroIfMissing(sb, h);
-        sb.append(h).append(TIME_SEPARATOR);
-        appendZeroIfMissing(sb, m);
-        sb.append(m).append(TIME_SEPARATOR);
-        appendZeroIfMissing(sb, s);
-        sb.append(s);
-
-        return sb.toString();
-    }
-
-    private static void appendZeroIfMissing(@NotNull StringBuilder sb, long digit) {
-        if (digit < Constants.TEN)
-            sb.append(Constants.ZERO_STRING);
     }
 
 }

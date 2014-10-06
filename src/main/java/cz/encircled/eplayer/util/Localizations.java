@@ -8,7 +8,7 @@ import java.util.ResourceBundle;
 
 public class Localizations {
 
-    private static final String DEFAULT_LANGUAGE = "en";
+    public static final String DEFAULT_LANGUAGE = "en";
 
     private static final String NOT_FOUND_VALUE = "?";
 
@@ -16,14 +16,21 @@ public class Localizations {
 
     private static ResourceBundle bundle;
 
+    private static Locale locale;
+
     static {
-        Locale l = new Locale(Settings.get(Settings.LANGUAGE, DEFAULT_LANGUAGE));
-        bundle = ResourceBundle.getBundle(BUNDLE_NAME, l, new UTF8Control());
+        locale = new Locale(Settings.get(Settings.LANGUAGE, DEFAULT_LANGUAGE));
+        bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, new UTF8Control());
     }
 
     @NotNull
     public static String get(@NotNull String key) {
         return bundle.containsKey(key) ? bundle.getString(key) : NOT_FOUND_VALUE + key;
+    }
+
+    @NotNull
+    public static Locale getUsedLocale() {
+        return locale;
     }
 
 }

@@ -186,21 +186,7 @@ public class FxView extends Application implements AppView {
     }
 
     public static void main(String[] args) throws Exception {
-//        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-//        Enumeration<URL> resources = classLoader.getResources("");
-//        System.getProperties().get("java.class.path");
-//        while(resources.hasMoreElements()) {
-//            URL url = resources.nextElement();
-//            URL url = new URL(System.getProperties().get("java.class.path").toString());
-//            URLConnection con = url.openConnection();
-//            if(con instanceof JarURLConnection) {
-//                System.out.println("JAR");
-//            }
-//            System.out.println(url.getPath());
-//        }
         launch();
-//        Container c = new Container();
-//        c.initializeContext();
     }
 
 }

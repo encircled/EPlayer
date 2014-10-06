@@ -49,9 +49,8 @@ public abstract class MediaTab extends Tab {
         mainPane = new FlowPane(10, 10);
         ScrollPane scrollPane = new ScrollPane(mainPane);
 
-        scrollPane.getStyleClass().add("tabs");
         mainPane.getStyleClass().add("tabs");
-        getStyleClass().add("tabs");
+        scrollPane.getStyleClass().add("tabs");
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setPadding(new Insets(10, 10, 10, 10));
@@ -69,7 +68,6 @@ public abstract class MediaTab extends Tab {
 
     public void showSeries() {
         FxUtil.workInNormalThread(() -> {
-//            repaintButtons(getSeriesMediaTypes());
             repaintSeriesButtons(getSeriesMediaTypes().values());
         });
     }
@@ -106,13 +104,14 @@ public abstract class MediaTab extends Tab {
     }
 
     private void repaintButtons(Collection<MediaType> mediaTypes) {
-        final Collection<QuickNaviButton> buttons = new ArrayList<>(mediaTypes.size());
-        mediaTypes.forEach(media -> {
-            QuickNaviButton button = context.getComponent(QuickNaviButton.class);
-            button.setMediaType(media);
-            buttons.add(button);
-        });
         Platform.runLater(() -> {
+            final Collection<QuickNaviButton> buttons = new ArrayList<>(mediaTypes.size());
+            mediaTypes.forEach(media -> {
+                QuickNaviButton button = context.getComponent(QuickNaviButton.class);
+                button.setMediaType(media);
+                buttons.add(button);
+            });
+
             log.debug("Media tab on show, add {} buttons", buttons.size());
             buttons.forEach(QuickNaviButton::initialize);
             mainPane.getChildren().setAll(buttons);
@@ -120,14 +119,15 @@ public abstract class MediaTab extends Tab {
     }
 
     private void repaintSeriesButtons(Collection<SeriesVideo> series) {
-        final Collection<QuickNaviButton> buttons = new ArrayList<>(series.size());
-        series.forEach(media -> {
-            QuickNaviButton button = context.getComponent(QuickNaviButton.class);
-            button.setMediaType(media.getLast());
-            button.setSeriesVideo(media);
-            buttons.add(button);
-        });
         Platform.runLater(() -> {
+            final Collection<QuickNaviButton> buttons = new ArrayList<>(series.size());
+            series.forEach(media -> {
+                QuickNaviButton button = context.getComponent(QuickNaviButton.class);
+                button.setMediaType(media.getLast());
+                button.setSeriesVideo(media);
+                buttons.add(button);
+            });
+
             log.debug("Media tab on show, add {} buttons", buttons.size());
             buttons.forEach(QuickNaviButton::initialize);
             mainPane.getChildren().setAll(buttons);

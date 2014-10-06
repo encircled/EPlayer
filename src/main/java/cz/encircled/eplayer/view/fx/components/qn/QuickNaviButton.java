@@ -7,13 +7,17 @@ import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.model.SeriesVideo;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.util.DateUtil;
+import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.fx.FxUtil;
 import cz.encircled.eplayer.view.fx.QuickNaviScreen;
-import cz.encircled.eplayer.view.fx.components.ImageButton;
+import cz.encircled.eplayer.view.fx.components.SimpleButton;
 import javafx.application.Platform;
-import javafx.scene.control.Button;
+import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 import javax.annotation.Resource;
 
@@ -24,10 +28,6 @@ import javax.annotation.Resource;
 @Factory(FxFactory.class)
 @Scope(Scope.PROTOTYPE)
 public class QuickNaviButton extends BorderPane {
-
-    public static final int WIDTH = 410;
-
-    public static final int HEIGHT = 350;
 
     @Resource
     private MediaService mediaService;
@@ -52,32 +52,44 @@ public class QuickNaviButton extends BorderPane {
 
     public QuickNaviButton initialize() {
         getStyleClass().add("qn_video");
-        setPrefSize(WIDTH, HEIGHT);
-        setMaxSize(WIDTH, HEIGHT);
 
         setTop(initializeTitle());
+        setBottom(initializeStatusBar());
 
         setOnMouseClicked(event -> FxUtil.workInNormalThread(() -> mediaService.play(mediaType.getPath())));
+        return this;
+    }
 
-        if(seriesVideo != null) {
-            Button next = new Button("Next");
-            next.setOnAction(event -> {
-                mediaService.play(seriesVideo.getNext());
-            });
-            setBottom(next);
+    private HBox initializeStatusBar() {
+        HBox statusBar = new HBox(20);
+        statusBar.getStyleClass().add("status_bar");
+
+        if (mediaType.getTime() > 0L) {
+            Label timeLabel = new Label(DateUtil.daysBetweenLocalized(mediaType.getWatchDate()) + ", " +
+                    StringUtil.msToTimeLabel(mediaType.getTime()));
+            statusBar.getChildren().add(timeLabel);
         }
 
-        return this;
+        if (seriesVideo != null) {
+            SimpleButton next = new SimpleButton("action_button", new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    mediaService.play(seriesVideo.getNext());
+                }
+            }, "Next");
+            statusBar.getChildren().add(next);
+        }
+
+        return statusBar;
     }
 
     private BorderPane initializeTitle() {
         Label titleText = new Label(mediaType.getName());
-        titleText.setMaxWidth(WIDTH - 50);
         titleText.getStyleClass().add("text");
 
-        ImageButton removeButton = new ImageButton("remove", event -> {
+        SimpleButton removeButton = new SimpleButton("remove", event -> {
             FxUtil.workInNormalThread(() -> {
-                cacheService.deleteEntry(mediaType.hashCode());
+                cacheService.deleteEntry(mediaType.getId());
                 Platform.runLater(quickNaviScreen::refreshCurrentTab);
             });
         });

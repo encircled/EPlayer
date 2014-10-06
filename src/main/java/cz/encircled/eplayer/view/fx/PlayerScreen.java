@@ -8,6 +8,9 @@ import cz.encircled.eplayer.ioc.core.container.Context;
 import cz.encircled.eplayer.ioc.factory.FxFactory;
 import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.service.event.Event;
+import cz.encircled.eplayer.service.event.EventListener;
+import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import cz.encircled.eplayer.view.fx.components.PlayerControls;
 import javafx.application.Platform;
@@ -38,6 +41,7 @@ import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.awt.*;
 import java.nio.ByteBuffer;
 
 /**
@@ -76,11 +80,16 @@ public class PlayerScreen extends BorderPane {
 
     private ImageView imageView;
 
+    private Robot robot;
+
     @Resource
     private PlayerControls playerControls;
 
     @Resource
     private Context context;
+
+    @Resource
+    private EventObserver eventObserver;
 
     private EventHandler<MouseEvent> fullScreenMouseMoveHandler = event -> {
         setCursor(Cursor.DEFAULT);
@@ -139,6 +148,11 @@ public class PlayerScreen extends BorderPane {
     }
 
     private void initializeListeners() {
+        try {
+            robot = new Robot();
+        } catch (AWTException e) {
+            e.printStackTrace();
+        }
         fitToScreen.addListener(observable -> fitImageViewSize((float) playerHolder.getWidth(), (float) playerHolder.getHeight()));
         playerHolder.setOnMouseClicked(event -> {
             mediaService.toggle();
@@ -157,6 +171,17 @@ public class PlayerScreen extends BorderPane {
         if (appView.isFullScreen()) {
             onFullScreen();
         }
+
+        eventObserver.listen(Event.playingChanged, new EventListener<Boolean, Void>() {
+            @Override
+            public void handle(Event event, Boolean isPlaying, Void arg2) {
+                if (isPlaying) {
+                    // TODO
+//                    robot.keyPress(KeyEvent.VK_0);
+                }
+            }
+        });
+
     }
 
     private void onNotFullScreen() {
@@ -210,7 +235,7 @@ public class PlayerScreen extends BorderPane {
 
     private void fitImageViewSize(float width, float height) {
         Platform.runLater(() -> {
-            if(fitToScreen.get()) {
+            if (fitToScreen.get()) {
                 imageView.setX(0);
                 imageView.setY(0);
                 imageView.setFitWidth(width);

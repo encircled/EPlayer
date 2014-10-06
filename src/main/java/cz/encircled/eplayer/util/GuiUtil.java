@@ -10,9 +10,8 @@ import javax.annotation.Resource;
 @Resource
 public class GuiUtil {
 
-    public void showMessage(@NotNull String text, @NotNull String title, int level) {
+    public void showMessage(@NotNull String text, @NotNull String title) {
         // TODO
     }
-
 
 }

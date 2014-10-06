@@ -18,7 +18,7 @@ public class IOUtil {
 
     private static final Logger log = LogManager.getLogger();
 
-    private final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<Integer, MediaType>>() {
+    private final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<String, MediaType>>() {
     }.getType();
 
     public static <T> T getPlayableJson(@NotNull String filePath) throws IOException {
