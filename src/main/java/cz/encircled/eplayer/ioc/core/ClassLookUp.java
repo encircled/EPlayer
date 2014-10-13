@@ -122,12 +122,21 @@ public class ClassLookUp {
                             .substring(0, f.getName().length() - 6);
                     className = className.substring(pathPrefixLength,
                             className.length());
+
+                    if (className.startsWith(File.separator)) {
+                        className = className.substring(1);
+                    }
+
                     className = className.replace(File.separator, ".");
 
-                    Class<?> componentClass = Class.forName(className);
+                    try {
+                        Class<?> componentClass = Class.forName(className);
                     if (componentClass.getAnnotation(Resource.class) != null && !Modifier.isAbstract(componentClass.getModifiers())) {
                         log.debug("New resource annotated class {}", componentClass.getName());
                         result.add(componentClass);
+                    }
+                    } catch (ClassNotFoundException c) {
+                        log.debug("Class not found " + className);
                     }
 
 

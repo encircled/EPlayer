@@ -17,6 +17,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -155,6 +157,28 @@ public class FxView extends Application implements AppView {
         primaryScene = new Scene(quickNaviScreen);
         screenChangeProperty.set(QUICK_NAVI_SCREEN);
         primaryScene.getStylesheets().add("/stylesheet.css");
+        primaryScene.setOnDragOver(event -> {
+            if (event.getDragboard().hasFiles()) {
+                event.acceptTransferModes(TransferMode.COPY);
+            } else {
+                event.consume();
+            }
+        });
+
+        primaryScene.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                success = true;
+                for (File file : db.getFiles()) {
+                    String filePath = file.getAbsolutePath();
+                    System.out.println(filePath + " " + file.isFile());
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
+
 
         initializeMediaFileChoose();
 
