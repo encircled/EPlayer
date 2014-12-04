@@ -79,7 +79,7 @@ public class ReflectionActionExecutor implements ActionExecutor {
 //                mediaService.exitFullScreen();
 //                mediaService.updateCurrentMediaInCache();
 //            } else
-//                execute(ActionCommands.OPEN_QUICK_NAVI);
+//                execute(ActionCommands.openQuickNavi);
 //        }
     }
 

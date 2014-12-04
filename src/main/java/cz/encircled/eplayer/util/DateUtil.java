@@ -37,13 +37,13 @@ public class DateUtil {
         String localized;
         switch (days) {
             case 0:
-                localized = Localizations.get(LocalizedMessages.TODAY);
+                localized = Localization.today.ln();
                 break;
             case 1:
-                localized = Localizations.get(LocalizedMessages.YESTERDAY);
+                localized = Localization.yesterday.ln();
                 break;
             default:
-                localized = days + " " + Localizations.get(LocalizedMessages.DAYS_AGO);
+                localized = days + " " + Localization.daysAgo.ln();
         }
         return localized;
     }

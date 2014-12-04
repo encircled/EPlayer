@@ -5,8 +5,7 @@ import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
-import cz.encircled.eplayer.util.Localizations;
-import cz.encircled.eplayer.util.LocalizedMessages;
+import cz.encircled.eplayer.util.Localization;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.fx.FxUtil;
@@ -125,7 +124,7 @@ public class PlayerControls extends GridPane {
             }
         });
         fitScreenToggleButton.setSelected(playerScreen.fitToScreenProperty().get());
-        Tooltip tooltip = new Tooltip(Localizations.get(LocalizedMessages.FIT_SCREEN));
+        Tooltip tooltip = new Tooltip(Localization.fitScreen.ln());
 
         fitScreenToggleButton.setTooltip(tooltip);
 

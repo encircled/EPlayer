@@ -74,7 +74,8 @@ public class QuickNaviButton extends BorderPane {
             SimpleButton next = new SimpleButton("action_button", new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
-                    mediaService.play(seriesVideo.getNext());
+                    mediaService.play(seriesVideo.getNext(
+                    ));
                 }
             }, "Next");
             statusBar.getChildren().add(next);
@@ -92,6 +93,7 @@ public class QuickNaviButton extends BorderPane {
                 cacheService.deleteEntry(mediaType.getId());
                 Platform.runLater(quickNaviScreen::refreshCurrentTab);
             });
+            event.consume();
         });
 
         BorderPane title = new BorderPane();

@@ -95,7 +95,6 @@ public class ClassLookUp {
 
             } else {
                 result = new ArrayList<>();
-                System.out.println("FILE");
                 int pathPrefixLength = url.getFile().length()
                         - rootPackage.length() - 1;
                 File rootFile = new File(url.getFile());

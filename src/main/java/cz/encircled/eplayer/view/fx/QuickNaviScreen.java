@@ -73,6 +73,13 @@ public class QuickNaviScreen extends BorderPane {
         return filterProperty;
     }
 
+    // TODO move
+    public void addTab(String path) {
+        FolderMediaTab tab = context.getComponent(FolderMediaTab.class);
+        tab.setPath(path);
+        centerTabPane.getTabs().add(tab);
+    }
+
     @PostConstruct
     private void initialize() {
 
@@ -92,11 +99,7 @@ public class QuickNaviScreen extends BorderPane {
 
         initializeListeners();
 
-        Settings.getList(Settings.FOLDERS_TO_SCAN).forEach(path -> {
-            FolderMediaTab tab = context.getComponent(FolderMediaTab.class);
-            tab.setPath(path);
-            centerTabPane.getTabs().add(tab);
-        });
+        Settings.getList(Settings.FOLDERS_TO_SCAN).forEach(this::addTab);
 
         setTop(context.getComponent(AppMenuBar.class).getMenuBar());
         setCenter(centerTabPane);
@@ -153,10 +156,8 @@ public class QuickNaviScreen extends BorderPane {
         TextField searchField = new TextField();
         searchField.getStyleClass().add("search_input");
 
-        searchField.addEventHandler(KeyEvent.KEY_TYPED, event -> filterProperty.setValue(searchField.getText()));
+        filterProperty.bindBidirectional(searchField.textProperty());
 
-
-        // TODO search
         sideMenu.getChildren().add(searchField);
         VBox.setMargin(searchField, new Insets(0, 2, 10, 2));
 

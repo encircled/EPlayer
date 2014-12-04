@@ -9,7 +9,7 @@ import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.service.gui.ViewService;
 import cz.encircled.eplayer.util.GuiUtil;
-import cz.encircled.eplayer.util.LocalizedMessages;
+import cz.encircled.eplayer.util.Localization;
 import cz.encircled.eplayer.view.fx.PlayerScreen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,7 +56,7 @@ public class VLCMediaService implements MediaService {
     private ActionExecutor actionExecutor;
 
     // TODO smthing
-    public static final String VLC_LIB_PATH = "D:\\Soft\\EPlayer\\vlc";
+    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.1.5-x64";
 
     public VLCMediaService() {
         initializeLibs();
@@ -227,7 +227,7 @@ public class VLCMediaService implements MediaService {
                 @Override
                 public void error(MediaPlayer mediaPlayer) {
                     log.error("Failed to open media {} ", current);
-                    guiUtil.showMessage(LocalizedMessages.FILE_OPEN_FAILED, LocalizedMessages.ERROR_TITLE);
+                    guiUtil.showMessage(Localization.fileOpenFailed.ln(), Localization.errorTitle.ln());
                     if (current != null) {
                         cacheService.deleteEntry(current);
                         current = null;
@@ -251,7 +251,7 @@ public class VLCMediaService implements MediaService {
             log.trace("VLCLib successfully initialized");
         } catch (UnsatisfiedLinkError e) {
             // TODO NPE
-//            guiUtil.showMessage(Localizations.get(MSG_VLC_LIBS_FAIL), Localizations.get(ERROR_TITLE), JOptionPane.ERROR_MESSAGE);
+//            guiUtil.showMessage(Localizations.get(MSG_VLC_LIBS_FAIL), Localizations.get(errorTitle), JOptionPane.ERROR_MESSAGE);
             log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH);
             // TODO exit?
         }

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static cz.encircled.eplayer.util.LocalizedMessages.*;
+import static cz.encircled.eplayer.util.Localization.*;
 
 /**
  * Created by Administrator on 9.6.2014.
@@ -44,10 +44,10 @@ public class JsonCacheService implements CacheService {
         } catch (IOException e) {
             log.error("Failed to read cache data from {} with default type token. Message: {}",
                     Settings.get(QUICK_NAVI_PATH), e.getMessage());
-            guiUtil.showMessage(MSG_QN_FILE_IO_FAIL, ERROR_TITLE);
+            guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
         } catch (JsonSyntaxException e) {
             log.error("JSON syntax error. Message: {}", e.getMessage());
-            guiUtil.showMessage(MSG_QN_FILE_CORRUPTED, ERROR_TITLE);
+            guiUtil.showMessage(msgQnFileCorrupted.ln(), errorTitle.ln());
         }
         if (cache == null)
             cache = new HashMap<>();

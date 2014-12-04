@@ -8,8 +8,7 @@ import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.service.action.ActionExecutor;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
-import cz.encircled.eplayer.util.Localizations;
-import cz.encircled.eplayer.util.LocalizedMessages;
+import cz.encircled.eplayer.util.Localization;
 import cz.encircled.eplayer.view.fx.FxView;
 import cz.encircled.eplayer.view.fx.PlayerScreen;
 import cz.encircled.eplayer.view.fx.QuickNaviScreen;
@@ -67,13 +66,13 @@ public class AppMenuBar {
     }
 
     private Menu getFileMenu() {
-        Menu file = new Menu(Localizations.get(LocalizedMessages.FILE));
+        Menu file = new Menu(Localization.file.ln());
 
-        MenuItem open = new MenuItem(Localizations.get(LocalizedMessages.OPEN));
+        MenuItem open = new MenuItem(Localization.open.ln());
         open.setAccelerator(new KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN));
         open.setOnAction(event -> appView.openMedia());
 
-        MenuItem exit = new MenuItem(Localizations.get(LocalizedMessages.EXIT));
+        MenuItem exit = new MenuItem(Localization.exit.ln());
         exit.setAccelerator(new KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN));
         exit.setOnAction(event -> actionExecutor.execute(ActionCommands.EXIT));
 
@@ -82,15 +81,15 @@ public class AppMenuBar {
     }
 
     private Menu getViewMenu() {
-        Menu view = new Menu(Localizations.get(LocalizedMessages.VIEW));
+        Menu view = new Menu(Localization.view.ln());
 
-        CheckMenuItem fullScreen = new CheckMenuItem(Localizations.get(LocalizedMessages.FULL_SCREEN));
+        CheckMenuItem fullScreen = new CheckMenuItem(Localization.fullScreen.ln());
         appView.getPrimaryStage().fullScreenProperty().addListener((observable, oldValue, newValue) -> fullScreen.setSelected(newValue));
         fullScreen.setOnAction(event -> appView.toggleFullScreen());
         fullScreen.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN));
         fullScreen.setSelected(appView.isFullScreen());
 
-        CheckMenuItem fitScreen = new CheckMenuItem(Localizations.get(LocalizedMessages.FIT_SCREEN));
+        CheckMenuItem fitScreen = new CheckMenuItem(Localization.fitScreen.ln());
         playerScreen.fitToScreenProperty().addListener((observable, oldValue, newValue) -> fitScreen.setSelected(newValue));
         fitScreen.setOnAction(event -> playerScreen.toggleFitToScreen());
         fitScreen.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
@@ -101,16 +100,16 @@ public class AppMenuBar {
     }
 
     private Menu getMediaMenu() {
-        Menu media = new Menu(Localizations.get(LocalizedMessages.MEDIA));
+        Menu media = new Menu(Localization.media.ln());
 
-        MenuItem play = new MenuItem(Localizations.get(LocalizedMessages.PLAY));
+        MenuItem play = new MenuItem(Localization.play.ln());
         play.setOnAction(event -> mediaService.toggle());
         eventObserver.listenFxThread(Event.playingChanged, (event, isPlaying, arg2) -> {
-            play.setText(Localizations.get(isPlaying ? LocalizedMessages.PAUSE : LocalizedMessages.PLAY));
+            play.setText(isPlaying ? Localization.pause.ln() : Localization.play.ln());
         });
 
-        subtitles = new Menu(Localizations.get(LocalizedMessages.SUBTITLES));
-        audioTracks = new Menu(Localizations.get(LocalizedMessages.AUDIO_TRACK));
+        subtitles = new Menu(Localization.subtitles.ln());
+        audioTracks = new Menu(Localization.audioTrack.ln());
         subtitles.setDisable(true);
         audioTracks.setDisable(true);
 
@@ -120,13 +119,13 @@ public class AppMenuBar {
     }
 
     private Menu getToolsMenu() {
-        Menu tools = new Menu(Localizations.get(LocalizedMessages.TOOLS));
+        Menu tools = new Menu(Localization.tools.ln());
 
-        MenuItem openQn = new MenuItem(Localizations.get(LocalizedMessages.OPEN_QUICK_NAVI));
+        MenuItem openQn = new MenuItem(Localization.openQuickNavi.ln());
         openQn.setAccelerator(new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN));
         openQn.setOnAction(event -> actionExecutor.execute(ActionCommands.OPEN_QUICK_NAVI));
 
-        MenuItem deleteMissing = new MenuItem(Localizations.get(LocalizedMessages.DELETE_MISSING));
+        MenuItem deleteMissing = new MenuItem(Localization.deleteMissing.ln());
         deleteMissing.setOnAction(event -> new Thread(() -> {
             Iterator<MediaType> iterator = cacheService.getCache().iterator();
             while(iterator.hasNext()) {

@@ -12,6 +12,9 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 public class IOUtil {
@@ -40,9 +43,6 @@ public class IOUtil {
     /**
      * @return true if file was created
      */
-//    public static boolean createIfMissing(@NotNull String pathToFile) throws IOException {
-//        return createIfMissing(pathToFile, false);
-//    }
     public static boolean createIfMissing(@NotNull String pathTo, boolean isDirectory, boolean isJson) {
         Path path = Paths.get(pathTo);
         try {
@@ -63,6 +63,27 @@ public class IOUtil {
             throw new RuntimeException("Failed to create requeried file " + pathTo, io);
         }
         return false;
+    }
+
+    public static List<File> getFilesInFolder(String path) {
+        File source = new File(path);
+        if (!(source.exists() && source.isDirectory())) {
+            throw new IllegalArgumentException();
+        }
+        return getFilesInFolderInternal(source, new ArrayList<>());
+    }
+
+    private static <T extends Collection<File>> T getFilesInFolderInternal(File source, T files) {
+        File[] filesInFolder = source.listFiles();
+        if (filesInFolder != null) {
+            for (File file : filesInFolder) {
+                if (file.isFile())
+                    files.add(file);
+                else
+                    getFilesInFolderInternal(file, files);
+            }
+        }
+        return files;
     }
 
 }

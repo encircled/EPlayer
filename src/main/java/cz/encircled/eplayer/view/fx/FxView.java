@@ -8,8 +8,7 @@ import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.service.action.ActionExecutor;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
-import cz.encircled.eplayer.util.Localizations;
-import cz.encircled.eplayer.util.LocalizedMessages;
+import cz.encircled.eplayer.util.Localization;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.AppView;
 import javafx.application.Application;
@@ -172,7 +171,12 @@ public class FxView extends Application implements AppView {
                 success = true;
                 for (File file : db.getFiles()) {
                     String filePath = file.getAbsolutePath();
-                    System.out.println(filePath + " " + file.isFile());
+                    log.debug("DnD {}", filePath);
+                    quickNaviScreen.addTab(filePath);
+                    new Thread(() -> {
+                        Settings.addToList(Settings.FOLDERS_TO_SCAN, filePath);
+                        Settings.save();
+                    }).start();
                 }
             }
             event.setDropCompleted(success);
@@ -200,7 +204,7 @@ public class FxView extends Application implements AppView {
 
     private void initializeMediaFileChoose() {
         mediaFileChooser = new FileChooser();
-        mediaFileChooser.setTitle(Localizations.get(LocalizedMessages.OPEN));
+        mediaFileChooser.setTitle(Localization.open.ln());
         String initialLocation = Settings.get(Settings.FC_OPEN_LOCATION);
         if (initialLocation != null) {
             File initialDirectory = new File(initialLocation);

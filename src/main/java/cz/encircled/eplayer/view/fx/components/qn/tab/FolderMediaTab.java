@@ -27,6 +27,7 @@ public class FolderMediaTab extends MediaTab {
             Settings.removeFromList(Settings.FOLDERS_TO_SCAN, pathToFolder);
             Settings.save();
         }).start());
+
     }
 
     @Override
