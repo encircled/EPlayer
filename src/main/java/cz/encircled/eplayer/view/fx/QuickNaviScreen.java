@@ -18,7 +18,6 @@ import javafx.geometry.Insets;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -99,7 +98,7 @@ public class QuickNaviScreen extends BorderPane {
 
         initializeListeners();
 
-        Settings.getList(Settings.FOLDERS_TO_SCAN).forEach(this::addTab);
+        Settings.folders_to_scan.getList().forEach(this::addTab);
 
         setTop(context.getComponent(AppMenuBar.class).getMenuBar());
         setCenter(centerTabPane);

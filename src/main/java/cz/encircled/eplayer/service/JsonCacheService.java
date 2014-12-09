@@ -5,7 +5,7 @@ import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.util.GuiUtil;
 import cz.encircled.eplayer.util.IOUtil;
-import cz.encircled.eplayer.util.Settings;
+import cz.encircled.eplayer.util.SettingsProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public class JsonCacheService implements CacheService {
             cache = IOUtil.getPlayableJson(QUICK_NAVI_PATH);
         } catch (IOException e) {
             log.error("Failed to read cache data from {} with default type token. Message: {}",
-                    Settings.get(QUICK_NAVI_PATH), e.getMessage());
+                    SettingsProvider.get(QUICK_NAVI_PATH), e.getMessage());
             guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
         } catch (JsonSyntaxException e) {
             log.error("JSON syntax error. Message: {}", e.getMessage());

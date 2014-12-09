@@ -53,6 +53,6 @@ public enum Localization {
     daysAgo;
 
     public String ln() {
-        return Localizations.get2(this.name());
+        return LocalizationProvider.get2(this.name());
     }
 }

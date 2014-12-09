@@ -163,7 +163,7 @@ public class PlayerControls extends GridPane {
 
     private void initializeVolumeControls() {
 
-        volumeSlider = new Slider(0, Settings.getInt(Settings.MAX_VOLUME, 150), Settings.getInt(Settings.LAST_VOLUME, 100));
+        volumeSlider = new Slider(0, Settings.max_volume.getInt(150), Settings.last_volume.getInt(100));
         volumeSlider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
             if (Boolean.FALSE.equals(newValue)) {
                 saveLastVolumeToSettings();
@@ -184,8 +184,7 @@ public class PlayerControls extends GridPane {
 
     private void saveLastVolumeToSettings() {
         FxUtil.workInNormalThread(() -> {
-            Settings.set(Settings.LAST_VOLUME, (int) volumeSlider.getValue());
-            Settings.save();
+            Settings.last_volume.set((int) volumeSlider.getValue()).save();
         });
     }
 

@@ -24,8 +24,7 @@ public class FolderMediaTab extends MediaTab {
         this.pathToFolder = pathToFolder;
         setText(pathToFolder);
         setOnClosed(event -> new Thread(() -> {
-            Settings.removeFromList(Settings.FOLDERS_TO_SCAN, pathToFolder);
-            Settings.save();
+            Settings.folders_to_scan.removeFromList(pathToFolder).save();
         }).start());
 
     }

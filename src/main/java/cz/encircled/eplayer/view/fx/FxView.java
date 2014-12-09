@@ -145,8 +145,7 @@ public class FxView extends Application implements AppView {
             mediaService.play(file.getAbsolutePath());
             new Thread(() -> {
                 mediaFileChooser.setInitialDirectory(file.getParentFile());
-                Settings.set(Settings.FC_OPEN_LOCATION, file.getParentFile().getAbsolutePath());
-                Settings.save();
+                Settings.fc_open_location.set(file.getParentFile().getAbsolutePath()).save();
             }).run();
         }
     }
@@ -174,8 +173,7 @@ public class FxView extends Application implements AppView {
                     log.debug("DnD {}", filePath);
                     quickNaviScreen.addTab(filePath);
                     new Thread(() -> {
-                        Settings.addToList(Settings.FOLDERS_TO_SCAN, filePath);
-                        Settings.save();
+                        Settings.folders_to_scan.addToList(filePath).save();
                     }).start();
                 }
             }
@@ -205,7 +203,7 @@ public class FxView extends Application implements AppView {
     private void initializeMediaFileChoose() {
         mediaFileChooser = new FileChooser();
         mediaFileChooser.setTitle(Localization.open.ln());
-        String initialLocation = Settings.get(Settings.FC_OPEN_LOCATION);
+        String initialLocation = Settings.fc_open_location.get();
         if (initialLocation != null) {
             File initialDirectory = new File(initialLocation);
             if (initialDirectory.exists())

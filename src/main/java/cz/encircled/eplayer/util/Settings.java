@@ -1,105 +1,64 @@
 package cz.encircled.eplayer.util;
 
-import com.google.gson.reflect.TypeToken;
-import cz.encircled.eplayer.core.Application;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-public class Settings {
 
-    private final static String PROPERTIES_FILE_PATH = Application.APP_DOCUMENTS_ROOT + "eplayer.properties.json";
+/**
+ * Created by Encircled on 04-Dec-14.
+ */
+public enum Settings {
 
-    private final static Logger log = LogManager.getLogger(Settings.class);
+    language,
 
-    private static Map<String, Object> properties;
+    fc_open_location,
 
-    private final static Type TYPE_TOKEN = new TypeToken<Map<String, Object>>() {
-    }.getType();
+    max_volume,
 
-    public final static String LANGUAGE = "language";
+    last_volume,
 
-    public final static String FC_OPEN_LOCATION = "fc_open_location";
+    folders_to_scan;
 
-    public final static String MAX_VOLUME = "max_volume";
-
-    public final static String LAST_VOLUME = "last_volume";
-
-    public final static String FOLDERS_TO_SCAN = "folders_to_scan";
-
-    static {
-        try {
-            properties = IOUtil.createIfMissing(PROPERTIES_FILE_PATH, false, true) ? new HashMap<>() : IOUtil.getFromJson(PROPERTIES_FILE_PATH, TYPE_TOKEN);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static String get(@NotNull String key, String defaultValue) {
-        return properties.containsKey(key) ? get(key, String.class) : defaultValue;
+    public String get(String defaultValue) {
+        return SettingsProvider.get(this.name(), defaultValue);
     }
 
     @NotNull
-    public static List<String> getList(@NotNull String key) {
-        List<?> list = get(key, List.class);
-        if (list == null)
-            return new ArrayList<>(0);
-        return list.stream().map(Object::toString).collect(Collectors.toList());
+    public List<String> getList() {
+        return SettingsProvider.getList(this.name());
     }
 
-    public static String get(@NotNull String key) {
-        return get(key, String.class);
+    public String get() {
+        return SettingsProvider.get(this.name());
     }
 
-    public static Integer getInt(String key) {
-        Number n = get(key, Number.class);
-        return n == null ? null : n.intValue();
+    public Integer getInt() {
+        return SettingsProvider.getInt(this.name());
     }
 
-    public static Integer getInt(String key, int defaultValue) {
-        Number n = get(key, Number.class);
-        return n == null ? defaultValue : n.intValue();
+    public Integer getInt(int defaultValue) {
+        return SettingsProvider.getInt(this.name(), defaultValue);
     }
 
-    public static void set(@NotNull String key, @Nullable Object value) {
-        log.debug("Set property {} = {}", key, value);
-        properties.put(key, value);
+    public Settings set(@Nullable Object value) {
+        SettingsProvider.set(this.name(), value);
+        return this;
     }
 
-    public static void addToList(@NotNull String key, @Nullable String value) {
-        List<String> list = getList(key);
-        list.add(value);
-        set(key, list);
+    public Settings addToList(@Nullable String value) {
+        SettingsProvider.addToList(this.name(), value);
+        return this;
     }
 
-    public static void removeFromList(@NotNull String key, @Nullable String value) {
-        List<String> list = getList(key);
-        if (list.contains(value)) {
-            list.remove(value);
-            set(key, list);
-        }
+    public Settings removeFromList(@Nullable String value) {
+        SettingsProvider.removeFromList(this.name(), value);
+        return this;
     }
 
-    public static void save() {
-        try {
-            IOUtil.storeJson(properties, PROPERTIES_FILE_PATH);
-            log.debug("Properties saved");
-        } catch (IOException io) {
-            log.error("Failed to save properties to {}", PROPERTIES_FILE_PATH, io);
-        }
-    }
-
-    private static <T> T get(String key, Class<T> clazz) {
-        return (T) properties.get(key);
+    public void save() {
+        SettingsProvider.save();
     }
 
 }

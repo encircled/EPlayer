@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class Localizations {
+public class LocalizationProvider {
 
     public static final String DEFAULT_LANGUAGE = "en";
 
@@ -19,7 +19,7 @@ public class Localizations {
     private static Locale locale;
 
     static {
-        locale = new Locale(Settings.get(Settings.LANGUAGE, DEFAULT_LANGUAGE));
+        locale = new Locale(Settings.language.get(DEFAULT_LANGUAGE));
         bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, new UTF8Control());
     }
 
