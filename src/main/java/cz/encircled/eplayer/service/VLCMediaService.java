@@ -77,12 +77,14 @@ public class VLCMediaService implements MediaService {
     private void play(@NotNull String path, long time) {
         log.debug("Play {}, start time is {}", path, time);
         CountDownLatch countDownLatch = new CountDownLatch(1);
+        log.debug("Show player requested");
         viewService.showPlayer(countDownLatch);
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+        log.debug("Show player done");
         if (!path.equals(current)) {
             log.debug("Path {} is new", path);
             current = path;

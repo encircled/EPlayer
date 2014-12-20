@@ -74,7 +74,7 @@ public class Container extends AbstractContainer implements Context {
     private void setupComponentDefinitions(List<Class<?>> componentClasses) {
         Long start = System.nanoTime();
         componentClasses.forEach(c -> {
-            ComponentDefinition definition = definitionBuilder.build(c);
+            ComponentDefinition definition = definitionBuilder.annotationToDefinition(c);
             if (scopeAware.isSingletonScope(definition))
                 definition.instance = instanceCreator.createInstance(definition);
             components.put(getNameForComponent(c), definition);

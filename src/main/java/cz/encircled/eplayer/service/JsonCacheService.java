@@ -67,6 +67,7 @@ public class JsonCacheService implements CacheService {
 
     @Override
     public MediaType addIfAbsent(@NotNull MediaType mediaType) {
+        log.debug("Add if absent {}", mediaType.toString());
         return cache.putIfAbsent(mediaType.getPath(), mediaType);
     }
 

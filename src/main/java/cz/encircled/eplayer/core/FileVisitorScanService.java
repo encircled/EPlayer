@@ -39,7 +39,7 @@ public class FileVisitorScanService {
     public boolean addIfAbsent(String absolutePath) {
         if (!foldersToScan.containsKey(absolutePath)) {
             try {
-                ScanFolder newFolder = new ScanFolder(absolutePath).build();
+                ScanFolder newFolder = new ScanFolder(absolutePath).annotationToDefinition();
                 foldersToScan.put(absolutePath, newFolder);
                 scanDirectory(absolutePath, newFolder);
                 return true;
@@ -203,7 +203,7 @@ public class FileVisitorScanService {
             scanned = false;
         }
 
-        ScanFolder build() throws IOException {
+        ScanFolder annotationToDefinition() throws IOException {
             path = Paths.get(absolutePath);
             key = path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
             return this;

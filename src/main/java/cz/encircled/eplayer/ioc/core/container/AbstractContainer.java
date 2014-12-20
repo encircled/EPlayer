@@ -47,7 +47,7 @@ public abstract class AbstractContainer implements Context {
      */
     @Override
     public void addComponent(Object component) {
-        ComponentDefinition definition = definitionBuilder.build(component.getClass());
+        ComponentDefinition definition = definitionBuilder.annotationToDefinition(component.getClass());
         definition.instance = component;
         components.put(getNameForComponent(component.getClass()), definition);
     }

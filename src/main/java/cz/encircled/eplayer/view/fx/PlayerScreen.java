@@ -23,10 +23,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
+import javafx.scene.image.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -264,14 +261,23 @@ public class PlayerScreen extends BorderPane {
             super(new CanvasBufferFormatCallback());
         }
 
+        PixelWriter pixelWriter = null;
+
+        private PixelWriter getPW() {
+            if(pixelWriter == null)
+                pixelWriter = writableImage.getPixelWriter();
+             return pixelWriter;
+        }
+
         @Override
         public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, BufferFormat bufferFormat) {
+            log.debug("display");
             if (writableImage == null)
                 return;
             Memory nativeBuffer = nativeBuffers[0];
             ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
             Platform.runLater(() -> {
-                writableImage.getPixelWriter().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+                getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
             });
         }
 
@@ -280,6 +286,7 @@ public class PlayerScreen extends BorderPane {
     private class CanvasBufferFormatCallback implements BufferFormatCallback {
         @Override
         public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
+            log.debug("GetBufferFormat: source dimension is {}x{}", sourceWidth, sourceHeight);
             Platform.runLater(() -> videoSourceRatioProperty.set((float) sourceHeight / (float) sourceWidth));
             return new RV32BufferFormat((int) appView.screenBounds.getWidth(), (int) appView.screenBounds.getHeight());
         }

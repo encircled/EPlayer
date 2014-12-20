@@ -21,7 +21,7 @@ public class DefinitionBuilder {
         this.scopeAware = scopeAware;
     }
 
-    public ComponentDefinition build(Class<?> clazz) {
+    public ComponentDefinition annotationToDefinition(Class<?> clazz) {
         ComponentDefinition definition = new ComponentDefinition(clazz);
         definition.modifiers.put(scopeAware.isPrototypeScope(clazz) ? PROTOTYPE : SINGLETON, null);
 
@@ -41,13 +41,16 @@ public class DefinitionBuilder {
     }
 
     private Set<Class<?>> findSuperClasses(Class<?> clazz) {
-        Set<Class<?>> result = new HashSet<>();
+        return findSuperClasses(clazz, new HashSet<>());
+    }
+
+    private Set<Class<?>> findSuperClasses(Class<?> clazz, Set<Class<?>> collected) {
         Class<?> s = clazz.getSuperclass();
         if (s.getAnnotation(Resource.class) != null) {
-            result.add(s);
-            result.addAll(findSuperClasses(s));
+            collected.add(s);
+            findSuperClasses(s, collected);
         }
-        return result;
+        return collected;
     }
 
 }
