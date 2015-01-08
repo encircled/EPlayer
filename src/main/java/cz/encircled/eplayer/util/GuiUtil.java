@@ -1,13 +1,12 @@
 package cz.encircled.eplayer.util;
 
+import cz.encircled.elight.core.annotation.Component;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Resource;
 
 /**
  * Created by Encircled on 7/06/2014.
  */
-@Resource
+@Component
 public class GuiUtil {
 
     public void showMessage(@NotNull String text, @NotNull String title) {

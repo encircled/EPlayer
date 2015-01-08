@@ -1,10 +1,10 @@
 package cz.encircled.eplayer.view.fx;
 
-import cz.encircled.eplayer.ioc.component.annotation.Factory;
-import cz.encircled.eplayer.ioc.component.annotation.Runner;
-import cz.encircled.eplayer.ioc.core.container.Context;
-import cz.encircled.eplayer.ioc.factory.FxFactory;
-import cz.encircled.eplayer.ioc.runner.FxRunner;
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Creator;
+import cz.encircled.elight.core.annotation.Wired;
+import cz.encircled.elight.core.context.ApplicationContext;
+import cz.encircled.elight.core.creator.FxInstanceCreator;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import cz.encircled.eplayer.view.fx.components.SimpleButton;
@@ -25,29 +25,27 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 
 /**
  * Created by Encircled on 18/09/2014.
  */
-@Resource
-@Factory(FxFactory.class)
-@Runner(FxRunner.class)
+@Component
+@Creator(FxInstanceCreator.class)
 public class QuickNaviScreen extends BorderPane {
 
     private Logger log = LogManager.getLogger();
 
-    @Resource
+    @Wired
     private FxView appView;
 
     private VBox sideMenu;
 
     private TabPane centerTabPane;
 
-    @Resource
-    private Context context;
+    @Wired
+    private ApplicationContext context;
 
-    @Resource
+    @Wired
     private QuickNaviMediaTab quickNaviMediaTab;
 
     public static final String VIEW_ALL = "viewAll";

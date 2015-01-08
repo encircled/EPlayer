@@ -1,6 +1,8 @@
 package cz.encircled.eplayer.view.fx.components;
 
-import cz.encircled.eplayer.ioc.component.annotation.Scope;
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Scope;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.MediaService;
@@ -22,7 +24,6 @@ import javafx.scene.input.KeyCombination;
 import uk.co.caprica.vlcj.player.TrackDescription;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,29 +31,29 @@ import java.util.stream.Collectors;
 /**
  * Created by Encircled on 27/09/2014.
  */
-@Resource
+@Component
 @Scope(Scope.PROTOTYPE)
 public class AppMenuBar {
 
-    @Resource
+    @Wired
     private ActionExecutor actionExecutor;
 
-    @Resource
+    @Wired
     private FxView appView;
 
-    @Resource
+    @Wired
     private EventObserver eventObserver;
 
-    @Resource
+    @Wired
     private PlayerScreen playerScreen;
 
-    @Resource
+    @Wired
     private MediaService mediaService;
 
-    @Resource
+    @Wired
     private QuickNaviScreen quickNaviScreen;
 
-    @Resource
+    @Wired
     private CacheService cacheService;
 
     private Menu subtitles;

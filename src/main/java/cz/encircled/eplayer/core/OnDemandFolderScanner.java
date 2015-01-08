@@ -1,14 +1,13 @@
 package cz.encircled.eplayer.core;
 
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.FolderScanService;
 import cz.encircled.eplayer.util.IOUtil;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import javax.annotation.Resource;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,12 +15,12 @@ import java.util.List;
 /**
  * Created by Encircled on 20/09/2014.
  */
-@Resource
+@Component
 public class OnDemandFolderScanner implements FolderScanService {
 
     private static final List<String> SUPPORTED_FORMATS = Arrays.asList("avi", "mkv", "mp3", "wav", "wmv", "mov");
 
-    @Resource
+    @Wired
     private CacheService cacheService;
 
     @Override

@@ -2,6 +2,8 @@ package cz.encircled.eplayer.service;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.service.action.ActionExecutor;
@@ -22,41 +24,40 @@ import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Administrator on 9.6.2014.
  */
-@Resource
+@Component
 public class VLCMediaService implements MediaService {
 
     private static final Logger log = LogManager.getLogger();
 
-    @Resource
+    @Wired
     private CacheService cacheService;
 
-    @Resource
+    @Wired
     private GuiUtil guiUtil;
 
-    @Resource
+    @Wired
     private EventObserver eventObserver;
 
     private long currentTime;
 
     private DirectMediaPlayer player;
 
-    @Resource
+    @Wired
     private ViewService viewService;
 
     @Nullable
     private String current;
 
-    @Resource
+    @Wired
     private ActionExecutor actionExecutor;
 
     // TODO smthing
-    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.1.5-x64";
+    public static final String VLC_LIB_PATH = "D:\\Soft\\vlc-2.1.3-win64\\vlc-2.1.3";
 
     public VLCMediaService() {
         initializeLibs();
@@ -181,7 +182,7 @@ public class VLCMediaService implements MediaService {
         viewService.enableSubtitlesMenu(false);
     }
 
-    @Resource
+    @Wired
     private PlayerScreen playerScreen;
 
     @PostConstruct

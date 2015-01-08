@@ -1,11 +1,11 @@
 package cz.encircled.eplayer.core;
 
+import cz.encircled.elight.core.annotation.Component;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.model.SeriesVideo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Encircled on 22/09/2014.
  */
-@Resource
+@Component
 public class SeriesFinder {
 
     private static final Logger log = LogManager.getLogger();

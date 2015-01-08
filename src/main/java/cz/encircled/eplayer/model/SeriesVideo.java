@@ -1,15 +1,15 @@
 package cz.encircled.eplayer.model;
 
+import cz.encircled.elight.core.annotation.Component;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.TreeMap;
 
 /**
  * Created by Encircled on 23/09/2014.
  */
-@Resource
+@Component
 public class SeriesVideo {
 
     private static final Comparator<MediaType> mediaTypeComparator = (o1, o2) -> o1.getName().compareTo(o2.getName());

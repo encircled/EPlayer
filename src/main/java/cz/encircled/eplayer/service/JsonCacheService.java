@@ -1,6 +1,8 @@
 package cz.encircled.eplayer.service;
 
 import com.google.gson.JsonSyntaxException;
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.core.Application;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.util.GuiUtil;
@@ -11,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
@@ -21,7 +22,7 @@ import static cz.encircled.eplayer.util.Localization.*;
 /**
  * Created by Administrator on 9.6.2014.
  */
-@Resource
+@Component
 public class JsonCacheService implements CacheService {
 
     public static final String QUICK_NAVI_PATH = Application.APP_DOCUMENTS_ROOT + "quicknavi2.json";
@@ -30,7 +31,7 @@ public class JsonCacheService implements CacheService {
 
     private static final Logger log = LogManager.getLogger();
 
-    @Resource
+    @Wired
     private GuiUtil guiUtil;
 
     public JsonCacheService() {

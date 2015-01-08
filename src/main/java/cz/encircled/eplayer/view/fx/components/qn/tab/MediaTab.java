@@ -1,8 +1,10 @@
 package cz.encircled.eplayer.view.fx.components.qn.tab;
 
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Scope;
+import cz.encircled.elight.core.annotation.Wired;
+import cz.encircled.elight.core.context.ApplicationContext;
 import cz.encircled.eplayer.core.SeriesFinder;
-import cz.encircled.eplayer.ioc.component.annotation.Scope;
-import cz.encircled.eplayer.ioc.core.container.Context;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.model.SeriesVideo;
 import cz.encircled.eplayer.util.StringUtil;
@@ -17,7 +19,6 @@ import javafx.scene.layout.FlowPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 /**
  * Created by Encircled on 20/09/2014.
  */
-@Resource
+@Component
 @Scope(Scope.PROTOTYPE)
 public abstract class MediaTab extends Tab {
 
@@ -36,13 +37,13 @@ public abstract class MediaTab extends Tab {
 
     protected FlowPane mainPane;
 
-    @Resource
-    private Context context;
+    @Wired
+    private ApplicationContext context;
 
-    @Resource
+    @Wired
     private SeriesFinder seriesFinder;
 
-    @Resource
+    @Wired
     private QuickNaviScreen quickNaviScreen;
 
     public MediaTab() {

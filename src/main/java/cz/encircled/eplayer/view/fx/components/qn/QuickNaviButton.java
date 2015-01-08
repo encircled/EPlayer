@@ -1,8 +1,10 @@
 package cz.encircled.eplayer.view.fx.components.qn;
 
-import cz.encircled.eplayer.ioc.component.annotation.Factory;
-import cz.encircled.eplayer.ioc.component.annotation.Scope;
-import cz.encircled.eplayer.ioc.factory.FxFactory;
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Creator;
+import cz.encircled.elight.core.annotation.Scope;
+import cz.encircled.elight.core.annotation.Wired;
+import cz.encircled.elight.core.creator.FxInstanceCreator;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.model.SeriesVideo;
 import cz.encircled.eplayer.service.CacheService;
@@ -19,23 +21,21 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-import javax.annotation.Resource;
-
 /**
  * Created by Encircled on 19/09/2014.
  */
-@Resource
-@Factory(FxFactory.class)
+@Component
+@Creator(FxInstanceCreator.class)
 @Scope(Scope.PROTOTYPE)
 public class QuickNaviButton extends BorderPane {
 
-    @Resource
+    @Wired
     private MediaService mediaService;
 
-    @Resource
+    @Wired
     private QuickNaviScreen quickNaviScreen;
 
-    @Resource
+    @Wired
     private CacheService cacheService;
 
     private MediaType mediaType;

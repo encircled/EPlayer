@@ -1,25 +1,20 @@
 package cz.encircled.eplayer.service.gui;
 
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.view.fx.FxView;
 import javafx.application.Platform;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by Encircled on 16/09/2014.
  */
-@Resource
+@Component
 public class FxViewService implements ViewService {
 
-    @Resource
+    @Wired
     private FxView appView;
-
-    @PostConstruct
-    private void initialize() {
-
-    }
 
     @Override
     public boolean isPlayerState() {

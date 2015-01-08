@@ -1,8 +1,6 @@
 package cz.encircled.eplayer.view.fx;
 
-import cz.encircled.eplayer.ioc.component.annotation.Runner;
-import cz.encircled.eplayer.ioc.core.container.Container;
-import cz.encircled.eplayer.ioc.runner.FxRunner;
+import cz.encircled.elight.core.context.AnnotationApplicationContext;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.action.ActionCommands;
 import cz.encircled.eplayer.service.action.ActionExecutor;
@@ -12,6 +10,7 @@ import cz.encircled.eplayer.util.Localization;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.AppView;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Rectangle2D;
@@ -24,14 +23,11 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.io.File;
 
 /**
  * Created by Encircled on 18/09/2014.
  */
-@Runner(FxRunner.class)
 public class FxView extends Application implements AppView {
 
     private Logger log = LogManager.getLogger();
@@ -44,19 +40,14 @@ public class FxView extends Application implements AppView {
 
     private FileChooser mediaFileChooser;
 
-    @Resource
     private QuickNaviScreen quickNaviScreen;
 
-    @Resource
     private PlayerScreen playerScreen;
 
-    @Resource
     private EventObserver eventObserver;
 
-    @Resource
     private MediaService mediaService;
 
-    @Resource
     private ActionExecutor actionExecutor;
 
     private Stage primaryStage;
@@ -119,14 +110,17 @@ public class FxView extends Application implements AppView {
         setFullScreen(true);
 
         new Thread(() -> {
-            Container c = new Container();
-            c.addComponent(this);
-            try {
-                c.initializeContext();
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.exit(-1);
-            }
+            AnnotationApplicationContext annotationContext = new AnnotationApplicationContext("cz.encircled.eplayer");
+            annotationContext.addResolvedDependency(this);
+            annotationContext.initialize();
+
+            eventObserver = annotationContext.getComponent(EventObserver.class);
+            quickNaviScreen = annotationContext.getComponent(QuickNaviScreen.class);
+            playerScreen = annotationContext.getComponent(PlayerScreen.class);
+            mediaService = annotationContext.getComponent(MediaService.class);
+            actionExecutor = annotationContext.getComponent(ActionExecutor.class);
+
+            Platform.runLater(this::initialize);
             eventObserver.fire(Event.contextInitialized);
         }).start();
     }
@@ -150,7 +144,6 @@ public class FxView extends Application implements AppView {
         }
     }
 
-    @PostConstruct
     private void initialize() {
         primaryScene = new Scene(quickNaviScreen);
         screenChangeProperty.set(QUICK_NAVI_SCREEN);

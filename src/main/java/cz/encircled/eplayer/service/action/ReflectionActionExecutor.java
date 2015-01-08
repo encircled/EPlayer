@@ -1,5 +1,7 @@
 package cz.encircled.eplayer.service.action;
 
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.CacheService;
@@ -11,28 +13,27 @@ import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.TreeMap;
 
-@Resource
+@Component
 public class ReflectionActionExecutor implements ActionExecutor {
 
     private final static Logger log = LogManager.getLogger();
 
     private TreeMap<String, Method> commands;
 
-    @Resource
+    @Wired
     private MediaService mediaService;
 
-    @Resource
+    @Wired
     private CacheService cacheService;
 
-    @Resource
+    @Wired
     private ViewService viewService;
 
-    @Resource
+    @Wired
     private AppView appView;
 
     public ReflectionActionExecutor() {

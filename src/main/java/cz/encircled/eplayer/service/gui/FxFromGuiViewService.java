@@ -1,13 +1,12 @@
 package cz.encircled.eplayer.service.gui;
 
+import cz.encircled.elight.core.annotation.Component;
 import cz.encircled.eplayer.model.MediaType;
-
-import javax.annotation.Resource;
 
 /**
  * Created by Encircled on 18/09/2014.
  */
-@Resource
+@Component
 public class FxFromGuiViewService implements FromGuiViewService {
 
     @Override

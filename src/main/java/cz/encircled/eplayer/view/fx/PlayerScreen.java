@@ -1,12 +1,11 @@
 package cz.encircled.eplayer.view.fx;
 
 import com.sun.jna.Memory;
+import cz.encircled.elight.core.annotation.Creator;
+import cz.encircled.elight.core.annotation.Wired;
+import cz.encircled.elight.core.context.ApplicationContext;
+import cz.encircled.elight.core.creator.FxInstanceCreator;
 import cz.encircled.eplayer.common.PostponeTimer;
-import cz.encircled.eplayer.ioc.component.annotation.Factory;
-import cz.encircled.eplayer.ioc.component.annotation.Runner;
-import cz.encircled.eplayer.ioc.core.container.Context;
-import cz.encircled.eplayer.ioc.factory.FxFactory;
-import cz.encircled.eplayer.ioc.runner.FxRunner;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventListener;
@@ -37,26 +36,24 @@ import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.awt.*;
 import java.nio.ByteBuffer;
 
 /**
  * Created by Encircled on 18/09/2014.
  */
-@Resource
-@Factory(FxFactory.class)
-@Runner(FxRunner.class)
+@cz.encircled.elight.core.annotation.Component
+@Creator(FxInstanceCreator.class)
 public class PlayerScreen extends BorderPane {
 
     private static final Logger log = LogManager.getLogger();
 
-    @Resource
+    @Wired
     private MediaService mediaService;
 
     private MenuBar menuBar;
 
-    @Resource
+    @Wired
     private FxView appView;
 
     private final DirectMediaPlayerComponent mediaPlayerComponent;
@@ -79,13 +76,13 @@ public class PlayerScreen extends BorderPane {
 
     private Robot robot;
 
-    @Resource
+    @Wired
     private PlayerControls playerControls;
 
-    @Resource
-    private Context context;
+    @Wired
+    private ApplicationContext context;
 
-    @Resource
+    @Wired
     private EventObserver eventObserver;
 
     private EventHandler<MouseEvent> fullScreenMouseMoveHandler = event -> {

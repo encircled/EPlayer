@@ -1,7 +1,7 @@
 package cz.encircled.eplayer.view.fx.components;
 
-import cz.encircled.eplayer.ioc.component.annotation.Runner;
-import cz.encircled.eplayer.ioc.runner.FxRunner;
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.service.MediaService;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.service.event.EventObserver;
@@ -11,6 +11,7 @@ import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.fx.FxUtil;
 import cz.encircled.eplayer.view.fx.FxView;
 import cz.encircled.eplayer.view.fx.PlayerScreen;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -24,13 +25,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 
 /**
  * Created by Encircled on 21/09/2014.
  */
-@Resource
-@Runner(FxRunner.class)
+@Component
 public class PlayerControls extends GridPane {
 
     private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger();
@@ -57,16 +56,16 @@ public class PlayerControls extends GridPane {
 
     private ToggleButton fitScreenToggleButton;
 
-    @Resource
+    @Wired
     private FxView appView;
 
-    @Resource
+    @Wired
     private PlayerScreen playerScreen;
 
-    @Resource
+    @Wired
     private EventObserver eventObserver;
 
-    @Resource
+    @Wired
     private MediaService mediaService;
 
     private static final Color textColor = Color.rgb(155, 155, 155);
@@ -74,6 +73,10 @@ public class PlayerControls extends GridPane {
     private double lastVolumeSliderValue;
 
     @PostConstruct
+    private void initializeWrapper() {
+        Platform.runLater(this::initialize);
+    }
+
     private void initialize() {
         initializeTexts();
         initializeTimeControls();

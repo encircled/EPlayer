@@ -1,21 +1,22 @@
 package cz.encircled.eplayer.view.fx.components.qn.tab;
 
-import cz.encircled.eplayer.ioc.component.annotation.Scope;
+import cz.encircled.elight.core.annotation.Component;
+import cz.encircled.elight.core.annotation.Scope;
+import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.service.FolderScanService;
 import cz.encircled.eplayer.util.Settings;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 
 /**
  * Created by Encircled on 20/09/2014.
  */
-@Resource
+@Component
 @Scope(Scope.PROTOTYPE)
 public class FolderMediaTab extends MediaTab {
 
-    @Resource
+    @Wired
     private FolderScanService folderScanService;
 
     private String pathToFolder;

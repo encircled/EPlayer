@@ -1,10 +1,10 @@
 package cz.encircled.eplayer.service.event;
 
+import cz.encircled.elight.core.annotation.Component;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * Created by Encircled on 13/09/2014.
  */
-@Resource
+@Component
 public class EventObserverImpl implements EventObserver {
 
     private static final Logger log = LogManager.getLogger();
@@ -63,7 +63,7 @@ public class EventObserverImpl implements EventObserver {
 
     @Override
     public <A, A2> void fire(Event<A, A2> event, A arg, A2 arg2) {
-        log.trace("Fire event {} with args (arg1:{}, arg2: {}) ", event, arg, arg2);
+        log.debug("Fire event {} with args (arg1:{}, arg2: {}) ", event, arg, arg2);
         checkEvent(event);
         checkFxEvent(event);
         events.get(event).stream().forEach(l -> l.handle(event, arg, arg2));
