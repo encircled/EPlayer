@@ -20,10 +20,12 @@ import org.jetbrains.annotations.Nullable;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
-import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
+import uk.co.caprica.vlcj.player.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.headless.HeadlessMediaPlayer;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 import javax.annotation.PostConstruct;
+import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -45,7 +47,7 @@ public class VLCMediaService implements MediaService {
 
     private long currentTime;
 
-    private DirectMediaPlayer player;
+    private MediaPlayer player;
 
     @Wired
     private ViewService viewService;
@@ -57,7 +59,7 @@ public class VLCMediaService implements MediaService {
     private ActionExecutor actionExecutor;
 
     // TODO smthing
-    public static final String VLC_LIB_PATH = "D:\\Soft\\vlc-2.1.3-win64\\vlc-2.1.3";
+    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.1.5";
 
     public VLCMediaService() {
         initializeLibs();
@@ -66,7 +68,9 @@ public class VLCMediaService implements MediaService {
     @Override
     public void releasePlayer() {
         stop();
-        player.release();
+        if (player != null) {
+            player.release();
+        }
     }
 
     @Override
@@ -178,7 +182,9 @@ public class VLCMediaService implements MediaService {
         log.debug("Stop player");
         current = null;
         currentTime = 0L;
-        player.stop();
+        if(player != null) {
+            player.stop();
+        }
         viewService.enableSubtitlesMenu(false);
     }
 
@@ -191,8 +197,10 @@ public class VLCMediaService implements MediaService {
         log.trace("VLCMediaService init start");
         try {
             player = playerScreen.getMediaPlayerComponent().getMediaPlayer();
+//            player = new MediaPlayerFactory().newHeadlessMediaPlayer();
 
             player.addMediaPlayerEventListener(new MediaPlayerEventAdapter() {
+
                 @Override
                 public void playing(MediaPlayer mediaPlayer) {
                     eventObserver.fire(Event.playingChanged, true);
@@ -239,6 +247,7 @@ public class VLCMediaService implements MediaService {
                 }
 
             });
+
         } catch (Exception e) {
             log.error("Player initialization failed", e);
             guiUtil.showMessage("VLC library not found", "Error title");
@@ -258,6 +267,23 @@ public class VLCMediaService implements MediaService {
             log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH);
             // TODO exit?
         }
+    }
+
+    public static void main(String[] args) {
+        JFrame test = new JFrame("Test");
+        test.setVisible(true);
+        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
+        try {
+            Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+        } catch (UnsatisfiedLinkError e) {
+        }
+        new Thread(() -> {
+            HeadlessMediaPlayer headlessMediaPlayer = new MediaPlayerFactory().newHeadlessMediaPlayer();
+            headlessMediaPlayer.prepareMedia("E:\\video\\ostrov.mkv");
+            headlessMediaPlayer.start();
+        }).start();
+
+
     }
 
 }

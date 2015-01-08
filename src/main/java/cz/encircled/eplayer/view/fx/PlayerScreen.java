@@ -124,7 +124,7 @@ public class PlayerScreen extends BorderPane {
 
     @PostConstruct
     private void initialize() {
-        pixelFormat = PixelFormat.getByteBgraPreInstance();
+        pixelFormat = PixelFormat.getByteBgraInstance();
 
         playerHolder = new Pane();
         playerStackPane = new StackPane(playerHolder);
