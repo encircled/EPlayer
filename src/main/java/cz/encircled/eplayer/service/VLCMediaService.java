@@ -34,35 +34,45 @@ import java.util.concurrent.CountDownLatch;
 @Component
 public class VLCMediaService implements MediaService {
 
+    // TODO smthing
+    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.2.1";
     private static final Logger log = LogManager.getLogger();
-
     @Wired
     private CacheService cacheService;
-
     @Wired
     private GuiUtil guiUtil;
-
     @Wired
     private EventObserver eventObserver;
-
     private long currentTime;
-
     private MediaPlayer player;
-
     @Wired
     private ViewService viewService;
-
     @Nullable
     private String current;
-
     @Wired
     private ActionExecutor actionExecutor;
-
-    // TODO smthing
-    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.1.5";
+    @Wired
+    private PlayerScreen playerScreen;
 
     public VLCMediaService() {
         initializeLibs();
+    }
+
+    public static void main(String[] args) {
+        JFrame test = new JFrame("Test");
+        test.setVisible(true);
+        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
+        try {
+            Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+        } catch (UnsatisfiedLinkError e) {
+        }
+        new Thread(() -> {
+            HeadlessMediaPlayer headlessMediaPlayer = new MediaPlayerFactory().newHeadlessMediaPlayer();
+            headlessMediaPlayer.prepareMedia("E:\\video\\ostrov.mkv");
+            headlessMediaPlayer.start();
+        }).start();
+
+
     }
 
     @Override
@@ -112,13 +122,13 @@ public class VLCMediaService implements MediaService {
     }
 
     @Override
-    public void setSubtitles(int id) {
-        player.setSpu(id);
+    public int getSubtitles() {
+        return player.getSpu();
     }
 
     @Override
-    public int getSubtitles() {
-        return player.getSpu();
+    public void setSubtitles(int id) {
+        player.setSpu(id);
     }
 
     @Override
@@ -187,9 +197,6 @@ public class VLCMediaService implements MediaService {
         }
         viewService.enableSubtitlesMenu(false);
     }
-
-    @Wired
-    private PlayerScreen playerScreen;
 
     @PostConstruct
     private void init() {
@@ -267,23 +274,6 @@ public class VLCMediaService implements MediaService {
             log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH);
             // TODO exit?
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame test = new JFrame("Test");
-        test.setVisible(true);
-        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
-        try {
-            Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
-        } catch (UnsatisfiedLinkError e) {
-        }
-        new Thread(() -> {
-            HeadlessMediaPlayer headlessMediaPlayer = new MediaPlayerFactory().newHeadlessMediaPlayer();
-            headlessMediaPlayer.prepareMedia("E:\\video\\ostrov.mkv");
-            headlessMediaPlayer.start();
-        }).start();
-
-
     }
 
 }
