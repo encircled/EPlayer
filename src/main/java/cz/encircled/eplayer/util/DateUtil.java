@@ -1,11 +1,13 @@
 package cz.encircled.eplayer.util;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 /**
- * Created by Encircled on 5/10/2014.
+ * @author Encircled on 5/10/2014.
  */
 public class DateUtil {
 
@@ -15,7 +17,7 @@ public class DateUtil {
         return DateFormat.getDateInstance(DateFormat.MEDIUM, LocalizationProvider.getUsedLocale()).format(new Date(time));
     }
 
-    private static void resetTime(Calendar c1) {
+    private static void resetTime(@NotNull Calendar c1) {
         c1.set(Calendar.HOUR_OF_DAY, 0);
         c1.set(Calendar.MINUTE, 0);
         c1.set(Calendar.SECOND, 0);

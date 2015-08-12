@@ -7,7 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,7 +68,8 @@ public class IOUtil {
         return false;
     }
 
-    public static List<File> getFilesInFolder(String path) {
+    @NotNull
+    public static List<File> getFilesInFolder(@NotNull String path) {
         File source = new File(path);
         if (!(source.exists() && source.isDirectory())) {
             throw new IllegalArgumentException();
@@ -73,7 +77,8 @@ public class IOUtil {
         return getFilesInFolderInternal(source, new ArrayList<>());
     }
 
-    private static <T extends Collection<File>> T getFilesInFolderInternal(File source, T files) {
+    @NotNull
+    private static <T extends Collection<File>> T getFilesInFolderInternal(@NotNull File source, @NotNull T files) {
         File[] filesInFolder = source.listFiles();
         if (filesInFolder != null) {
             for (File file : filesInFolder) {

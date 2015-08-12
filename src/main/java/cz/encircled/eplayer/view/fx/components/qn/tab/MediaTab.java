@@ -1,10 +1,6 @@
 package cz.encircled.eplayer.view.fx.components.qn.tab;
 
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Scope;
-import cz.encircled.elight.core.annotation.Wired;
-import cz.encircled.elight.core.context.ApplicationContext;
-import cz.encircled.eplayer.core.SeriesFinder;
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.model.SeriesVideo;
 import cz.encircled.eplayer.util.StringUtil;
@@ -18,6 +14,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.FlowPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,27 +24,20 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Created by Encircled on 20/09/2014.
+ * @author Encircled on 20/09/2014.
  */
-@Component
-@Scope(Scope.PROTOTYPE)
 public abstract class MediaTab extends Tab {
 
     private final static Logger log = LogManager.getLogger();
-
+    protected ApplicationCore core;
     protected FlowPane mainPane;
-
-    @Wired
-    private ApplicationContext context;
-
-    @Wired
-    private SeriesFinder seriesFinder;
-
-    @Wired
     private QuickNaviScreen quickNaviScreen;
 
-    public MediaTab() {
-        mainPane = new FlowPane(10, 10);
+    public MediaTab(ApplicationCore core, QuickNaviScreen quickNaviScreen) {
+        this.quickNaviScreen = quickNaviScreen;
+        this.core = core;
+        this.mainPane = new FlowPane(10, 10);
+
         ScrollPane scrollPane = new ScrollPane(mainPane);
 
         mainPane.getStyleClass().add("tabs");
@@ -86,12 +76,13 @@ public abstract class MediaTab extends Tab {
         return mediaTypes;
     }
 
+    @NotNull
     protected abstract Collection<MediaType> getAllMediaTypes();
 
     public void showFilms() {
         // TODO optimize?
         Collection<MediaType> allMediaTypes = getAllMediaTypesFiltered();
-        Map<String, SeriesVideo> series = seriesFinder.findSeries(allMediaTypes);
+        Map<String, SeriesVideo> series = core.getSeriesFinder().findSeries(allMediaTypes);
         series.forEach((key, s) -> {
             allMediaTypes.removeAll(s.getMediaTypes().keySet());
         });
@@ -100,15 +91,16 @@ public abstract class MediaTab extends Tab {
         });
     }
 
+    @NotNull
     public Map<String, SeriesVideo> getSeriesMediaTypes() {
-        return seriesFinder.findSeries(getAllMediaTypes());
+        return core.getSeriesFinder().findSeries(getAllMediaTypes());
     }
 
-    private void repaintButtons(Collection<MediaType> mediaTypes) {
+    private void repaintButtons(@NotNull Collection<MediaType> mediaTypes) {
         Platform.runLater(() -> {
             final Collection<QuickNaviButton> buttons = new ArrayList<>(mediaTypes.size());
             mediaTypes.forEach(media -> {
-                QuickNaviButton button = context.getComponent(QuickNaviButton.class);
+                QuickNaviButton button = new QuickNaviButton(core, quickNaviScreen);
                 button.setMediaType(media);
                 buttons.add(button);
             });
@@ -119,11 +111,11 @@ public abstract class MediaTab extends Tab {
         });
     }
 
-    private void repaintSeriesButtons(Collection<SeriesVideo> series) {
+    private void repaintSeriesButtons(@NotNull Collection<SeriesVideo> series) {
         Platform.runLater(() -> {
             final Collection<QuickNaviButton> buttons = new ArrayList<>(series.size());
             series.forEach(media -> {
-                QuickNaviButton button = context.getComponent(QuickNaviButton.class);
+                QuickNaviButton button = new QuickNaviButton(core, quickNaviScreen);
                 button.setMediaType(media.getLast());
                 button.setSeriesVideo(media);
                 buttons.add(button);

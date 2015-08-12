@@ -9,20 +9,15 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by Encircled on 7/06/2014.
+ * @author Encircled on 7/06/2014.
  */
 public class ShutdownManager {
 
-    private static final Logger log = LogManager.getLogger();
-
-    private static final String SD_CMD_COMMAND = "shutdown";
-
-    private static final String SD_CMD_TIME = " /t ";
-
     public static final String SD_CMD_HIBERNATE = " /h ";
-
     public static final String SD_CMD_SHUTDOWN = " /s";
-
+    private static final Logger log = LogManager.getLogger();
+    private static final String SD_CMD_COMMAND = "shutdown";
+    private static final String SD_CMD_TIME = " /t ";
     private static final String SD_CMD_CANCEL = "shutdown -a";
 
     private Timer hibernateTimer;

@@ -1,76 +1,15 @@
 package cz.encircled.eplayer.service.action;
 
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Wired;
-import cz.encircled.eplayer.common.Constants;
-import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.service.CacheService;
-import cz.encircled.eplayer.service.MediaService;
-import cz.encircled.eplayer.service.gui.ViewService;
-import cz.encircled.eplayer.util.ReflectionUtil;
-import cz.encircled.eplayer.view.AppView;
-import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.TreeMap;
-
-@Component
-public class ReflectionActionExecutor implements ActionExecutor {
+public class ReflectionActionExecutor {
 
     private final static Logger log = LogManager.getLogger();
 
-    private TreeMap<String, Method> commands;
-
-    @Wired
-    private MediaService mediaService;
-
-    @Wired
-    private CacheService cacheService;
-
-    @Wired
-    private ViewService viewService;
-
-    @Wired
-    private AppView appView;
-
-    public ReflectionActionExecutor() {
-        log.debug("Action executor init");
-        commands = new TreeMap<>();
-        for (Field field : ActionCommands.class.getDeclaredFields()) {
-            try {
-                commands.put((String) field.get(null), ReflectionActionExecutor.class.getMethod((String) field.get(null)));
-            } catch (Exception e) {
-                log.warn("error reading command field {} ", field.getName());
-            }
-        }
-    }
-
-    @Override
-    public void execute(String command) {
-        log.debug("Execute " + command);
-        ReflectionUtil.invokeMethod(commands.get(command), this);
-    }
-
-    public void exit() {
-        Platform.exit();
-        System.exit(Constants.ZERO);
-    }
 
     public void showShutdownTimeChooser() {
 //        frame.showShutdownTimeChooser(); TODO
-    }
-
-    public void openQuickNavi() {
-        new Thread(() -> {
-            mediaService.pause();
-            viewService.switchToQuickNavi();
-            mediaService.updateCurrentMediaInCache();
-            mediaService.stop();
-            cacheService.save();
-        }).start();
     }
 
     public void back() {
@@ -82,12 +21,6 @@ public class ReflectionActionExecutor implements ActionExecutor {
 //            } else
 //                execute(ActionCommands.openQuickNavi);
 //        }
-    }
-
-    public void playLast() {
-        MediaType media = cacheService.getLastByWatchDate();
-        if (media != null)
-            mediaService.play(media);
     }
 
 }

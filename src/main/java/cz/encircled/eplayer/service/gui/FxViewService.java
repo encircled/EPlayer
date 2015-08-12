@@ -1,20 +1,21 @@
 package cz.encircled.eplayer.service.gui;
 
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Wired;
 import cz.encircled.eplayer.view.fx.FxView;
 import javafx.application.Platform;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Created by Encircled on 16/09/2014.
+ * @author Encircled on 16/09/2014.
  */
-@Component
 public class FxViewService implements ViewService {
 
-    @Wired
-    private FxView appView;
+    private FxView fxView;
+
+    public FxViewService(FxView fxView) {
+        this.fxView = fxView;
+    }
 
     @Override
     public boolean isPlayerState() {
@@ -32,8 +33,8 @@ public class FxViewService implements ViewService {
     }
 
     @Override
-    public void showPlayer(CountDownLatch countDownLatch) {
-        runInFxThread(appView::showPlayer, countDownLatch);
+    public void showPlayer(@NotNull CountDownLatch countDownLatch) {
+        runInFxThread(fxView::showPlayer, countDownLatch);
     }
 
     @Override
@@ -43,10 +44,10 @@ public class FxViewService implements ViewService {
 
     @Override
     public void switchToQuickNavi() {
-        runInFxThread(appView::showQuickNavi);
+        runInFxThread(fxView::showQuickNavi);
     }
 
-    private void runInFxThread(Runnable runnable) {
+    private void runInFxThread(@NotNull Runnable runnable) {
         if (Platform.isFxApplicationThread()) {
             runnable.run();
         } else {
@@ -54,7 +55,7 @@ public class FxViewService implements ViewService {
         }
     }
 
-    private void runInFxThread(Runnable runnable, CountDownLatch countDownLatch) {
+    private void runInFxThread(@NotNull Runnable runnable, @NotNull CountDownLatch countDownLatch) {
         if (Platform.isFxApplicationThread()) {
             runnable.run();
             countDownLatch.countDown();

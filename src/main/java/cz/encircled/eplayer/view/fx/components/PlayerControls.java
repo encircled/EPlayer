@@ -1,17 +1,12 @@
 package cz.encircled.eplayer.view.fx.components;
 
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Wired;
-import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.service.event.Event;
-import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.util.Localization;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.fx.FxUtil;
 import cz.encircled.eplayer.view.fx.FxView;
-import cz.encircled.eplayer.view.fx.PlayerScreen;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -24,57 +19,33 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
-import javax.annotation.PostConstruct;
-
 /**
- * Created by Encircled on 21/09/2014.
+ * @author Encircled on 21/09/2014.
  */
-@Component
 public class PlayerControls extends GridPane {
 
-    private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger();
-
     public static final double HEIGHT = 53;
-
-    private Slider timeSlider;
-
-    private Text timeFlyingText;
-
-    private Text timeText;
-
-    private Text totalTimeText;
-
-    private Text volumeText;
-
-    private Text timeTextSeparator;
-
-    private Slider volumeSlider;
-
-    private ToggleButton volumeButton;
-
-    private ToggleButton playerToggleButton;
-
-    private ToggleButton fitScreenToggleButton;
-
-    @Wired
-    private FxView appView;
-
-    @Wired
-    private PlayerScreen playerScreen;
-
-    @Wired
-    private EventObserver eventObserver;
-
-    @Wired
-    private MediaService mediaService;
-
+    private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger();
     private static final Color textColor = Color.rgb(155, 155, 155);
-
+    private Slider timeSlider;
+    private Text timeFlyingText;
+    private Text timeText;
+    private Text totalTimeText;
+    private Text volumeText;
+    private Text timeTextSeparator;
+    private Slider volumeSlider;
+    private ToggleButton volumeButton;
+    private ToggleButton playerToggleButton;
+    private ToggleButton fitScreenToggleButton;
     private double lastVolumeSliderValue;
 
-    @PostConstruct
-    private void initializeWrapper() {
-        Platform.runLater(this::initialize);
+    private ApplicationCore core;
+    private FxView fxView;
+
+    public PlayerControls(ApplicationCore core, FxView fxView) {
+        this.core = core;
+        this.fxView = fxView;
+        initialize();
     }
 
     private void initialize() {
@@ -83,8 +54,8 @@ public class PlayerControls extends GridPane {
         initializeVolumeControls();
         initializeButtons();
         getStyleClass().add("player_controls");
-        setPrefSize(appView.screenBounds.getWidth(), HEIGHT);
-        setMaxSize(appView.screenBounds.getWidth(), HEIGHT);
+        setPrefSize(fxView.screenBounds.getWidth(), HEIGHT);
+        setMaxSize(fxView.screenBounds.getWidth(), HEIGHT);
         setPadding(new Insets(2, 20, 0, 20));
         setStyle("-fx-background-color: rgb(40,40,40)");
         setHgap(3);
@@ -119,21 +90,21 @@ public class PlayerControls extends GridPane {
         fitScreenToggleButton = new ToggleButton();
 
         fitScreenToggleButton.setId("fitScreen");
-        fitScreenToggleButton.setOnAction(event -> playerScreen.toggleFitToScreen());
-        playerScreen.fitToScreenProperty().addListener(new ChangeListener<Boolean>() {
+        fitScreenToggleButton.setOnAction(event -> fxView.getPlayerScreen().toggleFitToScreen());
+        fxView.getPlayerScreen().fitToScreenProperty().addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 fitScreenToggleButton.setSelected(newValue);
             }
         });
-        fitScreenToggleButton.setSelected(playerScreen.fitToScreenProperty().get());
+        fitScreenToggleButton.setSelected(fxView.getPlayerScreen().fitToScreenProperty().get());
         Tooltip tooltip = new Tooltip(Localization.fitScreen.ln());
 
         fitScreenToggleButton.setTooltip(tooltip);
 
         playerToggleButton.setId("play");
-        playerToggleButton.setOnAction(e -> mediaService.toggle());
-        eventObserver.listenFxThread(Event.playingChanged, (event, arg, arg2) -> playerToggleButton.setSelected(!arg));
+        playerToggleButton.setOnAction(e -> core.getMediaService().toggle());
+        core.getEventObserver().listenFxThread(Event.playingChanged, (event, arg, arg2) -> playerToggleButton.setSelected(!arg));
 
         volumeButton.setId("mute");
         volumeButton.setOnAction(event -> {
@@ -179,7 +150,7 @@ public class PlayerControls extends GridPane {
             if (!volumeSlider.isValueChanging()) {
                 saveLastVolumeToSettings();
             }
-            mediaService.setVolume(volume);
+            core.getMediaService().setVolume(volume);
         });
         int volume = (int) volumeSlider.getValue();
         volumeText.setText(volume + " %");
@@ -207,21 +178,21 @@ public class PlayerControls extends GridPane {
 
         // Max label
         timeSlider.maxProperty().addListener((observable, oldValue, newValue) -> totalTimeText.setText(StringUtil.msToTimeLabel(newValue.longValue())));
-        eventObserver.listenFxThread(Event.mediaDurationChange, (event, newTime, arg2) -> timeSlider.setMax(newTime));
+        core.getEventObserver().listenFxThread(Event.mediaDurationChange, (event, newTime, arg2) -> timeSlider.setMax(newTime));
 
         // Current time and scrolling
         timeSlider.setOnMousePressed(event -> {
             double valueUnderCursor = event.getX() / timeSlider.getWidth() * timeSlider.getMax();
-            mediaService.setTime((long) valueUnderCursor);
+            core.getMediaService().setTime((long) valueUnderCursor);
         });
 
         timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (timeSlider.isValueChanging()) {
-                mediaService.setTime(newValue.longValue());
+                core.getMediaService().setTime(newValue.longValue());
             }
         });
 
-        eventObserver.listenFxThread(Event.mediaTimeChange, (event, newTime, arg2) -> {
+        core.getEventObserver().listenFxThread(Event.mediaTimeChange, (event, newTime, arg2) -> {
             if (!timeSlider.isValueChanging()) {
                 timeSlider.setValue(newTime);
                 timeText.setText(StringUtil.msToTimeLabel(newTime));

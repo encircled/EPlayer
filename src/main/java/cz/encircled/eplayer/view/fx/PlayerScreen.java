@@ -1,15 +1,9 @@
 package cz.encircled.eplayer.view.fx;
 
 import com.sun.jna.Memory;
-import cz.encircled.elight.core.annotation.Creator;
-import cz.encircled.elight.core.annotation.Wired;
-import cz.encircled.elight.core.context.ApplicationContext;
-import cz.encircled.elight.core.creator.FxInstanceCreator;
 import cz.encircled.eplayer.common.PostponeTimer;
-import cz.encircled.eplayer.service.MediaService;
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.service.event.Event;
-import cz.encircled.eplayer.service.event.EventListener;
-import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import cz.encircled.eplayer.view.fx.components.PlayerControls;
 import javafx.application.Platform;
@@ -29,34 +23,27 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
 import uk.co.caprica.vlcj.player.direct.BufferFormat;
 import uk.co.caprica.vlcj.player.direct.BufferFormatCallback;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
 
-import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.nio.ByteBuffer;
 
 /**
- * Created by Encircled on 18/09/2014.
+ * @author Encircled on 18/09/2014.
  */
-@cz.encircled.elight.core.annotation.Component
-@Creator(FxInstanceCreator.class)
 public class PlayerScreen extends BorderPane {
 
     private static final Logger log = LogManager.getLogger();
 
-    @Wired
-    private MediaService mediaService;
-
     private MenuBar menuBar;
 
-    @Wired
-    private FxView appView;
-
-    private final DirectMediaPlayerComponent mediaPlayerComponent;
+    private DirectMediaPlayerComponent mediaPlayerComponent;
 
     private WritablePixelFormat<ByteBuffer> pixelFormat;
 
@@ -76,15 +63,11 @@ public class PlayerScreen extends BorderPane {
 
     private Robot robot;
 
-    @Wired
     private PlayerControls playerControls;
 
-    @Wired
-    private ApplicationContext context;
+    private FxView fxView;
 
-    @Wired
-    private EventObserver eventObserver;
-
+    @NotNull
     private EventHandler<MouseEvent> fullScreenMouseMoveHandler = event -> {
         setCursor(Cursor.DEFAULT);
         if (event.getY() > getHeight() - playerControls.getHeight()) {
@@ -94,13 +77,19 @@ public class PlayerScreen extends BorderPane {
             hideTimer.cancel();
             menuBar.setVisible(true);
         } else {
-            if(menuBar.isVisible()) {
+            if (menuBar.isVisible()) {
                 menuBar.setVisible(false);
                 menuBar.getMenus().stream().forEach(Menu::hide);
             }
             hideTimer.postpone(600);
         }
     };
+
+    public PlayerScreen(ApplicationCore core, FxView fxView) {
+        super(new BorderPane());
+        this.fxView = fxView;
+        this.fitToScreen = new SimpleBooleanProperty(false);
+    }
 
     public void toggleFitToScreen() {
         fitToScreen.set(!fitToScreen.get());
@@ -110,27 +99,22 @@ public class PlayerScreen extends BorderPane {
         return fitToScreen;
     }
 
-    public PlayerScreen() {
-        super(new BorderPane());
-        hideTimer = new PostponeTimer(() -> Platform.runLater(() -> setCursor(Cursor.NONE)));
-        fitToScreen = new SimpleBooleanProperty(false);
-        mediaPlayerComponent = new CanvasPlayerComponent();
-        videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
-    }
-
     public DirectMediaPlayerComponent getMediaPlayerComponent() {
         return mediaPlayerComponent;
     }
 
-    @PostConstruct
-    private void initialize() {
+    public void init(@NotNull ApplicationCore core, @NotNull AppMenuBar appMenuBar) {
+        hideTimer = new PostponeTimer(() -> Platform.runLater(() -> setCursor(Cursor.NONE)));
+        mediaPlayerComponent = new CanvasPlayerComponent();
+        videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
+
+        this.menuBar = appMenuBar.getMenuBar();
+        this.playerControls = new PlayerControls(core, fxView);
         pixelFormat = PixelFormat.getByteBgraInstance();
 
         playerHolder = new Pane();
         playerStackPane = new StackPane(playerHolder);
         playerHolder.setStyle("-fx-background-color: #000");
-
-        menuBar = context.getComponent(AppMenuBar.class).getMenuBar();
 
         initializeImageView();
 
@@ -138,10 +122,10 @@ public class PlayerScreen extends BorderPane {
         setCenter(playerStackPane);
         setBottom(playerControls);
 
-        initializeListeners();
+        initializeListeners(core);
     }
 
-    private void initializeListeners() {
+    private void initializeListeners(@NotNull ApplicationCore core) {
         try {
             robot = new Robot();
         } catch (AWTException e) {
@@ -149,30 +133,27 @@ public class PlayerScreen extends BorderPane {
         }
         fitToScreen.addListener(observable -> fitImageViewSize((float) playerHolder.getWidth(), (float) playerHolder.getHeight()));
         playerHolder.setOnMouseClicked(event -> {
-            mediaService.toggle();
+            core.getMediaService().toggle();
             if (event.getClickCount() > 1) {
-                appView.toggleFullScreen();
+                fxView.toggleFullScreen();
             }
         });
 
 //        Platform.runLater is required, because elements must be removed after full screen repaint
-        appView.getPrimaryStage().fullScreenProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
+        fxView.getPrimaryStage().fullScreenProperty().addListener((observable, oldValue, newValue) -> Platform.runLater(() -> {
             if (newValue)
                 onFullScreen();
             else
                 onNotFullScreen();
         }));
-        if (appView.isFullScreen()) {
+        if (fxView.isFullScreen()) {
             onFullScreen();
         }
 
-        eventObserver.listen(Event.playingChanged, new EventListener<Boolean, Void>() {
-            @Override
-            public void handle(Event event, Boolean isPlaying, Void arg2) {
-                if (isPlaying) {
-                    // TODO
+        core.getEventObserver().listen(Event.playingChanged, (event, isPlaying, arg2) -> {
+            if (isPlaying) {
+                // TODO
 //                    robot.keyPress(KeyEvent.VK_0);
-                }
             }
         });
 
@@ -209,7 +190,7 @@ public class PlayerScreen extends BorderPane {
     }
 
     private void initializeImageView() {
-        writableImage = new WritableImage((int) appView.screenBounds.getWidth(), (int) appView.screenBounds.getHeight());
+        writableImage = new WritableImage((int) fxView.screenBounds.getWidth(), (int) fxView.screenBounds.getHeight());
 
         imageView = new ImageView(writableImage);
         playerHolder.getChildren().add(imageView);
@@ -254,20 +235,22 @@ public class PlayerScreen extends BorderPane {
 
     private class CanvasPlayerComponent extends DirectMediaPlayerComponent {
 
+        @Nullable
+        PixelWriter pixelWriter = null;
+
         public CanvasPlayerComponent() {
             super(new CanvasBufferFormatCallback());
         }
 
-        PixelWriter pixelWriter = null;
-
+        @Nullable
         private PixelWriter getPW() {
-            if(pixelWriter == null)
+            if (pixelWriter == null)
                 pixelWriter = writableImage.getPixelWriter();
-             return pixelWriter;
+            return pixelWriter;
         }
 
         @Override
-        public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, BufferFormat bufferFormat) {
+        public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, @NotNull BufferFormat bufferFormat) {
             log.debug("display");
             if (writableImage == null)
                 return;
@@ -281,11 +264,12 @@ public class PlayerScreen extends BorderPane {
     }
 
     private class CanvasBufferFormatCallback implements BufferFormatCallback {
+        @NotNull
         @Override
         public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
             log.debug("GetBufferFormat: source dimension is {}x{}", sourceWidth, sourceHeight);
             Platform.runLater(() -> videoSourceRatioProperty.set((float) sourceHeight / (float) sourceWidth));
-            return new RV32BufferFormat((int) appView.screenBounds.getWidth(), (int) appView.screenBounds.getHeight());
+            return new RV32BufferFormat((int) fxView.screenBounds.getWidth(), (int) fxView.screenBounds.getHeight());
         }
     }
 

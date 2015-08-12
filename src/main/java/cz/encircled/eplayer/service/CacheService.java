@@ -8,27 +8,33 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Created by Administrator on 9.6.2014.
+ * @author Encircled on 9.6.2014.
  */
 public interface CacheService {
 
-    void forEach(Consumer<MediaType> action);
+    void forEach(@NotNull Consumer<MediaType> action);
 
+    @NotNull
     MediaType createIfAbsent(@NotNull String path);
 
+    @NotNull
     MediaType addIfAbsent(@NotNull MediaType mediaType);
 
-    MediaType getEntry(String id);
+    @Nullable
+    MediaType getEntry(@NotNull String id);
 
-    MediaType deleteEntry(String id);
+    @Nullable
+    MediaType deleteEntry(@NotNull String id);
 
-    MediaType updateEntry(String id, long time);
+    @Nullable
+    MediaType updateEntry(@NotNull String id, long time);
 
     @Nullable
     MediaType getLastByWatchDate();
 
     void save();
 
+    @NotNull
     List<MediaType> getCache();
 
 }

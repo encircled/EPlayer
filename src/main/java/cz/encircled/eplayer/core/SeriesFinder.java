@@ -1,10 +1,10 @@
 package cz.encircled.eplayer.core;
 
-import cz.encircled.elight.core.annotation.Component;
 import cz.encircled.eplayer.model.MediaType;
 import cz.encircled.eplayer.model.SeriesVideo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,9 +13,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by Encircled on 22/09/2014.
+ * @author Encircled on 22/09/2014.
  */
-@Component
 public class SeriesFinder {
 
     private static final Logger log = LogManager.getLogger();
@@ -24,9 +23,11 @@ public class SeriesFinder {
 
     private static final Pattern replacePattern = Pattern.compile("(?i)s[\\d]{1,2}.?e[\\d]{1,2}");
 
+    @NotNull
     private Matcher seriesMatcher = seriesPattern.matcher("");
 
-    public Map<String, SeriesVideo> findSeries(Collection<MediaType> mediaTypes) {
+    @NotNull
+    public Map<String, SeriesVideo> findSeries(@NotNull Collection<MediaType> mediaTypes) {
         Map<String, SeriesVideo> result = new HashMap<>();
         mediaTypes.stream().forEach(mediaType -> {
             if (seriesMatcher.reset(mediaType.getName()).matches()) {

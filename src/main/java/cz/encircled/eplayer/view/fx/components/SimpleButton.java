@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 
 /**
- * Created by Encircled on 29/09/2014.
+ * @author Encircled on 29/09/2014.
  */
 public class SimpleButton extends Label {
 

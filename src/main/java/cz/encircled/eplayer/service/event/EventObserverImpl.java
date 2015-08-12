@@ -1,9 +1,9 @@
 package cz.encircled.eplayer.service.event;
 
-import cz.encircled.elight.core.annotation.Component;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,15 +11,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Encircled on 13/09/2014.
+ * @author Encircled on 13/09/2014.
  */
-@Component
 public class EventObserverImpl implements EventObserver {
 
     private static final Logger log = LogManager.getLogger();
 
+    @NotNull
     private final Map<Event, List<EventListener>> events;
 
+    @NotNull
     private final Map<Event, List<EventListener>> fxEvents;
 
     public EventObserverImpl() {

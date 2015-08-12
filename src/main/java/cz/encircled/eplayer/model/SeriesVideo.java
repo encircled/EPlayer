@@ -1,15 +1,13 @@
 package cz.encircled.eplayer.model;
 
-import cz.encircled.elight.core.annotation.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.TreeMap;
 
 /**
- * Created by Encircled on 23/09/2014.
+ * @author Encircled on 23/09/2014.
  */
-@Component
 public class SeriesVideo {
 
     private static final Comparator<MediaType> mediaTypeComparator = (o1, o2) -> o1.getName().compareTo(o2.getName());
@@ -74,21 +72,6 @@ public class SeriesVideo {
 
     public void addMediaType(MediaType mediaType) {
         mediaTypes.put(mediaType, null);
-    }
-
-    public static void main(String[] args) {
-        SeriesVideo s = new SeriesVideo();
-        MediaType m = new MediaType("D:/1.avi");
-        MediaType m2 = new MediaType("D:/2.avi");
-        MediaType m3 = new MediaType("D:/3.avi");
-        m.setTime(1);
-        m2.setTime(1);
-        m3.setTime(0);
-        s.addMediaType(m);
-        s.addMediaType(m2);
-        s.addMediaType(m3);
-        System.out.println(s.getLast());
-        System.out.println(" next " + s.getNext());
     }
 
 }

@@ -1,7 +1,7 @@
 package cz.encircled.eplayer.common;
 
 /**
- * Created by Encircled on 4/06/2014.
+ * @author Encircled on 4/06/2014.
  */
 public class Constants {
 

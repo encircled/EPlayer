@@ -1,25 +1,23 @@
 package cz.encircled.eplayer.view.fx.components.qn.tab;
 
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Scope;
-import cz.encircled.elight.core.annotation.Wired;
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.service.FolderScanService;
 import cz.encircled.eplayer.util.Settings;
+import cz.encircled.eplayer.view.fx.QuickNaviScreen;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
 /**
- * Created by Encircled on 20/09/2014.
+ * @author Encircled on 20/09/2014.
  */
-@Component
-@Scope(Scope.PROTOTYPE)
 public class FolderMediaTab extends MediaTab {
 
-    @Wired
-    private FolderScanService folderScanService;
-
     private String pathToFolder;
+
+    public FolderMediaTab(ApplicationCore core, QuickNaviScreen quickNaviScreen) {
+        super(core, quickNaviScreen);
+    }
 
     public void setPath(String pathToFolder) {
         this.pathToFolder = pathToFolder;
@@ -30,9 +28,10 @@ public class FolderMediaTab extends MediaTab {
 
     }
 
+    @NotNull
     @Override
     protected Collection<MediaType> getAllMediaTypes() {
-        return folderScanService.getMediaInFolder(pathToFolder);
+        return core.getFolderScanService().getMediaInFolder(pathToFolder);
     }
 
 }

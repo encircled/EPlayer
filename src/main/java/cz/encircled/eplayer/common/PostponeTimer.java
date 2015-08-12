@@ -4,7 +4,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Created by Encircled on 28/09/2014.
+ * @author Encircled on 28/09/2014.
  */
 public class PostponeTimer {
 

@@ -1,11 +1,11 @@
 package cz.encircled.eplayer.view;
 
 /**
- * Created by Encircled on 16/09/2014.
+ * @author Encircled on 16/09/2014.
  */
 public interface AppView {
 
-    static final String TITLE = "EPlayer";
+    String TITLE = "EPlayer";
 
     void showPlayer();
 

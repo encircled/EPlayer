@@ -7,7 +7,7 @@ import java.util.List;
 
 
 /**
- * Created by Encircled on 04-Dec-14.
+ * @author Encircled on 04-Dec-14.
  */
 public enum Settings {
 
@@ -21,7 +21,7 @@ public enum Settings {
 
     folders_to_scan;
 
-    public String get(String defaultValue) {
+    public String get(@NotNull String defaultValue) {
         return SettingsProvider.get(this.name(), defaultValue);
     }
 
@@ -34,6 +34,7 @@ public enum Settings {
         return SettingsProvider.get(this.name());
     }
 
+    @Nullable
     public Integer getInt() {
         return SettingsProvider.getInt(this.name());
     }
@@ -42,16 +43,19 @@ public enum Settings {
         return SettingsProvider.getInt(this.name(), defaultValue);
     }
 
+    @NotNull
     public Settings set(@Nullable Object value) {
         SettingsProvider.set(this.name(), value);
         return this;
     }
 
+    @NotNull
     public Settings addToList(@Nullable String value) {
         SettingsProvider.addToList(this.name(), value);
         return this;
     }
 
+    @NotNull
     public Settings removeFromList(@Nullable String value) {
         SettingsProvider.removeFromList(this.name(), value);
         return this;

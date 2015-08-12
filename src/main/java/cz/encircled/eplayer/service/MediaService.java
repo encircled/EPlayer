@@ -4,7 +4,7 @@ import cz.encircled.eplayer.model.MediaType;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Administrator on 9.6.2014.
+ * @author Encircled on 9.6.2014.
  */
 public interface MediaService {
 
@@ -37,9 +37,9 @@ public interface MediaService {
 
     void stop();
 
-    void setSubtitles(int id);
-
     int getSubtitles();
+
+    void setSubtitles(int id);
 
     int getAudioTrack();
 

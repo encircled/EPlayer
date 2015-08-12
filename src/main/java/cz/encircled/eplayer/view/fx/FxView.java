@@ -1,16 +1,14 @@
 package cz.encircled.eplayer.view.fx;
 
-import cz.encircled.elight.core.context.AnnotationApplicationContext;
-import cz.encircled.eplayer.service.MediaService;
-import cz.encircled.eplayer.service.action.ActionCommands;
-import cz.encircled.eplayer.service.action.ActionExecutor;
+import com.sun.jna.Native;
+import com.sun.jna.NativeLibrary;
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.service.event.Event;
-import cz.encircled.eplayer.service.event.EventObserver;
 import cz.encircled.eplayer.util.Localization;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.AppView;
+import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Rectangle2D;
@@ -22,43 +20,48 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.co.caprica.vlcj.binding.LibVlc;
+import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
 import java.io.File;
 
 /**
- * Created by Encircled on 18/09/2014.
+ * @author Encircled on 18/09/2014.
  */
 public class FxView extends Application implements AppView {
 
-    private Logger log = LogManager.getLogger();
-
+    // TODO
+    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.2.1";
     public static final int MIN_WIDTH = 860;
-
     public static final int MIN_HEIGHT = 600;
+    public static final String QUICK_NAVI_SCREEN = "quickNavi";
+    public static final String PLAYER_SCREEN = "player";
+    private static final Logger log = LogManager.getLogger();
+
+    static {
+        log.trace("Initialize VLC libs");
+        NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
+        try {
+            Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
+            log.trace("VLCLib successfully initialized");
+        } catch (UnsatisfiedLinkError e) {
+            // TODO
+            log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH);
+        }
+    }
 
     public Rectangle2D screenBounds;
-
     private FileChooser mediaFileChooser;
-
     private QuickNaviScreen quickNaviScreen;
-
     private PlayerScreen playerScreen;
-
-    private EventObserver eventObserver;
-
-    private MediaService mediaService;
-
-    private ActionExecutor actionExecutor;
-
     private Stage primaryStage;
-
     private Scene primaryScene;
-
     private StringProperty screenChangeProperty;
+    private ApplicationCore core;
 
-    public static final String QUICK_NAVI_SCREEN = "quickNavi";
-
-    public static final String PLAYER_SCREEN = "player";
+    public static void main(String[] args) throws Exception {
+        launch();
+    }
 
     @Override
     public void showQuickNavi() {
@@ -76,17 +79,17 @@ public class FxView extends Application implements AppView {
         return screenChangeProperty;
     }
 
-    @Override
-    public void setFullScreen(boolean fullScreen) {
-        primaryStage.setFullScreen(fullScreen);
-    }
-
     public void toggleFullScreen() {
         primaryStage.setFullScreen(!primaryStage.isFullScreen());
     }
 
     public boolean isFullScreen() {
         return primaryStage.isFullScreen();
+    }
+
+    @Override
+    public void setFullScreen(boolean fullScreen) {
+        primaryStage.setFullScreen(fullScreen);
     }
 
     public void maximize() {
@@ -102,27 +105,34 @@ public class FxView extends Application implements AppView {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        screenBounds = Screen.getPrimary().getVisualBounds();
-        screenChangeProperty = new SimpleStringProperty();
+        this.screenBounds = Screen.getPrimary().getVisualBounds();
+        this.screenChangeProperty = new SimpleStringProperty();
         this.primaryStage = primaryStage;
+
+        core = new ApplicationCore();
+
+        playerScreen = new PlayerScreen(core, this);
+        quickNaviScreen = new QuickNaviScreen(core, this);
+        primaryScene = new Scene(quickNaviScreen);
+
+        screenChangeProperty.set(QUICK_NAVI_SCREEN);
+
+        AppMenuBar menuBar = new AppMenuBar(core, this);
+        quickNaviScreen.init(menuBar);
+        menuBar.init();
+
         initializePrimaryStage();
         maximize();
-        setFullScreen(true);
+        initialize();
 
-        new Thread(() -> {
-            AnnotationApplicationContext annotationContext = new AnnotationApplicationContext("cz.encircled.eplayer");
-            annotationContext.addResolvedDependency(this);
-            annotationContext.initialize();
+        playerScreen.init(core, menuBar);
 
-            eventObserver = annotationContext.getComponent(EventObserver.class);
-            quickNaviScreen = annotationContext.getComponent(QuickNaviScreen.class);
-            playerScreen = annotationContext.getComponent(PlayerScreen.class);
-            mediaService = annotationContext.getComponent(MediaService.class);
-            actionExecutor = annotationContext.getComponent(ActionExecutor.class);
 
-            Platform.runLater(this::initialize);
-            eventObserver.fire(Event.contextInitialized);
-        }).start();
+        core.init(playerScreen.getMediaPlayerComponent().getMediaPlayer(), this);
+
+//        new Thread(() -> {
+        core.getEventObserver().fire(Event.contextInitialized);
+//        }).start();
     }
 
     private void initializePrimaryStage() {
@@ -136,7 +146,7 @@ public class FxView extends Application implements AppView {
     public void openMedia() {
         File file = mediaFileChooser.showOpenDialog(primaryStage);
         if (file != null) {
-            mediaService.play(file.getAbsolutePath());
+            core.getMediaService().play(file.getAbsolutePath());
             new Thread(() -> {
                 mediaFileChooser.setInitialDirectory(file.getParentFile());
                 Settings.fc_open_location.set(file.getParentFile().getAbsolutePath()).save();
@@ -145,8 +155,6 @@ public class FxView extends Application implements AppView {
     }
 
     private void initialize() {
-        primaryScene = new Scene(quickNaviScreen);
-        screenChangeProperty.set(QUICK_NAVI_SCREEN);
         primaryScene.getStylesheets().add("/stylesheet.css");
         primaryScene.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
@@ -174,21 +182,9 @@ public class FxView extends Application implements AppView {
             event.consume();
         });
 
-
         initializeMediaFileChoose();
 
-        primaryStage.setOnCloseRequest(t -> {
-            actionExecutor.execute(ActionCommands.EXIT);
-        });
-
-        //  TODO search
-//        primaryScene.getAccelerators().put(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN), new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        });
-
+        primaryStage.setOnCloseRequest(t -> core.exit());
         primaryStage.setScene(primaryScene);
         primaryStage.show();
     }
@@ -204,8 +200,12 @@ public class FxView extends Application implements AppView {
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        launch();
+    public PlayerScreen getPlayerScreen() {
+        return playerScreen;
+    }
+
+    public QuickNaviScreen getQuickNaviScreen() {
+        return quickNaviScreen;
     }
 
 }

@@ -1,31 +1,30 @@
 package cz.encircled.eplayer.view.fx.components.qn.tab;
 
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Wired;
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.service.CacheService;
+import cz.encircled.eplayer.view.fx.QuickNaviScreen;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.PostConstruct;
 import java.util.Collection;
 
 /**
- * Created by Encircled on 20/09/2014.
+ * @author Encircled on 20/09/2014.
  */
-@Component("quickNaviMediaTab")
 public class QuickNaviMediaTab extends MediaTab {
 
-    @Wired
-    private CacheService cacheService;
+    ApplicationCore core;
 
-    @PostConstruct
-    private void initialize() {
+    public QuickNaviMediaTab(ApplicationCore core, QuickNaviScreen screen) {
+        super(core, screen);
+        this.core = core;
         setText("Quick Navigation");
         setClosable(false);
     }
 
+    @NotNull
     @Override
     protected Collection<MediaType> getAllMediaTypes() {
-        return cacheService.getCache();
+        return core.getCacheService().getCache();
     }
 
 }

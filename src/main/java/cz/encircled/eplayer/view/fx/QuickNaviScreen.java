@@ -1,10 +1,7 @@
 package cz.encircled.eplayer.view.fx;
 
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Creator;
-import cz.encircled.elight.core.annotation.Wired;
-import cz.encircled.elight.core.context.ApplicationContext;
-import cz.encircled.elight.core.creator.FxInstanceCreator;
+import cz.encircled.eplayer.core.ApplicationCore;
+import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import cz.encircled.eplayer.view.fx.components.SimpleButton;
@@ -23,40 +20,30 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.annotation.PostConstruct;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Created by Encircled on 18/09/2014.
+ * @author Encircled on 18/09/2014.
  */
-@Component
-@Creator(FxInstanceCreator.class)
 public class QuickNaviScreen extends BorderPane {
 
-    private Logger log = LogManager.getLogger();
-
-    @Wired
-    private FxView appView;
-
-    private VBox sideMenu;
-
-    private TabPane centerTabPane;
-
-    @Wired
-    private ApplicationContext context;
-
-    @Wired
-    private QuickNaviMediaTab quickNaviMediaTab;
-
     public static final String VIEW_ALL = "viewAll";
-
     public static final String VIEW_SERIES = "viewSeries";
-
     public static final String VIEW_FILMS = "viewFilms";
-
+    private Logger log = LogManager.getLogger();
+    private VBox sideMenu;
+    private TabPane centerTabPane;
     private StringProperty viewProperty;
 
     private StringProperty filterProperty;
+
+    private ApplicationCore core;
+    private FxView fxView;
+
+    public QuickNaviScreen(ApplicationCore core, FxView fxView) {
+        this.core = core;
+        this.fxView = fxView;
+    }
 
     public void refreshCurrentTab() {
         refreshTab((MediaTab) centerTabPane.getSelectionModel().getSelectedItem());
@@ -72,14 +59,13 @@ public class QuickNaviScreen extends BorderPane {
 
     // TODO move
     public void addTab(String path) {
-        FolderMediaTab tab = context.getComponent(FolderMediaTab.class);
+        FolderMediaTab tab = new FolderMediaTab(core, this);
         tab.setPath(path);
         centerTabPane.getTabs().add(tab);
     }
 
-    @PostConstruct
-    private void initialize() {
-
+    public void init(@NotNull AppMenuBar menuBar) {
+        QuickNaviMediaTab quickNaviMediaTab = new QuickNaviMediaTab(core, this);
         filterProperty = new SimpleStringProperty();
         viewProperty = new SimpleStringProperty();
         viewProperty.addListener(observable -> refreshCurrentTab());
@@ -94,11 +80,14 @@ public class QuickNaviScreen extends BorderPane {
         quickNaviMediaTab.getStyleClass().add("tabs");
         getStyleClass().add("tabs");
 
-        initializeListeners();
+        initializeListeners(fxView);
+        core.getEventObserver().listen(Event.contextInitialized, (event, isPlaying, param) -> {
+            refreshCurrentTab();
+        });
 
         Settings.folders_to_scan.getList().forEach(this::addTab);
 
-        setTop(context.getComponent(AppMenuBar.class).getMenuBar());
+        setTop(menuBar.getMenuBar());
         setCenter(centerTabPane);
         setLeft(sideMenu);
 
@@ -112,7 +101,7 @@ public class QuickNaviScreen extends BorderPane {
         setBottom(statusBar);
     }
 
-    private void refreshTab(MediaTab tab) {
+    private void refreshTab(@NotNull MediaTab tab) {
         switch (viewProperty.get()) {
             case VIEW_ALL:
                 tab.showAll();
@@ -126,8 +115,8 @@ public class QuickNaviScreen extends BorderPane {
         }
     }
 
-    private void initializeListeners() {
-        appView.screenChangeProperty().addListener((observable, oldValue, newValue) -> {
+    private void initializeListeners(@NotNull FxView fxView) {
+        fxView.screenChangeProperty().addListener((observable, oldValue, newValue) -> {
             if (FxView.QUICK_NAVI_SCREEN.equals(newValue)) {
                 refreshCurrentTab();
             }
@@ -138,7 +127,7 @@ public class QuickNaviScreen extends BorderPane {
         );
 
         filterProperty.addListener((observable, oldValue, newValue) -> {
-                refreshCurrentTab();
+            refreshCurrentTab();
         });
     }
 
@@ -160,17 +149,13 @@ public class QuickNaviScreen extends BorderPane {
 
         ToggleGroup sideMenuGroup = new ToggleGroup();
 
-        QuickNaviViewButton films = context.getComponent(QuickNaviViewButton.class);
-        films.initialize(VIEW_FILMS, "Films", sideMenuGroup);
+        QuickNaviViewButton films = new QuickNaviViewButton(this, VIEW_FILMS, "Films", sideMenuGroup);
 
-        QuickNaviViewButton series = context.getComponent(QuickNaviViewButton.class);
-        series.initialize(VIEW_SERIES, "Series", sideMenuGroup);
+        QuickNaviViewButton series = new QuickNaviViewButton(this, VIEW_SERIES, "Series", sideMenuGroup);
 
-        QuickNaviViewButton all = context.getComponent(QuickNaviViewButton.class);
-        all.initialize(VIEW_ALL, "All", sideMenuGroup);
+        QuickNaviViewButton all = new QuickNaviViewButton(this, VIEW_ALL, "All", sideMenuGroup);
 
-        sideMenu.getChildren().addAll(all, series,
-                films);
+        sideMenu.getChildren().addAll(all, series, films);
     }
 
 }

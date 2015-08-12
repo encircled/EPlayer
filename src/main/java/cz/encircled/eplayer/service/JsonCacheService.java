@@ -1,11 +1,8 @@
 package cz.encircled.eplayer.service;
 
 import com.google.gson.JsonSyntaxException;
-import cz.encircled.elight.core.annotation.Component;
-import cz.encircled.elight.core.annotation.Wired;
-import cz.encircled.eplayer.core.Application;
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.util.GuiUtil;
 import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.util.SettingsProvider;
 import org.apache.logging.log4j.LogManager;
@@ -17,24 +14,16 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Consumer;
 
-import static cz.encircled.eplayer.util.Localization.*;
-
 /**
- * Created by Administrator on 9.6.2014.
+ * @author Encircled on 9.6.2014.
  */
-@Component
 public class JsonCacheService implements CacheService {
 
-    public static final String QUICK_NAVI_PATH = Application.APP_DOCUMENTS_ROOT + "quicknavi2.json";
-
-    private Map<String, MediaType> cache;
-
+    public static final String QUICK_NAVI_PATH = ApplicationCore.APP_DOCUMENTS_ROOT + "quicknavi2.json";
     private static final Logger log = LogManager.getLogger();
+    private Map<String, MediaType> cache = new HashMap<>();
 
-    @Wired
-    private GuiUtil guiUtil;
-
-    public JsonCacheService() {
+    public void init() {
         long start = System.currentTimeMillis();
         log.trace("JsonCacheService init start");
         if (IOUtil.createIfMissing(QUICK_NAVI_PATH, false, true)) {
@@ -45,27 +34,32 @@ public class JsonCacheService implements CacheService {
         } catch (IOException e) {
             log.error("Failed to read cache data from {} with default type token. Message: {}",
                     SettingsProvider.get(QUICK_NAVI_PATH), e.getMessage());
-            guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
+            // TODO
+//            guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
         } catch (JsonSyntaxException e) {
             log.error("JSON syntax error. Message: {}", e.getMessage());
-            guiUtil.showMessage(msgQnFileCorrupted.ln(), errorTitle.ln());
+            // TODO
+//            guiUtil.showMessage(msgQnFileCorrupted.ln(), errorTitle.ln());
         }
-        if (cache == null)
+        if (cache == null) {
             cache = new HashMap<>();
+        }
 
         log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start);
     }
 
     @Override
-    public void forEach(Consumer<MediaType> action) {
+    public void forEach(@NotNull Consumer<MediaType> action) {
         getCache().forEach(action);
     }
 
+    @NotNull
     @Override
     public MediaType createIfAbsent(@NotNull String path) {
         return cache.computeIfAbsent(path, p -> new MediaType(path));
     }
 
+    @NotNull
     @Override
     public MediaType addIfAbsent(@NotNull MediaType mediaType) {
         log.debug("Add if absent {}", mediaType.toString());
@@ -73,12 +67,14 @@ public class JsonCacheService implements CacheService {
     }
 
     @Override
-    public MediaType getEntry(String id) {
+    @Nullable
+    public MediaType getEntry(@NotNull String id) {
         return cache.get(id);
     }
 
     @Override
-    public MediaType updateEntry(String id, long time) {
+    @Nullable
+    public MediaType updateEntry(@NotNull String id, long time) {
         MediaType p = cache.get(id);
         log.debug("Update cache entry {}, time {}", p, time);
         p.setTime(time);
@@ -87,7 +83,8 @@ public class JsonCacheService implements CacheService {
     }
 
     @Override
-    public MediaType deleteEntry(String id) {
+    @Nullable
+    public MediaType deleteEntry(@NotNull String id) {
         return cache.remove(id);
     }
 

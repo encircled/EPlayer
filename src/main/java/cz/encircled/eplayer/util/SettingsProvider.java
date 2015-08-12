@@ -1,7 +1,7 @@
 package cz.encircled.eplayer.util;
 
 import com.google.gson.reflect.TypeToken;
-import cz.encircled.eplayer.core.Application;
+import cz.encircled.eplayer.core.ApplicationCore;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -17,14 +17,12 @@ import java.util.stream.Collectors;
 
 public class SettingsProvider {
 
-    private final static String PROPERTIES_FILE_PATH = Application.APP_DOCUMENTS_ROOT + "eplayer.properties.json";
+    private final static String PROPERTIES_FILE_PATH = ApplicationCore.APP_DOCUMENTS_ROOT + "eplayer.properties.json";
 
     private final static Logger log = LogManager.getLogger(SettingsProvider.class);
-
-    private static Map<String, Object> properties;
-
     private final static Type TYPE_TOKEN = new TypeToken<Map<String, Object>>() {
     }.getType();
+    private static Map<String, Object> properties;
 
     static {
         try {
@@ -34,27 +32,33 @@ public class SettingsProvider {
         }
     }
 
-    public static String get(@NotNull String key, String defaultValue) {
-        return properties.containsKey(key) ? get(key, String.class) : defaultValue;
+    @NotNull
+    public static String get(@NotNull String key, @NotNull String defaultValue) {
+        String value = get(key, String.class);
+        return value != null ? value : defaultValue;
     }
 
     @NotNull
     public static List<String> getList(@NotNull String key) {
         List<?> list = get(key, List.class);
-        if (list == null)
+        if (list == null) {
             return new ArrayList<>(0);
+        }
         return list.stream().map(Object::toString).collect(Collectors.toList());
     }
 
+    @Nullable
     public static String get(@NotNull String key) {
         return get(key, String.class);
     }
 
+    @Nullable
     public static Integer getInt(String key) {
         Number n = get(key, Number.class);
         return n == null ? null : n.intValue();
     }
 
+    @Nullable
     public static Integer getInt(String key, int defaultValue) {
         Number n = get(key, Number.class);
         return n == null ? defaultValue : n.intValue();
@@ -88,6 +92,7 @@ public class SettingsProvider {
         }
     }
 
+    @Nullable
     private static <T> T get(String key, Class<T> clazz) {
         return (T) properties.get(key);
     }
