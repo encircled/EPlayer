@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>
+        // TODO Delete me after test
+        app = {
+
+            getMediaTabs: function () {
+                if (!model.tabs.length) {
+                    model.tabs = JSON.parse(bridge.getMediaTabs());
+                    console.log('Tabs loaded');
+                }
+                return model.tabs;
+            },
+
+            callMediaTabContent: function (tabId) {
+                console.log('Call media tab ' + tabId);
+                model.getTabById(tabId);
+                console.log('path ' + model.getTabById(tabId).path);
+                bridge.getMediaTabContent(model.getTabById(tabId).path);
+            }
+
+        };
+
+        function showMediaCallback(arg) {
+            var params = JSON.parse(arg);
+            var path = params[0];
+            var media = params[1];
+
+            console.log('showMediaCallback: tab path is {0}'.format(path));
+            console.log(media);
+
+            var tab = ui.getTabById(model.getTabByPath(path).id);
+
+            console.log('Target tab is ' + tab);
+
+            tab.html('');
+            media.forEach(function (m) {
+                tab.append(components.getMediaWrapper(m));
+            })
+        }
+
+    </script>
+    <script type='text/JavaScript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+    <script type='text/JavaScript' src='http://code.jquery.com/jquery-latest.js'></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+
+<ul id="tabs-wrapper" class="nav nav-tabs"></ul>
+<div id="tabs-content-wrapper" class="tab-content">
+
+</div>
+
+</body>
+<script>
+    String.prototype.format = function () {
+        var str = this;
+        for (var i = 0; i < arguments.length; i++) {
+            var reg = new RegExp("\\{" + i + "\\}", "gm");
+            str = str.replace(reg, arguments[i]);
+        }
+        return str;
+    };
+
+    var ui = {
+
+        tabsWrapper: $('#tabs-wrapper'),
+
+        tabsContentWrapper: $('#tabs-content-wrapper'),
+
+        getTabById: function (tabId) {
+            return $('#tab_' + tabId);
+        }
+
+    };
+
+    var model = {
+
+        tabs: [],
+
+        getTabById: function (tabId) {
+            var result;
+            this.tabs.forEach(function (tab) {
+                if (tab.id == tabId) {
+                    result = tab;
+                }
+            });
+            return result;
+        },
+
+        getTabByPath: function (tabPath) {
+            var result;
+            this.tabs.forEach(function (tab) {
+                if (tab.path == tabPath) {
+                    result = tab;
+                }
+            });
+            return result;
+        }
+
+    };
+
+    var components = {
+
+        getTab: function (tab) {
+            return '<li role="presentation"><a href="#tab_{0}" tab-id="{0}" role="tab" data-toggle="tab">{1}</a></li>'.format(tab.id, tab.path);
+        },
+
+        getTabContent: function (tab) {
+            return '<div role="tabpanel" class="tab-pane" id="tab_{0}">Hi {1}!</div>'.format(tab.id, tab.path);
+        },
+
+        getMediaWrapper: function (media) {
+            return ('<div class="panel panel-default">' +
+            '<div class="panel-heading"><h3 class="panel-title">{0}</h3></div>' +
+            '<div class="panel-body">{1}</div></div>').format(media.name, media.path);
+        }
+
+    };
+
+    function showTabContent(tabId) {
+        console.log('Show tab {0}'.format(tabId));
+        var tab = ui.getTabById(tabId);
+        app.callMediaTabContent(tabId);
+    }
+
+    var a;
+
+    $(document).ready(function () {
+        app.getMediaTabs().forEach(function (tab) {
+            ui.tabsWrapper.append(components.getTab(tab));
+            ui.tabsContentWrapper.append(components.getTabContent(tab));
+        });
+
+        $('#tabs-wrapper a:first').tab('show');
+
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var tabId = e.target.attributes['tab-id'].value;
+            showTabContent(tabId);
+        });
+
+    });
+</script>
+</html>

@@ -1,26 +1,24 @@
 package cz.encircled.eplayer.view.fx;
 
 import cz.encircled.eplayer.core.ApplicationCore;
-import cz.encircled.eplayer.service.event.Event;
-import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
-import cz.encircled.eplayer.view.fx.components.SimpleButton;
 import cz.encircled.eplayer.view.fx.components.qn.QuickNaviViewButton;
-import cz.encircled.eplayer.view.fx.components.qn.tab.FolderMediaTab;
 import cz.encircled.eplayer.view.fx.components.qn.tab.MediaTab;
-import cz.encircled.eplayer.view.fx.components.qn.tab.QuickNaviMediaTab;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+
+import java.net.URL;
 
 /**
  * @author Encircled on 18/09/2014.
@@ -46,7 +44,7 @@ public class QuickNaviScreen extends BorderPane {
     }
 
     public void refreshCurrentTab() {
-        refreshTab((MediaTab) centerTabPane.getSelectionModel().getSelectedItem());
+//        refreshTab((MediaTab) centerTabPane.getSelectionModel().getSelectedItem());
     }
 
     public StringProperty viewProperty() {
@@ -59,13 +57,26 @@ public class QuickNaviScreen extends BorderPane {
 
     // TODO move
     public void addTab(String path) {
-        FolderMediaTab tab = new FolderMediaTab(core, this);
+        /*FolderMediaTab tab = new FolderMediaTab(core, this);
         tab.setPath(path);
-        centerTabPane.getTabs().add(tab);
+        centerTabPane.getTabs().add(tab);*/
     }
 
     public void init(@NotNull AppMenuBar menuBar) {
-        QuickNaviMediaTab quickNaviMediaTab = new QuickNaviMediaTab(core, this);
+        setTop(menuBar.getMenuBar());
+        WebView webView = new WebView();
+        WebEngine engine = webView.getEngine();
+        URL html = this.getClass().getClassLoader().getResource("html/quicknavi.html");
+        if (html == null) {
+            throw new RuntimeException("Html not found");
+        }
+        engine.load(html.toExternalForm());
+
+        JSObject windowObject = (JSObject) engine.executeScript("window");
+        windowObject.setMember("bridge", new JsBridge(core.getFolderScanService(), windowObject));
+
+        setCenter(webView);
+        /*QuickNaviMediaTab quickNaviMediaTab = new QuickNaviMediaTab(core, this);
         filterProperty = new SimpleStringProperty();
         viewProperty = new SimpleStringProperty();
         viewProperty.addListener(observable -> refreshCurrentTab());
@@ -98,11 +109,11 @@ public class QuickNaviScreen extends BorderPane {
         SimpleButton refreshButton = new SimpleButton("refresh_button", event -> refreshCurrentTab());
 
         statusBar.getChildren().add(refreshButton);
-        setBottom(statusBar);
+        setBottom(statusBar);*/
     }
 
     private void refreshTab(@NotNull MediaTab tab) {
-        switch (viewProperty.get()) {
+        /*switch (viewProperty.get()) {
             case VIEW_ALL:
                 tab.showAll();
                 break;
@@ -112,11 +123,11 @@ public class QuickNaviScreen extends BorderPane {
             case VIEW_FILMS:
                 tab.showFilms();
                 break;
-        }
+        }*/
     }
 
     private void initializeListeners(@NotNull FxView fxView) {
-        fxView.screenChangeProperty().addListener((observable, oldValue, newValue) -> {
+        /*fxView.screenChangeProperty().addListener((observable, oldValue, newValue) -> {
             if (FxView.QUICK_NAVI_SCREEN.equals(newValue)) {
                 refreshCurrentTab();
             }
@@ -128,7 +139,7 @@ public class QuickNaviScreen extends BorderPane {
 
         filterProperty.addListener((observable, oldValue, newValue) -> {
             refreshCurrentTab();
-        });
+        });*/
     }
 
     private void initializeSideMenu() {

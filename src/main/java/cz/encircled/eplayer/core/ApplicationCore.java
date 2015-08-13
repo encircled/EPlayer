@@ -34,6 +34,7 @@ public class ApplicationCore {
     public ApplicationCore() {
         eventObserver = new EventObserverImpl();
         cacheService = new JsonCacheService();
+        folderScanService = new OnDemandFolderScanner(this);
         IOUtil.createIfMissing(APP_DOCUMENTS_ROOT, true, false);
         addCloseHook();
     }
@@ -45,7 +46,6 @@ public class ApplicationCore {
     public void init(MediaPlayer mediaPlayer, FxView fxView) {
         cacheService.init();
         seriesFinder = new SeriesFinder();
-        folderScanService = new OnDemandFolderScanner(this);
         mediaService = new VLCMediaService(this, mediaPlayer);
         viewService = new FxViewService(fxView);
     }
