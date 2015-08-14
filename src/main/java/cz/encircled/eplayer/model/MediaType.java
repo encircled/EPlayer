@@ -1,6 +1,8 @@
 package cz.encircled.eplayer.model;
 
 import cz.encircled.eplayer.common.Constants;
+import cz.encircled.eplayer.util.DateUtil;
+import cz.encircled.eplayer.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class MediaType {
@@ -17,10 +19,16 @@ public class MediaType {
 
     private long watchDate;
 
+    private String timeLabel = "";
+
     public MediaType(@NotNull String path) {
         updatePath(path);
-        time = 0;
+        time = 0L;
         isSeries = false;
+    }
+
+    public String getTimeLabel() {
+        return timeLabel;
     }
 
     public boolean isSeries() {
@@ -49,6 +57,7 @@ public class MediaType {
 
     public void setTime(long time) {
         this.time = time;
+        updateTimeLabel();
     }
 
     public boolean exists() {
@@ -61,6 +70,12 @@ public class MediaType {
 
     public void setWatchDate(long watchDate) {
         this.watchDate = watchDate;
+    }
+
+    public void updateTimeLabel() {
+        timeLabel = time > 0L && watchDate > 0L ?
+                DateUtil.daysBetweenLocalized(watchDate) + ", " +
+                        StringUtil.msToTimeLabel(time) : " ";
     }
 
     @Override

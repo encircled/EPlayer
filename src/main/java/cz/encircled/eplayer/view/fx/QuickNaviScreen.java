@@ -2,13 +2,8 @@ package cz.encircled.eplayer.view.fx;
 
 import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
-import cz.encircled.eplayer.view.fx.components.qn.QuickNaviViewButton;
-import cz.encircled.eplayer.view.fx.components.qn.tab.MediaTab;
 import javafx.beans.property.StringProperty;
-import javafx.geometry.Insets;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
@@ -37,6 +32,7 @@ public class QuickNaviScreen extends BorderPane {
 
     private ApplicationCore core;
     private FxView fxView;
+    private JsBridge jsBridge;
 
     public QuickNaviScreen(ApplicationCore core, FxView fxView) {
         this.core = core;
@@ -44,6 +40,7 @@ public class QuickNaviScreen extends BorderPane {
     }
 
     public void refreshCurrentTab() {
+        jsBridge.pushRefreshCurrentTab();
 //        refreshTab((MediaTab) centerTabPane.getSelectionModel().getSelectedItem());
     }
 
@@ -73,7 +70,9 @@ public class QuickNaviScreen extends BorderPane {
         engine.load(html.toExternalForm());
 
         JSObject windowObject = (JSObject) engine.executeScript("window");
-        windowObject.setMember("bridge", new JsBridge(core.getFolderScanService(), windowObject));
+        jsBridge = new JsBridge(core, windowObject);
+        windowObject.setMember("bridge", jsBridge);
+        initializeListeners(fxView);
 
         setCenter(webView);
         /*QuickNaviMediaTab quickNaviMediaTab = new QuickNaviMediaTab(core, this);
@@ -112,61 +111,20 @@ public class QuickNaviScreen extends BorderPane {
         setBottom(statusBar);*/
     }
 
-    private void refreshTab(@NotNull MediaTab tab) {
-        /*switch (viewProperty.get()) {
-            case VIEW_ALL:
-                tab.showAll();
-                break;
-            case VIEW_SERIES:
-                tab.showSeries();
-                break;
-            case VIEW_FILMS:
-                tab.showFilms();
-                break;
-        }*/
-    }
-
     private void initializeListeners(@NotNull FxView fxView) {
-        /*fxView.screenChangeProperty().addListener((observable, oldValue, newValue) -> {
+        fxView.screenChangeProperty().addListener((observable, oldValue, newValue) -> {
             if (FxView.QUICK_NAVI_SCREEN.equals(newValue)) {
                 refreshCurrentTab();
             }
         });
 
-        centerTabPane.getSelectionModel().selectedItemProperty().addListener(
+        /*centerTabPane.getSelectionModel().selectedItemProperty().addListener(
                 (ov, oldTab, newTab) -> refreshTab((MediaTab) newTab)
-        );
+        );*/
 
-        filterProperty.addListener((observable, oldValue, newValue) -> {
+        /*filterProperty.addListener((observable, oldValue, newValue) -> {
             refreshCurrentTab();
         });*/
-    }
-
-    private void initializeSideMenu() {
-        sideMenu = new VBox(0);
-        sideMenu.setPadding(new Insets(40, 0, 0, 0));
-        sideMenu.getStyleClass().add("side_menu");
-
-        sideMenu.setPrefWidth(120);
-        sideMenu.setMaxWidth(120);
-
-        TextField searchField = new TextField();
-        searchField.getStyleClass().add("search_input");
-
-        filterProperty.bindBidirectional(searchField.textProperty());
-
-        sideMenu.getChildren().add(searchField);
-        VBox.setMargin(searchField, new Insets(0, 2, 10, 2));
-
-        ToggleGroup sideMenuGroup = new ToggleGroup();
-
-        QuickNaviViewButton films = new QuickNaviViewButton(this, VIEW_FILMS, "Films", sideMenuGroup);
-
-        QuickNaviViewButton series = new QuickNaviViewButton(this, VIEW_SERIES, "Series", sideMenuGroup);
-
-        QuickNaviViewButton all = new QuickNaviViewButton(this, VIEW_ALL, "All", sideMenuGroup);
-
-        sideMenu.getChildren().addAll(all, series, films);
     }
 
 }

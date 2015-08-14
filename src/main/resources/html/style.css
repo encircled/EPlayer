@@ -1,0 +1,9 @@
+.media-wrapper {
+    width: 350px;
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    float: left;
+    margin: 20px 20px 0 0;
+    cursor: pointer;
+}
