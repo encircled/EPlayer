@@ -38,7 +38,7 @@ public class JsBridge {
     }
 
     public void getMediaTabContent(String path) {
-        log.debug("getMediaTabContent call");
+        log.debug("getMediaTabContent call, path {}", path);
         new Thread(() -> {
             List<MediaType> mediaInFolder = core.getFolderScanService().getMediaInFolder(path);
             pushToUi("showMediaCallback", path, mediaInFolder);

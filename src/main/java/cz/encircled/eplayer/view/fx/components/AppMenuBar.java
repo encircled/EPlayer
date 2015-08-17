@@ -151,9 +151,10 @@ public class AppMenuBar {
         });
     }
 
-    private void updateTrackMenu(@NotNull Menu menu, @NotNull List<TrackDescription> trackDescriptions, final int selected, EventHandler<ActionEvent> eventHandler) {
+    private void updateTrackMenu(@NotNull Menu menu, @NotNull List<TrackDescription> trackDescriptions, int selected, EventHandler<ActionEvent> eventHandler) {
         ToggleGroup toggleGroup = new ToggleGroup();
-        menu.getItems().setAll(trackDescriptions.stream().map(s -> {
+
+        List<RadioMenuItem> menuItems = trackDescriptions.stream().map(s -> {
             RadioMenuItem menuItem = new RadioMenuItem(s.description());
 
             menuItem.setSelected(s.id() == selected);
@@ -162,7 +163,9 @@ public class AppMenuBar {
             menuItem.setOnAction(eventHandler);
 
             return menuItem;
-        }).collect(Collectors.toList()));
+        }).collect(Collectors.toList());
+
+        menu.getItems().setAll(menuItems);
         menu.setDisable(trackDescriptions.isEmpty());
     }
 

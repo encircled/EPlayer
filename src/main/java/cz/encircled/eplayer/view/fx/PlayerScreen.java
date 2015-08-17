@@ -3,7 +3,6 @@ package cz.encircled.eplayer.view.fx;
 import com.sun.jna.Memory;
 import cz.encircled.eplayer.common.PostponeTimer;
 import cz.encircled.eplayer.core.ApplicationCore;
-import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import cz.encircled.eplayer.view.fx.components.PlayerControls;
 import javafx.application.Platform;
@@ -31,7 +30,6 @@ import uk.co.caprica.vlcj.player.direct.BufferFormatCallback;
 import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
 import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
 
-import java.awt.*;
 import java.nio.ByteBuffer;
 
 /**
@@ -60,8 +58,6 @@ public class PlayerScreen extends BorderPane {
     private BooleanProperty fitToScreen;
 
     private ImageView imageView;
-
-    private Robot robot;
 
     private PlayerControls playerControls;
 
@@ -110,7 +106,7 @@ public class PlayerScreen extends BorderPane {
 
         this.menuBar = appMenuBar.getMenuBar();
         this.playerControls = new PlayerControls(core, fxView);
-        pixelFormat = PixelFormat.getByteBgraInstance();
+        pixelFormat = PixelFormat.getByteBgraPreInstance(); // TODO check
 
         playerHolder = new Pane();
         playerStackPane = new StackPane(playerHolder);
@@ -126,11 +122,6 @@ public class PlayerScreen extends BorderPane {
     }
 
     private void initializeListeners(@NotNull ApplicationCore core) {
-        try {
-            robot = new Robot();
-        } catch (AWTException e) {
-            e.printStackTrace();
-        }
         fitToScreen.addListener(observable -> fitImageViewSize((float) playerHolder.getWidth(), (float) playerHolder.getHeight()));
         playerHolder.setOnMouseClicked(event -> {
             core.getMediaService().toggle();
@@ -149,13 +140,6 @@ public class PlayerScreen extends BorderPane {
         if (fxView.isFullScreen()) {
             onFullScreen();
         }
-
-        core.getEventObserver().listen(Event.playingChanged, (event, isPlaying, arg2) -> {
-            if (isPlaying) {
-                // TODO
-//                    robot.keyPress(KeyEvent.VK_0);
-            }
-        });
 
     }
 
@@ -242,7 +226,7 @@ public class PlayerScreen extends BorderPane {
             super(new CanvasBufferFormatCallback());
         }
 
-        @Nullable
+        @NotNull
         private PixelWriter getPW() {
             if (pixelWriter == null)
                 pixelWriter = writableImage.getPixelWriter();
@@ -251,13 +235,19 @@ public class PlayerScreen extends BorderPane {
 
         @Override
         public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, @NotNull BufferFormat bufferFormat) {
-            log.debug("display");
-            if (writableImage == null)
+            if (writableImage == null) {
                 return;
-            Memory nativeBuffer = nativeBuffers[0];
-            ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
+            }
             Platform.runLater(() -> {
-                getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+                Memory nativeBuffer = mediaPlayer.lock()[0];
+                try {
+                    ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
+                    getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
+                } catch (Throwable t) {
+                    t.printStackTrace();
+                } finally {
+                    mediaPlayer.unlock();
+                }
             });
         }
 

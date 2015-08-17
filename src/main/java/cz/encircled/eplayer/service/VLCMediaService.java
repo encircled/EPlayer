@@ -19,7 +19,6 @@ public class VLCMediaService implements MediaService {
 
     private static final Logger log = LogManager.getLogger();
 
-
     private long currentTime;
 
     private MediaPlayer player;
@@ -51,6 +50,7 @@ public class VLCMediaService implements MediaService {
 
     private void play(@NotNull String path, long time) {
         log.debug("Play {}, start time is {}", path, time);
+
         CountDownLatch countDownLatch = new CountDownLatch(1);
         log.debug("Show player requested");
         core.getViewService().showPlayer(countDownLatch);
@@ -60,13 +60,17 @@ public class VLCMediaService implements MediaService {
             throw new RuntimeException(e);
         }
         log.debug("Show player done");
+
         if (!path.equals(current)) {
             log.debug("Path {} is new", path);
             current = path;
             player.prepareMedia(path);
+            log.debug("Media prepared");
         }
+
         player.start();
-        setTime(Math.min(time, player.getLength()));
+        if (time > 1L)
+            setTime(Math.min(time, player.getLength())); // TODO
         log.debug("Playing started");
     }
 

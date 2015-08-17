@@ -37,4 +37,6 @@ public interface CacheService {
     @NotNull
     List<MediaType> getCache();
 
+    void init();
+
 }

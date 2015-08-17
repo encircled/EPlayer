@@ -9,7 +9,6 @@ import cz.encircled.eplayer.service.gui.FxViewService;
 import cz.encircled.eplayer.service.gui.ViewService;
 import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.view.fx.FxView;
-import javafx.application.Application;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +20,7 @@ public class ApplicationCore {
     private static final Logger log = LogManager.getLogger();
     private MediaService mediaService;
 
-    private JsonCacheService cacheService;
+    private CacheService cacheService;
 
     private ViewService viewService;
 
@@ -32,21 +31,20 @@ public class ApplicationCore {
     private FolderScanService folderScanService;
 
     public ApplicationCore() {
-        eventObserver = new EventObserverImpl();
         cacheService = new JsonCacheService();
         folderScanService = new OnDemandFolderScanner(this);
+        eventObserver = new EventObserverImpl();
         IOUtil.createIfMissing(APP_DOCUMENTS_ROOT, true, false);
         addCloseHook();
     }
 
-    public static void main(String[] args) {
-        Application.launch(FxView.class);
+    public void initFx(MediaPlayer mediaPlayer) {
+        mediaService = new VLCMediaService(this, mediaPlayer);
     }
 
-    public void init(MediaPlayer mediaPlayer, FxView fxView) {
+    public void init(FxView fxView) {
         cacheService.init();
         seriesFinder = new SeriesFinder();
-        mediaService = new VLCMediaService(this, mediaPlayer);
         viewService = new FxViewService(fxView);
     }
 

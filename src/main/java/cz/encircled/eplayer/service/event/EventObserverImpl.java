@@ -68,7 +68,7 @@ public class EventObserverImpl implements EventObserver {
         checkEvent(event);
         checkFxEvent(event);
         events.get(event).stream().forEach(l -> l.handle(event, arg, arg2));
-        fxEvents.get(event).stream().forEach(l -> Platform.runLater(() -> l.handle(event, arg, arg2)));
+        Platform.runLater(() -> fxEvents.get(event).stream().forEach(l -> l.handle(event, arg, arg2)));
     }
 
 }
