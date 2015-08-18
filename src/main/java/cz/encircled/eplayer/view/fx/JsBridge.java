@@ -47,7 +47,7 @@ public class JsBridge {
                     mediaInFolder = mediaInFolder.stream().filter((m) -> matcher.reset(m.getName()).matches()).collect(Collectors.toList());
                     break;
                 case FILMS:
-                    mediaInFolder = mediaInFolder.stream().filter((m) -> matcher.reset(m.getName()).matches()).collect(Collectors.toList());
+                    mediaInFolder = mediaInFolder.stream().filter((m) -> !matcher.reset(m.getName()).matches()).collect(Collectors.toList());
                     break;
             }
 

@@ -1,7 +1,9 @@
 var components = {
 
     getTab: function (tab) {
-        return '<li role="presentation"><a href="#tab_{0}" tab-id="{0}" role="tab" data-toggle="tab">{1}</a></li>'.format(tab.id, tab.path);
+        return ('<li role="presentation">' +
+        '<a href="#tab_{0}" tab-id="{0}" role="tab" data-toggle="tab"><button type="button" class="close"><span aria-hidden="true">&times;</span></button>{1}</a>' +
+        '</li>').format(tab.id, tab.path);
     },
 
     getTabContent: function (tab) {
