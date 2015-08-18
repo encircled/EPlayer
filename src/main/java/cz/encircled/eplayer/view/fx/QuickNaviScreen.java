@@ -40,8 +40,7 @@ public class QuickNaviScreen extends BorderPane {
     }
 
     public void refreshCurrentTab() {
-        jsBridge.pushRefreshCurrentTab();
-//        refreshTab((MediaTab) centerTabPane.getSelectionModel().getSelectedItem());
+        jsBridge.refreshCurrentTab();
     }
 
     public StringProperty viewProperty() {

@@ -20,7 +20,19 @@
 <div class="container-fluid" style="padding: 20px">
     <div class="row">
         <div class="col-md-1">
-            Menu
+            <input class="form-control" type="text" id="searchInput"/>
+
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-primary active">
+                    <input type="radio" name="options" id="option1" autocomplete="off" checked>All
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="options" id="option2" autocomplete="off">Films
+                </label>
+                <label class="btn btn-primary">
+                    <input type="radio" name="options" id="option3" autocomplete="off">Series
+                </label>
+            </div>
         </div>
         <div class="col-md-11">
             <ul id="tabs-wrapper" class="nav nav-tabs"></ul>
@@ -33,9 +45,13 @@
 
     var ui = {
 
+        selectedTabId: null,
+
         tabsWrapper: $('#tabs-wrapper'),
 
         tabsContentWrapper: $('#tabs-content-wrapper'),
+
+        searchInput: $('#searchInput'),
 
         getTabById: function (tabId) {
             return $('#tab_' + tabId);
@@ -45,7 +61,7 @@
 
     $(document).ready(function () {
 
-        app.getMediaTabs().forEach(function (tab) {
+        app.callGetMediaTabs().forEach(function (tab) {
             ui.tabsWrapper.append(components.getTab(tab));
             ui.tabsContentWrapper.append(components.getTabContent(tab));
         });
@@ -53,10 +69,19 @@
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             var tabId = e.target.attributes['tab-id'].value;
-            app.callMediaTabContent(tabId);
+            ui.selectedTabId = tabId;
+
+            app.onTabUpdate(tabId);
+
+            ui.searchInput.focus();
         });
 
         $('#tabs-wrapper a:first').tab('show');
+
+        ui.searchInput.focus();
+        ui.searchInput.keyup(function (e) {
+            app.onFilterUpdate(e.target.value);
+        });
 
     });
 </script>

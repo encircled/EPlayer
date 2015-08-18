@@ -25,7 +25,7 @@ public class StringUtil {
         return s == null || s.trim().isEmpty();
     }
 
-    public static boolean notSet(String s) {
+    public static boolean isNotSet(String s) {
         return !isSet(s);
     }
 

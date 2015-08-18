@@ -31,8 +31,9 @@ import java.io.File;
 public class FxView extends Application implements AppView {
 
     // TODO
-//    public static final String VLC_LIB_PATH = "D:\\vlc-2.1.5-win64\\vlc-2.1.5";
-    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.2.1";
+//    public static final String VLC_LIB_PATH = "D:\\Soft\\vlc-2.2.1";
+    public static final String VLC_LIB_PATH = "D:\\Soft\\vlc";
+    //    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.2.1";
     public static final int MIN_WIDTH = 860;
     public static final int MIN_HEIGHT = 600;
     public static final String QUICK_NAVI_SCREEN = "quickNavi";
