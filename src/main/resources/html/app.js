@@ -1,17 +1,20 @@
 app = {
 
     callGetMediaTabs: function () {
-        if (!model.tabs.length) {
-            model.tabs = [{id: 1, path: 'QuickNavi'}];
-            model.tabs = model.tabs.concat(JSON.parse(bridge.getMediaTabs()));
-            console.log('Tabs loaded');
-        }
+        model.tabs = [{id: 1, path: 'QuickNavi'}];
+        model.tabs = model.tabs.concat(JSON.parse(bridge.getMediaTabs()));
+        console.log('Tabs loaded');
         return model.tabs;
     },
 
     callPlayMedia: function (path) {
         console.log('Call play media at path: ' + path);
         bridge.playMedia(path);
+    },
+
+    callCloseTab: function (path) {
+        console.log('Call close tab: ' + path);
+        bridge.closeTab(path);
     },
 
     onFilterUpdate: function (filter) {
@@ -27,6 +30,14 @@ app = {
         bridge.onViewTypeUpdate(viewType);
     },
 
+    onOrderByUpdate: function (orderBy) {
+        bridge.onOrderByUpdate(orderBy);
+    },
+
+    onReverseOrderUpdate: function (isReverseOrder) {
+        bridge.onReverseOrderUpdate(isReverseOrder);
+    },
+
     ln: JSON.parse(bridge.getLocalization())
 
 };
@@ -37,7 +48,6 @@ function showMediaCallback(arg) {
     var media = params[1];
 
     console.log('showMediaCallback: tab path is {0}'.format(path));
-    console.log(media)
 
     var tab = ui.getTabById(model.getTabByPath(path).id);
 
@@ -50,4 +60,33 @@ function showMediaCallback(arg) {
         });
         mediaWrapper.find('.glyphicon-info-sign').tooltip({});
     })
+}
+
+function addTabCallback(arg) {
+    var tab = JSON.parse(arg);
+
+    var tabStick = components.getTab(tab);
+    var tabContent = components.getTabContent(tab);
+
+    tabContent.appendTo(ui.tabsContentWrapper);
+    tabStick.appendTo(ui.tabsWrapper);
+
+    model.tabs.push(tab);
+
+    tabStick.find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var tabId = e.target.attributes['tab-id'].value;
+        ui.selectedTabId = tabId;
+
+        app.onTabUpdate(tabId);
+
+        ui.searchInput.focus();
+    });
+
+    if (tab.closeable) {
+        tabStick.find('.tab-close-button').click(function () {
+            tabStick.remove();
+            tabContent.remove();
+            app.callCloseTab(tab.path);
+        });
+    }
 }

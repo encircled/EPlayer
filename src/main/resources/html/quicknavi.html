@@ -8,9 +8,10 @@
     <script type='text/JavaScript' src='jquery-latest.js'></script>
     <script src="bootstrap.min.js"></script>
     <script src="components.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="bootstrap-theme.css">
     <link rel="stylesheet" href="style.css">
+
 
     <!--<script type='text/JavaScript' src='http://code.jquery.com/jquery-latest.js'></script>-->
     <!--<link rel="stylesheet" href="http://bootswatch.com/yeti/bootstrap.css">-->
@@ -21,13 +22,14 @@
 <div class="container-fluid" style="padding: 20px">
     <div class="row" style="margin-bottom: 20px">
         <div class="col-md-12">
-            <div class="left-inner-addon col-xs-3" style="padding-left: 0">
-                <span class="glyphicon glyphicon-search"></span>
+            <div class="inner-addon_wrapper col-xs-3" style="padding-left: 0">
+                <span class="left-inner-addon glyphicon glyphicon-search"></span>
                 <input type="text" id="searchInput"
                        class="form-control"
-                       placeholder="Username"/>
+                       placeholder="Search"/>
+                <span class="right-inner-addon clickable glyphicon glyphicon-remove" id="resetFilter"></span>
             </div>
-            <div class="btn-group" data-toggle="buttons">
+            <div class="btn-group col-xs-3" data-toggle="buttons">
                 <label class="btn btn-primary active" id="viewAll">
                     <input type="radio" name="options" autocomplete="off" checked>All
                 </label>
@@ -36,6 +38,28 @@
                 </label>
                 <label class="btn btn-primary" id="viewSeries">
                     <input type="radio" name="options" autocomplete="off">Series
+                </label>
+            </div>
+
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-info active" id="orderByName">
+                    <input type="radio" name="options" autocomplete="off" checked>Name
+                </label>
+                <label class="btn btn-info" id="orderBySize">
+                    <input type="radio" name="options" autocomplete="off">Size
+                </label>
+                <label class="btn btn-info" id="orderByCreationDate">
+                    <input type="radio" name="options" autocomplete="off">Creation date
+                </label>
+            </div>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default active" id="normalOrder">
+                    <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
+                    <input type="radio" name="options" autocomplete="off" checked>
+                </label>
+                <label class="btn btn-default " id="reverseOrder">
+                    <span class="glyphicon glyphicon-chevron-down" aria-hidden="true"></span>
+                    <input type="radio" name="options" autocomplete="off">
                 </label>
             </div>
         </div>
@@ -48,62 +72,7 @@
         </div>
     </div>
 </div>
-</div>
 </body>
-<script>
-
-    var ui = {
-
-        selectedTabId: null,
-
-        tabsWrapper: $('#tabs-wrapper'),
-
-        tabsContentWrapper: $('#tabs-content-wrapper'),
-
-        searchInput: $('#searchInput'),
-
-        getTabById: function (tabId) {
-            return $('#tab_' + tabId);
-        }
-
-    };
-
-    $(document).ready(function () {
-
-        app.callGetMediaTabs().forEach(function (tab) {
-            ui.tabsWrapper.append(components.getTab(tab));
-            ui.tabsContentWrapper.append(components.getTabContent(tab));
-        });
-
-
-        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            var tabId = e.target.attributes['tab-id'].value;
-            ui.selectedTabId = tabId;
-
-            app.onTabUpdate(tabId);
-
-            ui.searchInput.focus();
-        });
-
-        $('#tabs-wrapper a:first').tab('show');
-
-        ui.searchInput.focus();
-        ui.searchInput.keyup(function (e) {
-            app.onFilterUpdate(e.target.value);
-        });
-
-
-        $('#viewAll').click(function (e) {
-            console.log('qweqwe');
-            app.onViewTypeUpdate('ALL');
-        });
-        $('#viewSeries').click(function (e) {
-            app.onViewTypeUpdate('SERIES');
-        });
-        $('#viewFilms').click(function () {
-            app.onViewTypeUpdate('FILMS');
-        })
-
-    });
-</script>
+<script src="ui.js"></script>
+<script src="init.js"></script>
 </html>

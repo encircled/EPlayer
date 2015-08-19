@@ -1,16 +1,19 @@
-button.close {
-    color: red;
-    float: right;
-}
 
 .media-wrapper {
     width: 350px;
-    /*height: 200px;*/
-    /*min-height: 200px;*/
-    /*max-height: 200px;*/
+    height: 200px;
+    min-height: 200px;
+    max-height: 200px;
+    text-overflow: ellipsis;
     float: left;
     margin: 20px 20px 0 0;
     cursor: pointer;
+}
+
+.media-wrapper h3 {
+    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-all;
 }
 
 .media-wrapper .panel-body {
@@ -19,16 +22,43 @@ button.close {
     max-height: 60px;
 }
 
-.left-inner-addon {
+.media-wrapper:hover .panel-body {
+    background: rgb(39, 128, 227);
+}
+
+.inner-addon_wrapper {
     position: relative;
 }
 
-.left-inner-addon input {
-    padding-left: 35px;
+.inner-addon_wrapper input {
+    padding: 0 35px;
 }
 
-.left-inner-addon span {
+.left-inner-addon {
     position: absolute;
-    padding: 12px 12px;
+    padding: 14px 12px;
     pointer-events: none;
+}
+
+.right-inner-addon {
+    right: 0;
+    position: absolute;
+    padding: 14px 6px;
+    margin-right: 18px;
+}
+
+.right-inner-addon.clickable:hover {
+    color: rgb(39, 128, 227);
+    cursor: pointer;
+}
+
+.tab-close-button {
+    float: right;
+    margin: 0 0 0 15px;
+    color: black;
+}
+
+.tab-close-button:hover {
+    color: rgb(39, 128, 227);
+    cursor: pointer;
 }

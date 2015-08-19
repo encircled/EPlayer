@@ -50,7 +50,9 @@ public enum Localization {
 
     yesterday,
 
-    daysAgo;
+    daysAgo,
+
+    back;
 
     public String ln() {
         return LocalizationProvider.get2(this.name());

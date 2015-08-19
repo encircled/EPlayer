@@ -11,8 +11,10 @@ import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.stage.FileChooser;
@@ -20,6 +22,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import uk.co.caprica.vlcj.binding.LibVlc;
 import uk.co.caprica.vlcj.runtime.RuntimeUtil;
 
@@ -65,15 +68,24 @@ public class FxView extends Application implements AppView {
     }
 
     @Override
+    public boolean isPlayerScene() {
+        return PLAYER_SCREEN.equals(screenChangeProperty.getValue());
+    }
+
+    @Override
     public void showQuickNavi() {
-        primaryScene.setRoot(quickNaviScreen);
-        screenChangeProperty.setValue(QUICK_NAVI_SCREEN);
+        if (isPlayerScene()) {
+            primaryScene.setRoot(quickNaviScreen);
+            screenChangeProperty.setValue(QUICK_NAVI_SCREEN);
+        }
     }
 
     @Override
     public void showPlayer() {
-        primaryScene.setRoot(playerScreen);
-        screenChangeProperty.setValue(PLAYER_SCREEN);
+        if (!isPlayerScene()) {
+            primaryScene.setRoot(playerScreen);
+            screenChangeProperty.setValue(PLAYER_SCREEN);
+        }
     }
 
     public StringProperty screenChangeProperty() {
@@ -164,29 +176,39 @@ public class FxView extends Application implements AppView {
             }
         });
 
-        primaryScene.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasFiles()) {
-                success = true;
-                for (File file : db.getFiles()) {
-                    String filePath = file.getAbsolutePath();
-                    log.debug("DnD {}", filePath);
-                    quickNaviScreen.addTab(filePath);
-                    new Thread(() -> {
-                        Settings.folders_to_scan.addToList(filePath).save();
-                    }).start();
-                }
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
+        primaryScene.setOnDragDropped(getNewTabDropHandler());
 
         initializeMediaFileChoose();
 
         primaryStage.setOnCloseRequest(t -> core.exit());
         primaryStage.setScene(primaryScene);
         primaryStage.show();
+    }
+
+    @NotNull
+    public EventHandler<DragEvent> getNewTabDropHandler() {
+        return event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                success = true;
+                for (File file : db.getFiles()) {
+                    if (file.isDirectory()) {
+                        String filePath = file.getPath();
+                        log.debug("DnD new tab {}", filePath);
+                        quickNaviScreen.addTab(filePath);
+
+                        new Thread(() -> {
+                            Settings.folders_to_scan.addToList(filePath).save();
+                        }).start();
+
+                        success = true;
+                    }
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        };
     }
 
     private void initializeMediaFileChoose() {

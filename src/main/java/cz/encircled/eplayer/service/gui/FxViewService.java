@@ -18,21 +18,6 @@ public class FxViewService implements ViewService {
     }
 
     @Override
-    public boolean isPlayerState() {
-        return false;
-    }
-
-    @Override
-    public void enterFullScreen() {
-
-    }
-
-    @Override
-    public void exitFullScreen() {
-
-    }
-
-    @Override
     public void showPlayer(@NotNull CountDownLatch countDownLatch) {
         runInFxThread(fxView::showPlayer, countDownLatch);
     }

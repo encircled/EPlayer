@@ -17,7 +17,9 @@ import uk.co.caprica.vlcj.player.MediaPlayer;
 public class ApplicationCore {
 
     public static final String APP_DOCUMENTS_ROOT = System.getenv("APPDATA") + "\\EPlayer\\";
+
     private static final Logger log = LogManager.getLogger();
+
     private MediaService mediaService;
 
     private CacheService cacheService;
@@ -29,6 +31,8 @@ public class ApplicationCore {
     private SeriesFinder seriesFinder;
 
     private FolderScanService folderScanService;
+
+    private FxView fxView;
 
     public ApplicationCore() {
         cacheService = new JsonCacheService();
@@ -43,6 +47,7 @@ public class ApplicationCore {
     }
 
     public void init(FxView fxView) {
+        this.fxView = fxView;
         cacheService.init();
         seriesFinder = new SeriesFinder();
         viewService = new FxViewService(fxView);
@@ -56,6 +61,17 @@ public class ApplicationCore {
             mediaService.stop();
             cacheService.save();
         }).start();
+    }
+
+    public void back() {
+        // TODO
+        if (fxView.isPlayerScene()) {
+            if (fxView.isFullScreen()) {
+//                fxView.setFullScreen(false);
+                mediaService.updateCurrentMediaInCache();
+            } else
+                openQuickNavi();
+        }
     }
 
     public void playLast() {

@@ -77,6 +77,10 @@ public class AppMenuBar {
         fitScreen.setAccelerator(new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN));
         fitScreen.setSelected(fxView.getPlayerScreen().fitToScreenProperty().get());
 
+        MenuItem back = new MenuItem(Localization.back.ln());
+        back.setOnAction(event -> core.back());
+        back.setAccelerator(new KeyCodeCombination(KeyCode.CANCEL)); // TODO
+
         view.getItems().addAll(fullScreen, fitScreen);
         return view;
     }

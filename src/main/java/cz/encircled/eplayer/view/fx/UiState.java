@@ -9,9 +9,29 @@ public class UiState {
 
     private ViewType viewType = ViewType.ALL;
 
+    private OrderBy orderBy = OrderBy.NAME;
+
     private String path = "";
 
     private boolean isQuickNavi = true;
+
+    private boolean isReverseOrder = false;
+
+    public boolean isReverseOrder() {
+        return isReverseOrder;
+    }
+
+    public void setIsReverseOrder(boolean isReverseOrder) {
+        this.isReverseOrder = isReverseOrder;
+    }
+
+    public OrderBy getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(OrderBy orderBy) {
+        this.orderBy = orderBy;
+    }
 
     public String getFilter() {
         return filter;
@@ -48,6 +68,12 @@ public class UiState {
     public enum ViewType {
 
         ALL, FILMS, SERIES;
+
+    }
+
+    public enum OrderBy {
+
+        NAME, SIZE, CREATION_DATE
 
     }
 

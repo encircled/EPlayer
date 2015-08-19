@@ -11,9 +11,7 @@ import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -51,6 +49,24 @@ public class JsBridge {
                     break;
             }
 
+            Comparator<MediaType> comparator;
+            switch (uiState.getOrderBy()) {
+                case SIZE:
+                    comparator = (o1, o2) -> Long.compare(o1.getSize(), o2.getSize());
+                    break;
+                case CREATION_DATE:
+                    comparator = (o1, o2) -> Long.compare(o1.getFileCreationDate(), o2.getFileCreationDate());
+                    break;
+                default:
+                    comparator = (o1, o2) -> o1.getName().compareTo(o2.getName());
+            }
+
+            if (uiState.isReverseOrder()) {
+                comparator = Collections.reverseOrder(comparator);
+            }
+
+            mediaInFolder.sort(comparator);
+
             pushToUi("showMediaCallback", uiState.getPath(), mediaInFolder);
         }).start();
 
@@ -60,22 +76,6 @@ public class JsBridge {
         log.debug("GetMediaTabs call");
         List<TabDto> tabs = Settings.folders_to_scan.getList().stream().map(path -> new TabDto(path, true)).collect(Collectors.toList());
         return toJson(tabs);
-    }
-
-    public void getMediaTabContent(String path) {
-        log.debug("getMediaTabContent call, path {}", path);
-        new Thread(() -> {
-            List<MediaType> mediaInFolder = core.getFolderScanService().getMediaInFolder(path);
-            pushToUi("showMediaCallback", path, mediaInFolder);
-        }).start();
-    }
-
-    public void getQuickNaviContent() {
-        log.debug("getQuickNaviContent call");
-        new Thread(() -> {
-            List<MediaType> mediaInFolder = core.getCacheService().getCache();
-            pushToUi("showQuickNaviCallback", mediaInFolder);
-        }).start();
     }
 
     public String getLocalization() {
@@ -90,19 +90,11 @@ public class JsBridge {
         }).start();
     }
 
-    public void filterQuickNavi(String filter) {
-        log.debug("filterQuickNavi: {}", filter);
+    public void closeTab(String path) {
+        log.debug("Close tab call: {}", path);
         new Thread(() -> {
-            List<MediaType> mediaTypes = core.getCacheService().getCache();
-            pushToUi("showQuickNaviCallback", getFilteredMedia(filter, mediaTypes));
-        }).start();
-    }
-
-    public void filter(String path, String filter) {
-        log.debug("filter: {}, tab {}", filter, path);
-        new Thread(() -> {
-            List<MediaType> mediaTypes = core.getFolderScanService().getMediaInFolder(path);
-            pushToUi("showMediaCallback", path, getFilteredMedia(filter, mediaTypes));
+            Settings.folders_to_scan.removeFromList(path);
+            Settings.folders_to_scan.save();
         }).start();
     }
 
@@ -126,10 +118,28 @@ public class JsBridge {
         }
     }
 
+    public void onOrderByUpdate(String orderBy) {
+        if (StringUtil.isSet(orderBy)) {
+            uiState.setOrderBy(UiState.OrderBy.valueOf(orderBy));
+            refreshCurrentTab();
+        }
+    }
+
+    public void onReverseOrderUpdate(boolean isReverseOrder) {
+        uiState.setIsReverseOrder(isReverseOrder);
+        refreshCurrentTab();
+    }
+
+    // State callbacks end
+
     public void pushToUi(String action, Object... param) {
         log.debug("pushToUi call: {}", action);
         Platform.runLater(() -> {
-            windowObject.call(action, toJson(param));
+            if (param.length == 1) {
+                windowObject.call(action, toJson(param[0]));
+            } else {
+                windowObject.call(action, toJson(param));
+            }
         });
     }
 
@@ -147,7 +157,7 @@ public class JsBridge {
         return new Gson().toJson(obj);
     }
 
-    public class TabDto {
+    public static class TabDto {
 
         long id;
 

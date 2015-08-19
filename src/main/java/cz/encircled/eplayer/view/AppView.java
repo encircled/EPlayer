@@ -9,6 +9,8 @@ public interface AppView {
 
     void showPlayer();
 
+    boolean isPlayerScene();
+
     void showQuickNavi();
 
 //    void addTabForFolder(@NotNull String tabName, @NotNull String path);

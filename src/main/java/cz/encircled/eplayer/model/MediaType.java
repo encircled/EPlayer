@@ -6,6 +6,10 @@ import cz.encircled.eplayer.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 
 public class MediaType {
 
@@ -28,6 +32,8 @@ public class MediaType {
     private long size;
 
     private String formattedSize;
+
+    private long fileCreationDate;
 
     public MediaType(@NotNull String path) {
         updatePath(path);
@@ -92,6 +98,10 @@ public class MediaType {
         this.watchDate = watchDate;
     }
 
+    public long getFileCreationDate() {
+        return fileCreationDate;
+    }
+
     public void updateTimeLabel() {
         timeLabel = time > 0L && watchDate > 0L ?
                 DateUtil.daysBetweenLocalized(watchDate) + ", " +
@@ -106,6 +116,15 @@ public class MediaType {
     public void updatePath(@NotNull String path) {
         File file = new File(path);
         this.path = path;
+
+        try {
+            BasicFileAttributes attr = Files.readAttributes(Paths.get(file.getPath()), BasicFileAttributes.class);
+            this.fileCreationDate = attr.creationTime().toMillis();
+        } catch (IOException e) {
+            this.fileCreationDate = 0L;
+            e.printStackTrace();
+            // TODO
+        }
 
         String fullName = file.getName();
         int lastDot = fullName.lastIndexOf(".");
