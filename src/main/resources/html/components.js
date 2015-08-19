@@ -17,10 +17,11 @@ var components = {
         return $(('<div class="media-wrapper"><div class="panel panel-primary">' +
         '<div class="panel-heading"><h3 class="panel-title">{0}</h3></div>' +
         '<div class="panel-body">' +
-        '{1}' +
-        '<span title="{2}, {3}" class="glyphicon glyphicon-info-sign" />' +
+        '<p>{1}</p>' +
+        '<p>{2}</p>' +
+        '<span title="{3}, {4}" class="glyphicon glyphicon-info-sign" />' +
         '</div>' +
-        '</div></div>').format(media.name, media.timeLabel, media.extension, media.formattedSize));
+        '</div></div>').format(media.name, media.formattedCurrentTime, media.formattedWatchDate, media.extension, media.formattedSize));
     }
 
 };

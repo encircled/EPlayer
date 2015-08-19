@@ -21,8 +21,6 @@ public class MediaType {
 
     private long watchDate;
 
-    private String timeLabel = "";
-
     private String path;
 
     private String name;
@@ -30,6 +28,10 @@ public class MediaType {
     private String extension;
 
     private long size;
+
+    private String formattedWatchDate = "";
+
+    private String formattedCurrentTime = "";
 
     private String formattedSize;
 
@@ -41,8 +43,12 @@ public class MediaType {
         isSeries = false;
     }
 
-    public String getTimeLabel() {
-        return timeLabel;
+    public String getFormattedWatchDate() {
+        return formattedWatchDate;
+    }
+
+    public String getFormattedCurrentTime() {
+        return formattedCurrentTime;
     }
 
     public boolean isSeries() {
@@ -96,6 +102,7 @@ public class MediaType {
 
     public void setWatchDate(long watchDate) {
         this.watchDate = watchDate;
+        updateTimeLabel();
     }
 
     public long getFileCreationDate() {
@@ -103,9 +110,8 @@ public class MediaType {
     }
 
     public void updateTimeLabel() {
-        timeLabel = time > 0L && watchDate > 0L ?
-                DateUtil.daysBetweenLocalized(watchDate) + ", " +
-                        StringUtil.msToTimeLabel(time) : " ";
+        formattedCurrentTime = StringUtil.msToTimeLabel(time);
+        formattedWatchDate = DateUtil.daysBetweenLocalized(watchDate);
     }
 
     @Override

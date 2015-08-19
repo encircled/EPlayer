@@ -1,10 +1,8 @@
 app = {
 
     callGetMediaTabs: function () {
-        model.tabs = [{id: 1, path: 'QuickNavi'}];
-        model.tabs = model.tabs.concat(JSON.parse(bridge.getMediaTabs()));
-        console.log('Tabs loaded');
-        return model.tabs;
+        console.log('Load tabs');
+        return JSON.parse(bridge.getMediaTabs());
     },
 
     callPlayMedia: function (path) {
@@ -62,9 +60,7 @@ function showMediaCallback(arg) {
     })
 }
 
-function addTabCallback(arg) {
-    var tab = JSON.parse(arg);
-
+function addTab(tab) {
     var tabStick = components.getTab(tab);
     var tabContent = components.getTabContent(tab);
 
@@ -89,4 +85,9 @@ function addTabCallback(arg) {
             app.callCloseTab(tab.path);
         });
     }
+}
+
+function addTabCallback(arg) {
+    var tab = JSON.parse(arg);
+    addTab(tab);
 }

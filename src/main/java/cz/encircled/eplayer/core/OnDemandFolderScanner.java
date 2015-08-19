@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class OnDemandFolderScanner implements FolderScanService {
 
-    private static final List<String> SUPPORTED_FORMATS = Arrays.asList("avi", "mkv", "mp3", "wav", "wmv", "mov");
+    private static final List<String> SUPPORTED_FORMATS = Arrays.asList("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov");
 
     private CacheService cacheService;
 

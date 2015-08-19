@@ -75,6 +75,7 @@ public class JsBridge {
     public String getMediaTabs() {
         log.debug("GetMediaTabs call");
         List<TabDto> tabs = Settings.folders_to_scan.getList().stream().map(path -> new TabDto(path, true)).collect(Collectors.toList());
+        tabs.add(0, new TabDto("QuickNavi", false));
         return toJson(tabs);
     }
 

@@ -1,19 +1,8 @@
 $(document).ready(function () {
 
     app.callGetMediaTabs().forEach(function (tab) {
-        var tabStick = components.getTab(tab);
-        var tabContent = components.getTabContent(tab);
-
-        tabContent.appendTo(ui.tabsContentWrapper);
-        tabStick.appendTo(ui.tabsWrapper);
-
-        if (tab.closeable) {
-            tabStick.find('.tab-close-button').click(function () {
-                tabStick.remove();
-                tabContent.remove();
-                app.callCloseTab(tab.path);
-            });
-        }
+        model.tabs.push(tab);
+        addTab(tab);
     });
 
 
