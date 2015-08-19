@@ -18,3 +18,17 @@ button.close {
     min-height: 60px;
     max-height: 60px;
 }
+
+.left-inner-addon {
+    position: relative;
+}
+
+.left-inner-addon input {
+    padding-left: 35px;
+}
+
+.left-inner-addon span {
+    position: absolute;
+    padding: 12px 12px;
+    pointer-events: none;
+}

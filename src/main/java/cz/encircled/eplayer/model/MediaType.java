@@ -1,25 +1,33 @@
 package cz.encircled.eplayer.model;
 
-import cz.encircled.eplayer.common.Constants;
 import cz.encircled.eplayer.util.DateUtil;
+import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.File;
 
 public class MediaType {
 
     private static final String TO_STRING_FORMAT = "Playable name: %s, path: %s, time: %d, watchDate: %d";
 
-    private String name;
-
     private boolean isSeries;
-
-    private String path;
 
     private long time;
 
     private long watchDate;
 
     private String timeLabel = "";
+
+    private String path;
+
+    private String name;
+
+    private String extension;
+
+    private long size;
+
+    private String formattedSize;
 
     public MediaType(@NotNull String path) {
         updatePath(path);
@@ -60,6 +68,18 @@ public class MediaType {
         updateTimeLabel();
     }
 
+    public String getExtension() {
+        return extension;
+    }
+
+    public long getSize() {
+        return size;
+    }
+
+    public String getFormattedSize() {
+        return formattedSize;
+    }
+
     public boolean exists() {
         return path != null && new java.io.File(path).exists();
     }
@@ -84,7 +104,20 @@ public class MediaType {
     }
 
     public void updatePath(@NotNull String path) {
+        File file = new File(path);
         this.path = path;
-        this.name = path.substring(path.lastIndexOf(Constants.SLASH) + Constants.ONE, path.lastIndexOf(Constants.DOT));
+
+        String fullName = file.getName();
+        int lastDot = fullName.lastIndexOf(".");
+        if (lastDot > -1) {
+            name = fullName.substring(0, lastDot);
+            extension = fullName.substring(lastDot + 1, fullName.length());
+        } else {
+            name = fullName;
+            extension = "";
+        }
+
+        size = file.length();
+        formattedSize = IOUtil.byteCountToDisplaySize(size);
     }
 }

@@ -13,7 +13,11 @@ var components = {
     getMediaWrapper: function (media) {
         return $(('<div class="media-wrapper"><div class="panel panel-primary">' +
         '<div class="panel-heading"><h3 class="panel-title"><p>{0}</p></h3></div>' +
-        '<div class="panel-body">{1}</div></div></div>').format(media.name, media.timeLabel));
+        '<div class="panel-body">' +
+        '{1}' +
+        '<span title="{2}, {3}" class="glyphicon glyphicon-info-sign" />' +
+        '</div>' +
+        '</div></div>').format(media.name, media.timeLabel, media.extension, media.formattedSize));
     }
 
 };

@@ -3,6 +3,7 @@ package cz.encircled.eplayer.util;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import cz.encircled.eplayer.model.MediaType;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,9 +25,11 @@ import java.util.Map;
 public class IOUtil {
 
     private static final Logger log = LogManager.getLogger();
-
     private final static Type DEFAULT_TYPE_TOKEN = new TypeToken<Map<String, MediaType>>() {
     }.getType();
+    public static BigDecimal BD_ONE_KO = new BigDecimal(1024L);
+    public static BigDecimal BD_ONE_MO = BD_ONE_KO.multiply(BD_ONE_KO);
+    public static BigDecimal BD_ONE_GO = BD_ONE_MO.multiply(BD_ONE_KO);
 
     public static <T> T getPlayableJson(@NotNull String filePath) throws IOException {
         return getFromJson(filePath, DEFAULT_TYPE_TOKEN);
@@ -89,6 +93,21 @@ public class IOUtil {
             }
         }
         return files;
+    }
+
+    public static String byteCountToDisplaySize(long size) {
+        String displaySize;
+
+        if (size / FileUtils.ONE_GB > 0) {
+            displaySize = String.valueOf(new BigDecimal(size).divide(BD_ONE_GO, 2, BigDecimal.ROUND_FLOOR)) + " Gb";
+        } else if (size / FileUtils.ONE_MB > 0) {
+            displaySize = String.valueOf(new BigDecimal(size).divide(BD_ONE_MO, BigDecimal.ROUND_FLOOR)) + " Mb";
+        } else if (size / FileUtils.ONE_KB > 0) {
+            displaySize = String.valueOf(new BigDecimal(size).divide(BD_ONE_KO, BigDecimal.ROUND_FLOOR)) + " Kb";
+        } else {
+            displaySize = String.valueOf(size) + " b";
+        }
+        return displaySize;
     }
 
 }

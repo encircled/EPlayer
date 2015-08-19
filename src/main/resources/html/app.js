@@ -37,6 +37,7 @@ function showMediaCallback(arg) {
     var media = params[1];
 
     console.log('showMediaCallback: tab path is {0}'.format(path));
+    console.log(media)
 
     var tab = ui.getTabById(model.getTabByPath(path).id);
 
@@ -47,5 +48,6 @@ function showMediaCallback(arg) {
         mediaWrapper.click(function () {
             app.callPlayMedia(m.path);
         });
+        mediaWrapper.find('.glyphicon-info-sign').tooltip({});
     })
 }

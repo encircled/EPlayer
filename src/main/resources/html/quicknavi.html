@@ -4,10 +4,11 @@
     <script src="util.js"></script>
     <script src="model.js"></script>
     <script src="app.js"></script>
-    <!--<script type='text/JavaScript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>-->
+    <script type='text/JavaScript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
     <script type='text/JavaScript' src='jquery-latest.js'></script>
     <script src="bootstrap.min.js"></script>
     <script src="components.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="bootstrap.css">
     <link rel="stylesheet" href="style.css">
 
@@ -18,10 +19,14 @@
 <body>
 
 <div class="container-fluid" style="padding: 20px">
-    <div class="row">
-        <div class="col-md-1">
-            <input class="form-control" type="text" id="searchInput"/>
-
+    <div class="row" style="margin-bottom: 20px">
+        <div class="col-md-12">
+            <div class="left-inner-addon col-xs-3" style="padding-left: 0">
+                <span class="glyphicon glyphicon-search"></span>
+                <input type="text" id="searchInput"
+                       class="form-control"
+                       placeholder="Username"/>
+            </div>
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-primary active" id="viewAll">
                     <input type="radio" name="options" autocomplete="off" checked>All
@@ -34,11 +39,15 @@
                 </label>
             </div>
         </div>
-        <div class="col-md-11">
+    </div>
+    <div class="row">
+        <div class="col-md-12">
             <ul id="tabs-wrapper" class="nav nav-tabs"></ul>
-            <div id="tabs-content-wrapper" class="tab-content"></div>
+            <div id="tabs-content-wrapper" class="tab-content">
+            </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 <script>
@@ -82,6 +91,7 @@
         ui.searchInput.keyup(function (e) {
             app.onFilterUpdate(e.target.value);
         });
+
 
         $('#viewAll').click(function (e) {
             console.log('qweqwe');
