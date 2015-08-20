@@ -47,7 +47,8 @@ function showMediaCallback(arg) {
 
     console.log('showMediaCallback: tab path is {0}'.format(path));
 
-    var tab = ui.getTabById(model.getTabByPath(path).id);
+    var tabId = model.getTabByPath(path).id;
+    var tab = ui.getTabById(tabId);
 
     tab.html('');
     media.forEach(function (m) {
@@ -57,7 +58,16 @@ function showMediaCallback(arg) {
             app.callPlayMedia(m.path);
         });
         mediaWrapper.find('.glyphicon-info-sign').tooltip({});
-    })
+    });
+
+    setTimeout("refreshImg()", 1);
+}
+
+function refreshImg(tabId) {
+    var time = new Date().getTime();
+    $('img.media-screenshot').each(function (index, img) {
+        img.src = img.src + '?' + time;
+    });
 }
 
 function addTab(tab) {

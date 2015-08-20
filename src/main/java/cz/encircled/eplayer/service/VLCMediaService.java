@@ -47,7 +47,7 @@ public class VLCMediaService implements MediaService {
     public void updateCurrentMediaInCache() {
         if (current != null) {
             core.getCacheService().updateEntry(current.getPath(), currentTime);
-            player.saveSnapshot(new File("D:\\current.png"), 300, 168);
+            player.saveSnapshot(new File(ApplicationCore.getScreenshotLocation(current)), 336, 189);
         }
     }
 

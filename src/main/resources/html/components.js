@@ -14,12 +14,16 @@ var components = {
     },
 
     getMediaWrapper: function (media) {
-        return $(('<div class="media-wrapper"><div class="panel panel-primary">' +
-        '<div class="panel-heading"><h3 class="panel-title">{0}</h3></div>' +
+        var image = media.pathToScreenshot ? '<img src="{0}" alt="" class="media-screenshot" width="336" height="189"/>'.format(media.pathToScreenshot) : '';
+
+        return $(('<div class="media-wrapper"><div class="panel panel-default">' +
+        '<div style="height: 189px">' + image + '</div>' +
         '<div class="panel-body">' +
-        '<p>{1}</p>' +
-        '<p>{2}</p>' +
-        '<span title="{3}, {4}" class="glyphicon glyphicon-info-sign" />' +
+        '<h4 style="font-weight: bold">{0}</h4>' +
+        '<p>{1}, watched {2}</p>' +
+        '</div>' +
+        '<div class="panel-footer">' +
+        '<span title="{3}, {4}" class="glyphicon glyphicon-info-sign"></span>' +
         '</div>' +
         '</div></div>').format(media.name, media.formattedCurrentTime, media.formattedWatchDate, media.extension, media.formattedSize));
     }

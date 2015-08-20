@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.model;
 
+import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.util.DateUtil;
 import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.util.StringUtil;
@@ -37,10 +38,16 @@ public class MediaType {
 
     private long fileCreationDate;
 
+    private String pathToScreenshot;
+
     public MediaType(@NotNull String path) {
         updatePath(path);
         time = 0L;
         isSeries = false;
+    }
+
+    public String getPathToScreenshot() {
+        return pathToScreenshot;
     }
 
     public String getFormattedWatchDate() {
@@ -144,5 +151,6 @@ public class MediaType {
 
         size = file.length();
         formattedSize = IOUtil.byteCountToDisplaySize(size);
+        pathToScreenshot = ApplicationCore.getScreenshotURL(this);
     }
 }

@@ -102,8 +102,13 @@ public class JsBridge {
     // State callbacks
 
     public void onFilterUpdate(String newValue) {
-        uiState.setFilter(newValue);
-        refreshCurrentTab();
+        if (newValue == null) {
+            newValue = "";
+        }
+        if (!newValue.equals(uiState.getFilter())) {
+            uiState.setFilter(newValue);
+            refreshCurrentTab();
+        }
     }
 
     public void onTabUpdate(String newTabPath) {

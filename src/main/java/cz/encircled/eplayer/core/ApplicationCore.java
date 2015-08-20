@@ -12,13 +12,18 @@ import cz.encircled.eplayer.view.fx.FxView;
 import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 import uk.co.caprica.vlcj.player.MediaPlayer;
+
+import java.io.File;
 
 public class ApplicationCore {
 
     public static final String APP_DOCUMENTS_ROOT = System.getenv("APPDATA") + "\\EPlayer\\";
 
     public static final String SCREENS_FOLDER = APP_DOCUMENTS_ROOT + "\\frames\\";
+
+    public static final String URL_FILE_PREFIX = "file:\\\\\\";
 
     private static final Logger log = LogManager.getLogger();
 
@@ -43,6 +48,17 @@ public class ApplicationCore {
         IOUtil.createIfMissing(APP_DOCUMENTS_ROOT, true, false);
         IOUtil.createIfMissing(SCREENS_FOLDER, true, false);
         addCloseHook();
+    }
+
+    @NotNull
+    public static String getScreenshotLocation(@NotNull MediaType mediaType) {
+        return SCREENS_FOLDER + mediaType.getName() + mediaType.getSize() + ".png";
+    }
+
+    @NotNull
+    public static String getScreenshotURL(@NotNull MediaType mediaType) {
+        String fileLocation = getScreenshotLocation(mediaType);
+        return new File(fileLocation).exists() ? URL_FILE_PREFIX + fileLocation : "";
     }
 
     public void initFx(MediaPlayer mediaPlayer) {

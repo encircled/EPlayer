@@ -1,9 +1,9 @@
 
 .media-wrapper {
-    width: 350px;
-    height: 200px;
-    min-height: 200px;
-    max-height: 200px;
+    width: 338px;
+    height: 300px;
+    min-height: 300px;
+    max-height: 300px;
     text-overflow: ellipsis;
     float: left;
     margin: 20px 20px 0 0;
@@ -17,13 +17,21 @@
 }
 
 .media-wrapper .panel-body {
-    height: 60px;
-    min-height: 60px;
-    max-height: 60px;
+    height: 80px;
+    min-height: 80px;
+    max-height: 80px;
 }
 
-.media-wrapper:hover .panel-body {
-    background: rgb(39, 128, 227);
+.media-wrapper .panel-body img.media-screenshot {
+    margin: -15px 0 0 0;
+}
+
+.media-wrapper .panel-footer {
+    transition: 100ms, color;
+}
+
+.media-wrapper:hover .panel-footer {
+    background: #dedede;
 }
 
 .inner-addon_wrapper {

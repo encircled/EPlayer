@@ -1,7 +1,6 @@
 package cz.encircled.eplayer.core;
 
 import cz.encircled.eplayer.model.MediaType;
-import cz.encircled.eplayer.service.CacheService;
 import cz.encircled.eplayer.service.FolderScanService;
 import cz.encircled.eplayer.util.IOUtil;
 import org.apache.commons.io.FilenameUtils;
@@ -18,10 +17,10 @@ public class OnDemandFolderScanner implements FolderScanService {
 
     private static final List<String> SUPPORTED_FORMATS = Arrays.asList("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov");
 
-    private CacheService cacheService;
+    private ApplicationCore core;
 
     public OnDemandFolderScanner(@NotNull ApplicationCore core) {
-        this.cacheService = core.getCacheService();
+        this.core = core;
     }
 
     @Override
@@ -30,9 +29,10 @@ public class OnDemandFolderScanner implements FolderScanService {
         List<MediaType> mediaTypes = new ArrayList<>();
         IOUtil.getFilesInFolder(path).stream().forEach(file -> {
             if (SUPPORTED_FORMATS.contains(FilenameUtils.getExtension(file.getName()))) {
-                MediaType entry = cacheService.getEntry(file.getPath());
-                if (entry == null)
+                MediaType entry = core.getCacheService().getEntry(file.getPath());
+                if (entry == null) {
                     entry = new MediaType(file.getPath());
+                }
                 mediaTypes.add(entry);
             }
         });
