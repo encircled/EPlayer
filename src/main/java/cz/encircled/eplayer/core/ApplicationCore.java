@@ -15,8 +15,6 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 
-import java.io.File;
-
 public class ApplicationCore {
 
     public static final String APP_DOCUMENTS_ROOT = System.getenv("APPDATA") + "\\EPlayer\\";
@@ -58,7 +56,8 @@ public class ApplicationCore {
     @NotNull
     public static String getScreenshotURL(@NotNull MediaType mediaType) {
         String fileLocation = getScreenshotLocation(mediaType);
-        return new File(fileLocation).exists() ? URL_FILE_PREFIX + fileLocation : "";
+//        return new File(fileLocation).exists() ? URL_FILE_PREFIX + fileLocation : "";
+        return URL_FILE_PREFIX + fileLocation;
     }
 
     public void initFx(MediaPlayer mediaPlayer) {

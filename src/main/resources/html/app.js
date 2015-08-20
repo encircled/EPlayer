@@ -60,10 +60,10 @@ function showMediaCallback(arg) {
         mediaWrapper.find('.glyphicon-info-sign').tooltip({});
     });
 
-    setTimeout("refreshImg()", 1);
+    setTimeout("refreshImg()", 100);
 }
 
-function refreshImg(tabId) {
+function refreshImg() {
     var time = new Date().getTime();
     $('img.media-screenshot').each(function (index, img) {
         img.src = img.src + '?' + time;
