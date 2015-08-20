@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import uk.co.caprica.vlcj.player.MediaPlayer;
 import uk.co.caprica.vlcj.player.MediaPlayerEventAdapter;
 
+import java.io.File;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -24,7 +25,7 @@ public class VLCMediaService implements MediaService {
     private MediaPlayer player;
 
     @Nullable
-    private String current;
+    private MediaType current;
 
     private ApplicationCore core;
 
@@ -44,11 +45,14 @@ public class VLCMediaService implements MediaService {
     // TODO change me
     @Override
     public void updateCurrentMediaInCache() {
-        if (current != null)
-            core.getCacheService().updateEntry(current, currentTime);
+        if (current != null) {
+            core.getCacheService().updateEntry(current.getPath(), currentTime);
+            player.saveSnapshot(new File("D:\\current.png"), 300, 168);
+        }
     }
 
-    private void play(@NotNull String path, long time) {
+    private void play(@NotNull MediaType mediaType, long time) {
+        String path = mediaType.getPath();
         log.debug("Play {}, start time is {}", path, time);
 
         CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -61,28 +65,30 @@ public class VLCMediaService implements MediaService {
         }
         log.debug("Show player done");
 
-        if (!path.equals(current)) {
+        if (current == null || !path.equals(current.getPath())) {
             log.debug("Path {} is new", path);
-            current = path;
+            current = mediaType;
             player.prepareMedia(path);
             log.debug("Media prepared");
         }
 
         player.start();
-        if (time > 1L)
-            setTime(Math.min(time, player.getLength())); // TODO
+        if (time > 1L) {
+            setTime(Math.min(time, player.getLength()));
+        }
         log.debug("Playing started");
     }
 
     @Override
     public void play(@NotNull String path) {
-        play(core.getCacheService().createIfAbsent(path));
+        MediaType mediaType = core.getCacheService().createIfAbsent(path);
+        play(mediaType, mediaType.getTime());
     }
 
     @Override
     public void play(@NotNull MediaType p) {
         core.getCacheService().addIfAbsent(p);
-        play(p.getPath(), p.getTime());
+        play(p, p.getTime());
     }
 
     @Override
@@ -210,7 +216,7 @@ public class VLCMediaService implements MediaService {
                     // TODO
 //                    guiUtil.showMessage(Localization.fileOpenFailed.ln(), Localization.errorTitle.ln());
                     if (current != null) {
-                        core.getCacheService().deleteEntry(current);
+                        core.getCacheService().deleteEntry(current.getPath());
                         current = null;
                     }
                     core.getViewService().switchToQuickNavi();

@@ -18,6 +18,8 @@ public class ApplicationCore {
 
     public static final String APP_DOCUMENTS_ROOT = System.getenv("APPDATA") + "\\EPlayer\\";
 
+    public static final String SCREENS_FOLDER = APP_DOCUMENTS_ROOT + "\\frames\\";
+
     private static final Logger log = LogManager.getLogger();
 
     private MediaService mediaService;
@@ -39,6 +41,7 @@ public class ApplicationCore {
         folderScanService = new OnDemandFolderScanner(this);
         eventObserver = new EventObserverImpl();
         IOUtil.createIfMissing(APP_DOCUMENTS_ROOT, true, false);
+        IOUtil.createIfMissing(SCREENS_FOLDER, true, false);
         addCloseHook();
     }
 
@@ -68,7 +71,7 @@ public class ApplicationCore {
         if (fxView.isPlayerScene()) {
             if (fxView.isFullScreen()) {
 //                fxView.setFullScreen(false);
-                mediaService.updateCurrentMediaInCache();
+                new Thread(mediaService::updateCurrentMediaInCache).start();
             } else
                 openQuickNavi();
         }
