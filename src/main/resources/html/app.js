@@ -15,6 +15,11 @@ app = {
         bridge.closeTab(path);
     },
 
+    callRemoveMedia: function (path) {
+        console.log('Call remove media at path: ' + path);
+        bridge.removeMedia(path, false); // TODO modal dialog
+    },
+
     onFilterUpdate: function (filter) {
         bridge.onFilterUpdate(filter);
     },
@@ -57,7 +62,11 @@ function showMediaCallback(arg) {
         mediaWrapper.click(function () {
             app.callPlayMedia(m.path);
         });
-        mediaWrapper.find('.glyphicon-info-sign').tooltip({});
+        mediaWrapper.find('.glyphicon-file').tooltip({});
+        mediaWrapper.find('.glyphicon-remove').click(function () {
+            app.callRemoveMedia(m.path);
+            mediaWrapper.remove();
+        });
     });
 
     setTimeout("refreshImg()", 100);

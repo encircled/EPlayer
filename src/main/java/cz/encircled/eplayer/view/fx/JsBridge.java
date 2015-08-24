@@ -11,6 +11,7 @@ import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,6 +89,18 @@ public class JsBridge {
         log.debug("Play media call: {}", path);
         new Thread(() -> {
             core.getMediaService().play(path);
+        }).start();
+    }
+
+    public void removeMedia(String path, boolean shouldDeleteFile) {
+        log.debug("Remove media call: {}", path);
+        new Thread(() -> {
+            core.getCacheService().deleteEntry(path);
+            if (shouldDeleteFile) {
+                if (!new File(path).delete()) {
+                    // TODO log
+                }
+            }
         }).start();
     }
 

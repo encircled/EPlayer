@@ -23,9 +23,10 @@ var components = {
         '<h4 style="font-weight: bold">{0}</h4>' +
         '<p>{1}, watched {2}</p>' +
         '</div>' +
-        '<div class="panel-footer">' +
-        '<span title="{3}, {4}" class="glyphicon glyphicon-info-sign"></span>' +
-        '</div>' +
+        '<div class="panel-footer"><div class="center-block" style="width: 100px">' +
+        '<span title="{3}, {4}" class="glyphicon glyphicon-file"></span>' +
+        '<span class="glyphicon glyphicon-remove"></span>' +
+        '</div></div>' +
         '</div></div>').format(media.name, media.formattedCurrentTime, media.formattedWatchDate, media.extension, media.formattedSize));
     }
 

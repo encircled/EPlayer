@@ -1,4 +1,3 @@
-
 .media-wrapper {
     width: 338px;
     height: 300px;
@@ -31,7 +30,15 @@
 }
 
 .media-wrapper:hover .panel-footer {
-    background: #dedede;
+    background: #e5e5e5;
+}
+
+.panel-footer .glyphicon {
+    margin-right: 10px;
+}
+
+.media-wrapper .glyphicon:hover {
+    color: black;
 }
 
 .inner-addon_wrapper {
