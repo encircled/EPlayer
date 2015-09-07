@@ -1,5 +1,13 @@
 $(document).ready(function () {
 
+    // Localization
+    $('span.ln').each(function (i, e) {
+        var element = $(e);
+        var html = element.html();
+        var code = html.substring(3, html.length - 1);
+        element.html(app.ln[code]);
+    });
+
     app.callGetMediaTabs().forEach(function (tab) {
         model.tabs.push(tab);
         addTab(tab);

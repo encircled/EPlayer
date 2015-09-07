@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <script src="util.js"></script>
     <script src="model.js"></script>
     <script src="app.js"></script>
-    <script type='text/JavaScript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>
+    <!--<script type='text/JavaScript' src='http://getfirebug.com/releases/lite/1.2/firebug-lite-compressed.js'></script>-->
     <script type='text/JavaScript' src='jquery-latest.js'></script>
     <script src="bootstrap.min.js"></script>
     <script src="components.js"></script>
@@ -31,25 +32,25 @@
             </div>
             <div class="btn-group col-xs-3" data-toggle="buttons">
                 <label class="btn btn-primary active" id="viewAll">
-                    <input type="radio" name="options" autocomplete="off" checked>All
+                    <input type="radio" name="options" autocomplete="off" checked><span class="ln">ln(all)</span>
                 </label>
                 <label class="btn btn-primary" id="viewFilms">
-                    <input type="radio" name="options" autocomplete="off">Films
+                    <input type="radio" name="options" autocomplete="off"><span class="ln">ln(films)</span>
                 </label>
                 <label class="btn btn-primary" id="viewSeries">
-                    <input type="radio" name="options" autocomplete="off">Series
+                    <input type="radio" name="options" autocomplete="off"><span class="ln">ln(series)</span>
                 </label>
             </div>
 
             <div class="btn-group" data-toggle="buttons">
                 <label class="btn btn-info active" id="orderByName">
-                    <input type="radio" name="options" autocomplete="off" checked>Name
+                    <input type="radio" name="options" autocomplete="off" checked><span class="ln">ln(name)</span>
                 </label>
                 <label class="btn btn-info" id="orderBySize">
-                    <input type="radio" name="options" autocomplete="off">Size
+                    <input type="radio" name="options" autocomplete="off"><span class="ln">ln(size)</span>
                 </label>
                 <label class="btn btn-info" id="orderByCreationDate">
-                    <input type="radio" name="options" autocomplete="off">Creation date
+                    <input type="radio" name="options" autocomplete="off"><span class="ln">ln(creationDate)</span>
                 </label>
             </div>
             <div class="btn-group" data-toggle="buttons">

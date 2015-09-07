@@ -52,7 +52,19 @@ public enum Localization {
 
     daysAgo,
 
-    back;
+    back,
+
+    all,
+
+    films,
+
+    series,
+
+    name,
+
+    size,
+
+    creationDate;
 
     public String ln() {
         return LocalizationProvider.get2(this.name());
