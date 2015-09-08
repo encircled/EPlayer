@@ -14,7 +14,6 @@ var components = {
     },
 
     getMediaWrapper: function (media) {
-        console.log(media.pathToScreenshot);
         var image = media.time ? '<img src="{0}" alt="" class="media-screenshot" width="336" height="189"/>'.format(media.pathToScreenshot) : '';
 
         return $(('<div class="media-wrapper"><div class="panel panel-default">' +
