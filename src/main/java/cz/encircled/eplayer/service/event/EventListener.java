@@ -3,8 +3,8 @@ package cz.encircled.eplayer.service.event;
 /**
  * @author Encircled on 13/09/2014.
  */
-public interface EventListener<A, A2> {
+public interface EventListener<A> {
 
-    void handle(Event event, A arg, A2 arg2);
+    void handle(A arg);
 
 }

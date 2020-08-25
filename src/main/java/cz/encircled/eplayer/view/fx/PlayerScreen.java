@@ -1,9 +1,9 @@
 package cz.encircled.eplayer.view.fx;
 
-import com.sun.jna.Memory;
 import cz.encircled.eplayer.common.PostponeTimer;
 import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
+import cz.encircled.eplayer.view.fx.components.ImageViewVideoSurface;
 import cz.encircled.eplayer.view.fx.components.PlayerControls;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -15,7 +15,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.image.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -23,14 +24,9 @@ import javafx.scene.layout.StackPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import uk.co.caprica.vlcj.component.DirectMediaPlayerComponent;
-import uk.co.caprica.vlcj.player.direct.BufferFormat;
-import uk.co.caprica.vlcj.player.direct.BufferFormatCallback;
-import uk.co.caprica.vlcj.player.direct.DirectMediaPlayer;
-import uk.co.caprica.vlcj.player.direct.format.RV32BufferFormat;
-
-import java.nio.ByteBuffer;
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory;
+import uk.co.caprica.vlcj.player.base.MediaPlayer;
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
 
 /**
  * @author Encircled on 18/09/2014.
@@ -39,11 +35,12 @@ public class PlayerScreen extends BorderPane {
 
     private static final Logger log = LogManager.getLogger();
 
+    // Enable HDMI audio passthrough for Dolby/DTS audio
+    public static final String VLC_ARGS = "--mmdevice-passthrough=2";
+
     private MenuBar menuBar;
 
-    private DirectMediaPlayerComponent mediaPlayerComponent;
-
-    private WritablePixelFormat<ByteBuffer> pixelFormat;
+    private MediaPlayer mediaPlayerComponent;
 
     private WritableImage writableImage;
 
@@ -75,7 +72,7 @@ public class PlayerScreen extends BorderPane {
         } else {
             if (menuBar.isVisible()) {
                 menuBar.setVisible(false);
-                menuBar.getMenus().stream().forEach(Menu::hide);
+                menuBar.getMenus().forEach(Menu::hide);
             }
             hideTimer.postpone(600);
         }
@@ -95,24 +92,29 @@ public class PlayerScreen extends BorderPane {
         return fitToScreen;
     }
 
-    public DirectMediaPlayerComponent getMediaPlayerComponent() {
+    public MediaPlayer getMediaPlayerComponent() {
         return mediaPlayerComponent;
     }
 
     public void init(@NotNull ApplicationCore core, @NotNull AppMenuBar appMenuBar) {
         hideTimer = new PostponeTimer(() -> Platform.runLater(() -> setCursor(Cursor.NONE)));
-        mediaPlayerComponent = new CanvasPlayerComponent();
-        videoSourceRatioProperty = new SimpleFloatProperty(0.4f);
+
+        MediaPlayerFactory mediaPlayerFactory = new MediaPlayerFactory(VLC_ARGS);
+        EmbeddedMediaPlayer mediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer();
+
+        // TODO
+        videoSourceRatioProperty = new SimpleFloatProperty(0.56f);
 
         this.menuBar = appMenuBar.getMenuBar();
         this.playerControls = new PlayerControls(core, fxView);
-        pixelFormat = PixelFormat.getByteBgraPreInstance(); // TODO check
 
         playerHolder = new Pane();
         playerStackPane = new StackPane(playerHolder);
         playerHolder.setStyle("-fx-background-color: #000");
 
         initializeImageView();
+        mediaPlayer.videoSurface().set(new ImageViewVideoSurface(writableImage, fxView, videoSourceRatioProperty).videoSurface);
+        mediaPlayerComponent = mediaPlayer;
 
         setTop(menuBar);
         setCenter(playerStackPane);
@@ -216,6 +218,7 @@ public class PlayerScreen extends BorderPane {
             }
         });
     }
+/*
 
     private class CanvasPlayerComponent extends DirectMediaPlayerComponent {
 
@@ -263,5 +266,6 @@ public class PlayerScreen extends BorderPane {
             return new RV32BufferFormat((int) fxView.screenBounds.getWidth(), (int) fxView.screenBounds.getHeight());
         }
     }
+*/
 
 }

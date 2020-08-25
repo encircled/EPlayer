@@ -5,14 +5,12 @@ package cz.encircled.eplayer.service.event;
  */
 public interface EventObserver {
 
-    void fire(Event<Void, Void> event);
+    void fire(Event<Void> event);
 
-    <A> void fire(Event<A, Void> event, A arg);
+    <A> void fire(Event<A> event, A arg);
 
-    <A, A2> void fire(Event<A, A2> event, A arg, A2 arg2);
+    <A> void listen(Event<A> event, EventListener<A> eventListener);
 
-    <A, A2> void listen(Event<A, A2> event, EventListener<A, A2> eventListener);
-
-    <A, A2> void listenFxThread(Event<A, A2> event, EventListener<A, A2> eventListener);
+    <A> void listenFxThread(Event<A> event, EventListener<A> eventListener);
 
 }

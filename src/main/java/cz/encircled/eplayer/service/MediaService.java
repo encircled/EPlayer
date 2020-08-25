@@ -19,7 +19,7 @@ public interface MediaService {
      */
     void play(@NotNull MediaType p);
 
-    int getMediaLength();
+    long getMediaLength();
 
     long getCurrentTime();
 

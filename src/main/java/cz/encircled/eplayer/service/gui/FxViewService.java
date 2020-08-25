@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
  */
 public class FxViewService implements ViewService {
 
-    private FxView fxView;
+    private final FxView fxView;
 
     public FxViewService(FxView fxView) {
         this.fxView = fxView;

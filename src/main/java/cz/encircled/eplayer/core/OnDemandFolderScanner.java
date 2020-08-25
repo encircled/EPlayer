@@ -27,7 +27,7 @@ public class OnDemandFolderScanner implements FolderScanService {
     @NotNull
     public List<MediaType> getMediaInFolder(@NotNull String path) {
         List<MediaType> mediaTypes = new ArrayList<>();
-        IOUtil.getFilesInFolder(path).stream().forEach(file -> {
+        IOUtil.getFilesInFolder(path).forEach(file -> {
             if (SUPPORTED_FORMATS.contains(FilenameUtils.getExtension(file.getName()))) {
                 MediaType entry = core.getCacheService().getEntry(file.getPath());
                 if (entry == null) {

@@ -56,7 +56,13 @@ public class JsonCacheService implements CacheService {
     @NotNull
     @Override
     public MediaType createIfAbsent(@NotNull String path) {
-        return cache.computeIfAbsent(path, p -> new MediaType(path));
+        return createIfAbsent(path, null);
+    }
+
+    @NotNull
+    @Override
+    public MediaType createIfAbsent(@NotNull String path, @Nullable String title) {
+        return cache.computeIfAbsent(path, p -> new MediaType(path, title));
     }
 
     @NotNull
@@ -99,7 +105,7 @@ public class JsonCacheService implements CacheService {
     public MediaType getLastByWatchDate() {
         MediaType p = getCache()
                 .stream()
-                .max((p1, p2) -> Long.compare(p1.getWatchDate(), p2.getWatchDate())).get();
+                .max(Comparator.comparingLong(MediaType::getWatchDate)).get();
         log.debug("Last played: {}", p);
         return p;
     }

@@ -1,6 +1,5 @@
 package cz.encircled.eplayer.view.fx;
 
-import com.sun.jna.Native;
 import com.sun.jna.NativeLibrary;
 import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.service.event.Event;
@@ -23,8 +22,7 @@ import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import uk.co.caprica.vlcj.binding.LibVlc;
-import uk.co.caprica.vlcj.runtime.RuntimeUtil;
+import uk.co.caprica.vlcj.binding.RuntimeUtil;
 
 import java.io.File;
 
@@ -34,24 +32,19 @@ import java.io.File;
 public class FxView extends Application implements AppView {
 
     // TODO
-//    public static final String VLC_LIB_PATH = "D:\\Soft\\vlc";
-    public static final String VLC_LIB_PATH = "E:\\soft\\vlc-2.1.4";
+    public static final String VLC_LIB_PATH = "E:/vlc-3.0.11";
+
     public static final int MIN_WIDTH = 860;
     public static final int MIN_HEIGHT = 600;
+
     public static final String QUICK_NAVI_SCREEN = "quickNavi";
     public static final String PLAYER_SCREEN = "player";
+
     private static final Logger log = LogManager.getLogger();
 
     static {
         log.trace("Initialize VLC libs");
         NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), VLC_LIB_PATH);
-        try {
-            Native.loadLibrary(RuntimeUtil.getLibVlcLibraryName(), LibVlc.class);
-            log.trace("VLCLib successfully initialized");
-        } catch (UnsatisfiedLinkError e) {
-            // TODO
-            log.error("Failed to load vlc libs from specified path {}", VLC_LIB_PATH);
-        }
     }
 
     public Rectangle2D screenBounds;
@@ -63,7 +56,7 @@ public class FxView extends Application implements AppView {
     private StringProperty screenChangeProperty;
     private ApplicationCore core;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         launch();
     }
 
@@ -105,19 +98,12 @@ public class FxView extends Application implements AppView {
         primaryStage.setFullScreen(fullScreen);
     }
 
-    public void maximize() {
-        primaryStage.setX(screenBounds.getMinX());
-        primaryStage.setY(screenBounds.getMinY());
-        primaryStage.setWidth(screenBounds.getWidth());
-        primaryStage.setHeight(screenBounds.getHeight());
-    }
-
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         this.screenBounds = Screen.getPrimary().getVisualBounds();
         this.screenChangeProperty = new SimpleStringProperty();
         this.primaryStage = primaryStage;
@@ -133,14 +119,13 @@ public class FxView extends Application implements AppView {
         AppMenuBar menuBar = new AppMenuBar(core, this);
         quickNaviScreen.init(menuBar);
         menuBar.init();
-
         initializePrimaryStage();
-        maximize();
-        initialize();
+        primaryStage.setMaximized(true);
+        initializeStage();
 
         playerScreen.init(core, menuBar);
 
-        core.initFx(playerScreen.getMediaPlayerComponent().getMediaPlayer());
+        core.initFx(playerScreen.getMediaPlayerComponent());
         new Thread(() -> {
             core.init(this);
             core.getEventObserver().fire(Event.contextInitialized);
@@ -162,11 +147,11 @@ public class FxView extends Application implements AppView {
             new Thread(() -> {
                 mediaFileChooser.setInitialDirectory(file.getParentFile());
                 Settings.fc_open_location.set(file.getParentFile().getAbsolutePath()).save();
-            }).run();
+            }).start();
         }
     }
 
-    private void initialize() {
+    private void initializeStage() {
         primaryScene.getStylesheets().add("/stylesheet.css");
         primaryScene.setOnDragOver(event -> {
             if (event.getDragboard().hasFiles()) {
@@ -198,9 +183,7 @@ public class FxView extends Application implements AppView {
                         log.debug("DnD new tab {}", filePath);
                         quickNaviScreen.addTab(filePath);
 
-                        new Thread(() -> {
-                            Settings.folders_to_scan.addToList(filePath).save();
-                        }).start();
+                        new Thread(() -> Settings.folders_to_scan.addToList(filePath).save()).start();
 
                         success = true;
                     }

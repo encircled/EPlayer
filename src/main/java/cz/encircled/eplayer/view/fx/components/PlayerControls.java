@@ -104,7 +104,7 @@ public class PlayerControls extends GridPane {
 
         playerToggleButton.setId("play");
         playerToggleButton.setOnAction(e -> core.getMediaService().toggle());
-        core.getEventObserver().listenFxThread(Event.playingChanged, (event, arg, arg2) -> playerToggleButton.setSelected(!arg));
+        core.getEventObserver().listenFxThread(Event.playingChanged, (arg) -> playerToggleButton.setSelected(!arg));
 
         volumeButton.setId("mute");
         volumeButton.setOnAction(event -> {
@@ -178,7 +178,9 @@ public class PlayerControls extends GridPane {
 
         // Max label
         timeSlider.maxProperty().addListener((observable, oldValue, newValue) -> totalTimeText.setText(StringUtil.msToTimeLabel(newValue.longValue())));
-        core.getEventObserver().listenFxThread(Event.mediaDurationChange, (event, newTime, arg2) -> timeSlider.setMax(newTime));
+
+        // TODO check - was deleted
+        core.getEventObserver().listenFxThread(Event.mediaDurationChange, (newTime) -> timeSlider.setMax(newTime));
 
         // Current time and scrolling
         timeSlider.setOnMousePressed(event -> {
@@ -192,7 +194,7 @@ public class PlayerControls extends GridPane {
             }
         });
 
-        core.getEventObserver().listenFxThread(Event.mediaTimeChange, (event, newTime, arg2) -> {
+        core.getEventObserver().listenFxThread(Event.mediaTimeChange, (newTime) -> {
             if (!timeSlider.isValueChanging()) {
                 timeSlider.setValue(newTime);
                 timeText.setText(StringUtil.msToTimeLabel(newTime));

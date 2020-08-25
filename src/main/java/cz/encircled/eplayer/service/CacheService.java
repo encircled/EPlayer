@@ -18,6 +18,9 @@ public interface CacheService {
     MediaType createIfAbsent(@NotNull String path);
 
     @NotNull
+    MediaType createIfAbsent(@NotNull String path, @Nullable String title);
+
+    @NotNull
     MediaType addIfAbsent(@NotNull MediaType mediaType);
 
     @Nullable

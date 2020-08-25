@@ -5,6 +5,7 @@ import cz.encircled.eplayer.util.DateUtil;
 import cz.encircled.eplayer.util.IOUtil;
 import cz.encircled.eplayer.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,14 @@ public class MediaType {
     private String pathToScreenshot;
 
     public MediaType(@NotNull String path) {
+        this(path, null);
+    }
+
+    public MediaType(@NotNull String path, @Nullable String title) {
         updatePath(path);
+        if (title != null) {
+            name = title;
+        }
         time = 0L;
         isSeries = false;
     }

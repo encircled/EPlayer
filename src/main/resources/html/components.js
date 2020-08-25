@@ -19,7 +19,7 @@ var components = {
         return $(('<div class="media-wrapper"><div class="panel panel-default">' +
         '<div style="height: 189px">' + image + '</div>' +
         '<div class="panel-body">' +
-        '<h4 style="font-weight: bold">{0}</h4>' +
+        '<h4 style="font-weight: bold; text-overflow: ellipsis; overflow: hidden;">{0}</h4>' +
         '<p>{1}, watched {2}</p>' +
         '</div>' +
         '<div class="panel-footer"><div class="center-block" style="width: 100px">' +

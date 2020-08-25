@@ -53,13 +53,13 @@ public class JsBridge {
             Comparator<MediaType> comparator;
             switch (uiState.getOrderBy()) {
                 case SIZE:
-                    comparator = (o1, o2) -> Long.compare(o1.getSize(), o2.getSize());
+                    comparator = Comparator.comparingLong(MediaType::getSize);
                     break;
                 case CREATION_DATE:
-                    comparator = (o1, o2) -> Long.compare(o1.getFileCreationDate(), o2.getFileCreationDate());
+                    comparator = Comparator.comparingLong(MediaType::getFileCreationDate);
                     break;
                 default:
-                    comparator = (o1, o2) -> o1.getName().compareTo(o2.getName());
+                    comparator = Comparator.comparing(MediaType::getName);
             }
 
             if (uiState.isReverseOrder()) {
@@ -87,9 +87,7 @@ public class JsBridge {
 
     public void playMedia(String path) {
         log.debug("Play media call: {}", path);
-        new Thread(() -> {
-            core.getMediaService().play(path);
-        }).start();
+        new Thread(() -> core.getMediaService().play(path)).start();
     }
 
     public void removeMedia(String path, boolean shouldDeleteFile) {
