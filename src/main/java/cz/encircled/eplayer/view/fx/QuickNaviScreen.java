@@ -1,6 +1,8 @@
 package cz.encircled.eplayer.view.fx;
 
 import cz.encircled.eplayer.core.ApplicationCore;
+import cz.encircled.eplayer.model.MediaTab;
+import cz.encircled.eplayer.remote.RemoteControlHandler;
 import cz.encircled.eplayer.view.fx.components.AppMenuBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebEngine;
@@ -19,8 +21,8 @@ public class QuickNaviScreen extends BorderPane {
 
     private Logger log = LogManager.getLogger();
 
-    private ApplicationCore core;
-    private FxView fxView;
+    private final ApplicationCore core;
+    private final FxView fxView;
     private JsBridge jsBridge;
 
     public QuickNaviScreen(ApplicationCore core, FxView fxView) {
@@ -28,12 +30,16 @@ public class QuickNaviScreen extends BorderPane {
         this.fxView = fxView;
     }
 
+    public RemoteControlHandler getRemoteControlHandler() {
+        return jsBridge;
+    }
+
     public void refreshCurrentTab() {
         jsBridge.refreshCurrentTab();
     }
 
     public void addTab(String path) {
-        jsBridge.pushToUi("addTabCallback", new JsBridge.TabDto(path, true));
+        jsBridge.pushToUi("addTabCallback", new MediaTab(System.currentTimeMillis(), path, true));
     }
 
     public void init(@NotNull AppMenuBar menuBar) {
@@ -50,13 +56,20 @@ public class QuickNaviScreen extends BorderPane {
         JSObject windowObject = (JSObject) engine.executeScript("window");
         jsBridge = new JsBridge(core, windowObject);
         windowObject.setMember("bridge", jsBridge);
+        engine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) ->
+        {
+            engine.executeScript("console.log = function(message)\n" +
+                    "{\n" +
+                    "    java.log(message);\n" +
+                    "};");
+        });
         initializeListeners();
 
         setCenter(webView);
     }
 
     private void initializeListeners() {
-        fxView.screenChangeProperty().addListener((observable, oldValue, newValue) -> {
+        fxView.screenChangeProperty.addListener((observable, oldValue, newValue) -> {
             if (FxView.QUICK_NAVI_SCREEN.equals(newValue)) {
                 refreshCurrentTab();
             }

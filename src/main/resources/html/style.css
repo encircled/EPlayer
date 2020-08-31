@@ -29,7 +29,7 @@
     transition: 100ms, color;
 }
 
-.media-wrapper:hover .panel-footer {
+.media-wrapper:hover .panel-footer, .media-wrapper.selected .panel-footer {
     background: #e5e5e5;
 }
 

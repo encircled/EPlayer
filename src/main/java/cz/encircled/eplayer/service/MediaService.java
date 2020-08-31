@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.service;
 
-import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.model.PlayableMedia;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,7 +17,7 @@ public interface MediaService {
     /**
      * @param p
      */
-    void play(@NotNull MediaType p);
+    void play(@NotNull PlayableMedia p);
 
     long getMediaLength();
 

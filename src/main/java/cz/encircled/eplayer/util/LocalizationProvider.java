@@ -1,14 +1,13 @@
 package cz.encircled.eplayer.util;
 
 import cz.encircled.eplayer.core.UTF8Control;
+import cz.encircled.eplayer.model.AppSettings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
 public class LocalizationProvider {
-
-    public static final String DEFAULT_LANGUAGE = "en";
 
     private static final String NOT_FOUND_VALUE = "?";
 
@@ -18,8 +17,8 @@ public class LocalizationProvider {
 
     private static Locale locale;
 
-    static {
-        locale = new Locale(Settings.language.get(DEFAULT_LANGUAGE));
+    public static void init(AppSettings settings) {
+        locale = new Locale(settings.getLanguage());
         bundle = ResourceBundle.getBundle(BUNDLE_NAME, locale, new UTF8Control());
     }
 

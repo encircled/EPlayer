@@ -1,10 +1,13 @@
 package cz.encircled.eplayer.view.fx;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import cz.encircled.eplayer.core.ApplicationCore;
-import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.model.MediaTab;
+import cz.encircled.eplayer.model.PlayableMedia;
+import cz.encircled.eplayer.remote.RemoteControlHandler;
 import cz.encircled.eplayer.util.Localization;
-import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.util.StringUtil;
 import javafx.application.Platform;
 import netscape.javascript.JSObject;
@@ -12,7 +15,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -20,13 +25,15 @@ import java.util.stream.Collectors;
 /**
  * @author Kisel on 13.08.2015.
  */
-public class JsBridge {
+public class JsBridge implements RemoteControlHandler {
 
     private static final Logger log = LogManager.getLogger();
     private static final Pattern seriesPattern = Pattern.compile("(?i).*s[\\d]{1,2}.?e[\\d]{1,2}.*");
-    private UiState uiState;
-    private ApplicationCore core;
-    private JSObject windowObject;
+    private final UiState uiState;
+    private final ApplicationCore core;
+    private final JSObject windowObject;
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     public JsBridge(ApplicationCore core, JSObject windowObject) {
         this.core = core;
@@ -34,53 +41,125 @@ public class JsBridge {
         this.uiState = new UiState();
     }
 
+    // REMOTE CONTROL
+
+    @Override
+    public void toFullScreen() {
+        throw new RuntimeException("Not supported");
+    }
+
+    @Override
+    public void back() {
+        throw new RuntimeException("Not supported");
+    }
+
+    @Override
+    public void goToNextMedia() {
+        if (uiState.currentMedia != null) {
+            if (uiState.selectedItem == null || uiState.selectedItem == uiState.currentMedia.size() - 1) {
+                uiState.selectedItem = 0;
+            } else {
+                uiState.selectedItem++;
+            }
+            refreshCurrentTab(uiState.currentMedia);
+        }
+    }
+
+    @Override
+    public void goToPrevMedia() {
+        if (uiState.currentMedia != null) {
+            if (uiState.selectedItem == null || uiState.selectedItem == 0) {
+                uiState.selectedItem = 0;
+            } else {
+                uiState.selectedItem--;
+            }
+            refreshCurrentTab(uiState.currentMedia);
+        }
+    }
+
+    @Override
+    public void playSelected() {
+        if (isValidSelectedItem()) {
+            playMedia(uiState.currentMedia.get(uiState.selectedItem).mediaFile().getPath());
+        }
+    }
+
+    @Override
+    public void watchLastMedia() {
+        throw new RuntimeException("Not supported");
+    }
+
+    @Override
+    public void playPause() {
+        throw new RuntimeException("Not supported");
+    }
+
+
+    // APP LOGIC
     public void refreshCurrentTab() {
         new Thread(() -> {
             Matcher matcher = seriesPattern.matcher("");
-            List<MediaType> mediaInFolder = uiState.isQuickNavi() ? core.getCacheService().getCache() : core.getFolderScanService().getMediaInFolder(uiState.getPath());
+            List<PlayableMedia> mediaInFolder = uiState.isQuickNavi() ? core.getCacheService().getCache() : core.getFolderScanService().getMediaInFolder(uiState.getPath());
 
             mediaInFolder = getFilteredMedia(uiState.getFilter(), mediaInFolder);
 
             switch (uiState.getViewType()) {
                 case SERIES:
-                    mediaInFolder = mediaInFolder.stream().filter((m) -> matcher.reset(m.getName()).matches()).collect(Collectors.toList());
+                    mediaInFolder = mediaInFolder.stream().filter((m) -> matcher.reset(m.mediaFile().getName()).matches()).collect(Collectors.toList());
                     break;
                 case FILMS:
-                    mediaInFolder = mediaInFolder.stream().filter((m) -> !matcher.reset(m.getName()).matches()).collect(Collectors.toList());
+                    mediaInFolder = mediaInFolder.stream().filter((m) -> !matcher.reset(m.mediaFile().getName()).matches()).collect(Collectors.toList());
                     break;
             }
 
-            Comparator<MediaType> comparator;
+/*          TODO  Comparator<PlayableMedia> comparator;
             switch (uiState.getOrderBy()) {
                 case SIZE:
-                    comparator = Comparator.comparingLong(MediaType::getSize);
+                    comparator = Comparator.comparingLong(MediaFile::getSize);
                     break;
                 case CREATION_DATE:
-                    comparator = Comparator.comparingLong(MediaType::getFileCreationDate);
+                    comparator = Comparator.comparingLong(MediaFile::getFileCreationDate);
                     break;
                 default:
-                    comparator = Comparator.comparing(MediaType::getName);
+                    comparator = Comparator.comparing(MediaFile::getName);
             }
 
             if (uiState.isReverseOrder()) {
                 comparator = Collections.reverseOrder(comparator);
             }
 
-            mediaInFolder.sort(comparator);
+            mediaInFolder.sort(comparator);*/
 
-            pushToUi("showMediaCallback", uiState.getPath(), mediaInFolder);
+            refreshCurrentTab(mediaInFolder);
         }).start();
+    }
 
+    private boolean isValidSelectedItem() {
+        return uiState.currentMedia != null && uiState.selectedItem != null && uiState.selectedItem < uiState.currentMedia.size();
+    }
+
+    private void refreshCurrentTab(List<PlayableMedia> media) {
+        uiState.currentMedia = media;
+        pushToUi("showMediaCallback", uiState.getPath(), media, uiState.selectedItem);
     }
 
     public String getMediaTabs() {
-        log.debug("GetMediaTabs call");
-        List<TabDto> tabs = Settings.folders_to_scan.getList().stream().map(path -> new TabDto(path, true)).collect(Collectors.toList());
-        tabs.add(0, new TabDto("QuickNavi", false));
-        return toJson(tabs);
+        List<MediaTab> tabs = core.getSettings().getFoldersToScan().stream()
+                .map(path -> new MediaTab(System.currentTimeMillis(), path, true))
+                .collect(Collectors.toList());
+
+        tabs.add(0, new MediaTab(0, "QuickNavi", false));
+        try {
+            String result = toJson(tabs);
+            log.debug("GetMediaTabs call: {}", result);
+            return result;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
-    public String getLocalization() {
+    public String getLocalization() throws JsonProcessingException {
         Map<String, String> map = Arrays.stream(Localization.values()).collect(Collectors.toMap(Localization::name, Localization::ln));
         return toJson(map);
     }
@@ -104,10 +183,7 @@ public class JsBridge {
 
     public void closeTab(String path) {
         log.debug("Close tab call: {}", path);
-        new Thread(() -> {
-            Settings.folders_to_scan.removeFromList(path);
-            Settings.folders_to_scan.save();
-        }).start();
+        new Thread(() -> core.getSettings().removeFolderToScan(path)).start();
     }
 
     // State callbacks
@@ -152,41 +228,34 @@ public class JsBridge {
     public void pushToUi(String action, Object... param) {
         log.debug("pushToUi call: {}", action);
         Platform.runLater(() -> {
-            if (param.length == 1) {
-                windowObject.call(action, toJson(param[0]));
-            } else {
-                windowObject.call(action, toJson(param));
+            try {
+                if (param.length == 1) {
+                    windowObject.call(action, toJson(param[0]));
+                } else {
+                    windowObject.call(action, toJson(param));
+                }
+            } catch (JsonProcessingException e) {
+                e.printStackTrace(); // TODO
             }
         });
     }
 
-    private List<MediaType> getFilteredMedia(String filter, List<MediaType> mediaTypes) {
+    public void log(String text) {
+        System.out.println("JS: " + text);
+    }
+
+    private List<PlayableMedia> getFilteredMedia(String filter, List<PlayableMedia> mediaFiles) {
         if (StringUtil.isNotBlank(filter)) {
             Pattern p = Pattern.compile("(?i).*" + filter.replaceAll(" ", ".*") + ".*");
             Matcher m = p.matcher("");
-            return mediaTypes.stream().filter(media -> m.reset(media.getName()).matches()).collect(Collectors.toList());
+            return mediaFiles.stream().filter(media -> m.reset(media.mediaFile().getName()).matches()).collect(Collectors.toList());
         } else {
-            return mediaTypes;
+            return mediaFiles;
         }
     }
 
-    private String toJson(Object obj) {
-        return new Gson().toJson(obj);
-    }
-
-    public static class TabDto {
-
-        long id;
-
-        String path;
-
-        boolean closeable = true;
-
-        public TabDto(String path, boolean closeable) {
-            this.id = System.nanoTime();
-            this.path = path;
-            this.closeable = closeable;
-        }
+    private String toJson(Object obj) throws JsonProcessingException {
+        return objectMapper.writeValueAsString(obj);
     }
 
 }

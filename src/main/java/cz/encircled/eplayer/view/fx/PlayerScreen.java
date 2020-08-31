@@ -176,7 +176,7 @@ public class PlayerScreen extends BorderPane {
     }
 
     private void initializeImageView() {
-        writableImage = new WritableImage((int) fxView.screenBounds.getWidth(), (int) fxView.screenBounds.getHeight());
+        writableImage = new WritableImage((int) fxView.getScreenBounds().getWidth(), (int) fxView.getScreenBounds().getHeight());
 
         imageView = new ImageView(writableImage);
         playerHolder.getChildren().add(imageView);
@@ -218,54 +218,5 @@ public class PlayerScreen extends BorderPane {
             }
         });
     }
-/*
-
-    private class CanvasPlayerComponent extends DirectMediaPlayerComponent {
-
-        @Nullable
-        PixelWriter pixelWriter = null;
-
-        public CanvasPlayerComponent() {
-            super(new CanvasBufferFormatCallback());
-        }
-
-        @NotNull
-        private PixelWriter getPW() {
-            if (pixelWriter == null)
-                pixelWriter = writableImage.getPixelWriter();
-            return pixelWriter;
-        }
-
-        @Override
-        public void display(DirectMediaPlayer mediaPlayer, Memory[] nativeBuffers, @NotNull BufferFormat bufferFormat) {
-            if (writableImage == null) {
-                return;
-            }
-            Platform.runLater(() -> {
-                Memory nativeBuffer = mediaPlayer.lock()[0];
-//                Memory nativeBuffer = nativeBuffers[0];
-                try {
-                    ByteBuffer byteBuffer = nativeBuffer.getByteBuffer(0, nativeBuffer.size());
-                    getPW().setPixels(0, 0, bufferFormat.getWidth(), bufferFormat.getHeight(), pixelFormat, byteBuffer, bufferFormat.getPitches()[0]);
-                } catch (Throwable t) {
-                    t.printStackTrace();
-                } finally {
-                    mediaPlayer.unlock();
-                }
-            });
-        }
-
-    }
-
-    private class CanvasBufferFormatCallback implements BufferFormatCallback {
-        @NotNull
-        @Override
-        public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
-            log.debug("GetBufferFormat: source dimension is {}x{}", sourceWidth, sourceHeight);
-            Platform.runLater(() -> videoSourceRatioProperty.set((float) sourceHeight / (float) sourceWidth));
-            return new RV32BufferFormat((int) fxView.screenBounds.getWidth(), (int) fxView.screenBounds.getHeight());
-        }
-    }
-*/
 
 }

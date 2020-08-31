@@ -3,7 +3,6 @@ package cz.encircled.eplayer.view.fx.components;
 import cz.encircled.eplayer.core.ApplicationCore;
 import cz.encircled.eplayer.service.event.Event;
 import cz.encircled.eplayer.util.Localization;
-import cz.encircled.eplayer.util.Settings;
 import cz.encircled.eplayer.util.StringUtil;
 import cz.encircled.eplayer.view.fx.FxUtil;
 import cz.encircled.eplayer.view.fx.FxView;
@@ -39,8 +38,8 @@ public class PlayerControls extends GridPane {
     private ToggleButton fitScreenToggleButton;
     private double lastVolumeSliderValue;
 
-    private ApplicationCore core;
-    private FxView fxView;
+    private final ApplicationCore core;
+    private final FxView fxView;
 
     public PlayerControls(ApplicationCore core, FxView fxView) {
         this.core = core;
@@ -51,11 +50,12 @@ public class PlayerControls extends GridPane {
     private void initialize() {
         initializeTexts();
         initializeTimeControls();
+        // TODO NOT WORKING
         initializeVolumeControls();
         initializeButtons();
         getStyleClass().add("player_controls");
-        setPrefSize(fxView.screenBounds.getWidth(), HEIGHT);
-        setMaxSize(fxView.screenBounds.getWidth(), HEIGHT);
+        setPrefSize(fxView.getScreenBounds().getWidth(), HEIGHT);
+        setMaxSize(fxView.getScreenBounds().getWidth(), HEIGHT);
         setPadding(new Insets(2, 20, 0, 20));
         setStyle("-fx-background-color: rgb(40,40,40)");
         setHgap(3);
@@ -136,8 +136,12 @@ public class PlayerControls extends GridPane {
     }
 
     private void initializeVolumeControls() {
+        volumeSlider = new Slider(0, core.getSettings().getMaxVolume(), core.getSettings().getLastVolume());
 
-        volumeSlider = new Slider(0, Settings.max_volume.getInt(150), Settings.last_volume.getInt(100));
+        core.getEventObserver().listen(Event.mediaDurationChange, arg -> {
+            core.getMediaService().setVolume((int) core.getSettings().getLastVolume());
+        });
+
         volumeSlider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
             if (Boolean.FALSE.equals(newValue)) {
                 saveLastVolumeToSettings();
@@ -157,9 +161,7 @@ public class PlayerControls extends GridPane {
     }
 
     private void saveLastVolumeToSettings() {
-        FxUtil.workInNormalThread(() -> {
-            Settings.last_volume.set((int) volumeSlider.getValue()).save();
-        });
+        FxUtil.workInNormalThread(() -> core.getSettings().lastVolume(volumeSlider.getValue()));
     }
 
     private void initializeTimeControls() {

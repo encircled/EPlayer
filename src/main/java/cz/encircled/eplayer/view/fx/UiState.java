@@ -1,9 +1,20 @@
 package cz.encircled.eplayer.view.fx;
 
+import cz.encircled.eplayer.model.PlayableMedia;
+
+import java.util.List;
+
 /**
  * @author Kisel on 18.08.2015.
  */
 public class UiState {
+
+    /**
+     * Selected media item by remote control
+     */
+    Integer selectedItem = null;
+
+    List<PlayableMedia> currentMedia = null;
 
     private String filter = "";
 

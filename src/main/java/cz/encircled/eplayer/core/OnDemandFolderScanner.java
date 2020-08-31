@@ -1,9 +1,8 @@
 package cz.encircled.eplayer.core;
 
-import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.model.MediaFile;
+import cz.encircled.eplayer.model.PlayableMedia;
 import cz.encircled.eplayer.service.FolderScanService;
-import cz.encircled.eplayer.util.IOUtil;
-import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ public class OnDemandFolderScanner implements FolderScanService {
 
     private static final List<String> SUPPORTED_FORMATS = Arrays.asList("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov");
 
-    private ApplicationCore core;
+    private final ApplicationCore core;
 
     public OnDemandFolderScanner(@NotNull ApplicationCore core) {
         this.core = core;
@@ -25,18 +24,18 @@ public class OnDemandFolderScanner implements FolderScanService {
 
     @Override
     @NotNull
-    public List<MediaType> getMediaInFolder(@NotNull String path) {
-        List<MediaType> mediaTypes = new ArrayList<>();
-        IOUtil.getFilesInFolder(path).forEach(file -> {
+    public List<PlayableMedia> getMediaInFolder(@NotNull String path) {
+        List<MediaFile> mediaFiles = new ArrayList<>();
+        /*IOUtil.getFilesInFolder(path).forEach(file -> {
             if (SUPPORTED_FORMATS.contains(FilenameUtils.getExtension(file.getName()))) {
-                MediaType entry = core.getCacheService().getEntry(file.getPath());
+                PlayableMedia entry = core.getCacheService().getEntry(file.getPath());
                 if (entry == null) {
-                    entry = new MediaType(file.getPath());
+                    entry = new MediaFile(file.getPath());
                 }
-                mediaTypes.add(entry);
+                mediaFiles.add(entry);
             }
-        });
-        return mediaTypes;
+        }); TODO */
+        return new ArrayList<>();
     }
 
 }

@@ -1,11 +1,7 @@
 package cz.encircled.eplayer.model;
 
 import cz.encircled.eplayer.core.ApplicationCore;
-import cz.encircled.eplayer.util.DateUtil;
-import cz.encircled.eplayer.util.IOUtil;
-import cz.encircled.eplayer.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,15 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 
-public class MediaType {
+public class MediaFile {
 
-    private static final String TO_STRING_FORMAT = "Playable name: %s, path: %s, time: %d, watchDate: %d";
-
-    private boolean isSeries;
-
-    private long time;
-
-    private long watchDate;
+    private static final String TO_STRING_FORMAT = "Playable name: %s, path: %s";
 
     private String path;
 
@@ -31,47 +21,16 @@ public class MediaType {
 
     private long size;
 
-    private String formattedWatchDate = "";
-
-    private String formattedCurrentTime = "";
-
-    private String formattedSize;
-
     private long fileCreationDate;
 
     private String pathToScreenshot;
 
-    public MediaType(@NotNull String path) {
-        this(path, null);
-    }
-
-    public MediaType(@NotNull String path, @Nullable String title) {
+    public MediaFile(@NotNull String path) {
         updatePath(path);
-        if (title != null) {
-            name = title;
-        }
-        time = 0L;
-        isSeries = false;
     }
 
     public String getPathToScreenshot() {
         return pathToScreenshot;
-    }
-
-    public String getFormattedWatchDate() {
-        return formattedWatchDate;
-    }
-
-    public String getFormattedCurrentTime() {
-        return formattedCurrentTime;
-    }
-
-    public boolean isSeries() {
-        return isSeries;
-    }
-
-    public void setSeries(boolean isSeries) {
-        this.isSeries = isSeries;
     }
 
     public String getName() {
@@ -86,15 +45,6 @@ public class MediaType {
         return path;
     }
 
-    public long getTime() {
-        return time;
-    }
-
-    public void setTime(long time) {
-        this.time = time;
-        updateTimeLabel();
-    }
-
     public String getExtension() {
         return extension;
     }
@@ -103,35 +53,18 @@ public class MediaType {
         return size;
     }
 
-    public String getFormattedSize() {
-        return formattedSize;
-    }
-
     public boolean exists() {
         return path != null && new java.io.File(path).exists();
-    }
-
-    public long getWatchDate() {
-        return watchDate;
-    }
-
-    public void setWatchDate(long watchDate) {
-        this.watchDate = watchDate;
-        updateTimeLabel();
     }
 
     public long getFileCreationDate() {
         return fileCreationDate;
     }
 
-    public void updateTimeLabel() {
-        formattedCurrentTime = StringUtil.msToTimeLabel(time);
-        formattedWatchDate = DateUtil.daysBetweenLocalized(watchDate);
-    }
 
     @Override
     public String toString() {
-        return String.format(TO_STRING_FORMAT, name, path, time, watchDate);
+        return String.format(TO_STRING_FORMAT, name, path);
     }
 
     public void updatePath(@NotNull String path) {
@@ -158,7 +91,6 @@ public class MediaType {
         }
 
         size = file.length();
-        formattedSize = IOUtil.byteCountToDisplaySize(size);
         pathToScreenshot = ApplicationCore.getScreenshotURL(this);
     }
 }

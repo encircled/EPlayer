@@ -1,22 +1,23 @@
 app = {
 
     callGetMediaTabs: function () {
-        console.log('Load tabs');
-        return JSON.parse(bridge.getMediaTabs());
+        let tabs = JSON.parse(bridge.getMediaTabs());
+        bridge.log('Load tabs: ' + JSON.stringify(tabs));
+        return tabs;
     },
 
     callPlayMedia: function (path) {
-        console.log('Call play media at path: ' + path);
+        bridge.log('Call play media at path: ' + path);
         bridge.playMedia(path);
     },
 
     callCloseTab: function (path) {
-        console.log('Call close tab: ' + path);
+        bridge.log('Call close tab: ' + path);
         bridge.closeTab(path);
     },
 
     callRemoveMedia: function (path) {
-        console.log('Call remove media at path: ' + path);
+        bridge.log('Call remove media at path: ' + path);
         bridge.removeMedia(path, false); // TODO modal dialog
     },
 
@@ -48,16 +49,19 @@ app = {
 function showMediaCallback(arg) {
     var params = JSON.parse(arg);
     var path = params[0];
-    var media = params[1];
+    var media = params[1]; // TODO cache last and check if render is needed?
+    var selectedItem = params[2]; // TODO
 
-    console.log('showMediaCallback: tab path is {0}'.format(path));
+    bridge.log(JSON.stringify(media))
+    bridge.log('showMediaCallback: tab path is {0}'.format(path));
+    bridge.log('Selected is' + selectedItem);
 
     var tabId = model.getTabByPath(path).id;
     var tab = ui.getTabById(tabId);
 
     tab.html('');
-    media.forEach(function (m) {
-        var mediaWrapper = components.getMediaWrapper(m);
+    media.forEach(function (m, index) {
+        var mediaWrapper = components.getMediaWrapper(m, index === selectedItem);
         mediaWrapper.appendTo(tab);
         mediaWrapper.click(function () {
             app.callPlayMedia(m.path);
@@ -107,6 +111,5 @@ function addTab(tab) {
 }
 
 function addTabCallback(arg) {
-    var tab = JSON.parse(arg);
-    addTab(tab);
+    addTab(JSON.parse(arg));
 }

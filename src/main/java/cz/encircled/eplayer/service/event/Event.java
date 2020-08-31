@@ -30,9 +30,11 @@ public class Event<A> {
     public static Event<Long> mediaDurationChange = new Event<>("mediaDurationChange");
 
     private final String name;
+    public final boolean verbose;
 
     public Event(String name) {
         this.name = name;
+        this.verbose = !name.equals("mediaTimeChange");
     }
 
     @NotNull

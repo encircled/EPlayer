@@ -1,5 +1,7 @@
 package cz.encircled.eplayer.view;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * @author Encircled on 16/09/2014.
  */
@@ -7,16 +9,16 @@ public interface AppView {
 
     String TITLE = "EPlayer";
 
-    void showPlayer();
+    void showPlayer(CountDownLatch countDownLatch);
 
     boolean isPlayerScene();
 
+    boolean isFullScreen();
+
     void showQuickNavi();
 
-//    void addTabForFolder(@NotNull String tabName, @NotNull String path);
+    void toggleFullScreen();
 
-    void setFullScreen(boolean fullScreen);
-
-    void openMedia();
+    void openMediaChooser();
 
 }

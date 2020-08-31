@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.service;
 
-import cz.encircled.eplayer.model.MediaType;
+import cz.encircled.eplayer.model.PlayableMedia;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -11,6 +11,6 @@ import java.util.List;
 public interface FolderScanService {
 
     @NotNull
-    List<MediaType> getMediaInFolder(String pathToFolder);
+    List<PlayableMedia> getMediaInFolder(String pathToFolder);
 
 }

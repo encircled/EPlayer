@@ -2,7 +2,7 @@ package cz.encircled.eplayer.view.fx.components
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
-import cz.encircled.eplayer.model.MediaType
+import cz.encircled.eplayer.model.MediaFile
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.fx.FxView
@@ -30,7 +30,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
 
         val open = MenuItem(Localization.open.ln())
         open.accelerator = KeyCodeCombination(KeyCode.O, KeyCombination.CONTROL_DOWN)
-        open.onAction = EventHandler { fxView.openMedia() }
+        open.onAction = EventHandler { fxView.openMediaChooser() }
 
         val exit = MenuItem(Localization.exit.ln())
         exit.accelerator = KeyCodeCombination(KeyCode.Q, KeyCombination.CONTROL_DOWN)
@@ -44,7 +44,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
         val view = Menu(Localization.view.ln())
 
         val fullScreen = CheckMenuItem(Localization.fullScreen.ln())
-        fxView.primaryStage.fullScreenProperty().addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newValue: Boolean? -> fullScreen.isSelected = newValue!! }
+        fxView.primaryStage.fullScreenProperty().addNewValueListener { newValue: Boolean? -> fullScreen.isSelected = newValue!! }
         fullScreen.onAction = EventHandler { fxView.toggleFullScreen() }
         fullScreen.accelerator = KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN)
         fullScreen.isSelected = fxView.isFullScreen
@@ -57,7 +57,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
 
         val back = MenuItem(Localization.back.ln())
         back.onAction = EventHandler { core.back() }
-        back.accelerator = KeyCodeCombination(KeyCode.CANCEL) // TODO
+        back.accelerator = KeyCodeCombination(KeyCode.ESCAPE)
         view.items.addAll(fullScreen, fitScreen)
 
         return view
@@ -68,6 +68,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
 
         val play = MenuItem(Localization.play.ln())
         play.onAction = EventHandler { core.mediaService.toggle() }
+        play.accelerator = KeyCodeCombination(KeyCode.SPACE)
         core.eventObserver.listenFxThread(Event.playingChanged) { isPlaying: Boolean ->
             play.text = if (isPlaying) Localization.pause.ln() else Localization.play.ln()
         }
@@ -91,7 +92,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
         val deleteMissing = MenuItem(Localization.deleteMissing.ln())
         deleteMissing.onAction = EventHandler {
             Thread {
-                core.cacheService.cache.removeIf { m: MediaType -> !m.exists() }
+                core.cacheService.cache.removeIf { !it.mediaFile().exists() }
                 core.cacheService.save()
                 Platform.runLater { fxView.quickNaviScreen.refreshCurrentTab() }
             }.start()
@@ -114,7 +115,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
             }
         }
 
-        fxView.screenChangeProperty().addNewValueListener {
+        fxView.screenChangeProperty.addNewValueListener {
             if (FxView.QUICK_NAVI_SCREEN == it) {
                 audioTracks.isDisable = true
                 subtitles.isDisable = true

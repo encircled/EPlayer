@@ -11,7 +11,7 @@ import java.util.Date;
  */
 public class DateUtil {
 
-    private static float MS_IN_DAY = 86400000L;
+    private static final float MS_IN_DAY = 86400000L;
 
     public static String getLocaleFormatted(long time) {
         return DateFormat.getDateInstance(DateFormat.MEDIUM, LocalizationProvider.getUsedLocale()).format(new Date(time));

@@ -5,7 +5,6 @@ import javafx.application.Platform;
 import javafx.beans.property.FloatProperty;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
 import uk.co.caprica.vlcj.player.base.MediaPlayer;
 import uk.co.caprica.vlcj.player.embedded.videosurface.CallbackVideoSurface;
 import uk.co.caprica.vlcj.player.embedded.videosurface.VideoSurfaceAdapters;
@@ -42,7 +41,7 @@ public final class ImageViewVideoSurface {
         @Override
         public BufferFormat getBufferFormat(int sourceWidth, int sourceHeight) {
             Platform.runLater(() -> videoSourceRatioProperty.set((float) sourceHeight / (float) sourceWidth));
-            return new RV32BufferFormat((int) fxView.screenBounds.getWidth(), (int) fxView.screenBounds.getHeight());
+            return new RV32BufferFormat((int) fxView.getScreenBounds().getWidth(), (int) fxView.getScreenBounds().getHeight());
         }
 
     }
