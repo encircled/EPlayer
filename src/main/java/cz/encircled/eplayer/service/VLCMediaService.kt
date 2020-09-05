@@ -9,24 +9,32 @@ import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.media.TrackInfo
 import uk.co.caprica.vlcj.player.base.MediaPlayer
 import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import java.io.File
 import java.util.concurrent.CountDownLatch
 
 /**
  * @author Encircled on 9.6.2014.
  */
-class VLCMediaService(private val core: ApplicationCore, val player: MediaPlayer) : MediaService {
+class VLCMediaService(private val core: ApplicationCore) : MediaService {
 
     private val log = LogManager.getLogger()
     private var currentTime: Long = 0
     private var current: PlayableMedia? = null
     var timeToStart: Long? = null
 
+    lateinit var player: MediaPlayer
+
+    fun setMediaPlayer(player: MediaPlayer) {
+        this.player = player
+        this.player.events().addMediaPlayerEventListener(playerEventHandler)
+    }
+
     private val playerEventHandler = object : MediaPlayerEventAdapter() {
 
-        override fun playing(mediaPlayer: MediaPlayer) = core.eventObserver.fire(Event.playingChanged, true)
+        override fun playing(mediaPlayer: MediaPlayer) = Event.playingChanged.fire(true)
 
-        override fun paused(mediaPlayer: MediaPlayer) = core.eventObserver.fire(Event.playingChanged, false)
+        override fun paused(mediaPlayer: MediaPlayer) = Event.playingChanged.fire(false)
 
         override fun mediaPlayerReady(mediaPlayer: MediaPlayer) {
             log.debug("Media parsed - {}", current)
@@ -48,8 +56,8 @@ class VLCMediaService(private val core: ApplicationCore, val player: MediaPlayer
                 GenericTrackDescription(it.id(), d)
             }
 
-            core.eventObserver.fire(Event.subtitlesUpdated, textTracks)
-            core.eventObserver.fire(Event.audioTracksUpdated, audioTracks)
+            Event.subtitlesUpdated.fire(textTracks)
+            Event.audioTracksUpdated.fire(audioTracks)
         }
 
         override fun finished(mediaPlayer: MediaPlayer) {
@@ -59,18 +67,18 @@ class VLCMediaService(private val core: ApplicationCore, val player: MediaPlayer
 
         override fun timeChanged(mediaPlayer: MediaPlayer, newTime: Long) {
             currentTime = newTime
-            core.eventObserver.fire(Event.mediaTimeChange, newTime)
+            Event.mediaTimeChange.fire(newTime)
         }
 
         override fun lengthChanged(mediaPlayer: MediaPlayer, newLength: Long) {
-            core.eventObserver.fire(Event.mediaDurationChange, newLength)
+            Event.mediaDurationChange.fire(newLength)
         }
 
         override fun error(mediaPlayer: MediaPlayer) {
             log.error("Failed to open media {} ", current)
             // TODO guiUtil.showMessage(Localization.fileOpenFailed.ln(), Localization.errorTitle.ln());
             if (current != null) {
-                core.cacheService.deleteEntry(current!!.path)
+                core.cacheService.deleteEntry(current!!)
                 current = null
             }
             core.appView.showQuickNavi()
@@ -112,7 +120,7 @@ class VLCMediaService(private val core: ApplicationCore, val player: MediaPlayer
         play(media, media.time)
     }
 
-    override fun play(p: PlayableMedia) = play(p, p.time)
+    override fun play(p: PlayableMedia) = play(core.cacheService.createIfAbsent(p), p.time)
 
     override fun getSubtitles(): Int = player.subpictures().track()
 
@@ -123,6 +131,7 @@ class VLCMediaService(private val core: ApplicationCore, val player: MediaPlayer
     override fun getAudioTrack(): Int = player.audio().track()
 
     override fun setAudioTrack(trackId: Int) {
+        log.debug("Set audio track with id {}", trackId)
         player.audio().setTrack(trackId)
     }
 
@@ -159,19 +168,6 @@ class VLCMediaService(private val core: ApplicationCore, val player: MediaPlayer
         current = null
         currentTime = 0L
         player.controls().stop()
-    }
-
-    init {
-        val start = System.currentTimeMillis()
-        log.debug("VLCMediaService init start")
-        try {
-            player.events().addMediaPlayerEventListener(playerEventHandler)
-        } catch (e: Exception) {
-            log.error("Player initialization failed", e)
-            // TODO
-//            guiUtil.showMessage("VLC library not found", "Error title");
-        }
-        log.debug("VLCMediaService init complete in {} ms", System.currentTimeMillis() - start)
     }
 
 }

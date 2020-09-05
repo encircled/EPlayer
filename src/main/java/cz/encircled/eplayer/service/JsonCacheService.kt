@@ -25,7 +25,7 @@ class JsonCacheService : CacheService {
         log.trace("JsonCacheService init start")
         try {
             cache = IOUtil.getPlayableJson()
-                    .associateBy { if (it is MediaSeries) it.name else it.path }
+                    .associateBy { it.getId() }
                     .toMutableMap()
         } catch (e: Exception) {
             cache = HashMap()
@@ -33,6 +33,16 @@ class JsonCacheService : CacheService {
 //           TODO guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
         }
         log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start)
+    }
+
+    override fun getOrNull(path: String): PlayableMedia? {
+        val mediaFile = MediaFile(path)
+
+        return if (core.seriesFinder.isSeries(mediaFile.name)) {
+            cache[core.seriesFinder.seriesName(mediaFile.name)]
+        } else {
+            cache[path]
+        }
     }
 
     override fun createIfAbsent(path: String): PlayableMedia {
@@ -47,6 +57,8 @@ class JsonCacheService : CacheService {
         }
     }
 
+    override fun createIfAbsent(media: PlayableMedia): PlayableMedia = cache.getOrPut(media.getId()) { media }
+
     private fun getOrCreateSeries(mediaFile: MediaFile, path: String): PlayableMedia {
         val seriesName = core.seriesFinder.seriesName(mediaFile.name)
         val single = SingleMedia(path, mediaFile, 0, 0)
@@ -57,7 +69,7 @@ class JsonCacheService : CacheService {
             val allSeries = core.seriesFinder.findSeriesForName(File(mediaFile.path).parent, seriesName)
                     .map { SingleMedia(it, MediaFile(it), 0, 0) }
 
-            cache[seriesName] = MediaSeries(seriesName, path, 0, ArrayList(allSeries))
+            cache[seriesName] = MediaSeries(seriesName, ArrayList(allSeries))
         }
 
         return cache.getValue(seriesName)
@@ -76,14 +88,14 @@ class JsonCacheService : CacheService {
         return p
     }
 
-    override fun deleteEntry(id: String): PlayableMedia? = cache.remove(id)
+    override fun deleteEntry(media: PlayableMedia): PlayableMedia = cache.remove(media.getId())!!
 
-    override fun getCache(): List<PlayableMedia> {
+    override fun getCached(): List<PlayableMedia> {
         return ArrayList(cache.values)
     }
 
-    override fun getLastByWatchDate(): PlayableMedia? {
-        val p = getCache().maxWithOrNull(Comparator.comparingLong(PlayableMedia::watchDate))
+    override fun lastByWatchDate(): PlayableMedia? {
+        val p = getCached().maxWithOrNull(Comparator.comparingLong(PlayableMedia::watchDate))
         log.debug("Last played: {}", p)
         return p
     }

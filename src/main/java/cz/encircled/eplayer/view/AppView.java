@@ -1,5 +1,7 @@
 package cz.encircled.eplayer.view;
 
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer;
+
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -8,6 +10,8 @@ import java.util.concurrent.CountDownLatch;
 public interface AppView {
 
     String TITLE = "EPlayer";
+
+    void setMediaPlayer(EmbeddedMediaPlayer mediaPlayer);
 
     void showPlayer(CountDownLatch countDownLatch);
 

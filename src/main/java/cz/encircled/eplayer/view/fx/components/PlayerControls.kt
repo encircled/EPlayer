@@ -1,208 +1,176 @@
-package cz.encircled.eplayer.view.fx.components;
+package cz.encircled.eplayer.view.fx.components
 
-import cz.encircled.eplayer.core.ApplicationCore;
-import cz.encircled.eplayer.service.event.Event;
-import cz.encircled.eplayer.util.Localization;
-import cz.encircled.eplayer.util.StringUtil;
-import cz.encircled.eplayer.view.fx.FxUtil;
-import cz.encircled.eplayer.view.fx.FxView;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.scene.control.Slider;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.Tooltip;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
+import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.service.event.Event
+import cz.encircled.eplayer.util.Localization
+import cz.encircled.eplayer.util.StringUtil
+import cz.encircled.eplayer.view.fx.FxUtil.inNormalThread
+import cz.encircled.eplayer.view.fx.FxView
+import cz.encircled.eplayer.view.fx.UiDataModel
+import cz.encircled.eplayer.view.fx.addNewValueListener
+import javafx.beans.value.ObservableValue
+import javafx.event.ActionEvent
+import javafx.event.EventHandler
+import javafx.geometry.Insets
+import javafx.scene.control.Slider
+import javafx.scene.control.ToggleButton
+import javafx.scene.control.Tooltip
+import javafx.scene.input.MouseEvent
+import javafx.scene.layout.*
+import javafx.scene.paint.Color
+import javafx.scene.text.Text
+import org.apache.logging.log4j.LogManager
+
+private const val HEIGHT = 53.0
 
 /**
  * @author Encircled on 21/09/2014.
  */
-public class PlayerControls extends GridPane {
+class PlayerControls(private val core: ApplicationCore, private val fxView: FxView, private val dataModel: UiDataModel) : GridPane() {
 
-    public static final double HEIGHT = 53;
-    private static final org.apache.logging.log4j.Logger log = org.apache.logging.log4j.LogManager.getLogger();
-    private static final Color textColor = Color.rgb(155, 155, 155);
-    private Slider timeSlider;
-    private Text timeFlyingText;
-    private Text timeText;
-    private Text totalTimeText;
-    private Text volumeText;
-    private Text timeTextSeparator;
-    private Slider volumeSlider;
-    private ToggleButton volumeButton;
-    private ToggleButton playerToggleButton;
-    private ToggleButton fitScreenToggleButton;
-    private double lastVolumeSliderValue;
+    private val log = LogManager.getLogger()
 
-    private final ApplicationCore core;
-    private final FxView fxView;
+    private var timeSlider: Slider = Slider()
 
-    public PlayerControls(ApplicationCore core, FxView fxView) {
-        this.core = core;
-        this.fxView = fxView;
-        initialize();
+    private var timeFlyingText: Text = Text()
+
+    private var timeText: Text = Text(StringUtil.msToTimeLabel(0L))
+
+    private var totalTimeText: Text = Text()
+
+    private var volumeText: Text = Text()
+
+    private var timeTextSeparator: Text = Text(" / ")
+
+    private lateinit var volumeSlider: Slider
+
+    private var volumeButton: ToggleButton = ToggleButton()
+
+    private var playerToggleButton: ToggleButton = ToggleButton()
+
+    private var fitScreenToggleButton: ToggleButton = ToggleButton()
+
+    private var lastVolumeSliderValue = 0.0
+
+    init {
+        initializeTimeControls()
+        initializeVolumeControls()
+        initializeButtons()
+
+        styleClass.add("player_controls")
+        setPrefSize(fxView.screenBounds.width, HEIGHT)
+        setMaxSize(fxView.screenBounds.width, HEIGHT)
+
+        val timeTextPane = HBox(timeText, timeTextSeparator, totalTimeText)
+        timeTextPane.padding = Insets(3.0, 0.0, 0.0, 0.0)
+
+        val timeColumn = ColumnConstraints(100.0, 100.0, Double.MAX_VALUE)
+        timeColumn.hgrow = Priority.ALWAYS
+
+        timeFlyingText.y = 12.0
+        timeFlyingText.isVisible = false
+
+        add(playerToggleButton, 0, 1)
+        add(volumeButton, 1, 1)
+        add(volumeSlider, 2, 1)
+        add(volumeText, 3, 1)
+        add(Pane(timeFlyingText), 4, 0)
+        add(timeSlider, 4, 1)
+        add(timeTextPane, 5, 1)
+        add(fitScreenToggleButton, 6, 1)
+
+        columnConstraints.add(ColumnConstraints(35.0))
+        columnConstraints.add(ColumnConstraints(30.0))
+        columnConstraints.add(ColumnConstraints(130.0))
+        columnConstraints.add(ColumnConstraints(50.0))
+        columnConstraints.add(timeColumn)
+        columnConstraints.add(ColumnConstraints(130.0))
+
+        rowConstraints.add(RowConstraints(12.0))
     }
 
-    private void initialize() {
-        initializeTexts();
-        initializeTimeControls();
-        // TODO NOT WORKING
-        initializeVolumeControls();
-        initializeButtons();
-        getStyleClass().add("player_controls");
-        setPrefSize(fxView.getScreenBounds().getWidth(), HEIGHT);
-        setMaxSize(fxView.getScreenBounds().getWidth(), HEIGHT);
-        setPadding(new Insets(2, 20, 0, 20));
-        setStyle("-fx-background-color: rgb(40,40,40)");
-        setHgap(3);
+    private fun initializeButtons() {
+        dataModel.fitToScreen.addNewValueListener { fitScreenToggleButton.isSelected = it }
 
-        HBox timeTextPane = new HBox(timeText, timeTextSeparator, totalTimeText);
-        timeTextPane.setPadding(new Insets(3, 0, 0, 0));
-        add(playerToggleButton, 0, 1);
-        add(volumeButton, 1, 1);
-        add(volumeSlider, 2, 1);
-        add(volumeText, 3, 1);
-        add(new Pane(timeFlyingText), 4, 0);
-        add(timeSlider, 4, 1);
-        add(timeTextPane, 5, 1);
+        val tooltip = Tooltip(Localization.fitScreen.ln())
 
-        add(fitScreenToggleButton, 6, 1);
+        fitScreenToggleButton.tooltip = tooltip
+        fitScreenToggleButton.id = "fitScreen"
+        fitScreenToggleButton.onAction = EventHandler { dataModel.toggleFitToScreen() }
+        fitScreenToggleButton.isSelected = dataModel.fitToScreen.get()
 
-        getColumnConstraints().add(new ColumnConstraints(35));
-        getColumnConstraints().add(new ColumnConstraints(30));
-        getColumnConstraints().add(new ColumnConstraints(130));
-        getColumnConstraints().add(new ColumnConstraints(50));
-        ColumnConstraints timeColumn = new ColumnConstraints(100, 100, Double.MAX_VALUE);
-        timeColumn.setHgrow(Priority.ALWAYS);
-        getColumnConstraints().add(timeColumn);
-        getColumnConstraints().add(new ColumnConstraints(130));
+        playerToggleButton.id = "play"
+        playerToggleButton.onAction = EventHandler { e: ActionEvent? -> core.mediaService.toggle() }
+        Event.playingChanged.listenFxThread { arg: Boolean? -> playerToggleButton.isSelected = !arg!! }
 
-        getRowConstraints().add(new RowConstraints(12));
-    }
-
-    private void initializeButtons() {
-        playerToggleButton = new ToggleButton();
-        volumeButton = new ToggleButton();
-        fitScreenToggleButton = new ToggleButton();
-
-        fitScreenToggleButton.setId("fitScreen");
-        fitScreenToggleButton.setOnAction(event -> fxView.getPlayerScreen().toggleFitToScreen());
-        fxView.getPlayerScreen().fitToScreenProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                fitScreenToggleButton.setSelected(newValue);
-            }
-        });
-        fitScreenToggleButton.setSelected(fxView.getPlayerScreen().fitToScreenProperty().get());
-        Tooltip tooltip = new Tooltip(Localization.fitScreen.ln());
-
-        fitScreenToggleButton.setTooltip(tooltip);
-
-        playerToggleButton.setId("play");
-        playerToggleButton.setOnAction(e -> core.getMediaService().toggle());
-        core.getEventObserver().listenFxThread(Event.playingChanged, (arg) -> playerToggleButton.setSelected(!arg));
-
-        volumeButton.setId("mute");
-        volumeButton.setOnAction(event -> {
-            if (Boolean.TRUE.equals(volumeButton.isSelected())) {
-                lastVolumeSliderValue = volumeSlider.getValue();
-                volumeSlider.setValue(0);
+        volumeButton.id = "mute"
+        volumeButton.onAction = EventHandler {
+            if (volumeButton.isSelected) {
+                lastVolumeSliderValue = volumeSlider.value
+                volumeSlider.value = 0.0
             } else {
-                volumeSlider.setValue(lastVolumeSliderValue);
+                volumeSlider.value = lastVolumeSliderValue
             }
-        });
+        }
     }
 
-    private void initializeTexts() {
-        volumeText = new Text();
-        timeFlyingText = new Text();
-        timeTextSeparator = new Text(" / ");
-        totalTimeText = new Text();
-        timeText = new Text(StringUtil.msToTimeLabel(0L));
+    private fun initializeVolumeControls() {
+        Event.mediaDurationChange.listen { core.mediaService.volume = core.settings.lastVolume.toInt() }
 
-        volumeText.setFill(textColor);
-        timeFlyingText.setFill(textColor);
-        timeText.setFill(textColor);
-        totalTimeText.setFill(textColor);
-        timeTextSeparator.setFill(textColor);
+        volumeSlider = Slider(0.0, core.settings.maxVolume, core.settings.lastVolume)
 
-        timeFlyingText.setY(12);
-        timeFlyingText.setVisible(false);
-
-    }
-
-    private void initializeVolumeControls() {
-        volumeSlider = new Slider(0, core.getSettings().getMaxVolume(), core.getSettings().getLastVolume());
-
-        core.getEventObserver().listen(Event.mediaDurationChange, arg -> {
-            core.getMediaService().setVolume((int) core.getSettings().getLastVolume());
-        });
-
-        volumeSlider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
-            if (Boolean.FALSE.equals(newValue)) {
-                saveLastVolumeToSettings();
+        volumeSlider.valueChangingProperty().addNewValueListener {
+            if (!it) saveLastVolumeToSettings()
+        }
+        volumeSlider.valueProperty().addNewValueListener {
+            val volume = it.toInt()
+            volumeText.text = "$volume %"
+            volumeButton.isSelected = volume == 0
+            if (!volumeSlider.isValueChanging) {
+                saveLastVolumeToSettings()
             }
-        });
-        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            int volume = newValue.intValue();
-            volumeText.setText(volume + " %");
-            volumeButton.setSelected(volume == 0);
-            if (!volumeSlider.isValueChanging()) {
-                saveLastVolumeToSettings();
-            }
-            core.getMediaService().setVolume(volume);
-        });
-        int volume = (int) volumeSlider.getValue();
-        volumeText.setText(volume + " %");
+            core.mediaService.volume = volume
+        }
+
+        volumeText.text = "${volumeSlider.value.toInt()} %"
     }
 
-    private void saveLastVolumeToSettings() {
-        FxUtil.workInNormalThread(() -> core.getSettings().lastVolume(volumeSlider.getValue()));
+    private fun saveLastVolumeToSettings() = inNormalThread {
+        core.settings.lastVolume(volumeSlider.value)
     }
 
-    private void initializeTimeControls() {
-        timeSlider = new Slider();
-
+    private fun initializeTimeControls() {
         // Flying label
-        timeSlider.valueChangingProperty().addListener((observable, oldValue, newValue) -> {
-            timeFlyingText.setVisible(Boolean.TRUE.equals(newValue));
-        });
-        EventHandler<MouseEvent> handler = event -> {
-            timeFlyingText.setX(event.getX() - 20);
-            timeFlyingText.setText(StringUtil.msToTimeLabel((long) timeSlider.getValue()));
-        };
-        timeSlider.setOnMouseMoved(handler);
-        timeSlider.setOnMouseDragged(handler);
+        timeSlider.valueChangingProperty().addNewValueListener { timeFlyingText.isVisible = it }
+        val handler = EventHandler { event: MouseEvent ->
+            timeFlyingText.x = event.x - 20
+            timeFlyingText.text = StringUtil.msToTimeLabel(timeSlider.value.toLong())
+        }
+        timeSlider.onMouseMoved = handler
+        timeSlider.onMouseDragged = handler
 
         // Max label
-        timeSlider.maxProperty().addListener((observable, oldValue, newValue) -> totalTimeText.setText(StringUtil.msToTimeLabel(newValue.longValue())));
+        timeSlider.maxProperty().addNewValueListener { totalTimeText.text = StringUtil.msToTimeLabel(it.toLong()) }
 
         // TODO check - was deleted
-        core.getEventObserver().listenFxThread(Event.mediaDurationChange, (newTime) -> timeSlider.setMax(newTime));
+        Event.mediaDurationChange.listenFxThread { newTime: Long -> timeSlider.max = newTime.toDouble() }
 
         // Current time and scrolling
-        timeSlider.setOnMousePressed(event -> {
-            double valueUnderCursor = event.getX() / timeSlider.getWidth() * timeSlider.getMax();
-            core.getMediaService().setTime((long) valueUnderCursor);
-        });
-
-        timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (timeSlider.isValueChanging()) {
-                core.getMediaService().setTime(newValue.longValue());
+        timeSlider.onMousePressed = EventHandler { event: MouseEvent ->
+            val valueUnderCursor = event.x / timeSlider.width * timeSlider.max
+            core.mediaService.setTime(valueUnderCursor.toLong())
+        }
+        timeSlider.valueProperty().addNewValueListener {
+            if (timeSlider.isValueChanging) {
+                core.mediaService.setTime(it.toLong())
             }
-        });
-
-        core.getEventObserver().listenFxThread(Event.mediaTimeChange, (newTime) -> {
-            if (!timeSlider.isValueChanging()) {
-                timeSlider.setValue(newTime);
-                timeText.setText(StringUtil.msToTimeLabel(newTime));
+        }
+        Event.mediaTimeChange.listenFxThread { newTime: Long ->
+            if (!timeSlider.isValueChanging) {
+                timeSlider.value = newTime.toDouble()
+                timeText.text = StringUtil.msToTimeLabel(newTime)
             }
-        });
-
+        }
     }
 
 }

@@ -88,22 +88,6 @@ object IOUtil {
         return false
     }
 
-    fun getFilesInFolder(path: String): List<File> {
-        val source = File(path)
-        require(source.exists() && source.isDirectory)
-        return getFilesInFolderInternal(source, ArrayList())
-    }
-
-    private fun getFilesInFolderInternal(source: File, files: MutableList<File>): List<File> {
-        val filesInFolder = source.listFiles()
-        if (filesInFolder != null) {
-            for (file in filesInFolder) {
-                if (file.isFile) files.add(file) else getFilesInFolderInternal(file, files)
-            }
-        }
-        return files
-    }
-
     fun byteCountToDisplaySize(size: Long): String {
         return when {
             size / FileUtils.ONE_GB > 0 -> {

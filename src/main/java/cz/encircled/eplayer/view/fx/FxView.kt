@@ -6,6 +6,7 @@ import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.fx.components.AppMenuBar
+import cz.encircled.eplayer.view.fx.controller.QuickNaviController
 import javafx.application.Application
 import javafx.beans.property.SimpleStringProperty
 import javafx.beans.property.StringProperty
@@ -19,6 +20,7 @@ import javafx.stage.Screen
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.binding.RuntimeUtil
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import java.io.File
 import java.util.concurrent.CountDownLatch
 
@@ -50,36 +52,37 @@ class FxView : Application(), AppView {
 
     private lateinit var mediaFileChooser: FileChooser
 
-    lateinit var quickNaviScreen: QuickNaviScreen
+    private lateinit var quickNaviScreen: QuickNaviScreen
+
+    lateinit var quickNaviController: QuickNaviController
         private set
 
-    lateinit var playerScreen: PlayerScreen
-        private set
+    private lateinit var playerScreen: PlayerScreen
 
     lateinit var primaryStage: Stage
         private set
 
     private lateinit var primaryScene: Scene
 
-    lateinit var screenChangeProperty: StringProperty
+    lateinit var sceeneChangeProperty: StringProperty
 
     private lateinit var core: ApplicationCore
 
     override fun isPlayerScene(): Boolean {
-        return PLAYER_SCREEN == screenChangeProperty.value
+        return PLAYER_SCREEN == sceeneChangeProperty.value
     }
 
     override fun showQuickNavi() = fxThread {
         if (isPlayerScene) {
             primaryScene.root = quickNaviScreen
-            screenChangeProperty.value = QUICK_NAVI_SCREEN
+            sceeneChangeProperty.value = QUICK_NAVI_SCREEN
         }
     }
 
     override fun showPlayer(countDown: CountDownLatch) = fxThread(countDown) {
         if (!isPlayerScene) {
             primaryScene.root = playerScreen
-            screenChangeProperty.value = PLAYER_SCREEN
+            sceeneChangeProperty.value = PLAYER_SCREEN
         }
     }
 
@@ -92,26 +95,35 @@ class FxView : Application(), AppView {
     override fun start(primaryStage: Stage) {
         this.primaryStage = primaryStage
         screenBounds = Screen.getPrimary().visualBounds
-        screenChangeProperty = SimpleStringProperty()
+        sceeneChangeProperty = SimpleStringProperty()
         core = ApplicationCore()
-        playerScreen = PlayerScreen(core, this)
-        quickNaviScreen = QuickNaviScreen(core, this)
-        primaryScene = Scene(quickNaviScreen)
-        screenChangeProperty.set(QUICK_NAVI_SCREEN)
 
-        val menuBar = AppMenuBar(core, this)
-        quickNaviScreen.init(menuBar)
+        val dataModel = UiDataModel(core.settings.foldersToScan)
+        val quickNaviController = QuickNaviController(dataModel, core)
+
+        playerScreen = PlayerScreen(dataModel, this)
+        quickNaviScreen = QuickNaviScreen(dataModel, quickNaviController, this)
+
+        primaryScene = Scene(quickNaviScreen)
+        sceeneChangeProperty.set(QUICK_NAVI_SCREEN)
+
+        val menuBar = AppMenuBar(core, this, dataModel)
         menuBar.init()
 
         initializePrimaryStage()
         initializeMediaFileChoose()
         initializeScene()
-        playerScreen.init(core, menuBar)
 
-        Thread {
-            core.delayedInit(this, playerScreen.mediaPlayerComponent, quickNaviScreen.remoteControlHandler)
-            core.eventObserver.fire(Event.contextInitialized)
-        }.start()
+        fxThread {
+            quickNaviScreen.init(menuBar)
+            playerScreen.init(core, menuBar)
+            core.delayedInit(this, quickNaviController)
+            Event.contextInitialized.fire(core)
+        }
+    }
+
+    override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayer) {
+        playerScreen.setMediaPlayer(mediaPlayer)
     }
 
     private fun initializePrimaryStage() {
@@ -160,7 +172,7 @@ class FxView : Application(), AppView {
                     if (file.isDirectory) {
                         val filePath = file.path
                         log.debug("DnD new tab {}", filePath)
-                        quickNaviScreen.addTab(filePath)
+                        quickNaviController.addTab(filePath)
                         Thread { core.settings.addFolderToScan(filePath) }.start()
                         success = true
                     }

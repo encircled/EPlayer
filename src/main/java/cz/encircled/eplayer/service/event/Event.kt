@@ -1,47 +1,53 @@
-package cz.encircled.eplayer.service.event;
+package cz.encircled.eplayer.service.event
 
-import cz.encircled.eplayer.model.GenericTrackDescription;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
+import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.model.GenericTrackDescription
+import javafx.application.Platform
+import java.util.ArrayList
 
 /**
  * @author Encircled on 13/09/2014.
  */
-public class Event<A> {
+data class Event<A>(val name: String) {
 
-    @NotNull
-    public static Event<Void> contextInitialized = new Event<>("contextInitialized");
+    val verbose: Boolean = name != "mediaTimeChange"
 
-    @NotNull
-    public static Event<Long> mediaTimeChange = new Event<>("mediaTimeChange");
+    private val listeners: MutableList<(A) -> Unit> = ArrayList()
 
-    @NotNull
-    public static Event<List<GenericTrackDescription>> subtitlesUpdated = new Event<>("subtitlesUpdated");
+    private val fxListeners: MutableList<(A) -> Unit> = ArrayList()
 
-    @NotNull
-    public static Event<List<GenericTrackDescription>> audioTracksUpdated = new Event<>("audioTracksUpdated");
+    fun fire(arg: A) {
+        Thread {
+            listeners.forEach { it.invoke(arg) }
+        }.start()
 
-    // True if playing
-    @NotNull
-    public static Event<Boolean> playingChanged = new Event<>("playingChanged");
-
-    @NotNull
-    public static Event<Long> mediaDurationChange = new Event<>("mediaDurationChange");
-
-    private final String name;
-    public final boolean verbose;
-
-    public Event(String name) {
-        this.name = name;
-        this.verbose = !name.equals("mediaTimeChange");
+        fxListeners.forEach {
+            Platform.runLater { it.invoke(arg) }
+        }
     }
 
-    @NotNull
-    @Override
-    public String toString() {
-        return "Event{" +
-                "name='" + name + '\'' +
-                '}';
+    fun listen(listener: (A) -> Unit) = listeners.add(listener)
+
+    fun listenFxThread(listener: (A) -> Unit) = fxListeners.add(listener)
+
+    override fun toString(): String {
+        return "Event name [$name]"
     }
+
+    companion object {
+        var contextInitialized = Event<ApplicationCore>("contextInitialized")
+
+        @JvmField
+        var mediaTimeChange = Event<Long>("mediaTimeChange")
+        var subtitlesUpdated = Event<List<GenericTrackDescription>>("subtitlesUpdated")
+        var audioTracksUpdated = Event<List<GenericTrackDescription>>("audioTracksUpdated")
+
+        // True if playing
+        @JvmField
+        var playingChanged = Event<Boolean>("playingChanged")
+
+        @JvmField
+        var mediaDurationChange = Event<Long>("mediaDurationChange")
+    }
+
 }

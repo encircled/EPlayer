@@ -7,8 +7,6 @@ import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.remote.RemoteControlHttpServer
 import cz.encircled.eplayer.service.*
 import cz.encircled.eplayer.service.event.Event
-import cz.encircled.eplayer.service.event.EventObserver
-import cz.encircled.eplayer.service.event.EventObserverImpl
 import cz.encircled.eplayer.util.IOUtil.createIfMissing
 import cz.encircled.eplayer.util.IOUtil.getSettings
 import cz.encircled.eplayer.util.LocalizationProvider
@@ -16,7 +14,8 @@ import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.fx.FxRemoteControlHandler
 import javafx.application.Platform
 import org.apache.logging.log4j.LogManager
-import uk.co.caprica.vlcj.player.base.MediaPlayer
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory
+import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import kotlin.system.exitProcess
 
 /**
@@ -34,13 +33,15 @@ import kotlin.system.exitProcess
  */
 class ApplicationCore {
 
+
+    // Enable HDMI audio passthrough for Dolby/DTS audio TODO configurable
+    val VLC_ARGS = "--mmdevice-passthrough=2"
+
     val cacheService: CacheService
 
     val folderScanService: FolderScanService
 
     val settings: AppSettings
-
-    val eventObserver: EventObserver
 
     lateinit var mediaService: MediaService
 
@@ -56,7 +57,6 @@ class ApplicationCore {
 
         cacheService = JsonCacheService()
         folderScanService = OnDemandFolderScanner(this)
-        eventObserver = EventObserverImpl()
         settings = try {
             getSettings()
         } catch (e: Exception) {
@@ -66,13 +66,18 @@ class ApplicationCore {
         LocalizationProvider.init(settings)
     }
 
-    fun delayedInit(appView: AppView, mediaPlayer: MediaPlayer, playerRemoteControl: RemoteControlHandler?) {
+    fun delayedInit(appView: AppView, playerRemoteControl: RemoteControlHandler) {
         this.appView = appView
-        mediaService = VLCMediaService(this, mediaPlayer)
+        val vlcMediaService = VLCMediaService(this)
+        mediaService = vlcMediaService
         cacheService.delayedInit(this)
         seriesFinder = SeriesFinder()
-        eventObserver.listen(Event.contextInitialized) {
-            remoteControlServer = RemoteControlHttpServer(FxRemoteControlHandler(this, playerRemoteControl!!))
+        Event.contextInitialized.listen {
+            val mediaPlayerFactory = MediaPlayerFactory(VLC_ARGS)
+            val mediaPlayer: EmbeddedMediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer()
+            appView.setMediaPlayer(mediaPlayer)
+            vlcMediaService.setMediaPlayer(mediaPlayer)
+            remoteControlServer = RemoteControlHttpServer(FxRemoteControlHandler(this, playerRemoteControl))
         }
         addCloseHook()
     }
@@ -98,7 +103,7 @@ class ApplicationCore {
 
     fun playLast() {
         log.debug("Play last media")
-        cacheService.lastByWatchDate?.let {
+        cacheService.lastByWatchDate()?.let {
             mediaService.play(it)
         }
     }

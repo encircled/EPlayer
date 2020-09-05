@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import cz.encircled.eplayer.util.DateUtil
 import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.util.StringUtil
+import javafx.beans.property.IntegerPropertyBase
+import javafx.beans.property.SimpleIntegerProperty
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -12,14 +14,13 @@ import kotlin.collections.ArrayList
  */
 interface PlayableMedia {
 
+    fun getId(): String
+
     val formattedExtension: String
         get() = mediaFile().extension
 
     val pathToScreenshot: String
         get() = mediaFile().pathToScreenshot
-
-    val formattedTitle: String
-        get() = mediaFile().name
 
     val formattedWatchDate: String
         get() = DateUtil.daysBetweenLocalized(watchDate)
@@ -48,6 +49,8 @@ data class SingleMedia(
         override var watchDate: Long = 0,
 ) : PlayableMedia {
 
+    override fun getId(): String = path
+
     override fun mediaFile(): MediaFile = mediaFile
 
     override fun equals(other: Any?): Boolean {
@@ -63,20 +66,28 @@ data class SingleMedia(
 
 data class MediaSeries(
         val name: String,
-        override val path: String,
-        override var watchDate: Long = 0,
         val series: ArrayList<SingleMedia>
 ) : PlayableMedia {
+
+    @JsonIgnore
+    var currentEpisode: IntegerPropertyBase = SimpleIntegerProperty(indexOfCurrent())
 
     init {
         series.sortBy { it.path }
     }
 
+    override fun getId(): String = name
+
+    override val path: String = ""
+
+    override var watchDate: Long
+        get() = series[indexOfCurrent()].watchDate
+        set(value) {
+            series[indexOfCurrent()].watchDate = value
+        }
+
     override var time: Long = 0
         get() = series[indexOfCurrent()].time
-
-    override val formattedTitle: String
-        get() = name
 
     override fun mediaFile(): MediaFile {
         val index = indexOfCurrent()
@@ -85,7 +96,7 @@ data class MediaSeries(
 
     fun current(): SingleMedia = series[indexOfCurrent()]
 
-    private fun indexOfCurrent(): Int {
+    fun indexOfCurrent(): Int {
         val i = series.indexOfFirst { it.time > 0 }
         return if (i == -1) 0 else i
 //        if (series[i].mediaFile().series[i].time)

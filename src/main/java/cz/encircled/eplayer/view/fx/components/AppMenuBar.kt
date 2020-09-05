@@ -2,13 +2,12 @@ package cz.encircled.eplayer.view.fx.components
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
-import cz.encircled.eplayer.model.MediaFile
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.fx.FxView
+import cz.encircled.eplayer.view.fx.UiDataModel
 import cz.encircled.eplayer.view.fx.addNewValueListener
 import javafx.application.Platform
-import javafx.beans.value.ObservableValue
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.*
@@ -17,9 +16,11 @@ import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 
 /**
+ * TODO two separate menu bars for different scenes
+ *
  * @author Encircled on 27/09/2014.
  */
-class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) {
+class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, private val dataModel: UiDataModel) {
     lateinit var subtitles: Menu
     lateinit var audioTracks: Menu
 
@@ -44,16 +45,16 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
         val view = Menu(Localization.view.ln())
 
         val fullScreen = CheckMenuItem(Localization.fullScreen.ln())
-        fxView.primaryStage.fullScreenProperty().addNewValueListener { newValue: Boolean? -> fullScreen.isSelected = newValue!! }
+        fxView.primaryStage.fullScreenProperty().addNewValueListener { fullScreen.isSelected = it }
         fullScreen.onAction = EventHandler { fxView.toggleFullScreen() }
         fullScreen.accelerator = KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN)
         fullScreen.isSelected = fxView.isFullScreen
 
         val fitScreen = CheckMenuItem(Localization.fitScreen.ln())
-        fxView.playerScreen.fitToScreenProperty().addListener { _: ObservableValue<out Boolean?>?, _: Boolean?, newValue: Boolean? -> fitScreen.isSelected = newValue!! }
-        fitScreen.onAction = EventHandler { fxView.playerScreen.toggleFitToScreen() }
+        dataModel.fitToScreen.addNewValueListener { fitScreen.isSelected = it }
+        fitScreen.onAction = EventHandler { dataModel.toggleFitToScreen() }
         fitScreen.accelerator = KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN, KeyCodeCombination.SHIFT_DOWN)
-        fitScreen.isSelected = fxView.playerScreen.fitToScreenProperty().get()
+        fitScreen.isSelected = dataModel.fitToScreen.get()
 
         val back = MenuItem(Localization.back.ln())
         back.onAction = EventHandler { core.back() }
@@ -69,7 +70,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
         val play = MenuItem(Localization.play.ln())
         play.onAction = EventHandler { core.mediaService.toggle() }
         play.accelerator = KeyCodeCombination(KeyCode.SPACE)
-        core.eventObserver.listenFxThread(Event.playingChanged) { isPlaying: Boolean ->
+        Event.playingChanged.listenFxThread { isPlaying: Boolean ->
             play.text = if (isPlaying) Localization.pause.ln() else Localization.play.ln()
         }
 
@@ -92,9 +93,13 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
         val deleteMissing = MenuItem(Localization.deleteMissing.ln())
         deleteMissing.onAction = EventHandler {
             Thread {
-                core.cacheService.cache.removeIf { !it.mediaFile().exists() }
+                core.cacheService.getCached().filter {
+                    !it.mediaFile().exists()
+                }.forEach {
+                    core.cacheService.deleteEntry(it)
+                }
                 core.cacheService.save()
-                Platform.runLater { fxView.quickNaviScreen.refreshCurrentTab() }
+                fxView.quickNaviController.forceRefresh()
             }.start()
         }
 
@@ -103,19 +108,19 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView) 
     }
 
     fun init() {
-        core.eventObserver.listenFxThread(Event.subtitlesUpdated) { tracks: List<GenericTrackDescription> ->
+        Event.subtitlesUpdated.listenFxThread { tracks: List<GenericTrackDescription> ->
             updateTrackMenu(subtitles, tracks, core.mediaService.subtitles) {
                 core.mediaService.subtitles = (it.source as RadioMenuItem).userData as Int
             }
         }
 
-        core.eventObserver.listenFxThread(Event.audioTracksUpdated) { tracks: List<GenericTrackDescription> ->
+        Event.audioTracksUpdated.listenFxThread { tracks: List<GenericTrackDescription> ->
             updateTrackMenu(audioTracks, tracks, core.mediaService.audioTrack) {
                 core.mediaService.audioTrack = (it.source as RadioMenuItem).userData as Int
             }
         }
 
-        fxView.screenChangeProperty.addNewValueListener {
+        fxView.sceeneChangeProperty.addNewValueListener {
             if (FxView.QUICK_NAVI_SCREEN == it) {
                 audioTracks.isDisable = true
                 subtitles.isDisable = true
