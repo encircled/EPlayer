@@ -9,7 +9,6 @@ import javafx.application.Platform
 import javafx.beans.Observable
 import javafx.beans.property.FloatProperty
 import javafx.beans.property.SimpleFloatProperty
-import javafx.beans.value.ObservableValue
 import javafx.event.EventHandler
 import javafx.geometry.Pos
 import javafx.scene.Cursor
@@ -30,19 +29,23 @@ private const val MOUSE_HIDE_DELAY = 600L
 /**
  * @author Encircled on 18/09/2014.
  */
-class PlayerScreen(private val dataModel: UiDataModel, private val fxView: FxView) : BorderPane(BorderPane()) {
+class PlayerScreen(
+        private val dataModel: UiDataModel,
+        core: ApplicationCore,
+        menuBarProvider: AppMenuBar,
+        private val fxView: FxView) : BorderPane(BorderPane()) {
 
     private val log = LogManager.getLogger()
 
-    private lateinit var menuBar: MenuBar
-
     private lateinit var writableImage: WritableImage
 
-    private lateinit var hideTimer: PostponeTimer
+    private var hideTimer: PostponeTimer = PostponeTimer { Platform.runLater { cursor = Cursor.NONE } }
 
     private lateinit var imageView: ImageView
 
     private lateinit var playerControls: PlayerControls
+
+    private val menuBar = menuBarProvider.getMenuBar()
 
     private var playerHolder = Pane()
 
@@ -71,10 +74,8 @@ class PlayerScreen(private val dataModel: UiDataModel, private val fxView: FxVie
         }
     }
 
-    fun init(core: ApplicationCore, appMenuBar: AppMenuBar) {
-        hideTimer = PostponeTimer { Platform.runLater { cursor = Cursor.NONE } }
+    init {
         videoSourceRatioProperty = SimpleFloatProperty((fxView.screenBounds.width / fxView.screenBounds.height).toFloat())
-        menuBar = appMenuBar.getMenuBar()
         playerControls = PlayerControls(core, fxView, dataModel)
         playerHolder.style = "-fx-background-color: #000"
         initializeImageView()
@@ -86,8 +87,14 @@ class PlayerScreen(private val dataModel: UiDataModel, private val fxView: FxVie
         initializeListeners(core)
     }
 
-    fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayer) = fxThread {
-        mediaPlayer.videoSurface().set(ImageViewVideoSurface(writableImage, fxView, videoSourceRatioProperty).videoSurface)
+    fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayer) {
+        Platform.runLater {
+            val start = System.currentTimeMillis()
+            val videoSurface = ImageViewVideoSurface(writableImage, fxView, videoSourceRatioProperty).videoSurface
+            println("Vidoe Surf: ${System.currentTimeMillis() - start}")
+            mediaPlayer.videoSurface().set(videoSurface)
+            println("Set Surf: ${System.currentTimeMillis() - start}")
+        }
     }
 
     private fun initializeListeners(core: ApplicationCore) {

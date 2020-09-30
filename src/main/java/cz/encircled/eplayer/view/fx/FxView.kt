@@ -2,7 +2,6 @@ package cz.encircled.eplayer.view.fx
 
 import com.sun.jna.NativeLibrary
 import cz.encircled.eplayer.core.ApplicationCore
-import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.fx.components.AppMenuBar
@@ -20,12 +19,24 @@ import javafx.stage.Screen
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.binding.RuntimeUtil
+import uk.co.caprica.vlcj.factory.MediaPlayerFactory
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import java.io.File
 import java.util.concurrent.CountDownLatch
 
+/**
+ * TODO:
+ * - remember subtitles
+ * - Set duration after start, auto next series
+ * - Toggle in fullscreen
+ */
 fun main() {
+    NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), FxView.VLC_LIB_PATH)
     Application.launch(FxView::class.java)
+//    val start = System.currentTimeMillis()
+//    val mediaPlayerFactory = MediaPlayerFactory()
+//    val mediaPlayer: EmbeddedMediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer()
+//    println(System.currentTimeMillis() - start)
 }
 
 /**
@@ -34,7 +45,7 @@ fun main() {
 class FxView : Application(), AppView {
     companion object {
         // TODO
-        const val VLC_LIB_PATH = "E:/vlc-3.0.11"
+        const val VLC_LIB_PATH = "E:/vlc-3.0.3"
         const val MIN_WIDTH = 860
         const val MIN_HEIGHT = 600
         const val QUICK_NAVI_SCREEN = "quickNavi"
@@ -64,25 +75,23 @@ class FxView : Application(), AppView {
 
     private lateinit var primaryScene: Scene
 
-    lateinit var sceeneChangeProperty: StringProperty
+    lateinit var sceneChangeProperty: StringProperty
 
     private lateinit var core: ApplicationCore
 
-    override fun isPlayerScene(): Boolean {
-        return PLAYER_SCREEN == sceeneChangeProperty.value
-    }
+    override fun isPlayerScene(): Boolean = PLAYER_SCREEN == sceneChangeProperty.value
 
     override fun showQuickNavi() = fxThread {
         if (isPlayerScene) {
             primaryScene.root = quickNaviScreen
-            sceeneChangeProperty.value = QUICK_NAVI_SCREEN
+            sceneChangeProperty.value = QUICK_NAVI_SCREEN
         }
     }
 
     override fun showPlayer(countDown: CountDownLatch) = fxThread(countDown) {
         if (!isPlayerScene) {
             primaryScene.root = playerScreen
-            sceeneChangeProperty.value = PLAYER_SCREEN
+            sceneChangeProperty.value = PLAYER_SCREEN
         }
     }
 
@@ -93,36 +102,31 @@ class FxView : Application(), AppView {
     override fun isFullScreen(): Boolean = primaryStage.isFullScreen
 
     override fun start(primaryStage: Stage) {
+        val start = System.currentTimeMillis()
         this.primaryStage = primaryStage
         screenBounds = Screen.getPrimary().visualBounds
-        sceeneChangeProperty = SimpleStringProperty()
+        sceneChangeProperty = SimpleStringProperty(QUICK_NAVI_SCREEN)
         core = ApplicationCore()
 
-        val dataModel = UiDataModel(core.settings.foldersToScan)
-        val quickNaviController = QuickNaviController(dataModel, core)
+        val dataModel = UiDataModel()
+        quickNaviController = QuickNaviController(this, dataModel, core)
 
-        playerScreen = PlayerScreen(dataModel, this)
-        quickNaviScreen = QuickNaviScreen(dataModel, quickNaviController, this)
-
+        playerScreen = PlayerScreen(dataModel, core, AppMenuBar(core, this, dataModel), this)
+        quickNaviScreen = QuickNaviScreen(dataModel, quickNaviController, AppMenuBar(core, this, dataModel), this)
         primaryScene = Scene(quickNaviScreen)
-        sceeneChangeProperty.set(QUICK_NAVI_SCREEN)
-
-        val menuBar = AppMenuBar(core, this, dataModel)
-        menuBar.init()
 
         initializePrimaryStage()
         initializeMediaFileChoose()
         initializeScene()
 
-        fxThread {
-            quickNaviScreen.init(menuBar)
-            playerScreen.init(core, menuBar)
+        log.debug("UI start finished in ${System.currentTimeMillis() - start}")
+
+        Thread {
             core.delayedInit(this, quickNaviController)
-            Event.contextInitialized.fire(core)
-        }
+        }.start()
     }
 
-    override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayer) {
+    override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayer) = fxThread {
         playerScreen.setMediaPlayer(mediaPlayer)
     }
 
@@ -138,8 +142,8 @@ class FxView : Application(), AppView {
         val file = mediaFileChooser.showOpenDialog(primaryStage)
         if (file != null) {
             core.mediaService.play(file.absolutePath)
+            mediaFileChooser.initialDirectory = file.parentFile
             Thread {
-                mediaFileChooser.initialDirectory = file.parentFile
                 core.settings.setOpenLocation(file.parentFile.absolutePath)
             }.start()
         }
@@ -173,7 +177,6 @@ class FxView : Application(), AppView {
                         val filePath = file.path
                         log.debug("DnD new tab {}", filePath)
                         quickNaviController.addTab(filePath)
-                        Thread { core.settings.addFolderToScan(filePath) }.start()
                         success = true
                     }
                 }

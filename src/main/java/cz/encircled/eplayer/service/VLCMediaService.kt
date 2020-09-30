@@ -21,7 +21,6 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     private val log = LogManager.getLogger()
     private var currentTime: Long = 0
     private var current: PlayableMedia? = null
-    var timeToStart: Long? = null
 
     lateinit var player: MediaPlayer
 
@@ -30,6 +29,7 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         this.player.events().addMediaPlayerEventListener(playerEventHandler)
     }
 
+    // TODO double check - not to block native event thread
     private val playerEventHandler = object : MediaPlayerEventAdapter() {
 
         override fun playing(mediaPlayer: MediaPlayer) = Event.playingChanged.fire(true)
@@ -86,8 +86,10 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     }
 
     override fun releasePlayer() {
-        stop()
-        player.release()
+        if (this::player.isInitialized) {
+            stop()
+            player.release()
+        }
     }
 
     // TODO change me?
@@ -99,6 +101,8 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     }
 
     private fun play(media: PlayableMedia, time: Long) {
+        if (!this::player.isInitialized) return
+
         val path = media.mediaFile().path
         log.debug("Play {}, start time is {}", path, time)
 
@@ -154,6 +158,7 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     }
 
     override fun toggle() {
+        log.debug("Do toggle, currently is playing: {}", player.status().isPlaying)
         if (player.status().isPlaying) {
             player.controls().pause()
         } else {

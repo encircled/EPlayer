@@ -7,7 +7,6 @@ import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.fx.FxView
 import cz.encircled.eplayer.view.fx.UiDataModel
 import cz.encircled.eplayer.view.fx.addNewValueListener
-import javafx.application.Platform
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.*
@@ -16,7 +15,6 @@ import javafx.scene.input.KeyCodeCombination
 import javafx.scene.input.KeyCombination
 
 /**
- * TODO two separate menu bars for different scenes
  *
  * @author Encircled on 27/09/2014.
  */
@@ -107,7 +105,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
         return tools
     }
 
-    fun init() {
+    init {
         Event.subtitlesUpdated.listenFxThread { tracks: List<GenericTrackDescription> ->
             updateTrackMenu(subtitles, tracks, core.mediaService.subtitles) {
                 core.mediaService.subtitles = (it.source as RadioMenuItem).userData as Int
@@ -120,7 +118,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
             }
         }
 
-        fxView.sceeneChangeProperty.addNewValueListener {
+        fxView.sceneChangeProperty.addNewValueListener {
             if (FxView.QUICK_NAVI_SCREEN == it) {
                 audioTracks.isDisable = true
                 subtitles.isDisable = true

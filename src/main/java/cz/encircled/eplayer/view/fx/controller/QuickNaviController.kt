@@ -4,29 +4,37 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.service.event.Event
-import cz.encircled.eplayer.view.fx.UiDataModel
-import cz.encircled.eplayer.view.fx.addNewValueListener
-import cz.encircled.eplayer.view.fx.fxThread
+import cz.encircled.eplayer.view.fx.*
 import java.util.regex.Pattern
 
 /**
  * @author encir on 05-Sep-20.
  */
-class QuickNaviController(val dataModel: UiDataModel, val core: ApplicationCore) : RemoteControlHandler {
+class QuickNaviController(
+        private val fxView: FxView,
+        private val dataModel: UiDataModel,
+        private val core: ApplicationCore) : RemoteControlHandler {
 
     /**
      * For remote control
      */
     private var selectedItemIndex: Int = 0
 
+    private val mediaSource = ArrayList<PlayableMedia>()
+
     init {
         Event.contextInitialized.listenFxThread {
-            dataModel.media.addAll(core.cacheService.getCached())
+            dataModel.foldersToScan.setAll(listOf(QUICK_NAVI) + core.settings.foldersToScan)
+            onQuickNaviSelect()
+
+            fxView.sceneChangeProperty.addNewValueListener {
+                if (FxView.QUICK_NAVI_SCREEN == it) forceRefresh()
+            }
         }
 
         dataModel.filter.addNewValueListener {
             fxThread {
-                dataModel.media.setAll(getFilteredMedia(dataModel.media, it))
+                dataModel.media.setAll(getFilteredMedia(mediaSource, it))
             }
         }
     }
@@ -40,19 +48,32 @@ class QuickNaviController(val dataModel: UiDataModel, val core: ApplicationCore)
     }
 
     fun onFolderSelect(path: String) {
-        dataModel.media.clear()
-        core.folderScanService.getMediaInFolder(path) {
-            dataModel.media.addAll(it)
+        if (path == QUICK_NAVI) {
+            onQuickNaviSelect()
+        } else {
+            dataModel.selectedFolder.set(path)
+            dataModel.media.clear()
+            mediaSource.clear()
+
+            core.folderScanService.getMediaInFolder(path) {
+                mediaSource.addAll(it)
+                dataModel.media.addAll(getFilteredMedia(it))
+            }
         }
     }
 
     fun onQuickNaviSelect() {
-        dataModel.media.clear()
-        dataModel.media.addAll(core.cacheService.getCached())
+        val start = System.currentTimeMillis()
+        println("ON QUICK NAVI")
+        dataModel.selectedFolder.set(QUICK_NAVI)
+        mediaSource.clear()
+        mediaSource.addAll(core.cacheService.getCached())
+        dataModel.media.setAll(getFilteredMedia(mediaSource))
+        println("ON QUICK NAVI: ${System.currentTimeMillis() - start}")
     }
 
     fun forceRefresh() = fxThread {
-        // TODO check?
+        dataModel.media.clear()
         onQuickNaviSelect()
     }
 
@@ -61,16 +82,27 @@ class QuickNaviController(val dataModel: UiDataModel, val core: ApplicationCore)
         core.settings.addFolderToScan(path)
     }
 
+    fun removeTab(path: String) {
+        if (dataModel.foldersToScan.remove(path)) {
+            if (dataModel.selectedFolder.get() == path) {
+                onQuickNaviSelect()
+            }
+            core.settings.removeFolderToScan(path)
+        }
+    }
+
     override fun toFullScreen() = throw NotImplementedError()
     override fun back() = throw NotImplementedError()
 
     override fun goToNextMedia() = fxThread {
-        if (selectedItemIndex < dataModel.media.size - 1) {
-            selectedItemIndex++
-        } else {
-            selectedItemIndex = 0
+        selectedItemIndex = nextIndex(selectedItemIndex, dataModel.media)
+
+        if (selectedItemIndex == 0) {
+            val currentFolder = dataModel.foldersToScan.indexOf(dataModel.selectedFolder.get())
+            onFolderSelect(dataModel.foldersToScan[nextIndex(currentFolder, dataModel.foldersToScan)])
         }
-        dataModel.selectedMedia.set(dataModel.media[selectedItemIndex])
+
+        if (dataModel.media.isNotEmpty()) dataModel.selectedMedia.set(dataModel.media[selectedItemIndex])
     }
 
     override fun goToPrevMedia() = fxThread {
@@ -87,9 +119,10 @@ class QuickNaviController(val dataModel: UiDataModel, val core: ApplicationCore)
     }
 
     override fun watchLastMedia() = throw NotImplementedError()
+
     override fun playPause() = throw NotImplementedError()
 
-    private fun getFilteredMedia(mediaFiles: List<PlayableMedia>, filter: String): List<PlayableMedia> =
+    private fun getFilteredMedia(mediaFiles: List<PlayableMedia>, filter: String = dataModel.filter.get()): List<PlayableMedia> =
             if (filter.isNotBlank()) {
                 val p = Pattern.compile("(?i).*" + filter.replace(" ".toRegex(), ".*") + ".*")
                 val m = p.matcher("")
@@ -97,5 +130,7 @@ class QuickNaviController(val dataModel: UiDataModel, val core: ApplicationCore)
             } else {
                 mediaFiles
             }
+
+    private fun nextIndex(current: Int, max: Collection<*>): Int = if (current < max.size - 1) current + 1 else 0
 
 }

@@ -29,7 +29,7 @@ class RemoteControlHttpServer(private val remoteControlHandler: RemoteControlHan
                     "cmd:firstSuggested" -> remoteControlHandler.watchLastMedia()
                     "cmd:playPause" -> remoteControlHandler.playPause()
                     "cmd:back" -> remoteControlHandler.back()
-                    "m:click" -> remoteControlHandler.playSelected()
+                    "cmd:click" -> remoteControlHandler.playSelected()
                 }
             } catch (e: Exception) {
                 log.warn("Command failed", e)

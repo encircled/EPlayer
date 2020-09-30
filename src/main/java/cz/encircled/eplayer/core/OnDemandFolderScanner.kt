@@ -5,6 +5,8 @@ import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.model.SingleMedia
 import cz.encircled.eplayer.service.FolderScanService
+import cz.encircled.eplayer.service.JsonCacheService
+import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList
@@ -14,13 +16,16 @@ import kotlin.collections.ArrayList
  */
 class OnDemandFolderScanner(private val core: ApplicationCore) : FolderScanService {
 
+    private val log = LogManager.getLogger()
     private val supportedFormats = setOf("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov")
 
     override fun getMediaInFolder(path: String, callback: (List<PlayableMedia>) -> Unit) {
         Thread {
+            val start = System.currentTimeMillis()
+            log.debug("OnDemandFolderScanner: start scanning {}", path)
             val series = mutableMapOf<String, MediaSeries>()
 
-            File(path).walk().maxDepth(2)
+            File(path).walk().maxDepth(3)
                     .filter { it.isFile && supportedFormats.contains(it.extension) }
                     .chunked(20)
                     .forEach { chunk ->
@@ -55,6 +60,8 @@ class OnDemandFolderScanner(private val core: ApplicationCore) : FolderScanServi
                             }
                         })
                     }
+
+            log.debug("Folder {} scan complete in {} ms", path, System.currentTimeMillis() - start)
         }.start()
     }
 

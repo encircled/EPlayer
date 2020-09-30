@@ -1,16 +1,17 @@
 package cz.encircled.eplayer.view.fx
 
 import cz.encircled.eplayer.model.PlayableMedia
+import cz.encircled.eplayer.view.fx.components.MediaPane
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
+
+const val QUICK_NAVI = "Quick Navi"
 
 /**
  * @author encir on 05-Sep-20.
  */
 data class UiDataModel(
-
-        private val initialFoldersToScan: List<String>,
 
         val fitToScreen: BooleanProperty = SimpleBooleanProperty(false),
 
@@ -20,7 +21,11 @@ data class UiDataModel(
 
         val selectedMedia: ObjectProperty<PlayableMedia> = SimpleObjectProperty(),
 
-        val foldersToScan: ObservableList<String> = FXCollections.observableArrayList(initialFoldersToScan),
+        val selectedMediaPane: ObjectProperty<MediaPane> = SimpleObjectProperty(),
+
+        val selectedFolder: StringProperty = SimpleStringProperty(QUICK_NAVI),
+
+        val foldersToScan: ObservableList<String> = FXCollections.observableArrayList(),
 
         ) {
 

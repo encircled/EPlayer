@@ -22,7 +22,7 @@ class JsonCacheService : CacheService {
     override fun delayedInit(core: ApplicationCore) {
         this.core = core
         val start = System.currentTimeMillis()
-        log.trace("JsonCacheService init start")
+        log.debug("JsonCacheService init start")
         try {
             cache = IOUtil.getPlayableJson()
                     .associateBy { it.getId() }
@@ -32,7 +32,7 @@ class JsonCacheService : CacheService {
             log.error("Failed to read cache data. Message: {}", e.message)
 //           TODO guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
         }
-        log.trace("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start)
+        log.debug("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start)
     }
 
     override fun getOrNull(path: String): PlayableMedia? {

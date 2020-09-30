@@ -70,10 +70,13 @@ data class MediaSeries(
 ) : PlayableMedia {
 
     @JsonIgnore
-    var currentEpisode: IntegerPropertyBase = SimpleIntegerProperty(indexOfCurrent())
+    var currentEpisode: IntegerPropertyBase = SimpleIntegerProperty()
 
     init {
         series.sortBy { it.path }
+
+        val i = series.indexOfFirst { it.time > 0 }
+        currentEpisode.set(if (i == -1) 0 else i)
     }
 
     override fun getId(): String = name
@@ -81,25 +84,26 @@ data class MediaSeries(
     override val path: String = ""
 
     override var watchDate: Long
-        get() = series[indexOfCurrent()].watchDate
+        get() = series[currentEpisode.get()].watchDate
         set(value) {
-            series[indexOfCurrent()].watchDate = value
+            series[currentEpisode.get()].watchDate = value
         }
 
     override var time: Long = 0
-        get() = series[indexOfCurrent()].time
+        get() = series[currentEpisode.get()].time
 
     override fun mediaFile(): MediaFile {
-        val index = indexOfCurrent()
-        return series[index].mediaFile()
+        return series[currentEpisode.get()].mediaFile()
     }
 
-    fun current(): SingleMedia = series[indexOfCurrent()]
+    fun current(): SingleMedia = series[currentEpisode.get()]
 
-    fun indexOfCurrent(): Int {
-        val i = series.indexOfFirst { it.time > 0 }
-        return if (i == -1) 0 else i
-//        if (series[i].mediaFile().series[i].time)
+    fun toPrev() {
+        currentEpisode.set((currentEpisode.get() - 1).coerceAtLeast(0))
+    }
+
+    fun toNext() {
+        currentEpisode.set((currentEpisode.get() + 1).coerceAtMost(series.size - 1))
     }
 
 }

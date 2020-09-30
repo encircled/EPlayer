@@ -13,10 +13,6 @@ public class DateUtil {
 
     private static final float MS_IN_DAY = 86400000L;
 
-    public static String getLocaleFormatted(long time) {
-        return DateFormat.getDateInstance(DateFormat.MEDIUM, LocalizationProvider.getUsedLocale()).format(new Date(time));
-    }
-
     private static void resetTime(@NotNull Calendar c1) {
         c1.set(Calendar.HOUR_OF_DAY, 0);
         c1.set(Calendar.MINUTE, 0);
@@ -48,12 +44,6 @@ public class DateUtil {
                 localized = days + " " + Localization.daysAgo.ln();
         }
         return localized;
-    }
-
-    public static void main(String[] args) {
-        Calendar c = Calendar.getInstance();
-        c.set(2014, Calendar.OCTOBER, 5, 20, 0);
-        System.out.println(daysBetween(c.getTime().getTime()));
     }
 
 }

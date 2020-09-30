@@ -117,16 +117,55 @@
     -fx-font-size: 15px;
 }
 
-.qn_video .title .remove {
-    -fx-min-height: 22px;
-    -fx-min-width: 15px;
-    -fx-max-width: 15px;
-    -fx-background-image: url('icons/trash.png');
+.qn_video .remove {
+    -fx-graphic: url('icons/trash.png');
 }
 
-.qn_video .title .remove:hover {
-    -fx-background-image: url('icons/trash_hover.png');
+.qn_video .remove:hover {
+    -fx-graphic: url('icons/trash-hover.png');
 }
+
+.qn_video .search {
+    -fx-graphic: url('icons/search.png');
+}
+
+.qn_video .search:hover {
+    -fx-graphic: url('icons/search-hover.png');
+}
+
+.qn_video .arrow_left {
+    -fx-graphic: url('icons/arrow-left.png');
+}
+
+.qn_video .arrow_left:hover {
+    -fx-graphic: url('icons/arrow-left-hover.png');
+}
+
+.qn_video .arrow_right {
+    -fx-graphic: url('icons/arrow-right.png');
+}
+
+.qn_video .arrow_right:hover {
+    -fx-graphic: url('icons/arrow-right-hover.png');
+}
+
+.qn_video .info {
+    -fx-graphic: url('icons/info.png');
+}
+
+.qn_video .info:hover {
+    -fx-graphic: url('icons/info.png');
+}
+
+/*
+.my-button {
+    -fx-graphic: url("abc.png");
+}
+
+.my-button:hover {
+    -fx-graphic: url("xyz.png");
+}
+*/
 
 .qn_video .action_button {
     -fx-background-color: #444;

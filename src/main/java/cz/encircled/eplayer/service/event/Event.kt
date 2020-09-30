@@ -3,6 +3,7 @@ package cz.encircled.eplayer.service.event
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
 import javafx.application.Platform
+import org.apache.logging.log4j.LogManager
 import java.util.ArrayList
 
 /**
@@ -12,17 +13,32 @@ data class Event<A>(val name: String) {
 
     val verbose: Boolean = name != "mediaTimeChange"
 
+    private val log = LogManager.getLogger()
+
     private val listeners: MutableList<(A) -> Unit> = ArrayList()
 
     private val fxListeners: MutableList<(A) -> Unit> = ArrayList()
 
     fun fire(arg: A) {
+        if (verbose) {
+            log.debug("Fire event $name")
+        }
         Thread {
+            val start = System.currentTimeMillis()
             listeners.forEach { it.invoke(arg) }
+            if (verbose) {
+                log.debug("Event $name: ${System.currentTimeMillis() - start}")
+            }
         }.start()
 
         fxListeners.forEach {
-            Platform.runLater { it.invoke(arg) }
+            Platform.runLater {
+                val start = System.currentTimeMillis()
+                it.invoke(arg)
+                if (verbose) {
+                    log.debug("Event $name: ${System.currentTimeMillis() - start}")
+                }
+            }
         }
     }
 
@@ -30,9 +46,7 @@ data class Event<A>(val name: String) {
 
     fun listenFxThread(listener: (A) -> Unit) = fxListeners.add(listener)
 
-    override fun toString(): String {
-        return "Event name [$name]"
-    }
+    override fun toString(): String = "Event name [$name]"
 
     companion object {
         var contextInitialized = Event<ApplicationCore>("contextInitialized")
