@@ -2,6 +2,7 @@ package cz.encircled.eplayer.service.event
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
+import cz.encircled.eplayer.model.PlayableMedia
 import javafx.application.Platform
 import org.apache.logging.log4j.LogManager
 import java.util.ArrayList
@@ -9,9 +10,9 @@ import java.util.ArrayList
 /**
  * @author Encircled on 13/09/2014.
  */
-data class Event<A>(val name: String) {
+data class Event<A>(val name: String, val minDelay: Long = 0) {
 
-    val verbose: Boolean = name != "mediaTimeChange"
+    private val verbose: Boolean = name != "mediaTimeChange"
 
     private val log = LogManager.getLogger()
 
@@ -19,7 +20,16 @@ data class Event<A>(val name: String) {
 
     private val fxListeners: MutableList<(A) -> Unit> = ArrayList()
 
+    private var lastExecution: Long = 0
+
     fun fire(arg: A) {
+        if (System.currentTimeMillis() - lastExecution < minDelay) return
+
+        lastExecution = System.currentTimeMillis()
+        doFire(arg)
+    }
+
+    private fun doFire(arg: A) {
         if (verbose) {
             log.debug("Fire event $name")
         }
@@ -51,17 +61,27 @@ data class Event<A>(val name: String) {
     companion object {
         var contextInitialized = Event<ApplicationCore>("contextInitialized")
 
-        @JvmField
-        var mediaTimeChange = Event<Long>("mediaTimeChange")
+        var mediaTimeChange = Event<MediaCharacteristic<Long>>("mediaTimeChange", 1000)
+
         var subtitlesUpdated = Event<List<GenericTrackDescription>>("subtitlesUpdated")
+
         var audioTracksUpdated = Event<List<GenericTrackDescription>>("audioTracksUpdated")
 
+        /**
+         * New subtitle selected
+         */
+        var subtitleChanged = Event<MediaCharacteristic<Int>>("subtitleChanged")
+
+        /**
+         * New audio track selected
+         */
+        var audioTrackChanged = Event<MediaCharacteristic<Int>>("audioChanged")
+
         // True if playing
-        @JvmField
         var playingChanged = Event<Boolean>("playingChanged")
 
-        @JvmField
-        var mediaDurationChange = Event<Long>("mediaDurationChange")
+        var mediaDurationChange = Event<MediaCharacteristic<Long>>("mediaDurationChange")
+
     }
 
 }

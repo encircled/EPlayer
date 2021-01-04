@@ -6,8 +6,9 @@ import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.util.StringUtil
 import javafx.beans.property.IntegerPropertyBase
 import javafx.beans.property.SimpleIntegerProperty
-import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * @author encir on 29-Aug-20.
@@ -33,6 +34,12 @@ interface PlayableMedia {
 
     var time: Long
 
+    var duration: Long
+
+    var preferredSubtitle: Int?
+
+    var preferredAudio: Int?
+
     var watchDate: Long
 
     val path: String
@@ -42,11 +49,14 @@ interface PlayableMedia {
 }
 
 data class SingleMedia(
-        override val path: String,
-        @JsonIgnore
-        private val mediaFile: MediaFile = MediaFile(path),
-        override var time: Long = 0,
-        override var watchDate: Long = 0,
+    override val path: String,
+    @JsonIgnore
+    private val mediaFile: MediaFile = MediaFile(path),
+    override var time: Long = 0,
+    override var duration: Long = 0,
+    override var watchDate: Long = 0,
+    override var preferredSubtitle: Int? = null,
+    override var preferredAudio: Int? = null,
 ) : PlayableMedia {
 
     override fun getId(): String = path
@@ -72,11 +82,17 @@ data class MediaSeries(
     @JsonIgnore
     var currentEpisode: IntegerPropertyBase = SimpleIntegerProperty()
 
+    private val creditsTime = 1000 * 60;
+
     init {
         series.sortBy { it.path }
 
-        val i = series.indexOfFirst { it.time > 0 }
-        currentEpisode.set(if (i == -1) 0 else i)
+        var i = series.indexOfLast { it.time > 0 }
+
+        // Go to next episode if watch time is lesser than average credits time
+        if (i < series.size - 1 && series[i].duration - series[i].time < creditsTime) i++
+
+        currentEpisode.set(max(i, 0))
     }
 
     override fun getId(): String = name
@@ -84,26 +100,47 @@ data class MediaSeries(
     override val path: String = ""
 
     override var watchDate: Long
-        get() = series[currentEpisode.get()].watchDate
+        get() = current().watchDate
         set(value) {
-            series[currentEpisode.get()].watchDate = value
+            current().watchDate = value
         }
 
-    override var time: Long = 0
-        get() = series[currentEpisode.get()].time
+    override var time: Long
+        get() = current().time
+        set(value) {
+            current().time = value
+        }
+
+    override var duration: Long
+        get() = current().duration
+        set(value) {
+            current().duration = value
+        }
+
+    override var preferredSubtitle: Int?
+        get() = current().preferredSubtitle
+        set(value) {
+            series.forEach { it.preferredSubtitle = value }
+        }
+
+    override var preferredAudio: Int?
+        get() = series[currentEpisode.get()].preferredAudio
+        set(value) {
+            series.forEach { it.preferredAudio = value }
+        }
 
     override fun mediaFile(): MediaFile {
         return series[currentEpisode.get()].mediaFile()
     }
 
-    fun current(): SingleMedia = series[currentEpisode.get()]
-
     fun toPrev() {
-        currentEpisode.set((currentEpisode.get() - 1).coerceAtLeast(0))
+        currentEpisode.set(max(currentEpisode.get() - 1, 0))
     }
 
     fun toNext() {
-        currentEpisode.set((currentEpisode.get() + 1).coerceAtMost(series.size - 1))
+        currentEpisode.set(min(currentEpisode.get() + 1, series.size - 1))
     }
+
+    private fun current(): SingleMedia = series[currentEpisode.get()]
 
 }

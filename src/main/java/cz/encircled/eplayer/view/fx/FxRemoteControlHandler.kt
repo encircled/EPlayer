@@ -20,6 +20,20 @@ class FxRemoteControlHandler(
 
     override fun playPause() = core.mediaService.toggle()
 
-    override fun watchLastMedia() = core.playLast()
+    override fun goToNextMedia() {
+        if (core.appView.isPlayerScene) {
+            core.mediaService.playNext()
+        } else {
+            super.goToNextMedia()
+        }
+    }
+
+    override fun goToPrevMedia() {
+        if (core.appView.isPlayerScene) {
+            core.mediaService.playPrevious()
+        } else {
+            super.goToPrevMedia()
+        }
+    }
 
 }

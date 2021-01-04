@@ -16,14 +16,10 @@ interface CacheService {
 
     fun deleteEntry(media: PlayableMedia): PlayableMedia
 
-    fun updateEntry(media: PlayableMedia, time: Long): PlayableMedia
-
     fun lastByWatchDate(): PlayableMedia?
 
     fun save()
 
     fun getCached(): List<PlayableMedia>
-
-    fun delayedInit(core: ApplicationCore)
 
 }

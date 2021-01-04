@@ -57,7 +57,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
         val back = MenuItem(Localization.back.ln())
         back.onAction = EventHandler { core.back() }
         back.accelerator = KeyCodeCombination(KeyCode.ESCAPE)
-        view.items.addAll(fullScreen, fitScreen)
+        view.items.addAll(fullScreen, fitScreen, back)
 
         return view
     }

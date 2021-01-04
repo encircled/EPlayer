@@ -2,11 +2,11 @@ package cz.encircled.eplayer.service
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.*
+import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.IOUtil
 import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.io.IOException
-import java.nio.file.Paths
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -14,24 +14,38 @@ import kotlin.collections.HashMap
 /**
  * @author Encircled on 9.6.2014.
  */
-class JsonCacheService : CacheService {
+class JsonCacheService(val core: ApplicationCore) : CacheService {
 
-    private lateinit var cache: MutableMap<String, PlayableMedia>
-    private lateinit var core: ApplicationCore
+    private var cache: MutableMap<String, PlayableMedia>
 
-    override fun delayedInit(core: ApplicationCore) {
-        this.core = core
+    init {
         val start = System.currentTimeMillis()
         log.debug("JsonCacheService init start")
         try {
             cache = IOUtil.getPlayableJson()
-                    .associateBy { it.getId() }
-                    .toMutableMap()
+                .associateBy { it.getId() }
+                .toMutableMap()
         } catch (e: Exception) {
             cache = HashMap()
             log.error("Failed to read cache data. Message: {}", e.message)
 //           TODO guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
         }
+
+        Event.mediaTimeChange.listen {
+            cache.getValue(it.playableMedia.getId()).time = it.characteristic
+        }
+        Event.mediaDurationChange.listen {
+            cache.getValue(it.playableMedia.getId()).duration = it.characteristic
+        }
+
+        Event.subtitleChanged.listen {
+            cache.getValue(it.playableMedia.getId()).preferredSubtitle = it.characteristic
+        }
+
+        Event.audioTrackChanged.listen {
+            cache.getValue(it.playableMedia.getId()).preferredAudio = it.characteristic
+        }
+
         log.debug("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start)
     }
 
@@ -73,19 +87,6 @@ class JsonCacheService : CacheService {
         }
 
         return cache.getValue(seriesName)
-    }
-
-    override fun updateEntry(media: PlayableMedia, time: Long): PlayableMedia {
-        val path = media.mediaFile().path
-        val p = cache[path] ?: (cache[core.seriesFinder.seriesName(media.mediaFile().name)] as MediaSeries).current()
-        log.debug("Update cache entry {}, time {}", p, time)
-
-        (p as SingleMedia).apply {
-            this.time = time
-            this.watchDate = Date().time
-        }
-
-        return p
     }
 
     override fun deleteEntry(media: PlayableMedia): PlayableMedia = cache.remove(media.getId())!!

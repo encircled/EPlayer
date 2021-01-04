@@ -3,8 +3,10 @@ package cz.encircled.eplayer.service
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.model.MediaFile
+import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.service.event.Event
+import cz.encircled.eplayer.service.event.MediaCharacteristic
 import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.media.TrackInfo
 import uk.co.caprica.vlcj.player.base.MediaPlayer
@@ -23,6 +25,27 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     private var current: PlayableMedia? = null
 
     lateinit var player: MediaPlayer
+
+    override var volume: Int
+        get() = player.audio().volume()
+        set(value) {
+            player.audio().setVolume(value)
+        }
+
+    override var subtitles: Int
+        get() = player.subpictures().track()
+        set(value) {
+            player.subpictures().setTrack(value)
+            Event.subtitleChanged.fire(MediaCharacteristic(current!!, value))
+        }
+
+    override var audioTrack: Int
+        get() = player.audio().track()
+        set(value) {
+            log.debug("Set audio track with id {}", value)
+            player.audio().setTrack(value)
+            Event.audioTrackChanged.fire(MediaCharacteristic(current!!, value))
+        }
 
     fun setMediaPlayer(player: MediaPlayer) {
         this.player = player
@@ -67,11 +90,11 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
 
         override fun timeChanged(mediaPlayer: MediaPlayer, newTime: Long) {
             currentTime = newTime
-            Event.mediaTimeChange.fire(newTime)
+            if (current != null) Event.mediaTimeChange.fire(MediaCharacteristic(current!!, newTime))
         }
 
         override fun lengthChanged(mediaPlayer: MediaPlayer, newLength: Long) {
-            Event.mediaDurationChange.fire(newLength)
+            Event.mediaDurationChange.fire(MediaCharacteristic(current!!, newLength))
         }
 
         override fun error(mediaPlayer: MediaPlayer) {
@@ -92,19 +115,15 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         }
     }
 
-    // TODO change me?
-    override fun updateCurrentMediaInCache() {
-        current?.let {
-            core.cacheService.updateEntry(it, currentTime)
-            player.snapshots().save(File(ApplicationCore.getScreenshotLocation(it.mediaFile())), 336, 189)
-        }
-    }
+    override fun play(path: String) = play(core.cacheService.createIfAbsent(path))
 
-    private fun play(media: PlayableMedia, time: Long) {
+    override fun play(media: PlayableMedia) {
         if (!this::player.isInitialized) return
 
+        core.cacheService.createIfAbsent(media)
+
         val path = media.mediaFile().path
-        log.debug("Play {}, start time is {}", path, time)
+        log.debug("Play {}, start time is {}", path, media.time)
 
         val countDownLatch = CountDownLatch(1)
 
@@ -113,42 +132,31 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         countDownLatch.await()
         log.debug("Show player done")
         current = media
-        player.media().start(path) // --start-time=$time
-        println("DUR " + player.media().info().duration())
-        setTime(time)
+        player.media().start(path)
+
+        setTime(media.time)
+        media.preferredAudio?.let { audioTrack = it }
+        media.preferredSubtitle?.let { subtitles = it }
+
         log.debug("Playing started")
     }
 
-    override fun play(path: String) {
-        val media = core.cacheService.createIfAbsent(path)
-        play(media, media.time)
+    override fun playNext() {
+        val media = current
+        if (media is MediaSeries) {
+            stop()
+            media.toNext()
+            play(media)
+        }
     }
 
-    override fun play(p: PlayableMedia) = play(core.cacheService.createIfAbsent(p), p.time)
-
-    override fun getSubtitles(): Int = player.subpictures().track()
-
-    override fun setSubtitles(id: Int) {
-        player.subpictures().setTrack(id)
-    }
-
-    override fun getAudioTrack(): Int = player.audio().track()
-
-    override fun setAudioTrack(trackId: Int) {
-        log.debug("Set audio track with id {}", trackId)
-        player.audio().setTrack(trackId)
-    }
-
-    override fun isPlaying(): Boolean = player.status().isPlaying
-
-    override fun getMediaLength(): Long = player.media().info().duration()
-
-    override fun getCurrentTime(): Long = currentTime
-
-    override fun getVolume(): Int = player.audio().volume()
-
-    override fun setVolume(value: Int) {
-        player.audio().setVolume(value)
+    override fun playPrevious() {
+        val media = current
+        if (media is MediaSeries) {
+            stop()
+            media.toPrev()
+            play(media)
+        }
     }
 
     override fun setTime(value: Long) = player.controls().setTime(value)
@@ -169,6 +177,10 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     override fun pause() = player.controls().pause()
 
     override fun stop() {
+        current?.mediaFile()?.let {
+            player.snapshots().save(File(ApplicationCore.getScreenshotLocation(it)), 336, 189)
+        }
+
         log.debug("Stop player")
         current = null
         currentTime = 0L

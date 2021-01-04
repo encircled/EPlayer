@@ -32,7 +32,7 @@ import kotlin.system.exitProcess
 class ApplicationCore {
 
     // Enable HDMI audio passthrough for Dolby/DTS audio TODO configurable
-    val VLC_ARGS = "--mmdevice-passthrough=2"
+    val VLC_ARGS = "--mmdevice-passthrough=0"
 
     lateinit var cacheService: CacheService
 
@@ -63,25 +63,17 @@ class ApplicationCore {
     fun delayedInit(appView: AppView, playerRemoteControl: RemoteControlHandler) {
         val start = System.currentTimeMillis()
         this.appView = appView
-        cacheService = JsonCacheService()
+        cacheService = JsonCacheService(this)
         folderScanService = OnDemandFolderScanner(this)
         val vlcMediaService = VLCMediaService(this)
         mediaService = vlcMediaService
-        cacheService.delayedInit(this)
         seriesFinder = SeriesFinder()
-        log.debug("SeriesFinder finished in ${System.currentTimeMillis() - start}")
         remoteControlServer = RemoteControlHttpServer(FxRemoteControlHandler(this, playerRemoteControl))
-        log.debug("Remote finished in ${System.currentTimeMillis() - start}")
 
-        val playerStart = System.currentTimeMillis()
         val mediaPlayerFactory = MediaPlayerFactory(VLC_ARGS)
         val mediaPlayer: EmbeddedMediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer()
-        log.debug("MediaPlayer finished in ${System.currentTimeMillis() - playerStart}")
-        log.debug("MediaPlayer total finished in ${System.currentTimeMillis() - start}")
         appView.setMediaPlayer(mediaPlayer)
-        log.debug("Core step 1 ${System.currentTimeMillis() - start}")
         vlcMediaService.setMediaPlayer(mediaPlayer)
-        log.debug("Core step 2 ${System.currentTimeMillis() - start}")
         addCloseHook()
         log.debug("Core start finished in ${System.currentTimeMillis() - start}")
         Event.contextInitialized.fire(this)
@@ -91,19 +83,13 @@ class ApplicationCore {
         Thread {
             mediaService.pause()
             appView.showQuickNavi()
-            mediaService.updateCurrentMediaInCache()
             mediaService.stop()
             cacheService.save()
         }.start()
     }
 
     fun back() {
-        if (appView.isPlayerScene) {
-            if (appView.isFullScreen) {
-                appView.toggleFullScreen()
-                Thread { mediaService.updateCurrentMediaInCache() }.start()
-            } else openQuickNavi()
-        }
+        if (appView.isPlayerScene) openQuickNavi()
     }
 
     fun playLast() {
@@ -122,7 +108,7 @@ class ApplicationCore {
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {
                 log.debug("Close hook start")
-                mediaService.updateCurrentMediaInCache()
+                mediaService.stop()
                 cacheService.save()
                 mediaService.releasePlayer()
                 log.debug("Close hook finished")

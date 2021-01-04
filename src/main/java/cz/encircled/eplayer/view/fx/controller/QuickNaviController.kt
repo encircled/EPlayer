@@ -118,7 +118,7 @@ class QuickNaviController(
         core.mediaService.play(dataModel.media[selectedItemIndex])
     }
 
-    override fun watchLastMedia() = throw NotImplementedError()
+    override fun watchLastMedia() = core.playLast()
 
     override fun playPause() = throw NotImplementedError()
 

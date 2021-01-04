@@ -19,7 +19,6 @@ import javafx.stage.Screen
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.binding.RuntimeUtil
-import uk.co.caprica.vlcj.factory.MediaPlayerFactory
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import java.io.File
 import java.util.concurrent.CountDownLatch
@@ -31,12 +30,7 @@ import java.util.concurrent.CountDownLatch
  * - Toggle in fullscreen
  */
 fun main() {
-    NativeLibrary.addSearchPath(RuntimeUtil.getLibVlcLibraryName(), FxView.VLC_LIB_PATH)
     Application.launch(FxView::class.java)
-//    val start = System.currentTimeMillis()
-//    val mediaPlayerFactory = MediaPlayerFactory()
-//    val mediaPlayer: EmbeddedMediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer()
-//    println(System.currentTimeMillis() - start)
 }
 
 /**
@@ -44,8 +38,7 @@ fun main() {
  */
 class FxView : Application(), AppView {
     companion object {
-        // TODO
-        const val VLC_LIB_PATH = "E:/vlc-3.0.3"
+        const val VLC_LIB_PATH = "C:\\Program Files\\VideoLAN\\VLC"
         const val MIN_WIDTH = 860
         const val MIN_HEIGHT = 600
         const val QUICK_NAVI_SCREEN = "quickNavi"

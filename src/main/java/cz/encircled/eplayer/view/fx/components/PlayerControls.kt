@@ -153,7 +153,7 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
         timeSlider.maxProperty().addNewValueListener { totalTimeText.text = StringUtil.msToTimeLabel(it.toLong()) }
 
         // TODO check - was deleted
-        Event.mediaDurationChange.listenFxThread { newTime: Long -> timeSlider.max = newTime.toDouble() }
+        Event.mediaDurationChange.listenFxThread { timeSlider.max = it.characteristic.toDouble() }
 
         // Current time and scrolling
         timeSlider.onMousePressed = EventHandler { event: MouseEvent ->
@@ -165,10 +165,10 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
                 core.mediaService.setTime(it.toLong())
             }
         }
-        Event.mediaTimeChange.listenFxThread { newTime: Long ->
+        Event.mediaTimeChange.listenFxThread {
             if (!timeSlider.isValueChanging) {
-                timeSlider.value = newTime.toDouble()
-                timeText.text = StringUtil.msToTimeLabel(newTime)
+                timeSlider.value = it.characteristic.toDouble()
+                timeText.text = StringUtil.msToTimeLabel(it.characteristic)
             }
         }
     }

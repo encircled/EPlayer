@@ -14,6 +14,8 @@ import javafx.scene.image.ImageView
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.FlowPane
 import javafx.scene.layout.HBox
+import javafx.scene.layout.Pane
+import java.io.File
 import java.net.URLEncoder
 
 
@@ -35,7 +37,12 @@ class MediaPane(
             } else styleClass.remove("selected")
         }
 
-        val screenshot = ImageView(media.pathToScreenshot)
+        val screenshotPlaceholder = Pane()
+        screenshotPlaceholder.minHeight = 189.0
+        screenshotPlaceholder.minWidth = 336.0
+        val exists = File(media.pathToScreenshot.substring(8)).exists()
+        val screenshot = if (exists) ImageView(media.pathToScreenshot) else screenshotPlaceholder
+
         val nameLabel = Label(name())
         nameLabel.styleClass.add("name_label")
 
