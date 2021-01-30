@@ -1,15 +1,12 @@
 package cz.encircled.eplayer.core
 
-import cz.encircled.eplayer.model.MediaFile
 import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
-import cz.encircled.eplayer.model.SingleMedia
+import cz.encircled.eplayer.service.CancelableExecution
 import cz.encircled.eplayer.service.FolderScanService
-import cz.encircled.eplayer.service.JsonCacheService
+import cz.encircled.eplayer.view.UiUtil
 import org.apache.logging.log4j.LogManager
 import java.io.File
-import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * @author Encircled on 20/09/2014.
@@ -19,50 +16,33 @@ class OnDemandFolderScanner(private val core: ApplicationCore) : FolderScanServi
     private val log = LogManager.getLogger()
     private val supportedFormats = setOf("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov")
 
-    override fun getMediaInFolder(path: String, callback: (List<PlayableMedia>) -> Unit) {
-        Thread {
-            val start = System.currentTimeMillis()
+    override fun getMediaInFolder(path: String, callback: CancelableExecution<List<PlayableMedia>>) {
+        UiUtil.inNormalThread {
             log.debug("OnDemandFolderScanner: start scanning {}", path)
-            val series = mutableMapOf<String, MediaSeries>()
+            val start = System.currentTimeMillis()
+            val series = HashSet<String>()
 
             File(path).walk().maxDepth(3)
-                    .filter { it.isFile && supportedFormats.contains(it.extension) }
-                    .chunked(20)
-                    .forEach { chunk ->
-                        callback(chunk.mapNotNull {
-                            val mediaFile = MediaFile(it.path)
-                            val singleMedia = SingleMedia(it.path, mediaFile)
-
-                            val fromCache = core.cacheService.getOrNull(it.path)
-
-                            if (fromCache != null) {
-                                if (fromCache is MediaSeries) {
-                                    if (series.containsKey(fromCache.name)) return@mapNotNull null
-
-                                    series[fromCache.name] = fromCache
-                                }
-                                return@mapNotNull fromCache
-                            }
-
-                            if (core.seriesFinder.isSeries(mediaFile.name)) {
-                                val seriesName = core.seriesFinder.seriesName(mediaFile.name)
-                                if (series.containsKey(seriesName)) {
-                                    series.getValue(seriesName).series.add(singleMedia)
-                                    null
-                                } else {
-                                    val newSeries = MediaSeries(seriesName, ArrayList())
-                                    newSeries.series.add(singleMedia)
-                                    series[newSeries.getId()] = newSeries
-                                    newSeries
-                                }
-                            } else {
-                                singleMedia
-                            }
-                        })
+                .filter { it.isFile && supportedFormats.contains(it.extension.toLowerCase()) && it.canRead() }
+                .chunked(50)
+                .forEach { chunk ->
+                    if (callback.isCancelled) {
+                        return@inNormalThread
                     }
+                    callback.invoke(chunk.mapNotNull {
+                        playableForFile(it, series)
+                    })
+                }
 
             log.debug("Folder {} scan complete in {} ms", path, System.currentTimeMillis() - start)
-        }.start()
+        }
+    }
+
+    private fun playableForFile(it: File, series: MutableSet<String>): PlayableMedia? {
+        val media = core.cacheService.createIfAbsent(it.path)
+        return if (media is MediaSeries) {
+            if (series.add(core.seriesFinder.seriesName(media.mediaFile().name))) media else null
+        } else media
     }
 
 }

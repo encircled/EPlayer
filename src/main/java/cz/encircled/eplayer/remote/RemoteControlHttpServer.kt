@@ -21,6 +21,8 @@ class RemoteControlHttpServer(private val remoteControlHandler: RemoteControlHan
                 it.requestURI.query.replace("=".toRegex(), ":")
             }
 
+            println("RECEIVED REQUEST $request")
+
             try {
                 when (request) {
                     "cmd:fullScreen" -> remoteControlHandler.toFullScreen()

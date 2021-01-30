@@ -23,6 +23,9 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
         log.debug("JsonCacheService init start")
         try {
             cache = IOUtil.getPlayableJson()
+                .map {
+                    core.metaInfoService.fetchMetadataAsync(it)
+                }
                 .associateBy { it.getId() }
                 .toMutableMap()
         } catch (e: Exception) {
@@ -31,11 +34,17 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
 //           TODO guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
         }
 
+        addEventListeners()
+
+        log.debug("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start)
+    }
+
+    private fun addEventListeners() {
         Event.mediaTimeChange.listen {
             cache.getValue(it.playableMedia.getId()).time = it.characteristic
         }
         Event.mediaDurationChange.listen {
-            cache.getValue(it.playableMedia.getId()).duration = it.characteristic
+            cache.getValue(it.playableMedia.getId()).duration.set(it.characteristic)
         }
 
         Event.subtitleChanged.listen {
@@ -45,8 +54,6 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
         Event.audioTrackChanged.listen {
             cache.getValue(it.playableMedia.getId()).preferredAudio = it.characteristic
         }
-
-        log.debug("JsonCacheService init complete in {} ms", System.currentTimeMillis() - start)
     }
 
     override fun getOrNull(path: String): PlayableMedia? {
@@ -66,37 +73,21 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
             getOrCreateSeries(mediaFile, path)
         } else {
             cache.getOrPut(path) {
-                SingleMedia(path, mediaFile, 0, 0)
+                createNewMedia(path, mediaFile)
             }
         }
     }
 
     override fun createIfAbsent(media: PlayableMedia): PlayableMedia = cache.getOrPut(media.getId()) { media }
 
-    private fun getOrCreateSeries(mediaFile: MediaFile, path: String): PlayableMedia {
-        val seriesName = core.seriesFinder.seriesName(mediaFile.name)
-        val single = SingleMedia(path, mediaFile, 0, 0)
-
-        if (cache.containsKey(seriesName)) {
-            (cache.getValue(seriesName) as MediaSeries).series.add(single)
-        } else {
-            val allSeries = core.seriesFinder.findSeriesForName(File(mediaFile.path).parent, seriesName)
-                    .map { SingleMedia(it, MediaFile(it), 0, 0) }
-
-            cache[seriesName] = MediaSeries(seriesName, ArrayList(allSeries))
-        }
-
-        return cache.getValue(seriesName)
-    }
-
     override fun deleteEntry(media: PlayableMedia): PlayableMedia = cache.remove(media.getId())!!
 
-    override fun getCached(): List<PlayableMedia> {
-        return ArrayList(cache.values)
-    }
+    override fun getCachedMedia(): List<PlayableMedia> = ArrayList(cache.values)
+
+    override fun getPlayedMedia(): List<PlayableMedia> = getCachedMedia().filter { it.time > 0 }
 
     override fun lastByWatchDate(): PlayableMedia? {
-        val p = getCached().maxWithOrNull(Comparator.comparingLong(PlayableMedia::watchDate))
+        val p = getCachedMedia().maxWithOrNull(Comparator.comparingLong(PlayableMedia::watchDate))
         log.debug("Last played: {}", p)
         return p
     }
@@ -113,6 +104,28 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
         } catch (e: IOException) {
             log.error("Failed to save playable, msg {}", e)
         }
+    }
+
+    private fun getOrCreateSeries(mediaFile: MediaFile, path: String): PlayableMedia {
+        val seriesName = core.seriesFinder.seriesName(mediaFile.name)
+
+        if (cache.containsKey(seriesName)) {
+            val mediaSeries = cache.getValue(seriesName) as MediaSeries
+            if (!mediaSeries.series.map { it.path }.contains(path)) {
+                mediaSeries.series.add(createNewMedia(path, mediaFile))
+            }
+        } else {
+            val allSeries = core.seriesFinder.findSeriesForName(File(mediaFile.path).parent, seriesName)
+                .map { createNewMedia(it) }
+
+            cache[seriesName] = MediaSeries(seriesName, ArrayList(allSeries))
+        }
+
+        return cache.getValue(seriesName)
+    }
+
+    private fun createNewMedia(path: String, mediaFile: MediaFile = MediaFile(path)): SingleMedia {
+        return core.metaInfoService.fetchMetadataAsync(SingleMedia(path, mediaFile))
     }
 
     companion object {

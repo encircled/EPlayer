@@ -2,13 +2,16 @@ package cz.encircled.eplayer.view.fx
 
 import com.sun.jna.NativeLibrary
 import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
-import cz.encircled.eplayer.view.AppView
+import cz.encircled.eplayer.view.*
+import cz.encircled.eplayer.view.UiUtil.inUiThread
 import cz.encircled.eplayer.view.fx.components.AppMenuBar
-import cz.encircled.eplayer.view.fx.controller.QuickNaviController
+import cz.encircled.eplayer.view.controller.QuickNaviController
 import javafx.application.Application
-import javafx.beans.property.SimpleStringProperty
-import javafx.beans.property.StringProperty
+import javafx.beans.property.ObjectProperty
+import javafx.beans.property.ReadOnlyBooleanProperty
+import javafx.beans.property.SimpleObjectProperty
 import javafx.event.EventHandler
 import javafx.geometry.Rectangle2D
 import javafx.scene.Scene
@@ -19,6 +22,7 @@ import javafx.stage.Screen
 import javafx.stage.Stage
 import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.binding.RuntimeUtil
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import java.io.File
 import java.util.concurrent.CountDownLatch
@@ -39,10 +43,6 @@ fun main() {
 class FxView : Application(), AppView {
     companion object {
         const val VLC_LIB_PATH = "C:\\Program Files\\VideoLAN\\VLC"
-        const val MIN_WIDTH = 860
-        const val MIN_HEIGHT = 600
-        const val QUICK_NAVI_SCREEN = "quickNavi"
-        const val PLAYER_SCREEN = "player"
         private val log = LogManager.getLogger()
 
         init {
@@ -68,41 +68,43 @@ class FxView : Application(), AppView {
 
     private lateinit var primaryScene: Scene
 
-    lateinit var sceneChangeProperty: StringProperty
+    override lateinit var currentSceneProperty: ObjectProperty<Scenes>
 
     private lateinit var core: ApplicationCore
 
-    override fun isPlayerScene(): Boolean = PLAYER_SCREEN == sceneChangeProperty.value
-
-    override fun showQuickNavi() = fxThread {
-        if (isPlayerScene) {
+    override fun showQuickNaviScreen() = inUiThread {
+        if (currentSceneProperty.get() != Scenes.QUICK_NAVI) {
             primaryScene.root = quickNaviScreen
-            sceneChangeProperty.value = QUICK_NAVI_SCREEN
+            currentSceneProperty.value = Scenes.QUICK_NAVI
         }
     }
 
-    override fun showPlayer(countDown: CountDownLatch) = fxThread(countDown) {
-        if (!isPlayerScene) {
+    override fun showPlayer(countDown: CountDownLatch) = inUiThread(countDown) {
+        if (currentSceneProperty.get() != Scenes.PLAYER) {
             primaryScene.root = playerScreen
-            sceneChangeProperty.value = PLAYER_SCREEN
+            currentSceneProperty.value = Scenes.PLAYER
         }
     }
 
-    override fun toggleFullScreen() = fxThread {
+    override fun toggleFullScreen() = inUiThread {
         primaryStage.isFullScreen = !primaryStage.isFullScreen
     }
 
     override fun isFullScreen(): Boolean = primaryStage.isFullScreen
 
+    override fun fullScreenProperty(): ReadOnlyBooleanProperty = primaryStage.fullScreenProperty()
+
     override fun start(primaryStage: Stage) {
         val start = System.currentTimeMillis()
+        UiUtil.uiExecutor = FxUiExecutor()
         this.primaryStage = primaryStage
         screenBounds = Screen.getPrimary().visualBounds
-        sceneChangeProperty = SimpleStringProperty(QUICK_NAVI_SCREEN)
+        currentSceneProperty = SimpleObjectProperty(Scenes.QUICK_NAVI)
         core = ApplicationCore()
 
         val dataModel = UiDataModel()
-        quickNaviController = QuickNaviController(this, dataModel, core)
+        quickNaviController = QuickNaviController(dataModel, core)
+        quickNaviController.init(this)
 
         playerScreen = PlayerScreen(dataModel, core, AppMenuBar(core, this, dataModel), this)
         quickNaviScreen = QuickNaviScreen(dataModel, quickNaviController, AppMenuBar(core, this, dataModel), this)
@@ -112,6 +114,10 @@ class FxView : Application(), AppView {
         initializeMediaFileChoose()
         initializeScene()
 
+        Event.contextInitialized.listenUiThread {
+            quickNaviController.onFolderSelect(QUICK_NAVI)
+        }
+
         log.debug("UI start finished in ${System.currentTimeMillis() - start}")
 
         Thread {
@@ -119,14 +125,14 @@ class FxView : Application(), AppView {
         }.start()
     }
 
-    override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayer) = fxThread {
+    override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayerComponent) = inUiThread {
         playerScreen.setMediaPlayer(mediaPlayer)
     }
 
     private fun initializePrimaryStage() {
         primaryStage.title = AppView.TITLE
-        primaryStage.minHeight = MIN_HEIGHT.toDouble()
-        primaryStage.minWidth = MIN_WIDTH.toDouble()
+        primaryStage.minHeight = AppView.MIN_HEIGHT.toDouble()
+        primaryStage.minWidth = AppView.MIN_WIDTH.toDouble()
         primaryStage.fullScreenExitHint = ""
         primaryStage.isMaximized = true
     }
@@ -140,6 +146,10 @@ class FxView : Application(), AppView {
                 core.settings.setOpenLocation(file.parentFile.absolutePath)
             }.start()
         }
+    }
+
+    override fun showUserMessage(msg: String) {
+        TODO("Not yet implemented")
     }
 
     private fun initializeScene() {

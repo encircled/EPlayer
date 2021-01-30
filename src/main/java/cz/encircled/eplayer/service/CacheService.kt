@@ -1,6 +1,5 @@
 package cz.encircled.eplayer.service
 
-import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.PlayableMedia
 
 /**
@@ -20,6 +19,11 @@ interface CacheService {
 
     fun save()
 
-    fun getCached(): List<PlayableMedia>
+    fun getCachedMedia(): List<PlayableMedia>
+
+    /**
+     * Get list of played videos for QuickNavi view
+     */
+    fun getPlayedMedia(): List<PlayableMedia>
 
 }

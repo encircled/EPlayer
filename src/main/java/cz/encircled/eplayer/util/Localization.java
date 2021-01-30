@@ -64,6 +64,8 @@ public enum Localization {
 
     size,
 
+    search,
+
     creationDate;
 
     public String ln() {

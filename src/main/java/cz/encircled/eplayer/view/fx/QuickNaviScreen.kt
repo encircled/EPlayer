@@ -1,20 +1,20 @@
 package cz.encircled.eplayer.view.fx
 
-import cz.encircled.eplayer.view.fx.FxUtil.withFastScroll
+import cz.encircled.eplayer.view.QUICK_NAVI
+import cz.encircled.eplayer.view.UiDataModel
+import cz.encircled.eplayer.view.UiUtil.withFastScroll
+import cz.encircled.eplayer.view.addChangesListener
+import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.fx.components.AppMenuBar
 import cz.encircled.eplayer.view.fx.components.MediaFolder
 import cz.encircled.eplayer.view.fx.components.MediaPane
-import cz.encircled.eplayer.view.fx.controller.QuickNaviController
-import javafx.geometry.Bounds
-import javafx.scene.Node
+import cz.encircled.eplayer.view.controller.QuickNaviController
 import javafx.scene.control.ScrollPane
 import javafx.scene.control.TextField
 import javafx.scene.layout.BorderPane
 import javafx.scene.layout.FlowPane
 
 import org.apache.logging.log4j.LogManager
-import kotlin.math.max
-import kotlin.math.min
 
 const val SELECTED = "selected"
 
@@ -22,10 +22,10 @@ const val SELECTED = "selected"
  * @author Encircled on 18/09/2014.
  */
 class QuickNaviScreen(
-        private val dataModel: UiDataModel,
-        private val controller: QuickNaviController,
-        menuBar: AppMenuBar,
-        fxView: FxView
+    private val dataModel: UiDataModel,
+    private val controller: QuickNaviController,
+    menuBar: AppMenuBar,
+    fxView: FxView
 ) : BorderPane() {
     private val log = LogManager.getLogger()
 
@@ -38,7 +38,9 @@ class QuickNaviScreen(
 
         dataModel.selectedMediaPane.addNewValueListener {
             // Set focus on selected one
-            mediaContainerScroll.vvalue = (it.layoutY + (it.layoutBounds.height / 3)) / mediaContainer.height
+            val mediaPane = it as MediaPane
+            mediaContainerScroll.vvalue =
+                (mediaPane.layoutY + (mediaPane.layoutBounds.height / 3)) / mediaContainer.height
         }
 
         mediaContainerScroll.isFitToWidth = true
@@ -52,13 +54,8 @@ class QuickNaviScreen(
         center = content
 
         dataModel.media.addChangesListener { added, removed ->
-            fxThread {
-                println("dataModel.media")
-                val start = System.currentTimeMillis()
-                mediaContainer.children.removeIf { removed.contains((it as MediaPane).media) }
-                mediaContainer.children.addAll(added.map { MediaPane(it, dataModel, controller) })
-                log.debug("dataModel.media: ${System.currentTimeMillis() - start}")
-            }
+            mediaContainer.children.removeIf { removed.contains((it as MediaPane).media) }
+            mediaContainer.children.addAll(added.map { MediaPane(it, dataModel, controller) })
         }
     }
 
@@ -84,12 +81,8 @@ class QuickNaviScreen(
         }
 
         dataModel.foldersToScan.addChangesListener { added, removed ->
-            fxThread {
-                val start = System.currentTimeMillis()
-                folders.children.removeIf { removed.contains((it as MediaFolder).path) }
-                folders.children.addAll(added.map { MediaFolder(it, dataModel, controller) })
-                log.debug("dataModel.foldersToScan: ${System.currentTimeMillis() - start}")
-            }
+            folders.children.removeIf { removed.contains((it as MediaFolder).path) }
+            folders.children.addAll(added.map { MediaFolder(it, dataModel, controller) })
         }
 
         return folders

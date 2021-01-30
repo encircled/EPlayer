@@ -1,0 +1,10 @@
+{
+  "language": "en",
+  "fcOpenLocation": null,
+  "maxVolume": 150,
+  "lastVolume": 150,
+  "foldersToScan": [
+    "E:\\video",
+    "E:\\photo\\gopro"
+  ]
+}

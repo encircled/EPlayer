@@ -7,6 +7,6 @@ import cz.encircled.eplayer.model.PlayableMedia
  */
 interface FolderScanService {
 
-    fun getMediaInFolder(path: String, callback: (List<PlayableMedia>) -> Unit)
+    fun getMediaInFolder(path: String, callback: CancelableExecution<List<PlayableMedia>>)
 
 }

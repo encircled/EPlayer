@@ -7,15 +7,15 @@ import cz.encircled.eplayer.util.IOUtil
  * @author encir on 29-Aug-20.
  */
 data class AppSettings(
-        val language: String = "en",
+    val language: String = "en",
 
-        var fcOpenLocation: String?,
+    var fcOpenLocation: String?,
 
-        val maxVolume: Double = 150.0,
+    val maxVolume: Int = 150,
 
-        var lastVolume: Double = 100.0,
+    var lastVolume: Int = 100,
 
-        val foldersToScan: ArrayList<String>
+    val foldersToScan: ArrayList<String>
 ) {
 
     fun setOpenLocation(path: String) {
@@ -23,7 +23,7 @@ data class AppSettings(
         IOUtil.saveSettings(this)
     }
 
-    fun lastVolume(volume: Double) {
+    fun lastVolume(volume: Int) {
         lastVolume = volume
         IOUtil.saveSettings(this)
     }

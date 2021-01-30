@@ -1,9 +1,6 @@
 package cz.encircled.eplayer.util
 
-import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.model.PlayableMedia
@@ -12,10 +9,8 @@ import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.io.IOException
 import java.math.BigDecimal
-import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.*
 import kotlin.collections.ArrayList
 
 private data class MediaWrapper(val media: ArrayList<PlayableMedia> = ArrayList())
@@ -24,19 +19,14 @@ object IOUtil {
 
     private val log = LogManager.getLogger()
 
-    private val pathToSettings = ApplicationCore.APP_DOCUMENTS_ROOT + "eplayer.properties.json"
-    private val quickNaviPath = ApplicationCore.APP_DOCUMENTS_ROOT + "quicknavi2.json"
+    var pathToSettings = ApplicationCore.APP_DOCUMENTS_ROOT + "eplayer.properties.json"
+    var quickNaviPath = ApplicationCore.APP_DOCUMENTS_ROOT + "quicknavi2.json"
 
-    private var BD_ONE_KO = BigDecimal(1024L)
-    var BD_ONE_MO: BigDecimal = BD_ONE_KO.multiply(BD_ONE_KO)
-    var BD_ONE_GO: BigDecimal = BD_ONE_MO.multiply(BD_ONE_KO)
+    private var BD_ONE_KB = BigDecimal(1024L)
+    var BD_ONE_MB: BigDecimal = BD_ONE_KB.multiply(BD_ONE_KB)
+    var BD_ONE_GB: BigDecimal = BD_ONE_MB.multiply(BD_ONE_KB)
 
-    val mapper: ObjectMapper = ObjectMapper()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .registerModule(KotlinModule(nullIsSameAsDefault = true))
-            .activateDefaultTyping(BasicPolymorphicTypeValidator.builder()
-                    .allowIfBaseType(PlayableMedia::class.java)
-                    .build())
+    private val mapper: ObjectMapper = JsonMapper.getMapper()
 
     @Throws(IOException::class)
     fun getPlayableJson(): List<PlayableMedia> {
@@ -88,19 +78,17 @@ object IOUtil {
         return false
     }
 
-    fun byteCountToDisplaySize(size: Long): String {
-        return when {
-            size / FileUtils.ONE_GB > 0 -> {
-                BigDecimal(size).divide(BD_ONE_GO, 2, BigDecimal.ROUND_FLOOR).toString() + " Gb"
-            }
-            size / FileUtils.ONE_MB > 0 -> {
-                BigDecimal(size).divide(BD_ONE_MO, BigDecimal.ROUND_FLOOR).toString() + " Mb"
-            }
-            size / FileUtils.ONE_KB > 0 -> {
-                BigDecimal(size).divide(BD_ONE_KO, BigDecimal.ROUND_FLOOR).toString() + " Kb"
-            }
-            else -> "$size b"
+    fun byteCountToDisplaySize(size: Long): String = when {
+        size / FileUtils.ONE_GB > 0 -> {
+            BigDecimal(size).divide(BD_ONE_GB, 2, BigDecimal.ROUND_FLOOR).toString() + " Gb"
         }
+        size / FileUtils.ONE_MB > 0 -> {
+            BigDecimal(size).divide(BD_ONE_MB, BigDecimal.ROUND_FLOOR).toString() + " Mb"
+        }
+        size / FileUtils.ONE_KB > 0 -> {
+            BigDecimal(size).divide(BD_ONE_KB, BigDecimal.ROUND_FLOOR).toString() + " Kb"
+        }
+        else -> "$size b"
     }
 
 }

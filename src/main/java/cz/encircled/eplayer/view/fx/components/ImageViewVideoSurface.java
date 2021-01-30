@@ -24,7 +24,7 @@ public final class ImageViewVideoSurface {
     private final BufferFormatCallback bufferFormatCallback;
     private final PixelBufferRenderCallback renderCallback;
     public PixelBufferVideoSurface videoSurface;
-    private final FxView fxView;
+    final FxView fxView;
     private final FloatProperty videoSourceRatioProperty;
 
     public ImageViewVideoSurface(WritableImage writableImage, FxView fxView, FloatProperty videoSourceRatioProperty) {

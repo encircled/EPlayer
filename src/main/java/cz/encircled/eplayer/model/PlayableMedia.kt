@@ -1,11 +1,14 @@
 package cz.encircled.eplayer.model
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.util.DateUtil
 import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.util.StringUtil
 import javafx.beans.property.IntegerPropertyBase
 import javafx.beans.property.SimpleIntegerProperty
+import javafx.beans.property.SimpleLongProperty
+import java.io.File
 import kotlin.collections.ArrayList
 import kotlin.math.max
 import kotlin.math.min
@@ -20,8 +23,17 @@ interface PlayableMedia {
     val formattedExtension: String
         get() = mediaFile().extension
 
+    /**
+     * URL format path (with file:/ prefix)
+     */
     val pathToScreenshot: String
         get() = mediaFile().pathToScreenshot
+
+    /**
+     * File format path (without file:/ prefix)
+     */
+    val filePathToScreenshot: String
+        get() = mediaFile().pathToScreenshot.substring(ApplicationCore.URL_FILE_PREFIX.length)
 
     val formattedWatchDate: String
         get() = DateUtil.daysBetweenLocalized(watchDate)
@@ -34,7 +46,7 @@ interface PlayableMedia {
 
     var time: Long
 
-    var duration: Long
+    var duration: SimpleLongProperty
 
     var preferredSubtitle: Int?
 
@@ -46,6 +58,10 @@ interface PlayableMedia {
 
     fun mediaFile(): MediaFile
 
+    fun hasScreenshot(): Boolean = File(filePathToScreenshot).exists()
+
+    fun name(): String
+
 }
 
 data class SingleMedia(
@@ -53,7 +69,7 @@ data class SingleMedia(
     @JsonIgnore
     private val mediaFile: MediaFile = MediaFile(path),
     override var time: Long = 0,
-    override var duration: Long = 0,
+    override var duration: SimpleLongProperty = SimpleLongProperty(0),
     override var watchDate: Long = 0,
     override var preferredSubtitle: Int? = null,
     override var preferredAudio: Int? = null,
@@ -72,6 +88,7 @@ data class SingleMedia(
 
     override fun hashCode(): Int = path.hashCode()
 
+    override fun name(): String = mediaFile.name
 }
 
 data class MediaSeries(
@@ -90,7 +107,7 @@ data class MediaSeries(
         var i = series.indexOfLast { it.time > 0 }
 
         // Go to next episode if watch time is lesser than average credits time
-        if (i < series.size - 1 && series[i].duration - series[i].time < creditsTime) i++
+        if (i >= 0 && i < series.size - 1 && series[i].duration.get() - series[i].time < creditsTime) i++
 
         currentEpisode.set(max(i, 0))
     }
@@ -111,7 +128,7 @@ data class MediaSeries(
             current().time = value
         }
 
-    override var duration: Long
+    override var duration: SimpleLongProperty
         get() = current().duration
         set(value) {
             current().duration = value
@@ -124,14 +141,16 @@ data class MediaSeries(
         }
 
     override var preferredAudio: Int?
-        get() = series[currentEpisode.get()].preferredAudio
+        get() = current().preferredAudio
         set(value) {
             series.forEach { it.preferredAudio = value }
         }
 
     override fun mediaFile(): MediaFile {
-        return series[currentEpisode.get()].mediaFile()
+        return current().mediaFile()
     }
+
+    override fun name(): String = current().name()
 
     fun toPrev() {
         currentEpisode.set(max(currentEpisode.get() - 1, 0))

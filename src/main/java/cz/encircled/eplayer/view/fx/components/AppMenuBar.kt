@@ -4,9 +4,10 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
+import cz.encircled.eplayer.view.Scenes
+import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.fx.FxView
-import cz.encircled.eplayer.view.fx.UiDataModel
-import cz.encircled.eplayer.view.fx.addNewValueListener
+import cz.encircled.eplayer.view.addNewValueListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.scene.control.*
@@ -46,7 +47,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
         fxView.primaryStage.fullScreenProperty().addNewValueListener { fullScreen.isSelected = it }
         fullScreen.onAction = EventHandler { fxView.toggleFullScreen() }
         fullScreen.accelerator = KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN)
-        fullScreen.isSelected = fxView.isFullScreen
+        fullScreen.isSelected = fxView.isFullScreen()
 
         val fitScreen = CheckMenuItem(Localization.fitScreen.ln())
         dataModel.fitToScreen.addNewValueListener { fitScreen.isSelected = it }
@@ -68,7 +69,7 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
         val play = MenuItem(Localization.play.ln())
         play.onAction = EventHandler { core.mediaService.toggle() }
         play.accelerator = KeyCodeCombination(KeyCode.SPACE)
-        Event.playingChanged.listenFxThread { isPlaying: Boolean ->
+        Event.playingChanged.listenUiThread { isPlaying: Boolean ->
             play.text = if (isPlaying) Localization.pause.ln() else Localization.play.ln()
         }
 
@@ -86,12 +87,12 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
 
         val openQn = MenuItem(Localization.openQuickNavi.ln())
         openQn.accelerator = KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN)
-        openQn.onAction = EventHandler { core.openQuickNavi() }
+        openQn.onAction = EventHandler { core.openQuickNaviScreen() }
 
         val deleteMissing = MenuItem(Localization.deleteMissing.ln())
         deleteMissing.onAction = EventHandler {
             Thread {
-                core.cacheService.getCached().filter {
+                core.cacheService.getCachedMedia().filter {
                     !it.mediaFile().exists()
                 }.forEach {
                     core.cacheService.deleteEntry(it)
@@ -106,20 +107,20 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
     }
 
     init {
-        Event.subtitlesUpdated.listenFxThread { tracks: List<GenericTrackDescription> ->
+        Event.subtitlesUpdated.listenUiThread { tracks: List<GenericTrackDescription> ->
             updateTrackMenu(subtitles, tracks, core.mediaService.subtitles) {
                 core.mediaService.subtitles = (it.source as RadioMenuItem).userData as Int
             }
         }
 
-        Event.audioTracksUpdated.listenFxThread { tracks: List<GenericTrackDescription> ->
+        Event.audioTracksUpdated.listenUiThread { tracks: List<GenericTrackDescription> ->
             updateTrackMenu(audioTracks, tracks, core.mediaService.audioTrack) {
                 core.mediaService.audioTrack = (it.source as RadioMenuItem).userData as Int
             }
         }
 
-        fxView.sceneChangeProperty.addNewValueListener {
-            if (FxView.QUICK_NAVI_SCREEN == it) {
+        fxView.currentSceneProperty.addNewValueListener {
+            if (it == Scenes.QUICK_NAVI) {
                 audioTracks.isDisable = true
                 subtitles.isDisable = true
             }

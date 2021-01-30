@@ -2,6 +2,9 @@ package cz.encircled.eplayer.view.fx
 
 import cz.encircled.eplayer.common.PostponeTimer
 import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.view.UiDataModel
+import cz.encircled.eplayer.view.UiUtil
+import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.fx.components.AppMenuBar
 import cz.encircled.eplayer.view.fx.components.ImageViewVideoSurface
 import cz.encircled.eplayer.view.fx.components.PlayerControls
@@ -20,6 +23,7 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.Pane
 import javafx.scene.layout.StackPane
 import org.apache.logging.log4j.LogManager
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import java.util.function.Consumer
 
@@ -86,12 +90,12 @@ class PlayerScreen(
         initializeListeners(core)
     }
 
-    fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayer) {
+    fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayerComponent) {
         Platform.runLater {
             val start = System.currentTimeMillis()
             val videoSurface = ImageViewVideoSurface(writableImage, fxView, videoSourceRatioProperty).videoSurface
             println("Vidoe Surf: ${System.currentTimeMillis() - start}")
-            mediaPlayer.videoSurface().set(videoSurface)
+            mediaPlayer.mediaPlayer().videoSurface().set(videoSurface)
             println("Set Surf: ${System.currentTimeMillis() - start}")
         }
     }
@@ -107,7 +111,7 @@ class PlayerScreen(
 
         // Platform.runLater is required, because elements must be removed after full screen repaint
         fxView.primaryStage.fullScreenProperty().addNewValueListener { Platform.runLater { if (it) onFullScreen() else onNotFullScreen() } }
-        if (fxView.isFullScreen) onFullScreen()
+        if (fxView.isFullScreen()) onFullScreen()
         else onNotFullScreen()
     }
 
@@ -154,7 +158,7 @@ class PlayerScreen(
         videoSourceRatioProperty.addNewValueListener { fitImageViewSize(playerHolder.width, playerHolder.height) }
     }
 
-    private fun fitImageViewSize(width: Double, height: Double) = fxThread {
+    private fun fitImageViewSize(width: Double, height: Double) = UiUtil.inUiThread {
         if (dataModel.fitToScreen.get()) {
             imageView.x = 0.0
             imageView.y = 0.0

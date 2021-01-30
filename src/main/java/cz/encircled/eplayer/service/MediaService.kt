@@ -1,6 +1,7 @@
 package cz.encircled.eplayer.service
 
 import cz.encircled.eplayer.model.PlayableMedia
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 
 /**
  * @author Encircled on 9.6.2014.
@@ -11,7 +12,11 @@ interface MediaService {
     var subtitles: Int
     var audioTrack: Int
 
+    fun createPlayer(): EmbeddedMediaPlayerComponent
+
     fun releasePlayer()
+
+    fun isPlaying(): Boolean
 
     fun play(path: String)
 
@@ -22,6 +27,11 @@ interface MediaService {
     fun playPrevious()
 
     fun setTime(value: Long)
+
+    /**
+     * Add $value ms to the current time
+     */
+    fun setTimePlus(value: Long)
 
     fun start()
 

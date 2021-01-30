@@ -4,11 +4,10 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.util.StringUtil
-import cz.encircled.eplayer.view.fx.FxUtil.inNormalThread
+import cz.encircled.eplayer.view.UiDataModel
+import cz.encircled.eplayer.view.UiUtil.inNormalThread
 import cz.encircled.eplayer.view.fx.FxView
-import cz.encircled.eplayer.view.fx.UiDataModel
-import cz.encircled.eplayer.view.fx.addNewValueListener
-import javafx.beans.value.ObservableValue
+import cz.encircled.eplayer.view.addNewValueListener
 import javafx.event.ActionEvent
 import javafx.event.EventHandler
 import javafx.geometry.Insets
@@ -17,7 +16,6 @@ import javafx.scene.control.ToggleButton
 import javafx.scene.control.Tooltip
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.*
-import javafx.scene.paint.Color
 import javafx.scene.text.Text
 import org.apache.logging.log4j.LogManager
 
@@ -101,7 +99,7 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
 
         playerToggleButton.id = "play"
         playerToggleButton.onAction = EventHandler { e: ActionEvent? -> core.mediaService.toggle() }
-        Event.playingChanged.listenFxThread { arg: Boolean? -> playerToggleButton.isSelected = !arg!! }
+        Event.playingChanged.listenUiThread { arg: Boolean? -> playerToggleButton.isSelected = !arg!! }
 
         volumeButton.id = "mute"
         volumeButton.onAction = EventHandler {
@@ -115,9 +113,9 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
     }
 
     private fun initializeVolumeControls() {
-        Event.mediaDurationChange.listen { core.mediaService.volume = core.settings.lastVolume.toInt() }
+        Event.mediaDurationChange.listen { core.mediaService.volume = core.settings.lastVolume }
 
-        volumeSlider = Slider(0.0, core.settings.maxVolume, core.settings.lastVolume)
+        volumeSlider = Slider(0.0, core.settings.maxVolume.toDouble(), core.settings.lastVolume.toDouble())
 
         volumeSlider.valueChangingProperty().addNewValueListener {
             if (!it) saveLastVolumeToSettings()
@@ -136,7 +134,7 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
     }
 
     private fun saveLastVolumeToSettings() = inNormalThread {
-        core.settings.lastVolume(volumeSlider.value)
+        core.settings.lastVolume(volumeSlider.value.toInt())
     }
 
     private fun initializeTimeControls() {
@@ -153,7 +151,7 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
         timeSlider.maxProperty().addNewValueListener { totalTimeText.text = StringUtil.msToTimeLabel(it.toLong()) }
 
         // TODO check - was deleted
-        Event.mediaDurationChange.listenFxThread { timeSlider.max = it.characteristic.toDouble() }
+        Event.mediaDurationChange.listenUiThread { timeSlider.max = it.characteristic.toDouble() }
 
         // Current time and scrolling
         timeSlider.onMousePressed = EventHandler { event: MouseEvent ->
@@ -165,7 +163,7 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
                 core.mediaService.setTime(it.toLong())
             }
         }
-        Event.mediaTimeChange.listenFxThread {
+        Event.mediaTimeChange.listenUiThread {
             if (!timeSlider.isValueChanging) {
                 timeSlider.value = it.characteristic.toDouble()
                 timeText.text = StringUtil.msToTimeLabel(it.characteristic)

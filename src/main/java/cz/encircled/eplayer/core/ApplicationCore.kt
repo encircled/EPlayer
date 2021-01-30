@@ -3,6 +3,7 @@ package cz.encircled.eplayer.core
 import cz.encircled.eplayer.common.Constants
 import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.model.MediaFile
+import cz.encircled.eplayer.model.SingleMedia
 import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.remote.RemoteControlHttpServer
 import cz.encircled.eplayer.service.*
@@ -11,12 +12,12 @@ import cz.encircled.eplayer.util.IOUtil.createIfMissing
 import cz.encircled.eplayer.util.IOUtil.getSettings
 import cz.encircled.eplayer.util.LocalizationProvider
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.fx.FxRemoteControlHandler
-import cz.encircled.eplayer.view.fx.FxView
+import cz.encircled.eplayer.view.Scenes
+import cz.encircled.eplayer.view.controller.RemoteControlHandlerImpl
 import javafx.application.Platform
 import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory
-import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
+import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import kotlin.system.exitProcess
 
 /**
@@ -31,9 +32,6 @@ import kotlin.system.exitProcess
  */
 class ApplicationCore {
 
-    // Enable HDMI audio passthrough for Dolby/DTS audio TODO configurable
-    val VLC_ARGS = "--mmdevice-passthrough=0"
-
     lateinit var cacheService: CacheService
 
     lateinit var folderScanService: FolderScanService
@@ -45,6 +43,8 @@ class ApplicationCore {
     lateinit var appView: AppView
 
     lateinit var seriesFinder: SeriesFinder
+
+    lateinit var metaInfoService: MetadataInfoService
 
     private lateinit var remoteControlServer: RemoteControlHttpServer
 
@@ -63,33 +63,41 @@ class ApplicationCore {
     fun delayedInit(appView: AppView, playerRemoteControl: RemoteControlHandler) {
         val start = System.currentTimeMillis()
         this.appView = appView
-        cacheService = JsonCacheService(this)
-        folderScanService = OnDemandFolderScanner(this)
-        val vlcMediaService = VLCMediaService(this)
-        mediaService = vlcMediaService
-        seriesFinder = SeriesFinder()
-        remoteControlServer = RemoteControlHttpServer(FxRemoteControlHandler(this, playerRemoteControl))
+        this.metaInfoService = JavacvMetadataInfoService()
+        this.cacheService = JsonCacheService(this)
+        this.folderScanService = OnDemandFolderScanner(this)
 
-        val mediaPlayerFactory = MediaPlayerFactory(VLC_ARGS)
-        val mediaPlayer: EmbeddedMediaPlayer = mediaPlayerFactory.mediaPlayers().newEmbeddedMediaPlayer()
-        appView.setMediaPlayer(mediaPlayer)
-        vlcMediaService.setMediaPlayer(mediaPlayer)
+        this.seriesFinder = SeriesFinder()
+        this.remoteControlServer = RemoteControlHttpServer(RemoteControlHandlerImpl(this, playerRemoteControl))
+
+        this.mediaService = VLCMediaService(this)
+        appView.setMediaPlayer(mediaService.createPlayer())
+
         addCloseHook()
         log.debug("Core start finished in ${System.currentTimeMillis() - start}")
         Event.contextInitialized.fire(this)
     }
 
-    fun openQuickNavi() {
+    fun openQuickNaviScreen() {
         Thread {
-            mediaService.pause()
-            appView.showQuickNavi()
+            if (mediaService.isPlaying()) {
+                mediaService.pause()
+            }
+            appView.showQuickNaviScreen()
             mediaService.stop()
             cacheService.save()
         }.start()
     }
 
     fun back() {
-        if (appView.isPlayerScene) openQuickNavi()
+        if (appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            if (appView.isFullScreen()) {
+                appView.toggleFullScreen()
+                mediaService.pause()
+            } else {
+                openQuickNaviScreen()
+            }
+        }
     }
 
     fun playLast() {
@@ -122,7 +130,7 @@ class ApplicationCore {
 
         val SCREENS_FOLDER = "$APP_DOCUMENTS_ROOT\\frames\\"
 
-        private const val URL_FILE_PREFIX = "file:\\\\\\"
+        const val URL_FILE_PREFIX = "file:\\\\\\"
 
         private val log = LogManager.getLogger()
 

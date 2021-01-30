@@ -12,7 +12,7 @@
     </appenders>
     <loggers>
         <root level="DEBUG">
-            <!--<appender-ref ref="file"/>-->
+            <appender-ref ref="file"/>
             <appender-ref ref="STDOUT"/>
         </root>
     </loggers>

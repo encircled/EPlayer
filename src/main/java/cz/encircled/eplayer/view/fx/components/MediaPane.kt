@@ -2,9 +2,10 @@ package cz.encircled.eplayer.view.fx.components
 
 import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
-import cz.encircled.eplayer.view.fx.UiDataModel
-import cz.encircled.eplayer.view.fx.addNewValueListener
-import cz.encircled.eplayer.view.fx.controller.QuickNaviController
+import cz.encircled.eplayer.view.UiDataModel
+import cz.encircled.eplayer.view.UiUtil
+import cz.encircled.eplayer.view.addNewValueListener
+import cz.encircled.eplayer.view.controller.QuickNaviController
 import javafx.event.EventHandler
 import javafx.scene.Node
 import javafx.scene.control.ContentDisplay
@@ -15,7 +16,6 @@ import javafx.scene.layout.BorderPane
 import javafx.scene.layout.FlowPane
 import javafx.scene.layout.HBox
 import javafx.scene.layout.Pane
-import java.io.File
 import java.net.URLEncoder
 
 
@@ -23,9 +23,9 @@ import java.net.URLEncoder
  * @author encir on 01-Sep-20.
  */
 class MediaPane(
-        val media: PlayableMedia,
-        private val dataModel: UiDataModel,
-        private val controller: QuickNaviController,
+    val media: PlayableMedia,
+    private val dataModel: UiDataModel,
+    private val controller: QuickNaviController,
 ) : BorderPane() {
 
     init {
@@ -40,8 +40,7 @@ class MediaPane(
         val screenshotPlaceholder = Pane()
         screenshotPlaceholder.minHeight = 189.0
         screenshotPlaceholder.minWidth = 336.0
-        val exists = File(media.pathToScreenshot.substring(8)).exists()
-        val screenshot = if (exists) ImageView(media.pathToScreenshot) else screenshotPlaceholder
+        val screenshot = if (media.hasScreenshot()) ImageView(media.pathToScreenshot) else screenshotPlaceholder
 
         val nameLabel = Label(name())
         nameLabel.styleClass.add("name_label")
@@ -81,7 +80,8 @@ class MediaPane(
 
         val onlineSearchIcon = iconButton("search") {
             val cleanedName = URLEncoder.encode(mediaName, "UTF-8")
-            Runtime.getRuntime().exec(arrayOf("PowerShell", "start chrome https://www.kinopoisk.ru/index.php?kp_query=$cleanedName"))
+            Runtime.getRuntime()
+                .exec(arrayOf("PowerShell", "start chrome https://www.kinopoisk.ru/index.php?kp_query=$cleanedName"))
         }
         val deleteIcon = iconButton("remove") {
             controller.deleteEntry(media)
@@ -95,8 +95,8 @@ class MediaPane(
         }
 
         val infoText =
-                if (media.time > 0L) "watched ${media.formattedWatchDate}, ${media.path}"
-                else media.path
+            if (media.time > 0L) "watched ${media.formattedWatchDate}, ${media.path}"
+            else media.path
         val info = iconButton("info", infoText) {}
 
         val icons = HBox(10.0, info)
@@ -111,11 +111,11 @@ class MediaPane(
     }
 
     private fun iconButton(clazz: String, tooltip: String = "", onClick: () -> Unit): Node =
-            Label().apply {
-                if (tooltip.isNotEmpty()) this.tooltip = Tooltip(tooltip)
-                styleClass.add(clazz)
-                contentDisplay = ContentDisplay.GRAPHIC_ONLY
-                onMouseClicked = EventHandler { onClick() }
-            }
+        Label().apply {
+            if (tooltip.isNotEmpty()) this.tooltip = Tooltip(tooltip)
+            styleClass.add(clazz)
+            contentDisplay = ContentDisplay.GRAPHIC_ONLY
+            onMouseClicked = EventHandler { onClick() }
+        }
 
 }
