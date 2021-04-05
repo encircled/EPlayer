@@ -3,7 +3,6 @@ package cz.encircled.eplayer.view
 import cz.encircled.eplayer.service.Cancelable
 import javafx.beans.value.ChangeListener
 import javafx.beans.value.ObservableValue
-import javafx.beans.value.WeakChangeListener
 import javafx.collections.ListChangeListener
 import javafx.collections.ObservableList
 
