@@ -8,6 +8,7 @@ import cz.encircled.eplayer.service.CancelableExecution
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.view.*
 import cz.encircled.eplayer.view.UiUtil.inUiThread
+import org.apache.logging.log4j.LogManager
 import java.net.URLEncoder
 import java.util.regex.Pattern
 import javax.swing.SwingUtilities
@@ -19,6 +20,8 @@ class QuickNaviController(
     private val dataModel: UiDataModel,
     private val core: ApplicationCore
 ) : RemoteControlHandler {
+
+    private val log = LogManager.getLogger()
 
     /**
      * For remote control
@@ -162,7 +165,12 @@ class QuickNaviController(
         core.mediaService.play(dataModel.media[selectedItemIndex])
     }
 
-    override fun watchLastMedia() = core.playLast()
+    override fun watchLastMedia() {
+        log.debug("Play last media")
+        core.cacheService.lastByWatchDate()?.let {
+            core.mediaService.play(it)
+        }
+    }
 
     override fun playPause() = throw NotImplementedError()
 

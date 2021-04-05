@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger
 import java.util.ArrayList
 import java.util.concurrent.CountDownLatch
 
-val mutex: Any = Any()
-
 /**
  * @author Encircled on 13/09/2014.
  */
@@ -26,9 +24,8 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
 
     var lastListenersCount = -1
 
-    fun fire(arg: A, bypassThrottling: Boolean = false) = synchronized(mutex) {
-        if (!bypassThrottling && System.currentTimeMillis() - lastExecution < minDelay) return
-
+    fun fire(arg: A, bypassThrottling: Boolean = false) = UiUtil.inNormalThread {
+        if (!bypassThrottling && System.currentTimeMillis() - lastExecution < minDelay) return@inNormalThread
         lastExecution = System.currentTimeMillis()
         doFire(arg)
     }
@@ -39,17 +36,15 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
 
         log.ifVerbose("Fire event $name [$arg], $lastListenersCount listeners")
 
-        Thread {
-            listeners.forEach {
-                val start = System.currentTimeMillis()
-                try {
-                    it.invoke(arg)
-                } finally {
-                    log.ifVerbose("Event $name listener took ${System.currentTimeMillis() - start} ms")
-                    countDown.countDown()
-                }
+        listeners.forEach {
+            val start = System.currentTimeMillis()
+            try {
+                it.invoke(arg)
+            } finally {
+                log.ifVerbose("Event $name listener took ${System.currentTimeMillis() - start} ms")
+                countDown.countDown()
             }
-        }.start()
+        }
 
         uiListeners.forEach {
             UiUtil.inUiThread {
@@ -114,7 +109,7 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
 
         val mediaDurationChange = Event<MediaCharacteristic<Long>>("mediaDurationChange")
 
-        val screenshotAcquired = Event<MediaCharacteristic<String>>("screenshotAcquired", verbose = false)
+        val screenshotAcquired = Event<MediaCharacteristic<String>>("screenshotAcquired")
 
         val volumeChanged = Event<Int>("volumeChanged")
 

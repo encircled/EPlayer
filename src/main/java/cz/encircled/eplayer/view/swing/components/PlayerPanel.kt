@@ -25,9 +25,8 @@ import java.awt.image.BufferedImage
 
 
 class PlayerPanel(
-    appView: AppView,
+    private val appView: AppView,
     private val core: ApplicationCore,
-    private val mediaPlayer: EmbeddedMediaPlayerComponent,
     private val menu: JMenuBar,
 ) : BaseJPanel(BorderLayout()) {
 
@@ -38,6 +37,8 @@ class PlayerPanel(
     private val blankCursor: Cursor
 
     private val playerControls: PlayerControls = PlayerControls(appView, core)
+
+    private lateinit var mediaPlayer: EmbeddedMediaPlayerComponent
 
     private val listener = object : MouseAdapter() {
 
@@ -80,14 +81,24 @@ class PlayerPanel(
         val cursorImg = BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB)
         blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, Point(0, 0), "blank cursor")
 
-        add(mediaPlayer, BorderLayout.CENTER)
         add(playerControls, BorderLayout.SOUTH)
 
         appView.fullScreenProperty().addNewValueListener {
             if (it) onFullScreen() else onNotFullScreen()
         }
+    }
 
+    fun setPlayer(newPlayer: EmbeddedMediaPlayerComponent) {
+        if (this::mediaPlayer.isInitialized) {
+            remove(mediaPlayer)
+        }
+
+        mediaPlayer = newPlayer
         mediaPlayer.videoSurfaceComponent().addMouseListener(listener)
+        add(mediaPlayer, BorderLayout.CENTER)
+        if (appView.isFullScreen()) {
+            onFullScreen()
+        }
     }
 
     private fun onNotFullScreen() {

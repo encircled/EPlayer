@@ -58,6 +58,9 @@ class MainFrame(
         showQuickNaviScreen()
 
         registerShortcuts(quickNaviComponent)
+
+        playerComponent = PlayerPanel(this, core, jMenuBar)
+        registerShortcuts(playerComponent)
     }
 
     private fun initTitle() {
@@ -68,10 +71,7 @@ class MainFrame(
         }
     }
 
-    override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayerComponent) {
-        playerComponent = PlayerPanel(this, core, mediaPlayer, jMenuBar)
-        registerShortcuts(playerComponent)
-    }
+    override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayerComponent) = playerComponent.setPlayer(mediaPlayer)
 
     override fun showPlayer(countDownLatch: CountDownLatch) = inUiThread {
         try {

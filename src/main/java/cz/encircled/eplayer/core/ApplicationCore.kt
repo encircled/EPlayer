@@ -23,7 +23,6 @@ import kotlin.system.exitProcess
  * Series:
  * - Auto next episode
  *
- * Re-creation of the player
  * Notify if audio thru pass is needed
  * Switch audio thru HDMI automatically?
  * Check display changes
@@ -33,11 +32,11 @@ import kotlin.system.exitProcess
  */
 class ApplicationCore {
 
+    val settings: AppSettings
+
     lateinit var cacheService: CacheService
 
     lateinit var folderScanService: FolderScanService
-
-    val settings: AppSettings
 
     lateinit var mediaService: MediaService
 
@@ -77,11 +76,9 @@ class ApplicationCore {
         this.mediaService = VLCMediaService(this)
 
         Event.audioPassThroughChange.listen {
-            val currentMedia = mediaService.currentMedia()
-            appView.setMediaPlayer(mediaService.createPlayer())
-            if (currentMedia != null) mediaService.play(currentMedia)
+            resetPlayer(appView)
         }
-        appView.setMediaPlayer(mediaService.createPlayer())
+        resetPlayer(appView)
 
         addCloseHook()
         log.debug("Core start finished in ${System.currentTimeMillis() - start}")
@@ -110,16 +107,15 @@ class ApplicationCore {
         }
     }
 
-    fun playLast() {
-        log.debug("Play last media")
-        cacheService.lastByWatchDate()?.let {
-            mediaService.play(it)
-        }
-    }
-
     fun exit() {
         Platform.exit()
         exitProcess(Constants.ZERO)
+    }
+
+    private fun resetPlayer(appView: AppView) {
+        val currentMedia = mediaService.currentMedia()
+        appView.setMediaPlayer(mediaService.createPlayer())
+        if (currentMedia != null) mediaService.play(currentMedia)
     }
 
     private fun addCloseHook() {
