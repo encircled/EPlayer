@@ -2,7 +2,6 @@ package cz.encircled.eplayer.util;
 
 import cz.encircled.eplayer.common.Constants;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
@@ -16,22 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class StringUtil {
 
     private static final char TIME_SEPARATOR = ':';
-
-    public static boolean isSet(@Nullable String s) {
-        return s != null && !s.isEmpty();
-    }
-
-    public static boolean isBlank(@Nullable String s) {
-        return s == null || s.trim().isEmpty();
-    }
-
-    public static boolean isNotSet(String s) {
-        return !isSet(s);
-    }
-
-    public static boolean isNotBlank(String filter) {
-        return !isBlank(filter);
-    }
 
     public static String msToTimeLabel(long ms) {
         long h = TimeUnit.MILLISECONDS.toHours(ms);

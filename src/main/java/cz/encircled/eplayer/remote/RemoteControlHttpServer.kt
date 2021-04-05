@@ -31,10 +31,14 @@ class RemoteControlHttpServer(private val remoteControlHandler: RemoteControlHan
                     "cmd:firstSuggested" -> remoteControlHandler.watchLastMedia()
                     "cmd:playPause" -> remoteControlHandler.playPause()
                     "cmd:back" -> remoteControlHandler.back()
+                    "cmd:forward" -> remoteControlHandler.forward()
+                    "cmd:backward" -> remoteControlHandler.backward()
+                    "cmd:volumeUp" -> remoteControlHandler.volumeUp()
+                    "cmd:volumeDown" -> remoteControlHandler.volumeDown()
                     "cmd:click" -> remoteControlHandler.playSelected()
                 }
             } catch (e: Exception) {
-                log.warn("Command failed", e)
+                log.error("Command failed", e)
             }
 
             val response = "OK"

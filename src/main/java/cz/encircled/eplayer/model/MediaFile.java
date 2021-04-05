@@ -1,6 +1,8 @@
 package cz.encircled.eplayer.model;
 
 import cz.encircled.eplayer.core.ApplicationCore;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -10,6 +12,8 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 
 public class MediaFile {
+
+    private static final Logger log = LogManager.getLogger();
 
     private static final String TO_STRING_FORMAT = "Playable name: %s, path: %s";
 
@@ -76,8 +80,7 @@ public class MediaFile {
             this.fileCreationDate = attr.creationTime().toMillis();
         } catch (IOException e) {
             this.fileCreationDate = 0L;
-            e.printStackTrace();
-            // TODO
+            log.warn("Can't read file attributes", e);
         }
 
         String fullName = file.getName();

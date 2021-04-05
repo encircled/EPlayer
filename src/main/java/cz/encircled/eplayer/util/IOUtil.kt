@@ -1,6 +1,5 @@
 package cz.encircled.eplayer.util
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.model.PlayableMedia
@@ -11,9 +10,8 @@ import java.io.IOException
 import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
-import kotlin.collections.ArrayList
 
-private data class MediaWrapper(val media: ArrayList<PlayableMedia> = ArrayList())
+data class MediaWrapper(val media: List<PlayableMedia>)
 
 object IOUtil {
 
@@ -26,32 +24,38 @@ object IOUtil {
     var BD_ONE_MB: BigDecimal = BD_ONE_KB.multiply(BD_ONE_KB)
     var BD_ONE_GB: BigDecimal = BD_ONE_MB.multiply(BD_ONE_KB)
 
-    private val mapper: ObjectMapper = JsonMapper.getMapper()
+    private val serializer: Serializer = GsonSerializer()
 
     @Throws(IOException::class)
     fun getPlayableJson(): List<PlayableMedia> {
+        val start = System.currentTimeMillis()
+        log.info("getPlayableJson start")
         createIfMissing(quickNaviPath, false)
-        return mapper.readValue(Files.readAllBytes(Paths.get(quickNaviPath)), MediaWrapper::class.java).media
+        val readAllBytes = Files.readAllBytes(Paths.get(quickNaviPath))
+        log.info("getPlayableJson readAllBytes: {}ms", System.currentTimeMillis() - start)
+
+        val result = serializer.toObject(readAllBytes, MediaWrapper::class.java).media
+        log.info("getPlayableJson end: {}ms", System.currentTimeMillis() - start)
+        return result
     }
 
 
     @JvmStatic
     @Throws(IOException::class)
     fun savePlayable(settings: Map<String, PlayableMedia>) {
-        Files.write(Paths.get(quickNaviPath), mapper.writeValueAsBytes(MediaWrapper(ArrayList(settings.values))))
+        Files.writeString(Paths.get(quickNaviPath), serializer.fromObject(MediaWrapper(settings.values.toList())))
     }
-
 
     @JvmStatic
     @Throws(IOException::class)
     fun getSettings(): AppSettings {
-        return mapper.readValue(Files.readAllBytes(Paths.get(pathToSettings)), AppSettings::class.java)
+        return serializer.toObject(Files.readAllBytes(Paths.get(pathToSettings)), AppSettings::class.java)
     }
 
     @JvmStatic
     @Throws(IOException::class)
     fun saveSettings(settings: AppSettings) {
-        Files.write(Paths.get(pathToSettings), mapper.writeValueAsBytes(settings))
+        Files.writeString(Paths.get(pathToSettings), serializer.fromObject(settings))
     }
 
     /**

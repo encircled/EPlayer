@@ -1,12 +1,14 @@
 package cz.encircled.eplayer.view.controller
 
 import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.service.CancelableExecution
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.view.*
 import cz.encircled.eplayer.view.UiUtil.inUiThread
+import java.net.URLEncoder
 import java.util.regex.Pattern
 import javax.swing.SwingUtilities
 
@@ -63,6 +65,12 @@ class QuickNaviController(
         core.cacheService.deleteEntry(media)
     }
 
+    fun doWebSearch(media: PlayableMedia) {
+        val cleanedName = URLEncoder.encode(media.name(), "UTF-8")
+        Runtime.getRuntime()
+            .exec(arrayOf("PowerShell", "start chrome https://www.kinopoisk.ru/index.php?kp_query=$cleanedName"))
+    }
+
     fun onFolderSelect(path: String, forceRefresh: Boolean = false) {
         if (dataModel.selectedFolder.get() != path) {
             currentFolderScanning?.cancel()
@@ -116,9 +124,6 @@ class QuickNaviController(
         }
     }
 
-    override fun toFullScreen() = throw NotImplementedError()
-    override fun back() = throw NotImplementedError()
-
     override fun goToNextMedia() = inUiThread {
         selectedItemIndex = nextIndex(selectedItemIndex, dataModel.media)
 
@@ -137,6 +142,20 @@ class QuickNaviController(
             selectedItemIndex = dataModel.media.size - 1
         }
         dataModel.selectedMedia.set(dataModel.media[selectedItemIndex])
+    }
+
+    override fun forward() {
+        val media = dataModel.selectedMedia.get()
+        if (media is MediaSeries) {
+            media.toNext()
+        }
+    }
+
+    override fun backward() {
+        val media = dataModel.selectedMedia.get()
+        if (media is MediaSeries) {
+            media.toPrev()
+        }
     }
 
     override fun playSelected() = inUiThread {

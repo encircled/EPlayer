@@ -99,7 +99,7 @@ class PlayerControls(private val core: ApplicationCore, private val fxView: FxVi
 
         playerToggleButton.id = "play"
         playerToggleButton.onAction = EventHandler { e: ActionEvent? -> core.mediaService.toggle() }
-        Event.playingChanged.listenUiThread { arg: Boolean? -> playerToggleButton.isSelected = !arg!! }
+        Event.playingChanged.listenUiThread { playerToggleButton.isSelected = !it.characteristic }
 
         volumeButton.id = "mute"
         volumeButton.onAction = EventHandler {

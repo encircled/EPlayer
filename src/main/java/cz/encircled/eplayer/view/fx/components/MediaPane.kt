@@ -95,7 +95,7 @@ class MediaPane(
         }
 
         val infoText =
-            if (media.time > 0L) "watched ${media.formattedWatchDate}, ${media.path}"
+            if (media.time.get() > 0L) "watched ${media.formattedWatchDate}, ${media.path}"
             else media.path
         val info = iconButton("info", infoText) {}
 

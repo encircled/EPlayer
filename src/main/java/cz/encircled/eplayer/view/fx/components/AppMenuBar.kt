@@ -69,8 +69,8 @@ class AppMenuBar(private val core: ApplicationCore, private val fxView: FxView, 
         val play = MenuItem(Localization.play.ln())
         play.onAction = EventHandler { core.mediaService.toggle() }
         play.accelerator = KeyCodeCombination(KeyCode.SPACE)
-        Event.playingChanged.listenUiThread { isPlaying: Boolean ->
-            play.text = if (isPlaying) Localization.pause.ln() else Localization.play.ln()
+        Event.playingChanged.listenUiThread {
+            play.text = if (it.characteristic) Localization.pause.ln() else Localization.play.ln()
         }
 
         subtitles = Menu(Localization.subtitles.ln())

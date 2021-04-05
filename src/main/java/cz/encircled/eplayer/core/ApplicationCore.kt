@@ -3,7 +3,6 @@ package cz.encircled.eplayer.core
 import cz.encircled.eplayer.common.Constants
 import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.model.MediaFile
-import cz.encircled.eplayer.model.SingleMedia
 import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.remote.RemoteControlHttpServer
 import cz.encircled.eplayer.service.*
@@ -16,19 +15,21 @@ import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.controller.RemoteControlHandlerImpl
 import javafx.application.Platform
 import org.apache.logging.log4j.LogManager
-import uk.co.caprica.vlcj.factory.MediaPlayerFactory
-import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import kotlin.system.exitProcess
 
 /**
- * TODO
+ * TODO list
  *
  * Series:
  * - Auto next episode
  *
+ * Re-creation of the player
+ * Notify if audio thru pass is needed
+ * Switch audio thru HDMI automatically?
  * Check display changes
+ * Scan all folders on start
  *
- * TODO CHECK TRUEHD DOLBY
+ * CHECK TRUEHD DOLBY
  */
 class ApplicationCore {
 
@@ -45,6 +46,8 @@ class ApplicationCore {
     lateinit var seriesFinder: SeriesFinder
 
     lateinit var metaInfoService: MetadataInfoService
+
+    lateinit var mediaSettingsSuggestions: MediaSettingsSuggestions
 
     private lateinit var remoteControlServer: RemoteControlHttpServer
 
@@ -64,6 +67,7 @@ class ApplicationCore {
         val start = System.currentTimeMillis()
         this.appView = appView
         this.metaInfoService = JavacvMetadataInfoService()
+        this.mediaSettingsSuggestions = MediaSettingsSuggestionsImpl()
         this.cacheService = JsonCacheService(this)
         this.folderScanService = OnDemandFolderScanner(this)
 
@@ -71,6 +75,12 @@ class ApplicationCore {
         this.remoteControlServer = RemoteControlHttpServer(RemoteControlHandlerImpl(this, playerRemoteControl))
 
         this.mediaService = VLCMediaService(this)
+
+        Event.audioPassThroughChange.listen {
+            val currentMedia = mediaService.currentMedia()
+            appView.setMediaPlayer(mediaService.createPlayer())
+            if (currentMedia != null) mediaService.play(currentMedia)
+        }
         appView.setMediaPlayer(mediaService.createPlayer())
 
         addCloseHook()

@@ -3,6 +3,7 @@ package cz.encircled.eplayer.view.swing.components
 import com.formdev.flatlaf.ui.FlatRootPaneUI
 import com.formdev.flatlaf.ui.JBRCustomDecorations
 import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.*
 import cz.encircled.eplayer.view.UiUtil.inUiThread
@@ -42,7 +43,9 @@ class MainFrame(
     private val actions = SwingActions(this, core, quickNaviController)
 
     init {
-        title = AppView.TITLE // TODO NAME OF MEDIA
+        initTitle()
+
+        layout = BorderLayout()
         minimumSize = Dimension(AppView.MIN_HEIGHT, AppView.MIN_WIDTH)
         size = Dimension(1920, 1080)
         defaultCloseOperation = EXIT_ON_CLOSE
@@ -52,11 +55,17 @@ class MainFrame(
 
         quickNaviComponent = QuickNaviPanel(dataModel, quickNaviController, this)
 
-        layout = BorderLayout()
-
         showQuickNaviScreen()
 
         registerShortcuts(quickNaviComponent)
+    }
+
+    private fun initTitle() {
+        title = AppView.TITLE
+        Event.playingChanged.listenUiThread {
+            title = if (it.characteristic) "${AppView.TITLE} - ${it.playableMedia?.name()}"
+            else AppView.TITLE
+        }
     }
 
     override fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayerComponent) {

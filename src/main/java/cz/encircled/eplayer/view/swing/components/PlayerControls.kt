@@ -115,15 +115,10 @@ class PlayerControls(appView: AppView, val core: ApplicationCore) : BaseJPanel()
             volumeText.text = "$volume %"
             volumeToggle.isSelected = volume == 0
 
-            if (!isAdjusting) {
-                saveLastVolumeToSettings(volume)
-                core.mediaService.volume = volume
-            }
+            if (!isAdjusting) core.mediaService.volume = volume
         }
-    }
 
-    private fun saveLastVolumeToSettings(value: Int) = UiUtil.inNormalThread {
-        core.settings.lastVolume(value)
+        Event.volumeChanged.listenUiThread { volumeSlider.value = it }
     }
 
 }

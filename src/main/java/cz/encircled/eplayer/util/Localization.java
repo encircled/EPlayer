@@ -20,6 +20,8 @@ public enum Localization {
 
     openQuickNavi,
 
+    audioPassThrough,
+
     errorTitle,
 
     msgQnFileCorrupted,

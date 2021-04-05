@@ -5,7 +5,11 @@ import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.service.Cancelable
 import cz.encircled.eplayer.view.UiUtil
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import java.util.ArrayList
+import java.util.concurrent.CountDownLatch
+
+val mutex: Any = Any()
 
 /**
  * @author Encircled on 13/09/2014.
@@ -22,7 +26,7 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
 
     var lastListenersCount = -1
 
-    fun fire(arg: A, bypassThrottling: Boolean = false) {
+    fun fire(arg: A, bypassThrottling: Boolean = false) = synchronized(mutex) {
         if (!bypassThrottling && System.currentTimeMillis() - lastExecution < minDelay) return
 
         lastExecution = System.currentTimeMillis()
@@ -30,6 +34,42 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
     }
 
     private fun doFire(arg: A) {
+        updateListenersCount()
+        val countDown = CountDownLatch(lastListenersCount)
+
+        log.ifVerbose("Fire event $name [$arg], $lastListenersCount listeners")
+
+        Thread {
+            listeners.forEach {
+                val start = System.currentTimeMillis()
+                try {
+                    it.invoke(arg)
+                } finally {
+                    log.ifVerbose("Event $name listener took ${System.currentTimeMillis() - start} ms")
+                    countDown.countDown()
+                }
+            }
+        }.start()
+
+        uiListeners.forEach {
+            UiUtil.inUiThread {
+                try {
+                    val start = System.currentTimeMillis()
+                    it.invoke(arg)
+                    if (verbose) {
+                        log.debug("Event $name listener took ${System.currentTimeMillis() - start}")
+                    }
+                } finally {
+                    countDown.countDown()
+                }
+            }
+        }
+
+        countDown.await()
+        log.ifVerbose("Finished firing event $name")
+    }
+
+    private fun updateListenersCount() {
         val totalListenersCount = listeners.size + uiListeners.size
         if (lastListenersCount == -1) {
             lastListenersCount = totalListenersCount
@@ -37,27 +77,6 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
             log.warn("Count of listeners has changed for event $this: $lastListenersCount vs $totalListenersCount")
         }
         lastListenersCount = totalListenersCount
-
-        if (verbose) {
-            log.debug("Fire event $name, $totalListenersCount listeners")
-        }
-        Thread {
-            val start = System.currentTimeMillis()
-            listeners.forEach { it.invoke(arg) }
-            if (verbose) {
-                log.debug("Event $name: ${System.currentTimeMillis() - start}")
-            }
-        }.start()
-
-        uiListeners.forEach {
-            UiUtil.inUiThread {
-                val start = System.currentTimeMillis()
-                it.invoke(arg)
-                if (verbose) {
-                    log.debug("Event $name: ${System.currentTimeMillis() - start}")
-                }
-            }
-        }
     }
 
     fun listen(listener: (A) -> Unit) = listeners.add(listener)
@@ -72,31 +91,41 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
     override fun toString(): String = "Event name [$name]"
 
     companion object {
-        var contextInitialized = Event<ApplicationCore>("contextInitialized")
+        val contextInitialized = Event<ApplicationCore>("contextInitialized")
 
-        var mediaTimeChange = Event<MediaCharacteristic<Long>>("mediaTimeChange", 1000, false)
+        val mediaTimeChange = Event<MediaCharacteristic<Long>>("mediaTimeChange", 1000, false)
 
-        var subtitlesUpdated = Event<List<GenericTrackDescription>>("subtitlesUpdated")
+        val subtitlesUpdated = Event<List<GenericTrackDescription>>("subtitlesUpdated")
 
-        var audioTracksUpdated = Event<List<GenericTrackDescription>>("audioTracksUpdated")
+        val audioTracksUpdated = Event<List<GenericTrackDescription>>("audioTracksUpdated")
 
         /**
          * New subtitle selected
          */
-        var subtitleChanged = Event<MediaCharacteristic<Int>>("subtitleChanged")
+        val subtitleChanged = Event<MediaCharacteristic<Int>>("subtitleChanged")
 
         /**
          * New audio track selected
          */
-        var audioTrackChanged = Event<MediaCharacteristic<Int>>("audioChanged")
+        val audioTrackChanged = Event<MediaCharacteristic<Int>>("audioChanged")
 
         // True if playing
-        var playingChanged = Event<Boolean>("playingChanged")
+        val playingChanged = Event<OptionalMediaCharacteristic<Boolean>>("playingChanged")
 
-        var mediaDurationChange = Event<MediaCharacteristic<Long>>("mediaDurationChange")
+        val mediaDurationChange = Event<MediaCharacteristic<Long>>("mediaDurationChange")
 
-        var screenshotAcquired = Event<MediaCharacteristic<String>>("screenshotAcquired", verbose = false)
+        val screenshotAcquired = Event<MediaCharacteristic<String>>("screenshotAcquired", verbose = false)
 
+        val volumeChanged = Event<Int>("volumeChanged")
+
+        /* SETTINGS */
+
+        val audioPassThroughChange = Event<Boolean>("audioPassThroughChange")
+
+    }
+
+    private fun Logger.ifVerbose(msg: String) {
+        if (verbose) debug(msg)
     }
 
 }

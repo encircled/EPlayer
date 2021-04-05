@@ -5,38 +5,32 @@ package cz.encircled.eplayer.remote
  */
 interface RemoteControlHandler {
 
-    fun toFullScreen()
+    fun toFullScreen() {}
 
-    fun back()
+    fun back() {}
 
-    fun goToNextMedia()
+    /**
+     * Go to next media or series episode
+     */
+    fun goToNextMedia() {}
 
-    fun goToPrevMedia()
+    /**
+     * Go to prev media or series episode
+     */
+    fun goToPrevMedia() {}
 
-    fun playSelected()
+    fun forward() {}
 
-    fun watchLastMedia()
+    fun backward() {}
 
-    fun playPause()
+    fun volumeUp() {}
 
-}
+    fun volumeDown() {}
 
-abstract class RemoteControlHandlerWithDefaultDelegate : RemoteControlHandler {
+    fun playSelected() {}
 
-    abstract fun getRemoteControlDelegate(): RemoteControlHandler
+    fun watchLastMedia() {}
 
-    override fun toFullScreen() = getRemoteControlDelegate().toFullScreen()
-
-    override fun back() = getRemoteControlDelegate().back()
-
-    override fun goToNextMedia() = getRemoteControlDelegate().goToNextMedia()
-
-    override fun goToPrevMedia() = getRemoteControlDelegate().goToPrevMedia()
-
-    override fun playSelected() = getRemoteControlDelegate().playSelected()
-
-    override fun watchLastMedia() = getRemoteControlDelegate().watchLastMedia()
-
-    override fun playPause() = getRemoteControlDelegate().playPause()
+    fun playPause() {}
 
 }

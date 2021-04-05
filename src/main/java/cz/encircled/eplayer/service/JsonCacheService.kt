@@ -4,6 +4,7 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.*
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.IOUtil
+import cz.encircled.eplayer.util.Localization
 import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.io.IOException
@@ -30,8 +31,8 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
                 .toMutableMap()
         } catch (e: Exception) {
             cache = HashMap()
-            log.error("Failed to read cache data. Message: {}", e.message)
-//           TODO guiUtil.showMessage(msgQnFileIoFail.ln(), errorTitle.ln());
+            log.error("Failed to read cache data", e)
+            core.appView.showUserMessage(Localization.msgQnFileIoFail.ln())
         }
 
         addEventListeners()
@@ -41,7 +42,7 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
 
     private fun addEventListeners() {
         Event.mediaTimeChange.listen {
-            cache.getValue(it.playableMedia.getId()).time = it.characteristic
+            cache.getValue(it.playableMedia.getId()).time.set(it.characteristic)
         }
         Event.mediaDurationChange.listen {
             cache.getValue(it.playableMedia.getId()).duration.set(it.characteristic)
@@ -84,7 +85,7 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
 
     override fun getCachedMedia(): List<PlayableMedia> = ArrayList(cache.values)
 
-    override fun getPlayedMedia(): List<PlayableMedia> = getCachedMedia().filter { it.time > 0 }
+    override fun getPlayedMedia(): List<PlayableMedia> = getCachedMedia().filter { it.time.get() > 0 }
 
     override fun lastByWatchDate(): PlayableMedia? {
         val p = getCachedMedia().maxWithOrNull(Comparator.comparingLong(PlayableMedia::watchDate))

@@ -2,7 +2,6 @@ package cz.encircled.eplayer.view.controller
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.remote.RemoteControlHandler
-import cz.encircled.eplayer.remote.RemoteControlHandlerWithDefaultDelegate
 import cz.encircled.eplayer.view.Scenes
 
 /**
@@ -10,10 +9,8 @@ import cz.encircled.eplayer.view.Scenes
  */
 class RemoteControlHandlerImpl(
     private val core: ApplicationCore,
-    private val playerRemoteHandler: RemoteControlHandler,
-) : RemoteControlHandlerWithDefaultDelegate() {
-
-    override fun getRemoteControlDelegate(): RemoteControlHandler = playerRemoteHandler
+    private val delegate: RemoteControlHandler,
+) : RemoteControlHandler by delegate {
 
     override fun back() = core.back()
 
@@ -25,7 +22,7 @@ class RemoteControlHandlerImpl(
         if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
             core.mediaService.playNext()
         } else {
-            super.goToNextMedia()
+            delegate.goToNextMedia()
         }
     }
 
@@ -33,8 +30,32 @@ class RemoteControlHandlerImpl(
         if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
             core.mediaService.playPrevious()
         } else {
-            super.goToPrevMedia()
+            delegate.goToPrevMedia()
         }
+    }
+
+    override fun forward() {
+        if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            core.mediaService.setTimePlus(3000)
+        } else {
+            delegate.forward()
+        }
+    }
+
+    override fun backward() {
+        if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            core.mediaService.setTimePlus(-3000)
+        } else {
+            delegate.backward()
+        }
+    }
+
+    override fun volumeUp() {
+        core.mediaService.volume = core.mediaService.volume + 5
+    }
+
+    override fun volumeDown() {
+        core.mediaService.volume = core.mediaService.volume - 5
     }
 
 }

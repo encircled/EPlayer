@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.model
 
+import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.IOUtil
 
 
@@ -11,12 +12,18 @@ data class AppSettings(
 
     var fcOpenLocation: String?,
 
+    var audioPassThrough: Boolean = false,
+
     val maxVolume: Int = 150,
 
     var lastVolume: Int = 100,
 
-    val foldersToScan: ArrayList<String>
+    val foldersToScan: MutableList<String>
 ) {
+
+    init {
+        Event.volumeChanged.listen { lastVolume(it) }
+    }
 
     fun setOpenLocation(path: String) {
         fcOpenLocation = path
@@ -30,6 +37,11 @@ data class AppSettings(
 
     fun addFolderToScan(path: String) {
         foldersToScan.add(path)
+        IOUtil.saveSettings(this)
+    }
+
+    fun audioPassThrough(value: Boolean) {
+        audioPassThrough = value
         IOUtil.saveSettings(this)
     }
 

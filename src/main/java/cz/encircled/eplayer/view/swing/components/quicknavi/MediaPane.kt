@@ -36,12 +36,12 @@ class MediaPane(
         preferredSize = Dimension(size)
         maximumSize = Dimension(size)
         background = LIGHTER_BG
-        border(Color(94, 96, 96))
+        border(DARK_BG)
 
-        val bottomInfo = mediaPaneBottomInfo(media, name())
+        val bottomInfo = mediaPaneBottomInfo(media)
 
         val namePanel = gridPanel {
-            background = DEFAULT_BG
+            background = DARK_BG
             padding(8, 5, 5, 5)
 
             nextRow {
@@ -73,21 +73,17 @@ class MediaPane(
             controller.play(media)
         }
 
-        // TODO inner elems
         fun onHover() {
+            bottomInfo.background = MEDIUM_BG
+            namePanel.background = MEDIUM_BG
+        }
+
+        fun onExist() {
             bottomInfo.background = DARK_BG
             namePanel.background = DARK_BG
         }
 
-        fun onExist() {
-            bottomInfo.background = DEFAULT_BG
-            namePanel.background = DEFAULT_BG
-        }
-
-        addMouseListener(object : MouseAdapter() {
-            override fun mouseEntered(e: MouseEvent) = onHover()
-            override fun mouseExited(e: MouseEvent) = onExist()
-        })
+        onHover(::onHover, ::onExist)
 
         dataModel.selectedMedia.addNewValueListener {
             if (media == it) onHover() else onExist()
@@ -101,21 +97,19 @@ class MediaPane(
     }
 
     fun name(): String = media.name()
-    /*(
-        if (media is MediaSeries) "${media.name.trim()}- Episode ${media.currentEpisode.get() + 1}"
-        else media.mediaFile().name
-        ).replace(".", " ")*/
 
-    private fun mediaPaneBottomInfo(media: PlayableMedia, mediaName: String): Component {
+    private fun mediaPaneBottomInfo(media: PlayableMedia): Component {
         val bottomInfo = flowPanel(align = FlowLayout.RIGHT) {
             padding(6)
+            background = DARK_BG
         }
 
-        val timeLabel = JLabel(media.formattedCurrentTime + " / " + StringUtil.msToTimeLabel(media.duration.get()))
+        val timeLabel = JLabel(getTimeLabel(media))
         val listener: (Number) -> Unit = {
-            timeLabel.text = media.formattedCurrentTime + " / " + StringUtil.msToTimeLabel(media.duration.get())
+            timeLabel.text = getTimeLabel(media)
         }
         media.duration.addNewValueListener(listener).cancelOnRemove()
+        media.time.addNewValueListener(listener).cancelOnRemove()
 
         if (media is MediaSeries) {
             media.currentEpisode.addNewValueListener {
@@ -124,15 +118,16 @@ class MediaPane(
         }
 
         val onlineSearchIcon = iconButton("search.png") {
-            val cleanedName = URLEncoder.encode(mediaName, "UTF-8")
-            Runtime.getRuntime()
-                .exec(arrayOf("PowerShell", "start chrome https://www.kinopoisk.ru/index.php?kp_query=$cleanedName"))
+            controller.doWebSearch(media)
         }
+
         val deleteIcon = iconButton("trash.png") {
             controller.deleteEntry(media)
             removeSelf()
         }
+
         val nextSeries = iconButton("arrow-right.png") {
+            // TODO not good
             (media as MediaSeries).toNext()
         }
         val prevSeries = iconButton("arrow-left.png") {
@@ -140,13 +135,13 @@ class MediaPane(
         }
 
         val infoText =
-            if (media.time > 0L) "watched ${media.formattedWatchDate}, ${media.path}"
+            if (media.time.get() > 0L) "watched ${media.formattedWatchDate}, ${media.path}"
             else media.path
-        val info = iconButton("info.png", infoText) {}
 
         val icons = flowPanel(6, 0) {
             isOpaque = false
-            add(info)
+
+            add(iconButton("info.png", infoText))
         }
 
         if (media is MediaSeries) {
@@ -159,5 +154,8 @@ class MediaPane(
 
         return bottomInfo.addAll(timeLabel, icons)
     }
+
+    private fun getTimeLabel(media: PlayableMedia) =
+        media.formattedCurrentTime + " / " + StringUtil.msToTimeLabel(media.duration.get())
 
 }

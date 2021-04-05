@@ -6,14 +6,10 @@
                 <pattern>%d{HH:mm:ss.SSS} [%-5level] [%t] %logger{36} - %msg%n</pattern>
             </PatternLayout>
         </File>
-        <Console name="STDOUT" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%-5level] [%t] %logger{36} - %msg%n"/>
-        </Console>
     </appenders>
     <loggers>
         <root level="DEBUG">
-            <appender-ref ref="file"/>
-            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="FILE"/>
         </root>
     </loggers>
 </configuration>

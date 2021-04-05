@@ -2,7 +2,9 @@ package cz.encircled.eplayer.view.swing.components
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
+import cz.encircled.eplayer.service.Cancelable
 import cz.encircled.eplayer.service.event.Event
+import cz.encircled.eplayer.service.event.MediaCharacteristic
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
@@ -12,6 +14,8 @@ import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.ActionType
 import cz.encircled.eplayer.view.swing.SwingActions
 import cz.encircled.eplayer.view.swing.addAll
+import cz.encircled.eplayer.view.swing.components.base.BaseJMenu
+import cz.encircled.eplayer.view.swing.components.base.RemovalAware
 import java.awt.Toolkit
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
@@ -37,13 +41,16 @@ class SwingMenuBar(
         )
 
         Event.subtitlesUpdated.listenUiThread { tracks: List<GenericTrackDescription> ->
-            updateTrackMenu(subtitles, tracks, core.mediaService.subtitles) {
+            updateTrackMenu(subtitles, tracks, core.mediaService.subtitles, Event.subtitleChanged) {
                 core.mediaService.subtitles = (it.source as RadioItem).id
             }
         }
 
+        Event.audioTrackChanged.listenUiThread {
+            it.characteristic
+        }
         Event.audioTracksUpdated.listenUiThread { tracks: List<GenericTrackDescription> ->
-            updateTrackMenu(audioTracks, tracks, core.mediaService.audioTrack) {
+            updateTrackMenu(audioTracks, tracks, core.mediaService.audioTrack, Event.audioTrackChanged) {
                 core.mediaService.audioTrack = (it.source as RadioItem).id
             }
         }
@@ -94,12 +101,12 @@ class SwingMenuBar(
 
         val play = JMenuItem(Localization.play.ln())
         play.onMenuClick(ActionType.TOGGLE_PLAYER)
-        Event.playingChanged.listenUiThread { isPlaying: Boolean ->
-            play.text = if (isPlaying) Localization.pause.ln() else Localization.play.ln()
+        Event.playingChanged.listenUiThread {
+            play.text = if (it.characteristic) Localization.pause.ln() else Localization.play.ln()
         }
 
-        subtitles = JMenu(Localization.subtitles.ln())
-        audioTracks = JMenu(Localization.audioTrack.ln())
+        subtitles = BaseJMenu(Localization.subtitles.ln())
+        audioTracks = BaseJMenu(Localization.audioTrack.ln())
         subtitles.isEnabled = false
         audioTracks.isEnabled = false
 
@@ -108,7 +115,7 @@ class SwingMenuBar(
     }
 
     private fun toolsMenu(): JMenu {
-        val tools = JMenu(Localization.tools.ln())
+        val tools = BaseJMenu(Localization.tools.ln())
 
         val openQn = JMenuItem(Localization.openQuickNavi.ln())
         openQn.onMenuClick(ActionType.QUICK_NAVI)
@@ -126,7 +133,12 @@ class SwingMenuBar(
             }.start()
         }
 
-        tools.addAll(openQn, deleteMissing)
+        val audioPassThrough = JRadioButtonMenuItem(Localization.audioPassThrough.ln())
+        audioPassThrough.isSelected = core.settings.audioPassThrough
+        audioPassThrough.onMenuClick(ActionType.TOGGLE_AUDIO_PASS_THROUGH)
+        Event.audioPassThroughChange.listenUiThread { audioPassThrough.isSelected = it }
+
+        tools.addAll(openQn, deleteMissing, audioPassThrough)
         return tools
     }
 
@@ -137,6 +149,7 @@ class SwingMenuBar(
         menu: JMenu,
         trackDescriptions: List<GenericTrackDescription>,
         selected: Int,
+        changeEvent: Event<MediaCharacteristic<Int>>,
         eventHandler: ActionListener
     ) {
         menu.removeAll()
@@ -145,7 +158,11 @@ class SwingMenuBar(
             RadioItem(it.description, it.id).apply {
                 isSelected = it.id == selected
                 addActionListener(eventHandler)
-                this.model.setGroup(buttonGroup)
+                this.model.group = buttonGroup
+
+                changeEvent.listenUiThread { newValue ->
+                    isSelected = this.id == newValue.characteristic
+                }.cancelOnRemove()
             }
         }.forEach {
             menu.add(it)
@@ -157,6 +174,10 @@ class SwingMenuBar(
         this.addActionListener { swingActions.actions.getValue(type).action.invoke() }
     }
 
-    private class RadioItem(description: String, val id: Int) : JRadioButtonMenuItem(description)
+    private class RadioItem(description: String, val id: Int) : JRadioButtonMenuItem(description), RemovalAware {
+
+        override val cancelableListeners: MutableList<Cancelable> = ArrayList()
+
+    }
 
 }

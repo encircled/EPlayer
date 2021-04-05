@@ -27,12 +27,6 @@ import uk.co.caprica.vlcj.player.embedded.EmbeddedMediaPlayer
 import java.io.File
 import java.util.concurrent.CountDownLatch
 
-/**
- * TODO:
- * - remember subtitles
- * - Set duration after start, auto next series
- * - Toggle in fullscreen
- */
 fun main() {
     Application.launch(FxView::class.java)
 }

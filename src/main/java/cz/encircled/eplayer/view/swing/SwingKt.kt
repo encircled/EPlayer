@@ -10,11 +10,33 @@ import java.awt.Component
 import java.awt.FlowLayout
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.*
 import javax.swing.border.EmptyBorder
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Document
+
+fun JComponent.onHover(onEnter: () -> Unit, onLeft: () -> Unit) {
+    addMouseListener(object : MouseAdapter() {
+
+        var isInside: AtomicBoolean = AtomicBoolean(false)
+
+        override fun mouseEntered(e: MouseEvent) {
+            if (isInside.compareAndSet(false, true)) {
+                onEnter.invoke()
+            }
+        }
+
+        override fun mouseExited(e: MouseEvent) {
+            if (e.point.x < 0 || e.point.x >= this@onHover.width || e.point.y < 0 || e.point.y >= this@onHover.height) {
+                if (isInside.compareAndSet(true, false)) {
+                    onLeft.invoke()
+                }
+            }
+        }
+    })
+}
 
 fun JComponent.onClick(callback: (e: MouseEvent) -> Unit) {
     addMouseListener(object : MouseAdapter() {
@@ -85,7 +107,7 @@ fun flowPanel(
 ): BaseJPanel =
     BaseJPanel(FlowLayout(align, hgap, vhap)).apply { this.init() }
 
-fun iconButton(clazz: String, tooltip: String = "", group: ButtonGroup? = null, onClick: () -> Unit): Component =
+fun iconButton(clazz: String, tooltip: String = "", group: ButtonGroup? = null, onClick: () -> Unit = {}): Component =
     ToggleButton(clazz).apply {
         onClick { onClick() }
         this.toolTipText = tooltip

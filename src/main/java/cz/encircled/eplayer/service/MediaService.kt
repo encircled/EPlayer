@@ -12,6 +12,8 @@ interface MediaService {
     var subtitles: Int
     var audioTrack: Int
 
+    fun currentMedia(): PlayableMedia?
+
     fun createPlayer(): EmbeddedMediaPlayerComponent
 
     fun releasePlayer()

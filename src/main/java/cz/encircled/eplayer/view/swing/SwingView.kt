@@ -1,8 +1,8 @@
 package cz.encircled.eplayer.view.swing
 
 import com.formdev.flatlaf.FlatDarculaLaf
-import com.formdev.flatlaf.ui.JBRCustomDecorations
 import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.view.SwingEUiExecutor
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiUtil
@@ -14,17 +14,18 @@ import javax.swing.JFrame
 import javax.swing.UIManager
 
 
-fun main() {
-    SwingView()
+fun main(args: Array<String>) {
+    SwingView(args)
 }
 
-class SwingView {
+class SwingView(args: Array<String>) {
 
     private val log = LogManager.getLogger()
-
     private val core: ApplicationCore
 
     init {
+        log.info("INPUT ARGS: ${args.joinToString()}")
+
         val start = System.currentTimeMillis()
         FlatDarculaLaf.install()
         JFrame.setDefaultLookAndFeelDecorated(true)
@@ -41,6 +42,13 @@ class SwingView {
         mainFrame.isVisible = true
 
         log.debug("UI start finished in ${System.currentTimeMillis() - start}")
+
+        if (args.isNotEmpty()) {
+            Event.contextInitialized.listen {
+                log.info("Play input video: ${args[0]}")
+                it.mediaService.play(args[0])
+            }
+        }
 
         Thread {
             core.delayedInit(mainFrame, quickNaviController)

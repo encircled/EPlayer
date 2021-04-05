@@ -1,24 +1,26 @@
 package cz.encircled.eplayer.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.util.DateUtil
 import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.util.StringUtil
-import javafx.beans.property.IntegerPropertyBase
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
 import java.io.File
 import kotlin.collections.ArrayList
 import kotlin.math.max
 import kotlin.math.min
+import com.google.gson.annotations.SerializedName
 
 /**
  * @author encir on 29-Aug-20.
  */
-interface PlayableMedia {
+abstract class PlayableMedia {
 
-    fun getId(): String
+    abstract fun getId(): String
+
+    @SerializedName("type")
+    private val typeName: String = this.javaClass.name
 
     val formattedExtension: String
         get() = mediaFile().extension
@@ -39,41 +41,41 @@ interface PlayableMedia {
         get() = DateUtil.daysBetweenLocalized(watchDate)
 
     val formattedCurrentTime: String
-        get() = StringUtil.msToTimeLabel(time)
+        get() = StringUtil.msToTimeLabel(time.get())
 
     val formattedSize: String
         get() = IOUtil.byteCountToDisplaySize(mediaFile().size)
 
-    var time: Long
+    abstract var time: SimpleLongProperty
 
-    var duration: SimpleLongProperty
+    abstract var duration: SimpleLongProperty
 
-    var preferredSubtitle: Int?
+    abstract var preferredSubtitle: Int?
 
-    var preferredAudio: Int?
+    abstract var preferredAudio: Int?
 
-    var watchDate: Long
+    abstract var watchDate: Long
 
-    val path: String
+    abstract val path: String
 
-    fun mediaFile(): MediaFile
+    abstract fun mediaFile(): MediaFile
 
     fun hasScreenshot(): Boolean = File(filePathToScreenshot).exists()
 
-    fun name(): String
+    abstract fun name(): String
 
 }
 
 data class SingleMedia(
     override val path: String,
-    @JsonIgnore
+    @Transient
     private val mediaFile: MediaFile = MediaFile(path),
-    override var time: Long = 0,
+    override var time: SimpleLongProperty = SimpleLongProperty(0),
     override var duration: SimpleLongProperty = SimpleLongProperty(0),
     override var watchDate: Long = 0,
     override var preferredSubtitle: Int? = null,
     override var preferredAudio: Int? = null,
-) : PlayableMedia {
+) : PlayableMedia() {
 
     override fun getId(): String = path
 
@@ -92,22 +94,26 @@ data class SingleMedia(
 }
 
 data class MediaSeries(
-        val name: String,
-        val series: ArrayList<SingleMedia>
-) : PlayableMedia {
+    val name: String,
+    val series: ArrayList<SingleMedia>
+) : PlayableMedia() {
 
-    @JsonIgnore
-    var currentEpisode: IntegerPropertyBase = SimpleIntegerProperty()
+    @Transient
+    private val creditsTime = 1000 * 60
 
-    private val creditsTime = 1000 * 60;
+    @Transient
+    val currentEpisode: SimpleIntegerProperty = SimpleIntegerProperty()
+
+    // For Gson
+    constructor() : this("", arrayListOf())
 
     init {
         series.sortBy { it.path }
 
-        var i = series.indexOfLast { it.time > 0 }
+        var i = series.indexOfLast { it.time.get() > 0 }
 
         // Go to next episode if watch time is lesser than average credits time
-        if (i >= 0 && i < series.size - 1 && series[i].duration.get() - series[i].time < creditsTime) i++
+        if (i >= 0 && i < series.size - 1 && series[i].duration.get() - series[i].time.get() < creditsTime) i++
 
         currentEpisode.set(max(i, 0))
     }
@@ -122,7 +128,7 @@ data class MediaSeries(
             current().watchDate = value
         }
 
-    override var time: Long
+    override var time: SimpleLongProperty
         get() = current().time
         set(value) {
             current().time = value

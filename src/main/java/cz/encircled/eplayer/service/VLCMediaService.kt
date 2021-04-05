@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.service
 
+import com.sun.jna.NativeLibrary
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.model.MediaSeries
@@ -7,11 +8,16 @@ import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.model.SingleMedia
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.service.event.MediaCharacteristic
+import cz.encircled.eplayer.service.event.OptionalMediaCharacteristic
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.UiUtil
 import org.apache.logging.log4j.LogManager
+import uk.co.caprica.vlcj.binding.RuntimeUtil
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory
+import uk.co.caprica.vlcj.factory.discovery.NativeDiscovery
+import uk.co.caprica.vlcj.factory.discovery.strategy.NativeDiscoveryStrategy
+import uk.co.caprica.vlcj.factory.discovery.strategy.WindowsNativeDiscoveryStrategy
 import uk.co.caprica.vlcj.media.Meta
 import uk.co.caprica.vlcj.media.TrackInfo
 import uk.co.caprica.vlcj.player.base.MediaPlayer
@@ -25,7 +31,6 @@ import java.util.concurrent.CountDownLatch
  */
 class VLCMediaService(private val core: ApplicationCore) : MediaService {
 
-    // Enable HDMI audio passthrough for Dolby/DTS audio TODO configurable
     private val VLC_ARGS = "--mmdevice-passthrough=2"
     private val log = LogManager.getLogger()
     private var currentTime: Long = 0
@@ -36,26 +41,37 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     override var volume: Int
         get() = player.audio().volume()
         set(value) {
-            player.audio().setVolume(value)
+            if (value != player.audio().volume()) {
+                player.audio().setVolume(value)
+                Event.volumeChanged.fire(value)
+            }
         }
 
     override var subtitles: Int
         get() = player.subpictures().track()
         set(value) {
-            player.subpictures().setTrack(value)
-            Event.subtitleChanged.fire(MediaCharacteristic(current!!, value))
+            if (value != subtitles) {
+                player.subpictures().setTrack(value)
+                Event.subtitleChanged.fire(MediaCharacteristic(current!!, value))
+            }
         }
 
     override var audioTrack: Int
         get() = player.audio().track()
         set(value) {
-            log.debug("Set audio track with id {}", value)
-            player.audio().setTrack(value)
-            Event.audioTrackChanged.fire(MediaCharacteristic(current!!, value))
+            if (value != audioTrack) {
+                log.debug("Set audio track with id {}", value)
+                player.audio().setTrack(value)
+                Event.audioTrackChanged.fire(MediaCharacteristic(current!!, value))
+            }
         }
 
+    override fun currentMedia(): PlayableMedia? = current
+
     override fun createPlayer(): EmbeddedMediaPlayerComponent {
-        val mediaPlayerFactory = MediaPlayerFactory(VLC_ARGS)
+        releasePlayer()
+
+        val mediaPlayerFactory = MediaPlayerFactory(if (core.settings.audioPassThrough) VLC_ARGS else "")
         val playerComponent = EmbeddedMediaPlayerComponent(mediaPlayerFactory, null, null, null, null)
 
         this.player = playerComponent.mediaPlayer()
@@ -67,9 +83,11 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
     // TODO double check - not to block native event thread
     private val playerEventHandler = object : MediaPlayerEventAdapter() {
 
-        override fun playing(mediaPlayer: MediaPlayer) = Event.playingChanged.fire(true)
+        override fun playing(mediaPlayer: MediaPlayer) =
+            Event.playingChanged.fire(OptionalMediaCharacteristic(current, true))
 
-        override fun paused(mediaPlayer: MediaPlayer) = Event.playingChanged.fire(false)
+        override fun paused(mediaPlayer: MediaPlayer) =
+            Event.playingChanged.fire(OptionalMediaCharacteristic(current, false))
 
         override fun mediaPlayerReady(mediaPlayer: MediaPlayer) {
             log.debug("Media parsed - {}", current)
@@ -93,6 +111,8 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
 
             Event.subtitlesUpdated.fire(textTracks)
             Event.audioTracksUpdated.fire(audioTracks)
+
+            setAudioAndSubtitleTracks(audioTracks, textTracks)
         }
 
         override fun finished(mediaPlayer: MediaPlayer) {
@@ -130,6 +150,27 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
 
     }
 
+    private fun setAudioAndSubtitleTracks(
+        audioTracks: List<GenericTrackDescription>,
+        textTracks: List<GenericTrackDescription>
+    ) {
+        if (current?.preferredAudio != null) {
+            current?.preferredAudio?.let { audioTrack = it }
+            current?.preferredSubtitle?.let { subtitles = it }
+        } else {
+            // TODO language to be a setting
+            // TODO when only 1 is set
+            val suggestedAudio = core.mediaSettingsSuggestions.suggestAudioTrack("rus", audioTracks)
+            audioTrack = suggestedAudio.track.id
+            subtitles =
+                core.mediaSettingsSuggestions.suggestSubtitle(
+                    "rus",
+                    suggestedAudio.isPreferredLanguage,
+                    textTracks
+                ).track.id
+        }
+    }
+
     override fun releasePlayer() {
         if (this::player.isInitialized) {
             stop()
@@ -159,9 +200,7 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         UiUtil.inNormalThread {
             player.media().start(path)
 
-            setTime(media.time)
-            media.preferredAudio?.let { audioTrack = it }
-            media.preferredSubtitle?.let { subtitles = it }
+            setTime(media.time.get())
         }
 
         log.debug("Playing started")
