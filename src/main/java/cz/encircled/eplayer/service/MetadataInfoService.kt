@@ -31,6 +31,7 @@ class JavacvMetadataInfoService : MetadataInfoService {
                     val media = queue.keys.first()
 
                     if (isApplicable(media)) {
+                        println("queue size: ${queue.size}")
                         try {
                             doFetchMetadata(media, converter)
                         } catch (e: FrameGrabber.Exception) {
@@ -42,7 +43,6 @@ class JavacvMetadataInfoService : MetadataInfoService {
                     }
 
                     queue.remove(media)
-                    println("Queue size ${queue.size}")
                 }
                 Thread.sleep(100)
             }
@@ -76,10 +76,7 @@ class JavacvMetadataInfoService : MetadataInfoService {
     }
 
     override fun <T : PlayableMedia> fetchMetadataAsync(media: T): T {
-        if (isApplicable(media)) {
-            println("queue size: ${queue.size}")
-            queue[media] = 0
-        }
+        queue[media] = 0
         return media
     }
 

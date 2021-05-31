@@ -1,19 +1,16 @@
 package cz.encircled.eplayer.util
 
 import com.google.gson.*
-import cz.encircled.eplayer.model.MediaSeries
-import cz.encircled.eplayer.model.SingleMedia
-import java.lang.reflect.Type
-import com.google.gson.Gson
-
-import com.google.gson.GsonBuilder
+import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.model.PlayableMedia
+import cz.encircled.eplayer.model.SingleMedia
 import javafx.beans.property.SimpleLongProperty
+import java.lang.reflect.Type
 
 
 interface Serializer {
 
-    fun <T> toObject(string: ByteArray, clazz: Class<T>): T
+    fun <T> toObject(string: ByteArray, clazz: Class<T>): T = toObject(String(string), clazz)
 
     fun <T> toObject(string: String, clazz: Class<T>): T
 
@@ -37,8 +34,6 @@ class GsonSerializer : Serializer {
             .create()
     }
 
-    override fun <T> toObject(string: ByteArray, clazz: Class<T>): T = toObject(String(string), clazz)
-
     override fun <T> toObject(string: String, clazz: Class<T>): T {
         return gson.fromJson(string, clazz)
     }
@@ -61,8 +56,14 @@ class GsonSerializer : Serializer {
                         time = SimpleLongProperty(jsonObject["time"].asLong),
                         watchDate = jsonObject["watchDate"].asLong,
                         duration = SimpleLongProperty(jsonObject["duration"].asLong),
-                        preferredAudio = jsonObject["preferredAudio"]?.asInt,
-                        preferredSubtitle = jsonObject["preferredSubtitle"]?.asInt
+                        preferredAudio = context.deserialize<GenericTrackDescription>(
+                            jsonObject["preferredAudio"],
+                            GenericTrackDescription::class.java
+                        ),
+                        preferredSubtitle = context.deserialize<GenericTrackDescription>(
+                            jsonObject["preferredSubtitle"],
+                            GenericTrackDescription::class.java
+                        )
                     ) as T
                 }
                 return context.deserialize(jsonObject, Class.forName(className))
@@ -72,53 +73,4 @@ class GsonSerializer : Serializer {
         }
     }
 
-}
-
-fun main() {
-    val gson = GsonSerializer()
-
-    val fromObject = gson.fromObject(
-        listOf(
-            SingleMedia(
-                "E:\\video\\Silence.2016.BDRip.1080p.mkv"
-            ),
-            SingleMedia(
-                "E:\\video\\Silence.2016.BDRip.1080p.mkv"
-            ),
-            SingleMedia(
-                "E:\\video\\Silence.2016.BDRip.1080p.mkv"
-            ),
-            MediaSeries(
-                "E:\\video\\Silence.2016.BDRip.1080p.mkv",
-                arrayListOf(
-                    SingleMedia(
-                        "E:\\video\\Silence.2016.BDRip.1080p.mkv"
-                    )
-                )
-            )
-        )
-    )
-
-    val json = gson.fromObject(
-        MediaWrapper(
-            arrayListOf(
-                SingleMedia(
-                    "E:\\video\\Silence.2016.BDRip.1080p.mkv"
-                ),
-                SingleMedia(
-                    "E:\\video\\Silence.2016.BDRip.1080p.mkv"
-                ),
-                MediaSeries(
-                    "E:\\video\\Silence.2016.BDRip.1080p.mkv",
-                    arrayListOf(
-                        SingleMedia(
-                            "E:\\video\\Silence.2016.BDRip.1080p.mkv"
-                        )
-                    )
-                )
-            )
-        )
-    )
-    gson.toObject(json, MediaWrapper::class.java)
-    gson.toObject("{\"media\":" + fromObject + "}", MediaWrapper::class.java)
 }

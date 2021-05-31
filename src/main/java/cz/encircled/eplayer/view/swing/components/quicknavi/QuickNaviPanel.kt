@@ -6,6 +6,7 @@ import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
+import org.apache.logging.log4j.LogManager
 import java.awt.GridBagConstraints
 import java.awt.datatransfer.DataFlavor
 import java.awt.dnd.DnDConstants
@@ -17,8 +18,17 @@ import javax.swing.JScrollPane
 import kotlin.math.max
 import kotlin.math.min
 
-class QuickNaviPanel(val dataModel: UiDataModel, val quickNaviController: QuickNaviController, val appView: AppView) :
+/**
+ * Parent container panel on quick navi screen
+ */
+class QuickNaviPanel(
+    private val dataModel: UiDataModel,
+    val quickNaviController: QuickNaviController,
+    val appView: AppView
+) :
     BaseJPanel() {
+
+    private val log = LogManager.getLogger()
 
     private val mediaContainerScroll: JScrollPane
 
@@ -35,7 +45,7 @@ class QuickNaviPanel(val dataModel: UiDataModel, val quickNaviController: QuickN
         mediaContainerScroll.border = null
 
         mediaContainerScroll.verticalScrollBar.addAdjustmentListener {
-            if (it.valueIsAdjusting) {
+            if (!it.valueIsAdjusting) {
                 dataModel.lastScrollPosition.set(it.value)
             }
         }
@@ -66,11 +76,15 @@ class QuickNaviPanel(val dataModel: UiDataModel, val quickNaviController: QuickN
     private fun registerFilesDragAndDrop() {
         dropTarget = DropTarget(this, object : DropTargetAdapter() {
             override fun drop(e: DropTargetDropEvent) {
+                log.info("Dropped action")
                 e.acceptDrop(DnDConstants.ACTION_COPY)
                 (e.transferable.getTransferData(DataFlavor.javaFileListFlavor) as List<File>)
-                    .filter { it.isDirectory }
                     .forEach {
-                        quickNaviController.addTab(it.path)
+                        if (it.isDirectory) {
+                            quickNaviController.addTab(it.path)
+                        } else {
+                            quickNaviController.play(it.path)
+                        }
                     }
             }
         })

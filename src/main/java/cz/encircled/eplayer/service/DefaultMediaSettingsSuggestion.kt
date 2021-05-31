@@ -18,6 +18,8 @@ interface MediaSettingsSuggestions {
 
     fun suggestAudioTrack(preferredLanguage: String, available: List<GenericTrackDescription>): MediaSettingsSuggestion
 
+    fun suggestAudioPassThroughRequired(track: GenericTrackDescription): Boolean
+
 }
 
 class MediaSettingsSuggestionsImpl : MediaSettingsSuggestions {
@@ -53,6 +55,9 @@ class MediaSettingsSuggestionsImpl : MediaSettingsSuggestions {
         log.info("Suggested: ${suggestion.track.description}")
         return suggestion
     }
+
+    override fun suggestAudioPassThroughRequired(track: GenericTrackDescription): Boolean =
+        track.description.contains("trhd")
 
     private fun List<GenericTrackDescription>.firstMatch(vararg predicates: (String) -> Boolean): MediaSettingsSuggestion {
         val descriptions = this

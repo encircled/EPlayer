@@ -3,7 +3,7 @@ package cz.encircled.eplayer.view.swing
 import com.formdev.flatlaf.FlatDarculaLaf
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.service.event.Event
-import cz.encircled.eplayer.view.SwingEUiExecutor
+import cz.encircled.eplayer.util.TimeTracker
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiUtil
 import cz.encircled.eplayer.view.controller.QuickNaviController
@@ -18,6 +18,11 @@ fun main(args: Array<String>) {
     SwingView(args)
 }
 
+/**
+ * TODO
+ * - add media info
+ * - add grouping in folder
+ */
 class SwingView(args: Array<String>) {
 
     private val log = LogManager.getLogger()
@@ -26,22 +31,27 @@ class SwingView(args: Array<String>) {
     init {
         log.info("INPUT ARGS: ${args.joinToString()}")
 
-        val start = System.currentTimeMillis()
-        FlatDarculaLaf.install()
-        JFrame.setDefaultLookAndFeelDecorated(true)
+        TimeTracker.tracking("UI base setup") {
+            FlatDarculaLaf.install()
+            JFrame.setDefaultLookAndFeelDecorated(true)
 
-        UIManager.put("defaultFont", Font("Segoe UI", Font.PLAIN, 13));
+            UIManager.put("defaultFont", Font("Segoe UI", Font.PLAIN, 13));
 
-        UiUtil.uiExecutor = SwingEUiExecutor()
+        }
         core = ApplicationCore()
 
-        val dataModel = UiDataModel()
-        val quickNaviController = QuickNaviController(dataModel, core)
-        val mainFrame = MainFrame(dataModel, quickNaviController, core)
-        quickNaviController.init(mainFrame)
-        mainFrame.isVisible = true
+        TimeTracker.tracking("UI components") {
+            val dataModel = UiDataModel()
+            val quickNaviController = QuickNaviController(dataModel, core)
+            val mainFrame = MainFrame(dataModel, quickNaviController, core)
 
-        log.debug("UI start finished in ${System.currentTimeMillis() - start}")
+            quickNaviController.init(mainFrame)
+            mainFrame.isVisible = true
+
+            UiUtil.inNormalThread {
+                core.delayedInit(mainFrame, quickNaviController)
+            }
+        }
 
         if (args.isNotEmpty()) {
             Event.contextInitialized.listen {
@@ -50,9 +60,6 @@ class SwingView(args: Array<String>) {
             }
         }
 
-        Thread {
-            core.delayedInit(mainFrame, quickNaviController)
-        }.start()
     }
 
 }

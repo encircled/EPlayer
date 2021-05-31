@@ -5,11 +5,12 @@ import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.model.MediaFile
 import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.remote.RemoteControlHttpServer
+import cz.encircled.eplayer.remote.RemoteControlHttpServerImpl
 import cz.encircled.eplayer.service.*
 import cz.encircled.eplayer.service.event.Event
-import cz.encircled.eplayer.util.IOUtil.createIfMissing
-import cz.encircled.eplayer.util.IOUtil.getSettings
+import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.util.LocalizationProvider
+import cz.encircled.eplayer.util.TimeTracker.tracking
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.controller.RemoteControlHandlerImpl
@@ -22,17 +23,24 @@ import kotlin.system.exitProcess
  *
  * Series:
  * - Auto next episode
+ * title changes on pause
  *
- * Notify if audio thru pass is needed
- * Switch audio thru HDMI automatically?
  * Check display changes
  * Scan all folders on start
  *
  * CHECK TRUEHD DOLBY
  */
-class ApplicationCore {
+class ApplicationCore(
+    private val remoteControlServerCreator: (RemoteControlHandler) -> RemoteControlHttpServer = {
+        RemoteControlHttpServerImpl(
+            it
+        )
+    }
+) {
 
     val settings: AppSettings
+
+    val ioUtil: IOUtil = IOUtil()
 
     lateinit var cacheService: CacheService
 
@@ -51,37 +59,43 @@ class ApplicationCore {
     private lateinit var remoteControlServer: RemoteControlHttpServer
 
     init {
-        createIfMissing(APP_DOCUMENTS_ROOT, true)
-        createIfMissing(SCREENS_FOLDER, true)
+        ioUtil.createIfMissing(APP_DOCUMENTS_ROOT, true)
+        ioUtil.createIfMissing(SCREENS_FOLDER, true)
 
         settings = try {
-            getSettings()
+            ioUtil.getSettings()
         } catch (e: Exception) {
             throw IllegalStateException(e)
         }
+        settings.core = this
         LocalizationProvider.init(settings)
     }
 
     fun delayedInit(appView: AppView, playerRemoteControl: RemoteControlHandler) {
-        val start = System.currentTimeMillis()
-        this.appView = appView
-        this.metaInfoService = JavacvMetadataInfoService()
-        this.mediaSettingsSuggestions = MediaSettingsSuggestionsImpl()
-        this.cacheService = JsonCacheService(this)
-        this.folderScanService = OnDemandFolderScanner(this)
+        tracking("AppCore init") {
 
-        this.seriesFinder = SeriesFinder()
-        this.remoteControlServer = RemoteControlHttpServer(RemoteControlHandlerImpl(this, playerRemoteControl))
+            this.appView = appView
+            this.metaInfoService = JavacvMetadataInfoService()
+            this.mediaSettingsSuggestions = MediaSettingsSuggestionsImpl()
+            this.cacheService = JsonCacheService(this)
+            this.folderScanService = OnDemandFolderScanner(this)
 
-        this.mediaService = VLCMediaService(this)
+            this.seriesFinder = SeriesFinder()
+            this.remoteControlServer =
+                remoteControlServerCreator.invoke(RemoteControlHandlerImpl(this, playerRemoteControl))
 
-        Event.audioPassThroughChange.listen {
-            resetPlayer(appView)
+            this.mediaService = VLCMediaService(this)
+
+            Event.audioPassThroughChange.listen {
+                resetPlayer(appView)
+            }
+
         }
-        resetPlayer(appView)
 
-        addCloseHook()
-        log.debug("Core start finished in ${System.currentTimeMillis() - start}")
+        tracking("AppCore init player") {
+            resetPlayer(appView)
+            addCloseHook()
+        }
         Event.contextInitialized.fire(this)
     }
 
@@ -121,14 +135,19 @@ class ApplicationCore {
     private fun addCloseHook() {
         Runtime.getRuntime().addShutdownHook(object : Thread() {
             override fun run() {
-                log.debug("Close hook start")
-                mediaService.stop()
-                cacheService.save()
-                mediaService.releasePlayer()
-                log.debug("Close hook finished")
+                stopApp()
             }
         })
         log.trace("Close hook added")
+    }
+
+    fun stopApp() {
+        log.debug("Close hook start")
+        mediaService.stop()
+        cacheService.save()
+        mediaService.releasePlayer()
+        remoteControlServer.stop()
+        log.debug("Close hook finished")
     }
 
     companion object {

@@ -3,14 +3,8 @@ package cz.encircled.eplayer.view.swing.components
 import cz.encircled.eplayer.common.PostponeTimer
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.UiUtil
 import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
-import javafx.application.Platform
-import javafx.geometry.Pos
-import javafx.scene.control.Menu
-import javafx.scene.input.MouseEvent
-import javafx.scene.layout.StackPane
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import java.awt.BorderLayout
 import java.awt.Cursor
@@ -18,10 +12,8 @@ import java.awt.Cursor.getDefaultCursor
 import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.MouseAdapter
-import java.awt.event.MouseMotionAdapter
-import javax.swing.JMenuBar
-import javax.swing.SwingUtilities
 import java.awt.image.BufferedImage
+import javax.swing.JMenuBar
 
 
 class PlayerPanel(
@@ -42,9 +34,9 @@ class PlayerPanel(
 
     private val listener = object : MouseAdapter() {
 
-        override fun mouseClicked(e: java.awt.event.MouseEvent) {
+        override fun mousePressed(e: java.awt.event.MouseEvent) {
             if (toggleTimer == null) {
-                toggleTimer = PostponeTimer(170) {
+                toggleTimer = PostponeTimer(160) {
                     core.mediaService.toggle()
                     toggleTimer = null
                 }

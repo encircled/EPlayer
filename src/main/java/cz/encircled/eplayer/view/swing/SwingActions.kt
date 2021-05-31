@@ -34,13 +34,13 @@ class SwingActions(appView: AppView, core: ApplicationCore, controller: QuickNav
 
         ActionType.MOVE_RIGHT to SwingAction(KeyStroke.getKeyStroke("RIGHT")) {
             when (appView.currentSceneProperty.get()!!) {
-                Scenes.PLAYER -> core.mediaService.setTimePlus(2000)
+                Scenes.PLAYER -> core.mediaService.setTimePlus(7000)
                 Scenes.QUICK_NAVI -> controller.goToNextMedia()
             }
         },
         ActionType.MOVE_LEFT to SwingAction(KeyStroke.getKeyStroke("LEFT")) {
             when (appView.currentSceneProperty.get()!!) {
-                Scenes.PLAYER -> core.mediaService.setTimePlus(-2000)
+                Scenes.PLAYER -> core.mediaService.setTimePlus(-7000)
                 Scenes.QUICK_NAVI -> controller.goToPrevMedia()
             }
         },

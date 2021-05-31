@@ -10,7 +10,7 @@ import javafx.collections.ObservableList
  * @author encir on 25-Aug-20.
  */
 fun <T> ObservableValue<T>.addNewValueListener(listener: (T) -> Unit): Cancelable {
-    // TODO MOVE TO REMOVABLE
+    // TODO move to Removable?
     val listenerToAdd: ChangeListener<T> = ChangeListener { _: ObservableValue<out T>, _: T, newValue: T ->
         UiUtil.inUiThread {
             listener.invoke(newValue)

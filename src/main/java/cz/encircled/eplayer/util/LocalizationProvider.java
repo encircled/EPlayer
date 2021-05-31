@@ -23,13 +23,8 @@ public class LocalizationProvider {
     }
 
     @NotNull
-    public static String get2(@NotNull String key) {
+    public static String get(@NotNull String key) {
         return bundle.containsKey(key) ? bundle.getString(key) : NOT_FOUND_VALUE + key;
-    }
-
-    @NotNull
-    public static Locale getUsedLocale() {
-        return locale;
     }
 
 }

@@ -11,7 +11,6 @@ import cz.encircled.eplayer.view.UiUtil.inUiThread
 import org.apache.logging.log4j.LogManager
 import java.net.URLEncoder
 import java.util.regex.Pattern
-import javax.swing.SwingUtilities
 
 /**
  * @author encir on 05-Sep-20.
@@ -32,13 +31,16 @@ class QuickNaviController(
 
     private var currentFolderScanning: CancelableExecution<List<PlayableMedia>>? = null
 
-    // TODO set next episode on back, scroll video via remote, ios app?
+    // TODO set next episode on back, ios app?
     private val typeToComparator: Map<SortType, Comparator<PlayableMedia>> = mapOf(
-        SortType.BY_DURATION to Comparator { o1, o2 ->
+        SortType.Duration to Comparator { o1, o2 ->
             o1.duration.value.compareTo(o2.duration.value)
         },
-        SortType.BY_NAME to Comparator { o1, o2 ->
+        SortType.Name to Comparator { o1, o2 ->
             o1.name().compareTo(o2.name())
+        },
+        SortType.Date to Comparator { o1, o2 ->
+            o1.watchDate.compareTo(o2.watchDate)
         }
     )
 
@@ -56,12 +58,21 @@ class QuickNaviController(
         }
 
         dataModel.sortType.addNewValueListener {
-            dataModel.media.setAll(getFilteredMedia(mediaSource))
+            UiUtil.inNormalThread {
+                val filteredMedia = getFilteredMedia(mediaSource)
+                inUiThread {
+                    dataModel.media.setAll(filteredMedia)
+                }
+            }
         }
     }
 
     fun play(media: PlayableMedia) = UiUtil.inNormalThread {
         core.mediaService.play(media)
+    }
+
+    fun play(path: String) = UiUtil.inNormalThread {
+        core.mediaService.play(path)
     }
 
     fun deleteEntry(media: PlayableMedia) {
@@ -74,7 +85,7 @@ class QuickNaviController(
             .exec(arrayOf("PowerShell", "start chrome https://www.kinopoisk.ru/index.php?kp_query=$cleanedName"))
     }
 
-    fun onFolderSelect(path: String, forceRefresh: Boolean = false) {
+    fun onFolderSelect(path: String) {
         if (dataModel.selectedFolder.get() != path) {
             currentFolderScanning?.cancel()
             currentFolderScanning = null
@@ -93,7 +104,9 @@ class QuickNaviController(
                     }
                 }
 
-                core.folderScanService.getMediaInFolder(path, currentFolderScanning!!)
+                UiUtil.inNormalThread {
+                    core.folderScanService.getMediaInFolder(path, currentFolderScanning!!)
+                }
             }
         }
     }
@@ -110,7 +123,7 @@ class QuickNaviController(
     }
 
     fun forceRefresh() = inUiThread {
-        onFolderSelect(dataModel.selectedFolder.get(), true)
+        onFolderSelect(dataModel.selectedFolder.get())
     }
 
     fun addTab(path: String) {

@@ -1,6 +1,5 @@
 package cz.encircled.eplayer.service
 
-import com.sun.jna.NativeLibrary
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.model.MediaSeries
@@ -13,12 +12,8 @@ import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.UiUtil
 import org.apache.logging.log4j.LogManager
-import uk.co.caprica.vlcj.binding.RuntimeUtil
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory
-import uk.co.caprica.vlcj.factory.discovery.NativeDiscovery
-import uk.co.caprica.vlcj.factory.discovery.strategy.NativeDiscoveryStrategy
-import uk.co.caprica.vlcj.factory.discovery.strategy.WindowsNativeDiscoveryStrategy
-import uk.co.caprica.vlcj.media.Meta
+import uk.co.caprica.vlcj.media.AudioTrackInfo
 import uk.co.caprica.vlcj.media.TrackInfo
 import uk.co.caprica.vlcj.player.base.MediaPlayer
 import uk.co.caprica.vlcj.player.base.MediaPlayerEventAdapter
@@ -47,24 +42,41 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
             }
         }
 
-    override var subtitles: Int
-        get() = player.subpictures().track()
-        set(value) {
-            if (value != subtitles) {
-                player.subpictures().setTrack(value)
-                Event.subtitleChanged.fire(MediaCharacteristic(current!!, value))
-            }
-        }
+    private lateinit var subtitle: GenericTrackDescription
 
-    override var audioTrack: Int
-        get() = player.audio().track()
-        set(value) {
-            if (value != audioTrack) {
-                log.debug("Set audio track with id {}", value)
-                player.audio().setTrack(value)
-                Event.audioTrackChanged.fire(MediaCharacteristic(current!!, value))
-            }
+    private lateinit var audioTrack: GenericTrackDescription
+
+    init {
+        Event.audioTrackChanged.listen { change ->
+            switchAudioPassThruIfNeeded(change.characteristic)
         }
+    }
+
+    override fun currentSubtitle(): GenericTrackDescription = subtitle
+
+    override fun setSubtitle(track: GenericTrackDescription) = doSetSubtitle(track, true)
+
+    private fun doSetSubtitle(track: GenericTrackDescription, byUser: Boolean) {
+        if (!this::subtitle.isInitialized || track != subtitle) {
+            log.debug("Set subtitle track {}", track)
+            subtitle = track
+            player.subpictures().setTrack(track.id)
+            Event.subtitleChanged.fire(MediaCharacteristic(current!!, track, byUser))
+        }
+    }
+
+    override fun currentAudioTrack(): GenericTrackDescription = audioTrack
+
+    override fun setAudioTrack(track: GenericTrackDescription) = doSetAudioTrack(track, true)
+
+    private fun doSetAudioTrack(track: GenericTrackDescription, byUser: Boolean) {
+        if (!this::audioTrack.isInitialized || track != audioTrack) {
+            log.debug("Set audio track {}", track)
+            this.audioTrack = track
+            player.audio().setTrack(track.id)
+            Event.audioTrackChanged.fire(MediaCharacteristic(current!!, track, byUser))
+        }
+    }
 
     override fun currentMedia(): PlayableMedia? = current
 
@@ -90,27 +102,12 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
             Event.playingChanged.fire(OptionalMediaCharacteristic(current, false))
 
         override fun mediaPlayerReady(mediaPlayer: MediaPlayer) {
-            log.debug("Media parsed - {}", current)
+            log.info("Media parsed - {}", current)
 
-            val descriptionPrefix = { t: TrackInfo ->
-                if (t.description() == null) {
-                    "${t.language() ?: ""} "
-                } else {
-                    "${t.description()} [${t.language()}] "
-                }
-            }
+            val textTracks = mediaPlayer.media().info().textTracks().map { it.toGenericTrack() } +
+                    listOf(GenericTrackDescription(-1, "Disabled"))
 
-            val textTracks = mediaPlayer.media().info().textTracks().map {
-                GenericTrackDescription(it.id(), "${descriptionPrefix(it)} (${it.codecName()})")
-            } + listOf(GenericTrackDescription(-1, "Disabled"))
-
-            val audioTracks = mediaPlayer.media().info().audioTracks().map {
-                val d = "${descriptionPrefix(it)} (${it.codecName()}, ${it.rate()} Hz, ${it.channels()}c)"
-                GenericTrackDescription(it.id(), d)
-            }
-
-            Event.subtitlesUpdated.fire(textTracks)
-            Event.audioTracksUpdated.fire(audioTracks)
+            val audioTracks = mediaPlayer.media().info().audioTracks().map { it.toGenericTrack() }
 
             setAudioAndSubtitleTracks(audioTracks, textTracks)
         }
@@ -118,7 +115,11 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         override fun finished(mediaPlayer: MediaPlayer) {
             currentTime = 0L
             Event.mediaTimeChange.fire(MediaCharacteristic(current!!, 0), true)
-            core.openQuickNaviScreen()
+//            core.openQuickNaviScreen()
+        }
+
+        override fun stopped(mediaPlayer: MediaPlayer) {
+            Event.playingChanged.fire(OptionalMediaCharacteristic(null, false))
         }
 
         override fun error(mediaPlayer: MediaPlayer) {
@@ -133,7 +134,7 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
 
         override fun timeChanged(mediaPlayer: MediaPlayer, newTime: Long) {
             currentTime = newTime
-            if (current != null) Event.mediaTimeChange.fire(MediaCharacteristic(current!!, newTime))
+            current?.let { Event.mediaTimeChange.fire(MediaCharacteristic(it, newTime)) }
         }
 
         override fun lengthChanged(mediaPlayer: MediaPlayer, newLength: Long) {
@@ -144,7 +145,7 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
             try {
                 Event.screenshotAcquired.fire(MediaCharacteristic(current ?: SingleMedia(""), current?.path ?: ""))
             } catch (e: Exception) {
-                e.printStackTrace()
+                log.warn("Event error", e)
             }
         }
 
@@ -154,20 +155,29 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         audioTracks: List<GenericTrackDescription>,
         textTracks: List<GenericTrackDescription>
     ) {
-        if (current?.preferredAudio != null) {
-            current?.preferredAudio?.let { audioTrack = it }
-            current?.preferredSubtitle?.let { subtitles = it }
-        } else {
-            // TODO language to be a setting
-            // TODO when only 1 is set
-            val suggestedAudio = core.mediaSettingsSuggestions.suggestAudioTrack("rus", audioTracks)
-            audioTrack = suggestedAudio.track.id
-            subtitles =
-                core.mediaSettingsSuggestions.suggestSubtitle(
-                    "rus",
-                    suggestedAudio.isPreferredLanguage,
-                    textTracks
-                ).track.id
+        // TODO language to be a setting
+        val suggestAudio = core.mediaSettingsSuggestions.suggestAudioTrack("rus", audioTracks)
+        val audio = audioTracks.find(current?.preferredAudio) ?: suggestAudio.track
+        val text = textTracks.find(current?.preferredSubtitle) ?: core.mediaSettingsSuggestions.suggestSubtitle(
+            "rus",
+            current?.preferredAudio != null || suggestAudio.isPreferredLanguage,
+            textTracks
+        ).track
+
+        doSetSubtitle(text, false)
+        doSetAudioTrack(audio, false)
+
+        Event.subtitlesUpdated.fire(textTracks)
+        Event.audioTracksUpdated.fire(audioTracks)
+
+        switchAudioPassThruIfNeeded(audioTrack)
+    }
+
+    private fun switchAudioPassThruIfNeeded(track: GenericTrackDescription) {
+        val isRequired = core.mediaSettingsSuggestions.suggestAudioPassThroughRequired(track)
+        if (isRequired && !core.settings.audioPassThrough) {
+            core.settings.audioPassThrough(true)
+            Event.audioPassThroughChange.fire(true)
         }
     }
 
@@ -266,5 +276,19 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         currentTime = 0L
         player.controls().stop()
     }
+
+    private fun TrackInfo.toGenericTrack(): GenericTrackDescription {
+        val prefix = if (description() == null) "${language() ?: ""} "
+        else "${description()} [${language()}] "
+
+        val description =
+            if (this is AudioTrackInfo) "$prefix (${codecName()}: ${codecDescription()}, ${rate()} Hz, ${channels()}c)"
+            else "$prefix (${codecName()})"
+
+        return GenericTrackDescription(id(), description)
+    }
+
+    private fun List<GenericTrackDescription>.find(track: GenericTrackDescription?): GenericTrackDescription? =
+        if (track != null && contains(track)) track else null
 
 }

@@ -1,11 +1,12 @@
 package cz.encircled.eplayer.view.swing.components
 
 import com.formdev.flatlaf.ui.FlatRootPaneUI
-import com.formdev.flatlaf.ui.JBRCustomDecorations
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
-import cz.encircled.eplayer.view.*
+import cz.encircled.eplayer.view.AppView
+import cz.encircled.eplayer.view.Scenes
+import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiUtil.inUiThread
 import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.SwingActions
@@ -15,27 +16,28 @@ import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
-import uk.co.caprica.vlcj.player.embedded.fullscreen.adaptive.AdaptiveFullScreenStrategy
 import uk.co.caprica.vlcj.player.embedded.fullscreen.windows.Win32FullScreenStrategy
-import java.awt.*
-import java.util.concurrent.CountDownLatch
-import javax.swing.*
-
+import java.awt.BorderLayout
+import java.awt.Dimension
 import java.awt.event.ActionEvent
+import java.util.concurrent.CountDownLatch
+import javax.swing.AbstractAction
+import javax.swing.JComponent
+import javax.swing.JFrame
 import javax.swing.JOptionPane
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.jvm.isAccessible
 
 
 class MainFrame(
-    val dataModel: UiDataModel,
+    dataModel: UiDataModel,
     quickNaviController: QuickNaviController,
     val core: ApplicationCore
 ) : JFrame(), AppView {
 
     override var currentSceneProperty: ObjectProperty<Scenes> = SimpleObjectProperty()
 
-    private lateinit var playerComponent: PlayerPanel
+    private var playerComponent: PlayerPanel
     private val quickNaviComponent: QuickNaviPanel
 
     private val isFullScreen = SimpleBooleanProperty(false)
@@ -55,18 +57,18 @@ class MainFrame(
 
         quickNaviComponent = QuickNaviPanel(dataModel, quickNaviController, this)
 
+        playerComponent = PlayerPanel(this, core, jMenuBar)
         showQuickNaviScreen()
 
         registerShortcuts(quickNaviComponent)
 
-        playerComponent = PlayerPanel(this, core, jMenuBar)
         registerShortcuts(playerComponent)
     }
 
     private fun initTitle() {
         title = AppView.TITLE
         Event.playingChanged.listenUiThread {
-            title = if (it.characteristic) "${AppView.TITLE} - ${it.playableMedia?.name()}"
+            title = if (it.playableMedia != null) "${AppView.TITLE} - ${it.playableMedia.name()}"
             else AppView.TITLE
         }
     }
@@ -94,7 +96,7 @@ class MainFrame(
     override fun showQuickNaviScreen() = inUiThread {
         if (currentSceneProperty.get() == null || currentSceneProperty.get() != Scenes.QUICK_NAVI) {
             currentSceneProperty.set(Scenes.QUICK_NAVI)
-            if (this::playerComponent.isInitialized) remove(playerComponent)
+            remove(playerComponent)
             contentPane = quickNaviComponent
             quickNaviComponent.isVisible = true
 

@@ -4,7 +4,6 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.StringUtil
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.UiUtil
 import cz.encircled.eplayer.view.swing.*
 import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
 import cz.encircled.eplayer.view.swing.components.base.ToggleButton
@@ -37,6 +36,9 @@ class PlayerControls(appView: AppView, val core: ApplicationCore) : BaseJPanel()
         preferredSize = Dimension(AppView.MIN_WIDTH, 60)
 
         playerToggle.onClick { core.mediaService.toggle() }
+        Event.playingChanged.listenUiThread {
+            playerToggle.isSelected = !it.characteristic
+        }
 
         fullScreenToggle.onClick { appView.toggleFullScreen() }
         fullScreenToggle.isSelected = appView.isFullScreen()

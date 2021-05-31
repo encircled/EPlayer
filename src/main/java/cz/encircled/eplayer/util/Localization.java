@@ -71,6 +71,6 @@ public enum Localization {
     creationDate;
 
     public String ln() {
-        return LocalizationProvider.get2(this.name());
+        return LocalizationProvider.get(this.name());
     }
 }

@@ -9,9 +9,10 @@ import cz.encircled.eplayer.view.swing.components.base.WrapLayout
 import cz.encircled.eplayer.view.swing.removeIf
 import java.awt.FlowLayout
 
-class QuickNaviMediaContainer(val dataModel: UiDataModel, val quickNaviController: QuickNaviController) : BaseJPanel(
-    WrapLayout(FlowLayout.LEFT, 25, 25)
-) {
+class QuickNaviMediaContainer(
+    private val dataModel: UiDataModel,
+    private val quickNaviController: QuickNaviController
+) : BaseJPanel(WrapLayout(FlowLayout.LEFT, 25, 25)) {
 
     init {
         dataModel.media.addChangesListener { added, removed ->
@@ -19,6 +20,5 @@ class QuickNaviMediaContainer(val dataModel: UiDataModel, val quickNaviControlle
             addAll(added.map { MediaPane(it, dataModel, quickNaviController) })
         }
     }
-
 
 }

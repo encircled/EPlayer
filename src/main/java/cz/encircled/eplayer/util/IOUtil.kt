@@ -2,7 +2,9 @@ package cz.encircled.eplayer.util
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.AppSettings
+import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
+import cz.encircled.eplayer.util.TimeTracker.tracking
 import org.apache.commons.io.FileUtils
 import org.apache.logging.log4j.LogManager
 import java.io.File
@@ -13,7 +15,7 @@ import java.nio.file.Paths
 
 data class MediaWrapper(val media: List<PlayableMedia>)
 
-object IOUtil {
+class IOUtil {
 
     private val log = LogManager.getLogger()
 
@@ -28,41 +30,45 @@ object IOUtil {
 
     @Throws(IOException::class)
     fun getPlayableJson(): List<PlayableMedia> {
-        val start = System.currentTimeMillis()
-        log.info("getPlayableJson start")
-        createIfMissing(quickNaviPath, false)
-        val readAllBytes = Files.readAllBytes(Paths.get(quickNaviPath))
-        log.info("getPlayableJson readAllBytes: {}ms", System.currentTimeMillis() - start)
+        val allBytes = tracking("getPlayableJson") {
+            createIfMissing(quickNaviPath, false)
+            Files.readAllBytes(Paths.get(quickNaviPath))
+        }
 
-        val result = serializer.toObject(readAllBytes, MediaWrapper::class.java).media
-        log.info("getPlayableJson end: {}ms", System.currentTimeMillis() - start)
-        return result
+        return tracking("serializer.toObject") {
+            val result = serializer.toObject(allBytes, MediaWrapper::class.java).media
+
+            result.filterIsInstance<MediaSeries>().forEach { it.doInit() }
+            result
+        }
     }
 
-
-    @JvmStatic
     @Throws(IOException::class)
-    fun savePlayable(settings: Map<String, PlayableMedia>) {
-        Files.writeString(Paths.get(quickNaviPath), serializer.fromObject(MediaWrapper(settings.values.toList())))
+    fun savePlayable(playable: Map<String, PlayableMedia>) {
+        log.debug("Saving playable to $quickNaviPath")
+        try {
+            File(quickNaviPath).writeText(serializer.fromObject(MediaWrapper(playable.values.toList())))
+        } catch (e: Exception) {
+            log.error("Failed to save playable", e)
+        }
     }
 
-    @JvmStatic
     @Throws(IOException::class)
     fun getSettings(): AppSettings {
         return serializer.toObject(Files.readAllBytes(Paths.get(pathToSettings)), AppSettings::class.java)
+            ?: AppSettings()
     }
 
-    @JvmStatic
     @Throws(IOException::class)
     fun saveSettings(settings: AppSettings) {
-        Files.writeString(Paths.get(pathToSettings), serializer.fromObject(settings))
+        log.debug("Saving settings to $quickNaviPath")
+        File(pathToSettings).writeText(serializer.fromObject(settings))
     }
 
     /**
      * @return true if file was created
      */
-    @JvmStatic
-    fun createIfMissing(pathTo: String, isDirectory: Boolean): Boolean {
+    fun createIfMissing(pathTo: String, isDirectory: Boolean, defaultContent: String = ""): Boolean {
         val path = Paths.get(pathTo)
         try {
             if (!Files.exists(path)) {
@@ -71,7 +77,7 @@ object IOUtil {
                     log.debug("Directory {} not exists and was created", pathTo)
                 } else {
                     Files.createFile(path)
-                    File(path.toUri()).writeText("{}")
+                    File(path.toUri()).writeText(defaultContent)
                     log.debug("File {} not exists and was created", pathTo)
                 }
                 return true

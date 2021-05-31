@@ -5,15 +5,22 @@ import org.apache.logging.log4j.LogManager
 import java.io.OutputStream
 import java.net.InetSocketAddress
 
+interface RemoteControlHttpServer {
+
+    fun stop()
+
+}
+
 /**
  * @author encir on 26-Aug-20.
  */
-class RemoteControlHttpServer(private val remoteControlHandler: RemoteControlHandler) {
+class RemoteControlHttpServerImpl(private val remoteControlHandler: RemoteControlHandler) : RemoteControlHttpServer {
 
     private val log = LogManager.getLogger()
 
+    private val server: HttpServer = HttpServer.create(InetSocketAddress(8001), 0)
+
     init {
-        val server = HttpServer.create(InetSocketAddress(8001), 0)
         server.createContext("/") {
             val request = if (it.requestBody.available() > 0) {
                 it.requestBody.bufferedReader().use { r -> r.readText() }
@@ -50,6 +57,10 @@ class RemoteControlHttpServer(private val remoteControlHandler: RemoteControlHan
         }
         server.executor = null
         server.start()
+    }
+
+    override fun stop() {
+        server.stop(0)
     }
 
 }

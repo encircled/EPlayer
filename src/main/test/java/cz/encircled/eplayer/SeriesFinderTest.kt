@@ -1,6 +1,7 @@
 package cz.encircled.eplayer
 
 import cz.encircled.eplayer.core.SeriesFinder
+import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -24,8 +25,11 @@ class SeriesFinderTest {
 
     @Test
     fun testSeriesName() {
-        assertEquals("Better.Call.Saul.", seriesFinder.seriesName("Better.Call.Saul.S05E01.SomeAdditionalText"))
-        assertEquals("Better.Call.Saul.", seriesFinder.seriesName("Better.Call.Saul.S12E02.AnotherAdditionalText"))
+        assertEquals("Better.Call.Saul.", seriesFinder.seriesName(File("Better.Call.Saul.S05E01.SomeAdditionalText")))
+        assertEquals(
+            "Better.Call.Saul.",
+            seriesFinder.seriesName(File("Better.Call.Saul.S12E02.AnotherAdditionalText"))
+        )
     }
 
 }

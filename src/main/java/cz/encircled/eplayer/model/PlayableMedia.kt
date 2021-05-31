@@ -1,16 +1,15 @@
 package cz.encircled.eplayer.model
 
+import com.google.gson.annotations.SerializedName
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.util.DateUtil
-import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.util.StringUtil
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
+import org.apache.logging.log4j.LogManager
 import java.io.File
-import kotlin.collections.ArrayList
 import kotlin.math.max
 import kotlin.math.min
-import com.google.gson.annotations.SerializedName
 
 /**
  * @author encir on 29-Aug-20.
@@ -21,9 +20,6 @@ abstract class PlayableMedia {
 
     @SerializedName("type")
     private val typeName: String = this.javaClass.name
-
-    val formattedExtension: String
-        get() = mediaFile().extension
 
     /**
      * URL format path (with file:/ prefix)
@@ -43,16 +39,13 @@ abstract class PlayableMedia {
     val formattedCurrentTime: String
         get() = StringUtil.msToTimeLabel(time.get())
 
-    val formattedSize: String
-        get() = IOUtil.byteCountToDisplaySize(mediaFile().size)
-
     abstract var time: SimpleLongProperty
 
     abstract var duration: SimpleLongProperty
 
-    abstract var preferredSubtitle: Int?
+    abstract var preferredSubtitle: GenericTrackDescription?
 
-    abstract var preferredAudio: Int?
+    abstract var preferredAudio: GenericTrackDescription?
 
     abstract var watchDate: Long
 
@@ -64,18 +57,24 @@ abstract class PlayableMedia {
 
     abstract fun name(): String
 
+    abstract fun isPlayed(): Boolean
+
 }
+
+private val log = LogManager.getLogger()
 
 data class SingleMedia(
     override val path: String,
-    @Transient
-    private val mediaFile: MediaFile = MediaFile(path),
     override var time: SimpleLongProperty = SimpleLongProperty(0),
     override var duration: SimpleLongProperty = SimpleLongProperty(0),
     override var watchDate: Long = 0,
-    override var preferredSubtitle: Int? = null,
-    override var preferredAudio: Int? = null,
+    override var preferredSubtitle: GenericTrackDescription? = null,
+    override var preferredAudio: GenericTrackDescription? = null,
 ) : PlayableMedia() {
+
+    private val mediaFile: MediaFile by lazy { // TODO is it needed at all?
+        MediaFile(path)
+    }
 
     override fun getId(): String = path
 
@@ -91,15 +90,17 @@ data class SingleMedia(
     override fun hashCode(): Int = path.hashCode()
 
     override fun name(): String = mediaFile.name
+
+    override fun isPlayed(): Boolean = time.get() > 0
 }
 
 data class MediaSeries(
     val name: String,
-    val series: ArrayList<SingleMedia>
+    val series: MutableList<SingleMedia>
 ) : PlayableMedia() {
 
     @Transient
-    private val creditsTime = 1000 * 60
+    private val creditsTime = 1000 * 60 * 2
 
     @Transient
     val currentEpisode: SimpleIntegerProperty = SimpleIntegerProperty()
@@ -107,7 +108,8 @@ data class MediaSeries(
     // For Gson
     constructor() : this("", arrayListOf())
 
-    init {
+    // Workaround for constructor not called by Gson
+    fun doInit() {
         series.sortBy { it.path }
 
         var i = series.indexOfLast { it.time.get() > 0 }
@@ -140,13 +142,13 @@ data class MediaSeries(
             current().duration = value
         }
 
-    override var preferredSubtitle: Int?
+    override var preferredSubtitle: GenericTrackDescription?
         get() = current().preferredSubtitle
         set(value) {
             series.forEach { it.preferredSubtitle = value }
         }
 
-    override var preferredAudio: Int?
+    override var preferredAudio: GenericTrackDescription?
         get() = current().preferredAudio
         set(value) {
             series.forEach { it.preferredAudio = value }
@@ -167,5 +169,7 @@ data class MediaSeries(
     }
 
     private fun current(): SingleMedia = series[currentEpisode.get()]
+
+    override fun isPlayed(): Boolean = series.any { it.isPlayed() }
 
 }

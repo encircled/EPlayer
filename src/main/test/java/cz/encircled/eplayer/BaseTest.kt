@@ -3,27 +3,42 @@ package cz.encircled.eplayer
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.remote.RemoteControlHandler
+import cz.encircled.eplayer.remote.RemoteControlHttpServer
 import cz.encircled.eplayer.service.MetadataInfoService
-import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
+import org.junit.jupiter.api.AfterAll
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import java.io.File
 import java.util.concurrent.CountDownLatch
 
 abstract class BaseTest {
 
+    companion object {
+
+        lateinit var core: ApplicationCore
+
+        @JvmStatic
+        @AfterAll
+        fun afterAll() {
+            if (this::core.isInitialized) {
+                core.stopApp()
+            }
+        }
+
+    }
+
     val pathToResources = File("").absoluteFile.resolve("src/main/test/resources")
 
-    val core = ApplicationCore()
-
     init {
-        IOUtil.quickNaviPath = pathToResources.resolve("quicknavi2.json").path
-        IOUtil.pathToSettings = pathToResources.resolve("eplayer.properties.json").path
+        pathToResources.resolve("quicknavi2.json").delete()
+        core = ApplicationCore { TestServer() }
+        core.ioUtil.quickNaviPath = pathToResources.resolve("quicknavi2.json").path
+        core.ioUtil.pathToSettings = pathToResources.resolve("eplayer.properties.json").path
 
         core.delayedInit(TestView(), TestRemoteControl())
         core.metaInfoService = TestMetadataService()
@@ -86,6 +101,12 @@ abstract class BaseTest {
 
         override fun showUserMessage(msg: String) {
             println("User message: $msg")
+        }
+    }
+
+    class TestServer : RemoteControlHttpServer {
+        override fun stop() {
+
         }
     }
 

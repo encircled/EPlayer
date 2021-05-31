@@ -41,8 +41,8 @@ class SwingMenuBar(
         )
 
         Event.subtitlesUpdated.listenUiThread { tracks: List<GenericTrackDescription> ->
-            updateTrackMenu(subtitles, tracks, core.mediaService.subtitles, Event.subtitleChanged) {
-                core.mediaService.subtitles = (it.source as RadioItem).id
+            updateTrackMenu(subtitles, tracks, core.mediaService.currentSubtitle(), Event.subtitleChanged) {
+                core.mediaService.setSubtitle((it.source as RadioItem).track)
             }
         }
 
@@ -50,8 +50,8 @@ class SwingMenuBar(
             it.characteristic
         }
         Event.audioTracksUpdated.listenUiThread { tracks: List<GenericTrackDescription> ->
-            updateTrackMenu(audioTracks, tracks, core.mediaService.audioTrack, Event.audioTrackChanged) {
-                core.mediaService.audioTrack = (it.source as RadioItem).id
+            updateTrackMenu(audioTracks, tracks, core.mediaService.currentAudioTrack(), Event.audioTrackChanged) {
+                core.mediaService.setAudioTrack((it.source as RadioItem).track)
             }
         }
 
@@ -148,20 +148,20 @@ class SwingMenuBar(
     private fun updateTrackMenu(
         menu: JMenu,
         trackDescriptions: List<GenericTrackDescription>,
-        selected: Int,
-        changeEvent: Event<MediaCharacteristic<Int>>,
+        selected: GenericTrackDescription,
+        changeEvent: Event<MediaCharacteristic<GenericTrackDescription>>,
         eventHandler: ActionListener
     ) {
         menu.removeAll()
         val buttonGroup = ButtonGroup()
         trackDescriptions.map {
-            RadioItem(it.description, it.id).apply {
-                isSelected = it.id == selected
+            RadioItem(it.description, it).apply {
+                isSelected = it == selected
                 addActionListener(eventHandler)
-                this.model.group = buttonGroup
+                this.model.setGroup(buttonGroup)
 
                 changeEvent.listenUiThread { newValue ->
-                    isSelected = this.id == newValue.characteristic
+                    isSelected = this.track == newValue.characteristic
                 }.cancelOnRemove()
             }
         }.forEach {
@@ -174,7 +174,8 @@ class SwingMenuBar(
         this.addActionListener { swingActions.actions.getValue(type).action.invoke() }
     }
 
-    private class RadioItem(description: String, val id: Int) : JRadioButtonMenuItem(description), RemovalAware {
+    private class RadioItem(description: String, val track: GenericTrackDescription) :
+        JRadioButtonMenuItem(description), RemovalAware {
 
         override val cancelableListeners: MutableList<Cancelable> = ArrayList()
 

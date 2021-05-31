@@ -5,6 +5,10 @@ import cz.encircled.eplayer.model.PlayableMedia
 /**
  * @author encir on 02-Oct-20.
  */
-data class MediaCharacteristic<T>(val playableMedia: PlayableMedia, val characteristic: T)
+data class MediaCharacteristic<T>(
+    val playableMedia: PlayableMedia,
+    val characteristic: T,
+    val changedByUser: Boolean = false
+)
 
 data class OptionalMediaCharacteristic<T>(val playableMedia: PlayableMedia?, val characteristic: T)

@@ -1,7 +1,6 @@
 package cz.encircled.eplayer.view
 
 import cz.encircled.eplayer.model.PlayableMedia
-import cz.encircled.eplayer.view.fx.components.MediaPane
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -29,7 +28,7 @@ data class UiDataModel(
 
     val lastScrollPosition: IntegerProperty = SimpleIntegerProperty(0),
 
-    val sortType: ObjectProperty<SortType> = SimpleObjectProperty(SortType.BY_NAME),
+    val sortType: ObjectProperty<SortType> = SimpleObjectProperty(SortType.Name),
 
     val currentMedia: ObjectProperty<PlayableMedia> = SimpleObjectProperty(null)
 

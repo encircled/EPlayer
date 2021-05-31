@@ -1,9 +1,6 @@
 package cz.encircled.eplayer
 
-import cz.encircled.eplayer.model.AppSettings
-import cz.encircled.eplayer.model.MediaSeries
-import cz.encircled.eplayer.model.PlayableMedia
-import cz.encircled.eplayer.model.SingleMedia
+import cz.encircled.eplayer.model.*
 import cz.encircled.eplayer.util.GsonSerializer
 import cz.encircled.eplayer.util.MediaWrapper
 import cz.encircled.eplayer.util.Serializer
@@ -12,7 +9,7 @@ import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
-class SerializerTest {
+class GsonSerializerTest {
 
     private val gson: Serializer = GsonSerializer()
     private val random = Random(1000)
@@ -84,8 +81,8 @@ class SerializerTest {
             time = SimpleLongProperty(random.nextLong()),
             duration = SimpleLongProperty(random.nextLong()),
             watchDate = System.currentTimeMillis() - random.nextLong(),
-            preferredAudio = 2,
-            preferredSubtitle = 3
+            preferredAudio = GenericTrackDescription(2, "2 desc"),
+            preferredSubtitle = GenericTrackDescription(3, "3 desc")
         )
     }
 

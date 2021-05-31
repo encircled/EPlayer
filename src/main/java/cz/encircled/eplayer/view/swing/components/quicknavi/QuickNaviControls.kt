@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.view.swing.components.quicknavi
 
+import com.formdev.flatlaf.FlatClientProperties
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.*
 import cz.encircled.eplayer.view.controller.QuickNaviController
@@ -8,35 +9,39 @@ import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
 import cz.encircled.eplayer.view.swing.components.base.TabsPane
 import java.awt.Color
 import java.awt.GridBagConstraints
-import javax.swing.ButtonGroup
+import javax.swing.JComboBox
 import javax.swing.JTabbedPane
 import javax.swing.JTextField
 
-class QuickNaviControls(val quickNaviController: QuickNaviController, dataModel: UiDataModel) : BaseJPanel() {
+class QuickNaviControls(private val quickNaviController: QuickNaviController, dataModel: UiDataModel) : BaseJPanel() {
 
     init {
         anchor = GridBagConstraints.NORTHWEST
-        padding(10, 1, 10, 0)
 
-        val group = ButtonGroup()
+        val sortSelect = JComboBox(SortType.values().map { it.name }.toTypedArray())
+        sortSelect.addItemListener {
+            dataModel.sortType.set(SortType.valueOf(it.item.toString()))
+        }
+
+        val searchField = JTextField().apply {
+            putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, Localization.search.ln())
+            document.onChange { dataModel.filter.value = it }
+        }
+
+        // Layout
+        padding(10, 1, 10, 0)
 
         nextColumn(folderTabs(dataModel))
         nextColumn(GridData(width = 500, height = 34)) {
             flowPanel(vhap = 0) {
                 border(bottom = 1, color = Color(100, 100, 100))
 
-                nextColumn(GridData(30, 30)) {
-                    iconButton("sort_duration.png", Localization.size.ln(), group) {
-                        println("Sort duration")
-                        dataModel.sortType.set(SortType.BY_DURATION)
-                    }
+                nextColumn(GridData(120, 30)) {
+                    sortSelect
                 }
 
                 nextColumn(GridData(270, 30)) {
-                    JTextField().apply {
-                        putClientProperty(Localization.search.ln(), "Placeholder")
-                        document.onChange { dataModel.filter.value = it }
-                    }
+                    searchField
                 }
             }
         }

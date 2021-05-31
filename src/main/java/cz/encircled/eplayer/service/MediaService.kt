@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.service
 
+import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.model.PlayableMedia
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 
@@ -9,8 +10,14 @@ import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 interface MediaService {
 
     var volume: Int
-    var subtitles: Int
-    var audioTrack: Int
+
+    fun currentSubtitle(): GenericTrackDescription
+
+    fun setSubtitle(track: GenericTrackDescription)
+
+    fun currentAudioTrack(): GenericTrackDescription
+
+    fun setAudioTrack(track: GenericTrackDescription)
 
     fun currentMedia(): PlayableMedia?
 

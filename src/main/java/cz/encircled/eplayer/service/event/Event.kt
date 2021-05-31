@@ -6,7 +6,6 @@ import cz.encircled.eplayer.service.Cancelable
 import cz.encircled.eplayer.view.UiUtil
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import java.util.ArrayList
 import java.util.concurrent.CountDownLatch
 
 /**
@@ -24,35 +23,40 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
 
     var lastListenersCount = -1
 
-    fun fire(arg: A, bypassThrottling: Boolean = false) = UiUtil.inNormalThread {
-        if (!bypassThrottling && System.currentTimeMillis() - lastExecution < minDelay) return@inNormalThread
+    fun fire(arg: A, bypassThrottling: Boolean = false) = Thread {
+        if (!bypassThrottling && System.currentTimeMillis() - lastExecution < minDelay) return@Thread
         lastExecution = System.currentTimeMillis()
         doFire(arg)
-    }
+    }.start()
 
     private fun doFire(arg: A) {
         updateListenersCount()
         val countDown = CountDownLatch(lastListenersCount)
 
+        val listenersCopy = ArrayList(listeners)
+        val uiListenersCopy = ArrayList(uiListeners)
+
         log.ifVerbose("Fire event $name [$arg], $lastListenersCount listeners")
 
-        listeners.forEach {
+        listenersCopy.forEach {
             val start = System.currentTimeMillis()
             try {
                 it.invoke(arg)
             } finally {
-                log.ifVerbose("Event $name listener took ${System.currentTimeMillis() - start} ms")
+                val elapsed = System.currentTimeMillis() - start
+                if (elapsed > 10) log.ifVerbose("Event $name listener took $elapsed ms")
                 countDown.countDown()
             }
         }
 
-        uiListeners.forEach {
+        uiListenersCopy.forEach {
             UiUtil.inUiThread {
                 try {
                     val start = System.currentTimeMillis()
                     it.invoke(arg)
-                    if (verbose) {
-                        log.debug("Event $name listener took ${System.currentTimeMillis() - start}")
+                    val elapsed = System.currentTimeMillis() - start
+                    if (verbose && elapsed > 10) {
+                        log.debug("Event $name listener took $elapsed")
                     }
                 } finally {
                     countDown.countDown()
@@ -74,7 +78,12 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
         lastListenersCount = totalListenersCount
     }
 
-    fun listen(listener: (A) -> Unit) = listeners.add(listener)
+    fun listen(listener: (A) -> Unit): Cancelable {
+        listeners.add(listener)
+        return Cancelable {
+            listeners.remove(listener)
+        }
+    }
 
     fun listenUiThread(listener: (A) -> Unit): Cancelable {
         uiListeners.add(listener)
@@ -97,12 +106,12 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
         /**
          * New subtitle selected
          */
-        val subtitleChanged = Event<MediaCharacteristic<Int>>("subtitleChanged")
+        val subtitleChanged = Event<MediaCharacteristic<GenericTrackDescription>>("subtitleChanged")
 
         /**
          * New audio track selected
          */
-        val audioTrackChanged = Event<MediaCharacteristic<Int>>("audioChanged")
+        val audioTrackChanged = Event<MediaCharacteristic<GenericTrackDescription>>("audioChanged")
 
         // True if playing
         val playingChanged = Event<OptionalMediaCharacteristic<Boolean>>("playingChanged")

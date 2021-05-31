@@ -36,7 +36,7 @@ class RemoteControlHandlerImpl(
 
     override fun forward() {
         if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
-            core.mediaService.setTimePlus(3000)
+            core.mediaService.setTimePlus(7000)
         } else {
             delegate.forward()
         }
@@ -44,7 +44,7 @@ class RemoteControlHandlerImpl(
 
     override fun backward() {
         if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
-            core.mediaService.setTimePlus(-3000)
+            core.mediaService.setTimePlus(-7000)
         } else {
             delegate.backward()
         }

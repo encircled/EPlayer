@@ -13,14 +13,10 @@ import cz.encircled.eplayer.view.swing.*
 import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
 import cz.encircled.eplayer.view.swing.components.base.ImagePanel
 import cz.encircled.eplayer.view.swing.components.base.RemovalAware
-import cz.encircled.eplayer.view.swing.components.base.ToggleButton
-import java.awt.*
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
-import java.net.URLEncoder
-import java.util.concurrent.atomic.AtomicLong
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.FlowLayout
 import javax.swing.JLabel
-import javax.swing.JPanel
 
 
 class MediaPane(
@@ -113,7 +109,7 @@ class MediaPane(
 
         if (media is MediaSeries) {
             media.currentEpisode.addNewValueListener {
-                timeLabel.text = media.formattedCurrentTime
+                timeLabel.text = getTimeLabel(media)
             }.cancelOnRemove()
         }
 
