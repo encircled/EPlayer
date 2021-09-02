@@ -10,10 +10,9 @@ import cz.encircled.eplayer.service.*
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.IOUtil
 import cz.encircled.eplayer.util.LocalizationProvider
-import cz.encircled.eplayer.util.TimeTracker.tracking
+import cz.encircled.eplayer.util.TimeMeasure.measure
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.Scenes
-import cz.encircled.eplayer.view.controller.RemoteControlHandlerImpl
+import cz.encircled.eplayer.view.swing.AppActions
 import javafx.application.Platform
 import org.apache.logging.log4j.LogManager
 import kotlin.system.exitProcess
@@ -28,13 +27,13 @@ import kotlin.system.exitProcess
  * Check display changes
  * Scan all folders on start
  *
+ * show info messages: name, subtitle, audio track etc
+ *
  * CHECK TRUEHD DOLBY
  */
 class ApplicationCore(
     private val remoteControlServerCreator: (RemoteControlHandler) -> RemoteControlHttpServer = {
-        RemoteControlHttpServerImpl(
-            it
-        )
+        RemoteControlHttpServerImpl(it)
     }
 ) {
 
@@ -49,6 +48,8 @@ class ApplicationCore(
     lateinit var mediaService: MediaService
 
     lateinit var appView: AppView
+
+    lateinit var appActions: AppActions
 
     lateinit var seriesFinder: SeriesFinder
 
@@ -71,54 +72,29 @@ class ApplicationCore(
         LocalizationProvider.init(settings)
     }
 
-    fun delayedInit(appView: AppView, playerRemoteControl: RemoteControlHandler) {
-        tracking("AppCore init") {
-
+    fun delayedInit(appView: AppView) {
+        measure("AppCore init") {
             this.appView = appView
             this.metaInfoService = JavacvMetadataInfoService()
             this.mediaSettingsSuggestions = MediaSettingsSuggestionsImpl()
             this.cacheService = JsonCacheService(this)
             this.folderScanService = OnDemandFolderScanner(this)
-
             this.seriesFinder = SeriesFinder()
-            this.remoteControlServer =
-                remoteControlServerCreator.invoke(RemoteControlHandlerImpl(this, playerRemoteControl))
-
+            this.appActions = appView.actions
+            this.remoteControlServer = remoteControlServerCreator.invoke(appActions)
             this.mediaService = VLCMediaService(this)
 
             Event.audioPassThroughChange.listen {
                 resetPlayer(appView)
             }
-
         }
 
-        tracking("AppCore init player") {
+        measure("AppCore init player") {
             resetPlayer(appView)
             addCloseHook()
         }
+
         Event.contextInitialized.fire(this)
-    }
-
-    fun openQuickNaviScreen() {
-        Thread {
-            if (mediaService.isPlaying()) {
-                mediaService.pause()
-            }
-            appView.showQuickNaviScreen()
-            mediaService.stop()
-            cacheService.save()
-        }.start()
-    }
-
-    fun back() {
-        if (appView.currentSceneProperty.get() == Scenes.PLAYER) {
-            if (appView.isFullScreen()) {
-                appView.toggleFullScreen()
-                mediaService.pause()
-            } else {
-                openQuickNaviScreen()
-            }
-        }
     }
 
     fun exit() {

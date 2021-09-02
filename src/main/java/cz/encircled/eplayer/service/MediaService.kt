@@ -13,11 +13,11 @@ interface MediaService {
 
     fun currentSubtitle(): GenericTrackDescription
 
-    fun setSubtitle(track: GenericTrackDescription)
+    fun setSubtitle(track: GenericTrackDescription, byUser: Boolean = true)
 
     fun currentAudioTrack(): GenericTrackDescription
 
-    fun setAudioTrack(track: GenericTrackDescription)
+    fun setAudioTrack(track: GenericTrackDescription, byUser: Boolean = true)
 
     fun currentMedia(): PlayableMedia?
 
@@ -50,4 +50,5 @@ interface MediaService {
 
     fun stop()
 
+    fun switchAudioPassThruIfNeeded(track: GenericTrackDescription)
 }

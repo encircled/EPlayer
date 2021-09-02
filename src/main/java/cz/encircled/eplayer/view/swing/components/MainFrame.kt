@@ -9,40 +9,42 @@ import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiUtil.inUiThread
 import cz.encircled.eplayer.view.controller.QuickNaviController
+import cz.encircled.eplayer.view.swing.AppActions
 import cz.encircled.eplayer.view.swing.SwingActions
 import cz.encircled.eplayer.view.swing.components.quicknavi.QuickNaviPanel
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.beans.property.SimpleBooleanProperty
 import javafx.beans.property.SimpleObjectProperty
+import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import uk.co.caprica.vlcj.player.embedded.fullscreen.windows.Win32FullScreenStrategy
 import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.util.concurrent.CountDownLatch
-import javax.swing.AbstractAction
-import javax.swing.JComponent
-import javax.swing.JFrame
-import javax.swing.JOptionPane
+import javax.swing.*
 import kotlin.reflect.full.declaredFunctions
 import kotlin.reflect.jvm.isAccessible
 
 
 class MainFrame(
-    dataModel: UiDataModel,
+    val dataModel: UiDataModel,
     quickNaviController: QuickNaviController,
     val core: ApplicationCore
 ) : JFrame(), AppView {
+
+    val log = LogManager.getLogger()
 
     override var currentSceneProperty: ObjectProperty<Scenes> = SimpleObjectProperty()
 
     private var playerComponent: PlayerPanel
     private val quickNaviComponent: QuickNaviPanel
 
+    private val fullScreenStrategy = Win32FullScreenStrategy(this)
     private val isFullScreen = SimpleBooleanProperty(false)
 
-    private val actions = SwingActions(this, core, quickNaviController)
+    override val actions: AppActions = SwingActions(this, core, quickNaviController)
 
     init {
         initTitle()
@@ -53,12 +55,17 @@ class MainFrame(
         defaultCloseOperation = EXIT_ON_CLOSE
         extendedState = MAXIMIZED_BOTH
 
-        jMenuBar = SwingMenuBar(this, core, dataModel, quickNaviController, actions)
+        jMenuBar = SwingMenuBar(this, core, dataModel, quickNaviController, actions as SwingActions)
 
         quickNaviComponent = QuickNaviPanel(dataModel, quickNaviController, this)
 
         playerComponent = PlayerPanel(this, core, jMenuBar)
         showQuickNaviScreen()
+
+        // Remove default actions so it can be overriden
+        val tabActionMap = UIManager.get("TabbedPane.actionMap") as ActionMap
+        tabActionMap.remove("navigateLeft")
+        tabActionMap.remove("navigateRight")
 
         registerShortcuts(quickNaviComponent)
 
@@ -109,19 +116,15 @@ class MainFrame(
 
     override fun isFullScreen(): Boolean = isFullScreen.get()
 
-    val h = Win32FullScreenStrategy(this)
-
     override fun toggleFullScreen() {
-        if (h.isFullScreenMode) {
+        if (fullScreenStrategy.isFullScreenMode) {
             invokeFlatUiFun("installClientDecorations")
-            h.exitFullScreenMode()
+            fullScreenStrategy.exitFullScreenMode()
         } else {
             invokeFlatUiFun("uninstallClientDecorations")
-
-            h.enterFullScreenMode()
+            fullScreenStrategy.enterFullScreenMode()
         }
-        isFullScreen.set(h.isFullScreenMode)
-//        graphicsConfiguration.device.fullScreenWindow = if (isFullScreen()) this else null
+        isFullScreen.set(fullScreenStrategy.isFullScreenMode)
     }
 
     private fun invokeFlatUiFun(funName: String) {
@@ -138,6 +141,18 @@ class MainFrame(
         JOptionPane.showMessageDialog(this, msg, Localization.errorTitle.ln(), JOptionPane.ERROR_MESSAGE)
     }
 
+    override fun getUserConfirmation(msg: String, onConfirm: () -> Unit, onDecline: () -> Unit) {
+        when (JOptionPane.showConfirmDialog(
+            this,
+            msg,
+            Localization.confirmTitle.ln(),
+            JOptionPane.INFORMATION_MESSAGE
+        )) {
+            0 -> onConfirm.invoke()
+            1 -> onDecline.invoke()
+        }
+    }
+
     override fun scrollUp() {
         if (currentSceneProperty.get() == Scenes.QUICK_NAVI) {
             quickNaviComponent.scrollUp()
@@ -152,10 +167,15 @@ class MainFrame(
 
     private fun registerShortcuts(component: JComponent) {
         if (component.actionMap.size() == 0) {
-            actions.actions.forEach { (type, action) ->
-                component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(action.keyStroke, type.name)
+            (actions as SwingActions).actions.forEach { (type, action) ->
+
+                action.keyStrokes.forEach {
+                    component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(it, type.name)
+                }
+
                 component.actionMap.put(type.name, object : AbstractAction() {
                     override fun actionPerformed(e: ActionEvent) {
+                        log.info("Performing action for shortcut ${type.name}")
                         action.action.invoke()
                     }
                 })

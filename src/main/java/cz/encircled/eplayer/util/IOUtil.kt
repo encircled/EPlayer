@@ -4,7 +4,7 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
-import cz.encircled.eplayer.util.TimeTracker.tracking
+import cz.encircled.eplayer.util.TimeMeasure.measure
 import org.apache.commons.io.FileUtils
 import org.apache.logging.log4j.LogManager
 import java.io.File
@@ -30,12 +30,12 @@ class IOUtil {
 
     @Throws(IOException::class)
     fun getPlayableJson(): List<PlayableMedia> {
-        val allBytes = tracking("getPlayableJson") {
+        val allBytes = measure("getPlayableJson") {
             createIfMissing(quickNaviPath, false)
             Files.readAllBytes(Paths.get(quickNaviPath))
         }
 
-        return tracking("serializer.toObject") {
+        return measure("serializer.toObject") {
             val result = serializer.toObject(allBytes, MediaWrapper::class.java).media
 
             result.filterIsInstance<MediaSeries>().forEach { it.doInit() }

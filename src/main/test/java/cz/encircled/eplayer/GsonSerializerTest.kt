@@ -33,7 +33,7 @@ class GsonSerializerTest {
 
     @Test
     fun testReadWriteMediaMediaSeries() {
-        val single = MediaSeries("Some", arrayListOf(getSingleMedia()))
+        val single = MediaSeries("Some", "E:/Some", arrayListOf(getSingleMedia()))
 
         val right = gson.toObject(gson.fromObject(single), MediaSeries::class.java)
         assertMediaEquals(single, right)
@@ -72,6 +72,7 @@ class GsonSerializerTest {
             assertEquals(left.mediaFile().path, right.mediaFile().path)
             assertEquals(left.preferredSubtitle, right.preferredSubtitle)
             assertEquals(left.preferredAudio, right.preferredAudio)
+            assertEquals(left.metaCreationDate, right.metaCreationDate)
         }
     }
 
@@ -82,7 +83,8 @@ class GsonSerializerTest {
             duration = SimpleLongProperty(random.nextLong()),
             watchDate = System.currentTimeMillis() - random.nextLong(),
             preferredAudio = GenericTrackDescription(2, "2 desc"),
-            preferredSubtitle = GenericTrackDescription(3, "3 desc")
+            preferredSubtitle = GenericTrackDescription(3, "3 desc"),
+            metaCreationDate = "2020-01-01"
         )
     }
 

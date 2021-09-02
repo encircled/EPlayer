@@ -58,6 +58,7 @@ class JavacvMetadataInfoService : MetadataInfoService {
         g.imageWidth = AppView.SCREENSHOT_WIDTH
         g.imageHeight = AppView.SCREENSHOT_HEIGHT
 
+        Event.metadataAcquired.fire(MediaCharacteristic(media, g.metadata))
         media.duration.set(g.lengthInTime / 1000L)
 
         if (!media.hasScreenshot()) {

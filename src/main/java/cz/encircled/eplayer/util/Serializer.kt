@@ -63,7 +63,8 @@ class GsonSerializer : Serializer {
                         preferredSubtitle = context.deserialize<GenericTrackDescription>(
                             jsonObject["preferredSubtitle"],
                             GenericTrackDescription::class.java
-                        )
+                        ),
+                        metaCreationDate = jsonObject["metaCreationDate"]?.asString ?: "",
                     ) as T
                 }
                 return context.deserialize(jsonObject, Class.forName(className))

@@ -58,8 +58,7 @@ class QuickNaviPanel(
         mediaContainerScroll.verticalScrollBar.unitIncrement = 25
         dataModel.selectedMediaPane.addNewValueListener {
             // Set focus on selected one
-            val mediaPane = it as MediaPane
-            mediaContainerScroll.verticalScrollBar.value = max(mediaPane.y - 80, 0)
+            if (it != null) mediaContainerScroll.verticalScrollBar.value = max(it.y - 80, 0)
         }
 
 

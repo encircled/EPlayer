@@ -26,7 +26,11 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
     fun fire(arg: A, bypassThrottling: Boolean = false) = Thread {
         if (!bypassThrottling && System.currentTimeMillis() - lastExecution < minDelay) return@Thread
         lastExecution = System.currentTimeMillis()
-        doFire(arg)
+        try {
+            doFire(arg)
+        } catch (e: Exception) {
+            log.error("Event listener error", e)
+        }
     }.start()
 
     private fun doFire(arg: A) {
@@ -119,6 +123,8 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
         val mediaDurationChange = Event<MediaCharacteristic<Long>>("mediaDurationChange")
 
         val screenshotAcquired = Event<MediaCharacteristic<String>>("screenshotAcquired")
+
+        val metadataAcquired = Event<MediaCharacteristic<Map<String, String>>>("screenshotAcquired")
 
         val volumeChanged = Event<Int>("volumeChanged")
 

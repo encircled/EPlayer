@@ -2,7 +2,6 @@ package cz.encircled.eplayer.view.swing.components.base
 
 import cz.encircled.eplayer.view.AppView
 import java.awt.*
-import javax.swing.JComponent
 import javax.swing.JPanel
 import kotlin.math.max
 
@@ -99,6 +98,7 @@ open class BaseJPanel(
     )
 
     companion object {
+        val BLUE_BG = Color(9, 118, 171)
         val LIGHTER_BG = Color(69, 73, 74)
         val DEFAULT_BG = Color(60, 63, 65)
         val MEDIUM_BG = Color(45, 48, 51)

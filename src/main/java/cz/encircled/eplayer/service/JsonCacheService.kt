@@ -7,7 +7,7 @@ import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.model.SingleMedia
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.Localization
-import cz.encircled.eplayer.util.TimeTracker.tracking
+import cz.encircled.eplayer.util.TimeMeasure.measure
 import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.io.IOException
@@ -20,13 +20,13 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
     private lateinit var cache: MutableMap<String, PlayableMedia>
 
     init {
-        tracking("JsonCacheService init") {
+        measure("JsonCacheService init") {
             try {
                 cache = core.ioUtil.getPlayableJson()
                     .map {
                         core.metaInfoService.fetchMetadataAsync(it)
                     }
-                    .associateBy { it.getId() }
+                    .associateBy { it.path }
                     .toMutableMap()
             } catch (e: Exception) {
                 cache = HashMap()
@@ -35,25 +35,33 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
             }
         }
 
-        tracking("JsonCacheService init listeners") {
+        measure("JsonCacheService init listeners") {
             addEventListeners()
         }
     }
 
     private fun addEventListeners() {
         Event.mediaTimeChange.listen {
-            cache.getValue(it.playableMedia.getId()).time.set(it.characteristic)
+            cache.getValue(it.playableMedia.path).time.set(it.characteristic)
         }
         Event.mediaDurationChange.listen {
-            cache.getValue(it.playableMedia.getId()).duration.set(it.characteristic)
+            cache.getValue(it.playableMedia.path).duration.set(it.characteristic)
         }
 
         Event.subtitleChanged.listen {
-            if (it.changedByUser) cache.getValue(it.playableMedia.getId()).preferredSubtitle = it.characteristic
+            if (it.changedByUser) cache.getValue(it.playableMedia.path).preferredSubtitle = it.characteristic
         }
 
         Event.audioTrackChanged.listen {
-            if (it.changedByUser) cache.getValue(it.playableMedia.getId()).preferredAudio = it.characteristic
+            if (it.changedByUser) cache.getValue(it.playableMedia.path).preferredAudio = it.characteristic
+        }
+
+        Event.metadataAcquired.listen {
+            // TODO for series
+            val media = cache[it.playableMedia.path]
+            if (media is SingleMedia) {
+                media.metaCreationDate = it.characteristic.getOrDefault("creation_time", "")
+            }
         }
     }
 
@@ -79,9 +87,9 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
         }
     }
 
-    override fun createIfAbsent(media: PlayableMedia): PlayableMedia = cache.getOrPut(media.getId()) { media }
+    override fun createIfAbsent(media: PlayableMedia): PlayableMedia = cache.getOrPut(media.path) { media }
 
-    override fun deleteEntry(media: PlayableMedia): PlayableMedia = cache.remove(media.getId())!!
+    override fun deleteEntry(media: PlayableMedia): PlayableMedia = cache.remove(media.path)!!
 
     override fun getCachedMedia(): List<PlayableMedia> = ArrayList(cache.values)
 
@@ -109,9 +117,10 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
 
     private fun getOrCreateSeries(mediaFile: MediaFile, path: String): PlayableMedia {
         val seriesName = core.seriesFinder.seriesName(mediaFile)
+        val seriesPath = File(mediaFile.path).parent + File.separator + seriesName
 
-        if (cache.containsKey(seriesName)) {
-            val mediaSeries = cache.getValue(seriesName) as MediaSeries
+        if (cache.containsKey(seriesPath)) {
+            val mediaSeries = cache.getValue(seriesPath) as MediaSeries
             if (!mediaSeries.series.map { it.path }.contains(path)) {
                 mediaSeries.series.add(createNewMedia(path))
             }
@@ -119,10 +128,11 @@ class JsonCacheService(val core: ApplicationCore) : CacheService {
             val allSeries = core.seriesFinder.findSeriesForName(File(mediaFile.path).parent, seriesName)
                 .map { createNewMedia(it) }
 
-            cache[seriesName] = MediaSeries(seriesName, ArrayList(allSeries))
+
+            cache[seriesPath] = MediaSeries(seriesName, seriesPath, ArrayList(allSeries))
         }
 
-        return cache.getValue(seriesName)
+        return cache.getValue(seriesPath)
     }
 
     private fun createNewMedia(path: String): SingleMedia {

@@ -24,6 +24,8 @@ public enum Localization {
 
     errorTitle,
 
+    confirmTitle,
+
     msgQnFileCorrupted,
 
     msgQnFileIoFail,
@@ -60,6 +62,10 @@ public enum Localization {
 
     films,
 
+    aggregationType,
+
+    sortType,
+
     series,
 
     name,
@@ -73,4 +79,9 @@ public enum Localization {
     public String ln() {
         return LocalizationProvider.get(this.name());
     }
+
+    public String ln(String param) {
+        return LocalizationProvider.get(this.name() + "." + param);
+    }
+
 }

@@ -6,7 +6,6 @@ import cz.encircled.eplayer.util.DateUtil
 import cz.encircled.eplayer.util.StringUtil
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
-import org.apache.logging.log4j.LogManager
 import java.io.File
 import kotlin.math.max
 import kotlin.math.min
@@ -16,16 +15,8 @@ import kotlin.math.min
  */
 abstract class PlayableMedia {
 
-    abstract fun getId(): String
-
     @SerializedName("type")
     private val typeName: String = this.javaClass.name
-
-    /**
-     * URL format path (with file:/ prefix)
-     */
-    val pathToScreenshot: String
-        get() = mediaFile().pathToScreenshot
 
     /**
      * File format path (without file:/ prefix)
@@ -61,8 +52,6 @@ abstract class PlayableMedia {
 
 }
 
-private val log = LogManager.getLogger()
-
 data class SingleMedia(
     override val path: String,
     override var time: SimpleLongProperty = SimpleLongProperty(0),
@@ -70,15 +59,11 @@ data class SingleMedia(
     override var watchDate: Long = 0,
     override var preferredSubtitle: GenericTrackDescription? = null,
     override var preferredAudio: GenericTrackDescription? = null,
+
+    var metaCreationDate: String = "",
 ) : PlayableMedia() {
 
-    private val mediaFile: MediaFile by lazy { // TODO is it needed at all?
-        MediaFile(path)
-    }
-
-    override fun getId(): String = path
-
-    override fun mediaFile(): MediaFile = mediaFile
+    override fun mediaFile(): MediaFile = MediaFile(path)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -89,13 +74,14 @@ data class SingleMedia(
 
     override fun hashCode(): Int = path.hashCode()
 
-    override fun name(): String = mediaFile.name
+    override fun name(): String = mediaFile().name
 
     override fun isPlayed(): Boolean = time.get() > 0
 }
 
 data class MediaSeries(
     val name: String,
+    override val path: String,
     val series: MutableList<SingleMedia>
 ) : PlayableMedia() {
 
@@ -106,7 +92,7 @@ data class MediaSeries(
     val currentEpisode: SimpleIntegerProperty = SimpleIntegerProperty()
 
     // For Gson
-    constructor() : this("", arrayListOf())
+    constructor() : this("", "", arrayListOf())
 
     // Workaround for constructor not called by Gson
     fun doInit() {
@@ -119,10 +105,6 @@ data class MediaSeries(
 
         currentEpisode.set(max(i, 0))
     }
-
-    override fun getId(): String = name
-
-    override val path: String = ""
 
     override var watchDate: Long
         get() = current().watchDate
@@ -171,5 +153,20 @@ data class MediaSeries(
     private fun current(): SingleMedia = series[currentEpisode.get()]
 
     override fun isPlayed(): Boolean = series.any { it.isPlayed() }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as MediaSeries
+
+        if (path != other.path) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return path.hashCode()
+    }
 
 }

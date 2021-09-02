@@ -1,65 +1,162 @@
 package cz.encircled.eplayer.view.swing
 
 import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.controller.QuickNaviController
+import cz.encircled.eplayer.view.swing.ActionType.*
 import java.awt.Toolkit
 import java.awt.event.KeyEvent
 import javax.swing.KeyStroke
+import javax.swing.KeyStroke.getKeyStroke
 
-class SwingActions(appView: AppView, core: ApplicationCore, controller: QuickNaviController) {
+interface AppActions : RemoteControlHandler {
+
+    fun invoke(action: ActionType)
+
+    fun openQuickNaviScreen()
+}
+
+class SwingActions(
+    val appView: AppView,
+    val core: ApplicationCore,
+    val controller: QuickNaviController
+) : AppActions {
 
     val actions = mapOf(
-        ActionType.FULL_SCREEN to SwingAction(shortcut(KeyEvent.VK_F)) {
-            appView.toggleFullScreen()
-        },
-        ActionType.QUICK_NAVI to SwingAction(shortcut(KeyEvent.VK_N)) {
-            core.openQuickNaviScreen()
-        },
-        ActionType.TOGGLE_AUDIO_PASS_THROUGH to SwingAction(shortcut(KeyEvent.VK_P)) {
+        FULL_SCREEN to SwingAction(cmdShortcut(KeyEvent.VK_F), this::toFullScreen),
+
+        QUICK_NAVI to SwingAction(cmdShortcut(KeyEvent.VK_N), this::openQuickNaviScreen),
+
+        TOGGLE_AUDIO_PASS_THROUGH to SwingAction(cmdShortcut(KeyEvent.VK_P)) {
             core.settings.audioPassThrough(!core.settings.audioPassThrough)
             Event.audioPassThroughChange.fire(core.settings.audioPassThrough)
         },
-        ActionType.BACK to SwingAction(KeyStroke.getKeyStroke("ESCAPE")) {
-            core.back()
-        },
-        ActionType.TOGGLE_PLAYER to SwingAction(KeyStroke.getKeyStroke("SPACE")) {
-            core.mediaService.toggle()
-        },
-        ActionType.EXIT to SwingAction(shortcut(KeyEvent.VK_Q)) {
+
+        BACK to SwingAction(shortcut("ESCAPE") + shortcut("BACK_SPACE"), this::back),
+
+        TOGGLE_PLAYER to SwingAction(shortcut("SPACE"), this::playPause),
+
+        EXIT to SwingAction(cmdShortcut(KeyEvent.VK_Q)) {
             core.exit()
         },
 
-        ActionType.MOVE_RIGHT to SwingAction(KeyStroke.getKeyStroke("RIGHT")) {
+        MOVE_RIGHT to SwingAction(shortcut("RIGHT")) {
             when (appView.currentSceneProperty.get()!!) {
                 Scenes.PLAYER -> core.mediaService.setTimePlus(7000)
                 Scenes.QUICK_NAVI -> controller.goToNextMedia()
             }
         },
-        ActionType.MOVE_LEFT to SwingAction(KeyStroke.getKeyStroke("LEFT")) {
+        MOVE_LEFT to SwingAction(shortcut("LEFT")) {
             when (appView.currentSceneProperty.get()!!) {
                 Scenes.PLAYER -> core.mediaService.setTimePlus(-7000)
                 Scenes.QUICK_NAVI -> controller.goToPrevMedia()
             }
         },
 
-        ActionType.SCROLL_UP to SwingAction(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0)) {
+        TO_NEXT_MEDIA to SwingAction(shortcut("ctrl RIGHT"), this::goToNextMedia),
+
+        TO_PREV_MEDIA to SwingAction(shortcut("ctrl LEFT"), this::goToPrevMedia),
+
+        VOLUME_UP to SwingAction(shortcut("UP"), this::volumeUp),
+        VOLUME_DOWN to SwingAction(shortcut("DOWN"), this::volumeDown),
+
+        SCROLL_UP to SwingAction(listOf(getKeyStroke(KeyEvent.VK_PAGE_UP, 0))) {
             appView.scrollUp()
         },
-        ActionType.SCROLL_DOWN to SwingAction(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0)) {
+        SCROLL_DOWN to SwingAction(listOf(getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0))) {
             appView.scrollDown()
         }
     )
 
-    private fun shortcut(key: Int): KeyStroke =
-        KeyStroke.getKeyStroke(key, Toolkit.getDefaultToolkit().menuShortcutKeyMask)
+    override fun invoke(action: ActionType) {
+        actions.getValue(action).action.invoke()
+    }
+
+    override fun openQuickNaviScreen() {
+        if (core.mediaService.isPlaying()) {
+            core.mediaService.pause()
+        }
+        appView.showQuickNaviScreen()
+        core.mediaService.stop()
+        core.cacheService.save()
+    }
+
+    override fun playPause() = core.mediaService.toggle()
+
+    override fun back() {
+        if (appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            if (appView.isFullScreen()) {
+                appView.toggleFullScreen()
+                core.mediaService.pause()
+            } else {
+                openQuickNaviScreen()
+            }
+        } else if (appView.currentSceneProperty.get() == Scenes.QUICK_NAVI) {
+            controller.back()
+        }
+    }
+
+    override fun toFullScreen() = appView.toggleFullScreen()
+
+    override fun goToNextMedia() {
+        if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            core.mediaService.playNext()
+        } else {
+            controller.goToNextMedia()
+        }
+    }
+
+    override fun goToPrevMedia() {
+        if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            core.mediaService.playPrevious()
+        } else {
+            controller.goToPrevMedia()
+        }
+    }
+
+    /**
+     * Scroll play time or forward to next series episode
+     */
+    override fun forward() {
+        if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            core.mediaService.setTimePlus(7000)
+        } else {
+            controller.forward()
+        }
+    }
+
+    /**
+     * Scroll play time or forward to prev series episode
+     */
+    override fun backward() {
+        if (core.appView.currentSceneProperty.get() == Scenes.PLAYER) {
+            core.mediaService.setTimePlus(-7000)
+        } else {
+            controller.backward()
+        }
+    }
+
+    override fun volumeUp() {
+        core.mediaService.volume = core.mediaService.volume + 5
+    }
+
+    override fun volumeDown() {
+        core.mediaService.volume = core.mediaService.volume - 5
+    }
+
+    private fun cmdShortcut(key: Int): List<KeyStroke> =
+        listOf(getKeyStroke(key, Toolkit.getDefaultToolkit().menuShortcutKeyMask))
+
+    private fun shortcut(key: String): List<KeyStroke> =
+        listOf(getKeyStroke(key))
 
 }
 
 data class SwingAction(
-    val keyStroke: KeyStroke,
+    val keyStrokes: List<KeyStroke>,
     val action: () -> Unit,
 )
 
@@ -74,6 +171,12 @@ enum class ActionType {
 
     MOVE_RIGHT,
     MOVE_LEFT,
+
+    TO_NEXT_MEDIA,
+    TO_PREV_MEDIA,
+
+    VOLUME_UP,
+    VOLUME_DOWN,
 
     SCROLL_UP,
     SCROLL_DOWN,

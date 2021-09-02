@@ -4,7 +4,7 @@ import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.service.CancelableExecution
 import cz.encircled.eplayer.service.FolderScanService
-import cz.encircled.eplayer.util.TimeTracker
+import cz.encircled.eplayer.util.TimeMeasure
 import java.io.File
 
 /**
@@ -14,22 +14,19 @@ class OnDemandFolderScanner(private val core: ApplicationCore) : FolderScanServi
 
     private val supportedFormats = setOf("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov")
 
-    override fun getMediaInFolder(path: String, callback: CancelableExecution<List<PlayableMedia>>) =
-        TimeTracker.tracking("OnDemandFolderScanner - $path") {
+    override fun getMediaInFolder(path: String, callback: CancelableExecution<List<PlayableMedia>>) {
+        val result = TimeMeasure.measure("OnDemandFolderScanner - $path") {
             val series = HashSet<String>()
-
             File(path).walk().maxDepth(3)
-                .filter { it.isFile && supportedFormats.contains(it.extension.toLowerCase()) && it.canRead() }
-                .chunked(50)
-                .forEach { chunk ->
-                    if (callback.isCancelled) {
-                        return@tracking
-                    }
-                    callback.invoke(chunk.mapNotNull {
-                        playableForFile(it, series)
-                    })
-                }
+                .filter { it.isFile && supportedFormats.contains(it.extension.lowercase()) && it.canRead() }
+                .mapNotNull { playableForFile(it, series) }
+                .toList()
+
         }
+
+        callback.invoke(result)
+    }
+
 
     private fun playableForFile(it: File, series: MutableSet<String>): PlayableMedia? {
         val media = core.cacheService.createIfAbsent(it.path)

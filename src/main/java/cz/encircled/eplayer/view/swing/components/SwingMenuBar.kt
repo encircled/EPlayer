@@ -120,6 +120,7 @@ class SwingMenuBar(
         val openQn = JMenuItem(Localization.openQuickNavi.ln())
         openQn.onMenuClick(ActionType.QUICK_NAVI)
 
+        // TODO just hide/remove it
         val deleteMissing = JMenuItem(Localization.deleteMissing.ln())
         deleteMissing.addActionListener {
             Thread {
@@ -129,7 +130,6 @@ class SwingMenuBar(
                     core.cacheService.deleteEntry(it)
                 }
                 core.cacheService.save()
-                controller.forceRefresh()
             }.start()
         }
 
@@ -171,7 +171,7 @@ class SwingMenuBar(
     }
 
     private fun AbstractButton.onMenuClick(type: ActionType) {
-        this.addActionListener { swingActions.actions.getValue(type).action.invoke() }
+        this.addActionListener { swingActions.invoke(type) }
     }
 
     private class RadioItem(description: String, val track: GenericTrackDescription) :

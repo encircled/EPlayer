@@ -1,6 +1,6 @@
 package cz.encircled.eplayer.view
 
-import java.util.concurrent.CountDownLatch
+import java.util.concurrent.CompletableFuture
 import javax.swing.SwingUtilities
 
 /**
@@ -8,49 +8,24 @@ import javax.swing.SwingUtilities
  */
 object UiUtil {
 
-    private val uiExecutor: UiExecutor = SwingUiExecutor()
-
-    fun inNormalThread(runnable: Runnable) = uiExecutor.inNormalThread(runnable)
-
-    fun inUiThread(runnable: Runnable) = uiExecutor.inUiThread(runnable)
-
-    fun inUiThread(countDownLatch: CountDownLatch, runnable: Runnable) = uiExecutor.inUiThread(countDownLatch, runnable)
-
-}
-
-interface UiExecutor {
-
-    fun inNormalThread(runnable: Runnable)
-    fun inUiThread(runnable: Runnable)
-    fun inUiThread(countDownLatch: CountDownLatch, runnable: Runnable)
-
-}
-
-private class SwingUiExecutor : UiExecutor {
-
-    override fun inNormalThread(runnable: Runnable) {
-        if (!SwingUtilities.isEventDispatchThread()) {
-            runnable.run()
-        } else {
-            Thread(runnable).start()
-        }
-    }
-
-    override fun inUiThread(runnable: Runnable) {
+    inline fun inNormalThread(crossinline runnable: () -> Unit) {
         if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run()
+            CompletableFuture.runAsync {
+                runnable.invoke()
+            }
         } else {
-            SwingUtilities.invokeLater(runnable)
+            runnable.invoke()
         }
     }
 
-    override fun inUiThread(countDownLatch: CountDownLatch, runnable: Runnable) {
+    inline fun inUiThread(crossinline runnable: () -> Unit) {
         if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run()
-            countDownLatch.countDown()
+            runnable.invoke()
         } else {
-            SwingUtilities.invokeAndWait(runnable)
-            countDownLatch.countDown()
+            SwingUtilities.invokeLater {
+                runnable.invoke()
+            }
         }
     }
+
 }

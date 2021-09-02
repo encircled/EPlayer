@@ -1,29 +1,23 @@
 {
   "media": [
     {
-      "path": "",
       "name": "Series.",
+      "path": "E:\\soft\\projects\\EPlayer\\src\\main\\test\\resources\\video\\series\\Series.",
       "series": [
         {
-          "mediaFile$delegate": {
-            "initializer": {},
-            "_value": {}
-          },
           "path": "E:\\soft\\projects\\EPlayer\\src\\main\\test\\resources\\video\\series\\Series.s1e1.mkv",
           "time": 0,
           "duration": 0,
           "watchDate": 0,
+          "metaCreationDate": "",
           "type": "cz.encircled.eplayer.model.SingleMedia"
         },
         {
-          "mediaFile$delegate": {
-            "initializer": {},
-            "_value": {}
-          },
           "path": "E:\\soft\\projects\\EPlayer\\src\\main\\test\\resources\\video\\series\\Series.s1e2.mkv",
           "time": 0,
           "duration": 0,
           "watchDate": 0,
+          "metaCreationDate": "",
           "type": "cz.encircled.eplayer.model.SingleMedia"
         }
       ],

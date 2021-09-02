@@ -1,10 +1,22 @@
 package cz.encircled.eplayer.view.swing.components.base
 
+import com.formdev.flatlaf.FlatClientProperties.*
+import cz.encircled.eplayer.view.controller.QuickNaviController
+import java.util.function.BiConsumer
 import javax.swing.JTabbedPane
 
-class TabsPane : JTabbedPane() {
+class TabsPane(val controller: QuickNaviController) : JTabbedPane() {
 
     val tabs: MutableList<TitleAndIndex> = ArrayList()
+
+    init {
+        putClientProperty(TABBED_PANE_TAB_CLOSABLE, true)
+        putClientProperty(TABBED_PANE_TAB_CLOSE_TOOLTIPTEXT, "Close")
+        putClientProperty(TABBED_PANE_TAB_CLOSE_CALLBACK,
+            BiConsumer<JTabbedPane, Int> { _, tabIndex ->
+                controller.removeTab(tabs.first { it.index == tabIndex }.title)
+            })
+    }
 
     fun addTabs(names: List<String>) {
         names.forEach {

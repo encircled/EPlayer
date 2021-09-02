@@ -1,5 +1,6 @@
 package cz.encircled.eplayer.view
 
+import cz.encircled.eplayer.view.swing.AppActions
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyBooleanProperty
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
@@ -10,13 +11,15 @@ import java.util.concurrent.CountDownLatch
  */
 interface AppView {
 
+    val actions: AppActions
+
+    val currentSceneProperty: ObjectProperty<Scenes>
+
     fun setMediaPlayer(mediaPlayer: EmbeddedMediaPlayerComponent)
 
     fun showPlayer(countDownLatch: CountDownLatch)
 
     fun isFullScreen(): Boolean
-
-    val currentSceneProperty: ObjectProperty<Scenes>
 
     fun fullScreenProperty(): ReadOnlyBooleanProperty
 
@@ -27,6 +30,8 @@ interface AppView {
     fun openMediaChooser()
 
     fun showUserMessage(msg: String)
+
+    fun getUserConfirmation(msg: String, onConfirm: () -> Unit, onDecline: () -> Unit)
 
     fun scrollUp() {}
 

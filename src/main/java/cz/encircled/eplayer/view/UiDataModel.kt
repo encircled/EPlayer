@@ -1,6 +1,7 @@
 package cz.encircled.eplayer.view
 
 import cz.encircled.eplayer.model.PlayableMedia
+import cz.encircled.eplayer.view.swing.components.quicknavi.AbstractMediaPane
 import javafx.beans.property.*
 import javafx.collections.FXCollections
 import javafx.collections.ObservableList
@@ -16,19 +17,36 @@ data class UiDataModel(
 
     val filter: StringProperty = SimpleStringProperty(""),
 
-    val media: ObservableList<PlayableMedia> = FXCollections.observableArrayList(),
+    val media: ObservableList<UiMedia> = FXCollections.observableArrayList(),
 
-    val selectedMedia: ObjectProperty<PlayableMedia> = SimpleObjectProperty(),
+    val selectedMedia: ObjectProperty<UiMedia> = SimpleObjectProperty(),
 
-    val selectedMediaPane: ObjectProperty<Any> = SimpleObjectProperty(),
+    val selectedMediaPane: ObjectProperty<AbstractMediaPane?> = SimpleObjectProperty(),
 
-    val selectedFolder: StringProperty = SimpleStringProperty(),
+    /**
+     * Path to selected tab
+     */
+    val selectedTab: StringProperty = SimpleStringProperty(),
+
+    /**
+     * Path to selected folder within path, i.e. the full path to selected folder
+     */
+    val selectedFullPath: StringProperty = SimpleStringProperty(),
 
     val foldersToScan: ObservableList<String> = FXCollections.observableArrayList(),
 
     val lastScrollPosition: IntegerProperty = SimpleIntegerProperty(0),
 
     val sortType: ObjectProperty<SortType> = SimpleObjectProperty(SortType.Name),
+
+    val aggregationType: ObjectProperty<AggregationType> = SimpleObjectProperty(AggregationType.None),
+
+    var dynamicFilterForMedia: ObjectProperty<((UiMedia) -> Boolean)> = SimpleObjectProperty(),
+
+    /**
+     * Display media from sub-folders, or preserve folders structure
+     */
+    val flatView: BooleanProperty = SimpleBooleanProperty(true),
 
     val currentMedia: ObjectProperty<PlayableMedia> = SimpleObjectProperty(null)
 

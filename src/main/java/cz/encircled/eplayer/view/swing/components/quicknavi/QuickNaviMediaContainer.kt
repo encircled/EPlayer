@@ -1,7 +1,6 @@
 package cz.encircled.eplayer.view.swing.components.quicknavi
 
-import cz.encircled.eplayer.view.UiDataModel
-import cz.encircled.eplayer.view.addChangesListener
+import cz.encircled.eplayer.view.*
 import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.addAll
 import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
@@ -16,8 +15,20 @@ class QuickNaviMediaContainer(
 
     init {
         dataModel.media.addChangesListener { added, removed ->
-            removeIf { removed.contains((it as MediaPane).media) }
-            addAll(added.map { MediaPane(it, dataModel, quickNaviController) })
+            val idOfRemoved = removed.map { it.path() }
+            removeIf { idOfRemoved.contains((it as AbstractMediaPane).media.path()) }
+            addAll(added.map {
+                when (it) {
+                    is UiPlayableMedia -> PlayableMediaPane(it, dataModel, quickNaviController)
+                    is UiFolderMedia -> FolderMediaPane(it, dataModel, quickNaviController)
+                    else -> throw UnsupportedOperationException()
+                }
+            })
+        }
+
+        dataModel.selectedMedia.addNewValueListener { selected ->
+            dataModel.selectedMediaPane.value =
+                components.filterIsInstance<AbstractMediaPane>().firstOrNull { it.media == selected }
         }
     }
 

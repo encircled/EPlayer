@@ -1,15 +1,17 @@
 package cz.encircled.eplayer
 
+import cz.encircled.eplayer.view.UiDataModel
+import cz.encircled.eplayer.view.controller.QuickNaviControllerImpl
 import cz.encircled.eplayer.view.swing.components.base.TabsPane
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class TabsPaneTest {
+class TabsPaneTest : BaseTest() {
 
     @Test
     fun testAddTabs() {
-        val pane = TabsPane()
+        val pane = TabsPane(QuickNaviControllerImpl(UiDataModel(), core))
 
         pane.addTabs(listOf("0", "1", "2", "3", "4"))
         assertEquals(tabs(0, 1, 2, 3, 4), pane.tabs)
@@ -17,7 +19,7 @@ class TabsPaneTest {
 
     @Test
     fun testRemoveTabs() {
-        val pane = TabsPane()
+        val pane = TabsPane(QuickNaviControllerImpl(UiDataModel(), core))
 
         pane.addTabs(listOf("0", "1", "2", "3", "4"))
 

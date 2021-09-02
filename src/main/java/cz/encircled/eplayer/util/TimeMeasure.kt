@@ -3,11 +3,11 @@ package cz.encircled.eplayer.util
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
-object TimeTracker {
+object TimeMeasure {
 
     val log: Logger = LogManager.getLogger()
 
-    inline fun <T> tracking(name: String, crossinline callback: () -> T): T {
+    inline fun <T> measure(name: String, crossinline callback: () -> T): T {
         val start = System.currentTimeMillis()
 
         try {
