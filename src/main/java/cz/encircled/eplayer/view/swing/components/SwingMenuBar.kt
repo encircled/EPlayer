@@ -148,7 +148,7 @@ class SwingMenuBar(
     private fun updateTrackMenu(
         menu: JMenu,
         trackDescriptions: List<GenericTrackDescription>,
-        selected: GenericTrackDescription,
+        selected: GenericTrackDescription?,
         changeEvent: Event<MediaCharacteristic<GenericTrackDescription>>,
         eventHandler: ActionListener
     ) {

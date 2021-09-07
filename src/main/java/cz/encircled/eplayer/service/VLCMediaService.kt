@@ -37,9 +37,9 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
             }
         }
 
-    private lateinit var subtitle: GenericTrackDescription
+    private var subtitle: GenericTrackDescription? = null
 
-    private lateinit var audioTrack: GenericTrackDescription
+    private var audioTrack: GenericTrackDescription? = null
 
     init {
         Event.audioTrackChanged.listen { change ->
@@ -47,10 +47,10 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         }
     }
 
-    override fun currentSubtitle(): GenericTrackDescription = subtitle
+    override fun currentSubtitle() = subtitle
 
     override fun setSubtitle(track: GenericTrackDescription, byUser: Boolean) {
-        if (!this::subtitle.isInitialized || track != subtitle) {
+        if (track != subtitle) {
             log.debug("Set subtitle track {}", track)
             subtitle = track
             player.subpictures().setTrack(track.id)
@@ -58,10 +58,10 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
         }
     }
 
-    override fun currentAudioTrack(): GenericTrackDescription = audioTrack
+    override fun currentAudioTrack() = audioTrack
 
     override fun setAudioTrack(track: GenericTrackDescription, byUser: Boolean) {
-        if (!this::audioTrack.isInitialized || track != audioTrack) {
+        if (track != audioTrack) {
             log.debug("Set audio track {}", track)
             this.audioTrack = track
             player.audio().setTrack(track.id)
@@ -101,6 +101,8 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
             countDownLatch.await()
         }
 
+        subtitle = null
+        audioTrack = null
         current = media
 
         inNormalThread {

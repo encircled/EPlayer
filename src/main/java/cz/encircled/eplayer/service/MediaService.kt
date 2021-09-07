@@ -11,11 +11,11 @@ interface MediaService {
 
     var volume: Int
 
-    fun currentSubtitle(): GenericTrackDescription
+    fun currentSubtitle(): GenericTrackDescription?
 
     fun setSubtitle(track: GenericTrackDescription, byUser: Boolean = true)
 
-    fun currentAudioTrack(): GenericTrackDescription
+    fun currentAudioTrack(): GenericTrackDescription?
 
     fun setAudioTrack(track: GenericTrackDescription, byUser: Boolean = true)
 

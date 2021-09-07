@@ -85,7 +85,7 @@ class VLCEventListener(val core: ApplicationCore, val mediaService: MediaService
         Event.subtitlesUpdated.fire(textTracks)
         Event.audioTracksUpdated.fire(audioTracks)
 
-        mediaService.switchAudioPassThruIfNeeded(mediaService.currentAudioTrack())
+        mediaService.switchAudioPassThruIfNeeded(mediaService.currentAudioTrack()!!)
     }
 
     private inline fun withCurrent(crossinline consumer: (PlayableMedia) -> Unit) {
