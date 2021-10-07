@@ -111,6 +111,8 @@ class VLCMediaService(private val core: ApplicationCore) : MediaService {
             setTime(media.time.get())
         }
 
+        Event.mediaChange.fire(media)
+
         log.debug("Playing started")
     }
 

@@ -1,25 +1,25 @@
 package cz.encircled.eplayer.view.swing.components
 
-import cz.encircled.eplayer.core.ApplicationCore
+import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.StringUtil
 import cz.encircled.eplayer.view.AppView
+import cz.encircled.eplayer.view.controller.PlayerController
 import cz.encircled.eplayer.view.swing.*
 import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
 import cz.encircled.eplayer.view.swing.components.base.ToggleButton
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.GridBagConstraints
 import javax.swing.JLabel
 import javax.swing.JSlider
 
-class PlayerControls(appView: AppView, val core: ApplicationCore) : BaseJPanel() {
+class PlayerControls(appView: AppView, val settings: AppSettings, val controller: PlayerController) : BaseJPanel() {
 
     private val playerToggle: ToggleButton = ToggleButton("pause.png", "play.png")
 
     private val volumeToggle: ToggleButton = ToggleButton("volume.png", "volume_mute.png")
-    private val volumeSlider: JSlider = JSlider(0, core.settings.maxVolume, core.settings.lastVolume)
-    private val volumeText: JLabel = JLabel("${core.settings.lastVolume} %")
+    private val volumeSlider: JSlider = JSlider(0, settings.maxVolume, settings.lastVolume)
+    private val volumeText: JLabel = JLabel("${settings.lastVolume} %")
     private var lastVolumeSliderValue = 0
 
     private val fullScreenToggle: ToggleButton = ToggleButton("fit.png", "shrink.png")
@@ -28,14 +28,11 @@ class PlayerControls(appView: AppView, val core: ApplicationCore) : BaseJPanel()
     private val currentTimeText: JLabel = JLabel(StringUtil.msToTimeLabel(0L))
     private val totalTimeText: JLabel = JLabel(StringUtil.msToTimeLabel(0L))
 
-    private val bgColor = Color(40, 42, 42)
-
     init {
-        padding(20, 15)
-        background = bgColor
-        preferredSize = Dimension(AppView.MIN_WIDTH, 60)
+        background = MEDIUM_BG
+        preferredSize = Dimension(AppView.MIN_WIDTH, AppView.PLAYER_CONTROLS_HEIGHT)
 
-        playerToggle.onClick { core.mediaService.toggle() }
+        playerToggle.onClick { controller.togglePlaying() }
         Event.playingChanged.listenUiThread {
             playerToggle.isSelected = !it.characteristic
         }
@@ -46,37 +43,37 @@ class PlayerControls(appView: AppView, val core: ApplicationCore) : BaseJPanel()
         initVolume()
         initTimes()
 
-        nextColumn(flowPanel(hgap = 0, vhap = 0).apply {
-            background = bgColor
-            add(playerToggle)
-        }) {
-            width = 40
+        padding(20, 15)
+        nextColumn(GridData(width = 40)) {
+            flowPanel(hgap = 0, vhap = 0) {
+                background = MEDIUM_BG
+                add(playerToggle)
+            }
         }
 
-        nextColumn(flowPanel(hgap = 0, vhap = 0) {
-            background = bgColor
-            addAll(volumeToggle, volumeSlider, volumeText)
-        }) {
-            width = 300
+        nextColumn(GridData(width = 300)) {
+            flowPanel(hgap = 0, vhap = 0) {
+                background = MEDIUM_BG
+                addAll(volumeToggle, volumeSlider, volumeText)
+            }
         }
-        nextColumn(gridPanel {
-            background = bgColor
+        nextColumn(GridData(fill = GridBagConstraints.HORIZONTAL)) {
+            gridPanel {
+                background = MEDIUM_BG
 
-            nextColumn(timeSlider) {
-                fill = GridBagConstraints.HORIZONTAL
+                nextColumn(timeSlider) {
+                    fill = GridBagConstraints.HORIZONTAL
+                }
+
+                nextColumn(flowPanel(0, 0) {
+                    background = MEDIUM_BG
+
+                    addAll(currentTimeText, totalTimeText)
+                }) {
+                    width = 150
+                    fill = GridBagConstraints.NONE
+                }
             }
-
-            nextColumn(flowPanel(0, 0) {
-                background = bgColor
-
-                addAll(currentTimeText, totalTimeText)
-            }) {
-                width = 150
-                fill = GridBagConstraints.NONE
-            }
-
-        }) {
-            fill = GridBagConstraints.HORIZONTAL
         }
     }
 
@@ -97,7 +94,7 @@ class PlayerControls(appView: AppView, val core: ApplicationCore) : BaseJPanel()
 
         timeSlider.onChange { time, isAdjusting ->
             if (isAdjusting) {
-                core.mediaService.setTime(time.toLong())
+                controller.time = time.toLong()
                 currentTimeText.text = StringUtil.msToTimeLabel(time.toLong())
             }
         }
@@ -117,7 +114,7 @@ class PlayerControls(appView: AppView, val core: ApplicationCore) : BaseJPanel()
             volumeText.text = "$volume %"
             volumeToggle.isSelected = volume == 0
 
-            if (!isAdjusting) core.mediaService.volume = volume
+            if (!isAdjusting) controller.volume = volume
         }
 
         Event.volumeChanged.listenUiThread { volumeSlider.value = it }

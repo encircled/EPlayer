@@ -42,6 +42,8 @@ interface AppView {
         const val MIN_WIDTH = 1024
         const val MIN_HEIGHT = 800
 
+        const val PLAYER_CONTROLS_HEIGHT = 60
+
         const val SCREENSHOT_WIDTH = 336
         const val SCREENSHOT_HEIGHT = 189
     }

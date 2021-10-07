@@ -6,6 +6,7 @@ import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.TimeMeasure.measure
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiUtil
+import cz.encircled.eplayer.view.controller.PlayerControllerImpl
 import cz.encircled.eplayer.view.controller.QuickNaviControllerImpl
 import cz.encircled.eplayer.view.swing.components.MainFrame
 import org.apache.logging.log4j.LogManager
@@ -27,7 +28,7 @@ class SwingView(args: Array<String>) {
         log.info("INPUT ARGS: ${args.joinToString()}")
 
         measure("UI base setup") {
-            FlatDarculaLaf.install()
+            FlatDarculaLaf.setup()
             JFrame.setDefaultLookAndFeelDecorated(true)
 
             UIManager.put("defaultFont", Font("Segoe UI", Font.PLAIN, 13));
@@ -38,7 +39,8 @@ class SwingView(args: Array<String>) {
         measure("UI components") {
             val dataModel = UiDataModel()
             val quickNaviController = QuickNaviControllerImpl(dataModel, core)
-            val mainFrame = MainFrame(dataModel, quickNaviController, core)
+            val playerController = PlayerControllerImpl(core)
+            val mainFrame = MainFrame(dataModel, quickNaviController, playerController, core)
 
             quickNaviController.init(mainFrame)
             mainFrame.isVisible = true

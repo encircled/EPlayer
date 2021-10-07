@@ -8,6 +8,7 @@ import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiUtil.inUiThread
+import cz.encircled.eplayer.view.controller.PlayerController
 import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.AppActions
 import cz.encircled.eplayer.view.swing.SwingActions
@@ -31,6 +32,7 @@ import kotlin.reflect.jvm.isAccessible
 class MainFrame(
     val dataModel: UiDataModel,
     quickNaviController: QuickNaviController,
+    playerController: PlayerController,
     val core: ApplicationCore
 ) : JFrame(), AppView {
 
@@ -44,7 +46,7 @@ class MainFrame(
     private val fullScreenStrategy = Win32FullScreenStrategy(this)
     private val isFullScreen = SimpleBooleanProperty(false)
 
-    override val actions: AppActions = SwingActions(this, core, quickNaviController)
+    override val actions: AppActions = SwingActions(this, core, quickNaviController, playerController)
 
     init {
         initTitle()
@@ -59,13 +61,17 @@ class MainFrame(
 
         quickNaviComponent = QuickNaviPanel(dataModel, quickNaviController, this)
 
-        playerComponent = PlayerPanel(this, core, jMenuBar)
+        playerComponent = PlayerPanel(this, core, jMenuBar, playerController)
         showQuickNaviScreen()
 
-        // Remove default actions so it can be overriden
+        // Remove default actions so it can be overridden
         val tabActionMap = UIManager.get("TabbedPane.actionMap") as ActionMap
         tabActionMap.remove("navigateLeft")
         tabActionMap.remove("navigateRight")
+
+        val listActionMap = UIManager.get("List.actionMap") as ActionMap
+        // Uses 'space'
+        listActionMap.remove("addToSelection")
 
         registerShortcuts(quickNaviComponent)
 

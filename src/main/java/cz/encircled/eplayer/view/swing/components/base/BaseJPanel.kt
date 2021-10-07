@@ -17,35 +17,36 @@ open class BaseJPanel(
         layout = defLayout
     }
 
-    fun nextRow(component: Component, prep: GridData.() -> Unit = {}) {
+    inline fun nextRow(component: Component, crossinline prep: GridData.() -> Unit = {}) {
         addNext(component, max(0, currentColumn), ++currentRow, prep)
     }
 
-    fun nextRow(gridData: GridData = GridData(), component: () -> Component) {
+    inline fun nextRow(gridData: GridData = GridData(), crossinline component: () -> Component) {
         addNext(component.invoke(), max(0, currentColumn), ++currentRow, gridData)
     }
 
-    fun nextColumn(component: Component, prep: GridData.() -> Unit = {}) {
+    inline fun nextColumn(component: Component, crossinline prep: GridData.() -> Unit = {}) {
         addNext(component, ++currentColumn, max(0, currentRow), prep)
     }
 
-    fun nextColumn(gridData: GridData = GridData(), component: () -> Component): Component {
+    inline fun nextColumn(gridData: GridData = GridData(), crossinline component: () -> Component): Component {
         return addNext(component.invoke(), ++currentColumn, max(0, currentRow), gridData)
     }
 
-    private fun addNext(component: Component, x: Int, y: Int, prep: GridData.() -> Unit): Component {
+    inline fun addNext(component: Component, x: Int, y: Int, crossinline prep: GridData.() -> Unit): Component {
         val data = GridData()
         prep(data)
         return addNext(component, x, y, data)
     }
 
-    private fun addNext(component: Component, x: Int, y: Int, data: GridData): Component {
+    fun addNext(component: Component, x: Int, y: Int, data: GridData): Component {
         val constraints = GridBagConstraints()
         constraints.weightx = 1.0
         constraints.weighty = 1.0
 
         if (data.width != null) {
-            // TODO
+            // TODO or not TODO?
+            constraints.fill = GridBagConstraints.VERTICAL
         } else {
             constraints.fill = GridBagConstraints.HORIZONTAL
         }

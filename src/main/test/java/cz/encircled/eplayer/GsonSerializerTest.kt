@@ -5,6 +5,7 @@ import cz.encircled.eplayer.util.GsonSerializer
 import cz.encircled.eplayer.util.MediaWrapper
 import cz.encircled.eplayer.util.Serializer
 import javafx.beans.property.SimpleLongProperty
+import javafx.collections.FXCollections
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,9 +26,9 @@ class GsonSerializerTest {
     @Test
     fun testReadWriteMediaSingleMedia() {
         val single = getSingleMedia()
-        assertMediaEquals(single, gson.toObject(gson.fromObject(single), PlayableMedia::class.java))
+        assertMediaEquals(single, gson.toObject(gson.fromObject(single), SingleMedia::class.java))
 
-        val fromJson = gson.toObject(gson.fromObject(SingleMedia("E:/")), PlayableMedia::class.java)
+        val fromJson = gson.toObject(gson.fromObject(SingleMedia("E:/")), SingleMedia::class.java)
         assertMediaEquals(SingleMedia("E:/"), fromJson)
     }
 
@@ -43,8 +44,8 @@ class GsonSerializerTest {
     fun testMediaWrapper() {
         val element = getSingleMedia()
         assertEquals(
-            MediaWrapper(listOf()),
-            gson.toObject(gson.fromObject(MediaWrapper(listOf())), MediaWrapper::class.java)
+            MediaWrapper(),
+            gson.toObject(gson.fromObject(MediaWrapper()), MediaWrapper::class.java)
         )
         assertEquals(
             MediaWrapper(listOf(element)),
@@ -73,6 +74,7 @@ class GsonSerializerTest {
             assertEquals(left.preferredSubtitle, right.preferredSubtitle)
             assertEquals(left.preferredAudio, right.preferredAudio)
             assertEquals(left.metaCreationDate, right.metaCreationDate)
+            assertEquals(left.bookmarks, right.bookmarks)
         }
     }
 
@@ -84,7 +86,8 @@ class GsonSerializerTest {
             watchDate = System.currentTimeMillis() - random.nextLong(),
             preferredAudio = GenericTrackDescription(2, "2 desc"),
             preferredSubtitle = GenericTrackDescription(3, "3 desc"),
-            metaCreationDate = "2020-01-01"
+            metaCreationDate = "2020-01-01",
+            bookmarks = FXCollections.observableArrayList(MediaBookmark(1), MediaBookmark(2))
         )
     }
 

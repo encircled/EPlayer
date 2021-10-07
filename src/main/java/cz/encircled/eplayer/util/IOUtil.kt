@@ -4,6 +4,7 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.AppSettings
 import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
+import cz.encircled.eplayer.model.SingleMedia
 import cz.encircled.eplayer.util.TimeMeasure.measure
 import org.apache.commons.io.FileUtils
 import org.apache.logging.log4j.LogManager
@@ -13,7 +14,7 @@ import java.math.BigDecimal
 import java.nio.file.Files
 import java.nio.file.Paths
 
-data class MediaWrapper(val media: List<PlayableMedia>)
+data class MediaWrapper(val singleMedia: List<SingleMedia> = listOf(), val series: List<MediaSeries> = listOf())
 
 class IOUtil {
 
@@ -36,9 +37,12 @@ class IOUtil {
         }
 
         return measure("serializer.toObject") {
-            val result = serializer.toObject(allBytes, MediaWrapper::class.java).media
+            val wrapper = serializer.toObject(allBytes, MediaWrapper::class.java)
+            val result = wrapper.singleMedia + wrapper.series.map {
+                it.doInit()
+                it
+            }
 
-            result.filterIsInstance<MediaSeries>().forEach { it.doInit() }
             result
         }
     }
@@ -47,7 +51,9 @@ class IOUtil {
     fun savePlayable(playable: Map<String, PlayableMedia>) {
         log.debug("Saving playable to $quickNaviPath")
         try {
-            File(quickNaviPath).writeText(serializer.fromObject(MediaWrapper(playable.values.toList())))
+            val singleMedia = playable.values.filterIsInstance<SingleMedia>()
+            val series = playable.values.filterIsInstance<MediaSeries>()
+            File(quickNaviPath).writeText(serializer.fromObject(MediaWrapper(singleMedia, series)))
         } catch (e: Exception) {
             log.error("Failed to save playable", e)
         }

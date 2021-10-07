@@ -5,6 +5,7 @@ import cz.encircled.eplayer.remote.RemoteControlHandler
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
+import cz.encircled.eplayer.view.controller.PlayerController
 import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.ActionType.*
 import java.awt.Toolkit
@@ -22,7 +23,8 @@ interface AppActions : RemoteControlHandler {
 class SwingActions(
     val appView: AppView,
     val core: ApplicationCore,
-    val controller: QuickNaviController
+    val controller: QuickNaviController,
+    val playerController: PlayerController,
 ) : AppActions {
 
     val actions = mapOf(
@@ -84,7 +86,11 @@ class SwingActions(
         core.cacheService.save()
     }
 
-    override fun playPause() = core.mediaService.toggle()
+    override fun playPause() = playerController.togglePlaying()
+
+    override fun playSelected() = controller.playSelected()
+
+    override fun watchLastMedia() = controller.watchLastMedia()
 
     override fun back() {
         if (appView.currentSceneProperty.get() == Scenes.PLAYER) {
@@ -140,18 +146,17 @@ class SwingActions(
     }
 
     override fun volumeUp() {
-        core.mediaService.volume = core.mediaService.volume + 5
+        playerController.volume = playerController.volume + 5
     }
 
     override fun volumeDown() {
-        core.mediaService.volume = core.mediaService.volume - 5
+        playerController.volume = playerController.volume - 5
     }
 
     private fun cmdShortcut(key: Int): List<KeyStroke> =
         listOf(getKeyStroke(key, Toolkit.getDefaultToolkit().menuShortcutKeyMask))
 
-    private fun shortcut(key: String): List<KeyStroke> =
-        listOf(getKeyStroke(key))
+    private fun shortcut(key: String): List<KeyStroke> = listOf(getKeyStroke(key))
 
 }
 

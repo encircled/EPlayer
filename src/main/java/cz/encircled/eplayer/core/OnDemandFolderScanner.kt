@@ -21,7 +21,6 @@ class OnDemandFolderScanner(private val core: ApplicationCore) : FolderScanServi
                 .filter { it.isFile && supportedFormats.contains(it.extension.lowercase()) && it.canRead() }
                 .mapNotNull { playableForFile(it, series) }
                 .toList()
-
         }
 
         callback.invoke(result)

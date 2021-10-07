@@ -2,6 +2,7 @@ package cz.encircled.eplayer.service.event
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
+import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.service.Cancelable
 import cz.encircled.eplayer.view.UiUtil
 import org.apache.logging.log4j.LogManager
@@ -100,6 +101,8 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
 
     companion object {
         val contextInitialized = Event<ApplicationCore>("contextInitialized")
+
+        val mediaChange = Event<PlayableMedia>("mediaChange")
 
         val mediaTimeChange = Event<MediaCharacteristic<Long>>("mediaTimeChange", 1000, false)
 

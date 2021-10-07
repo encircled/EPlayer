@@ -23,8 +23,8 @@ inline fun <T> ObservableValue<T>.addNewValueListener(crossinline listener: (T) 
     }
 }
 
-inline fun <T> ObservableList<T>.addChangesListener(crossinline listener: (added: List<T>, removed: List<T>) -> Unit) {
-    addListener(ListChangeListener {
+inline fun <T> ObservableList<T>.addChangesListener(crossinline listener: (added: List<T>, removed: List<T>) -> Unit): Cancelable {
+    val listenerToAdd = ListChangeListener<T> {
         val added = ArrayList<T>()
         val removed = ArrayList<T>()
 
@@ -36,5 +36,9 @@ inline fun <T> ObservableList<T>.addChangesListener(crossinline listener: (added
         inUiThread {
             listener.invoke(added, removed)
         }
-    })
+    }
+    addListener(listenerToAdd)
+    return Cancelable {
+        removeListener(listenerToAdd)
+    }
 }

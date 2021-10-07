@@ -110,6 +110,15 @@ inline fun flowPanel(
 ): BaseJPanel =
     BaseJPanel(FlowLayout(align, hgap, vhap)).apply { this.init() }
 
+inline fun boxPanel(
+    align: Int = BoxLayout.Y_AXIS,
+    crossinline init: BaseJPanel.() -> Unit = {}
+): BaseJPanel =
+    BaseJPanel().apply {
+        this.layout = BoxLayout(this, align)
+        this.init()
+    }
+
 fun iconButton(clazz: String, tooltip: String = "", group: ButtonGroup? = null, onClick: () -> Unit = {}): Component =
     ToggleButton(clazz).apply {
         onClick { onClick() }

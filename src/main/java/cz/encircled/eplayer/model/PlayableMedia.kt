@@ -1,11 +1,12 @@
 package cz.encircled.eplayer.model
 
-import com.google.gson.annotations.SerializedName
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.util.DateUtil
 import cz.encircled.eplayer.util.StringUtil
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
+import javafx.collections.FXCollections
+import javafx.collections.ObservableList
 import java.io.File
 import kotlin.math.max
 import kotlin.math.min
@@ -14,9 +15,6 @@ import kotlin.math.min
  * @author encir on 29-Aug-20.
  */
 abstract class PlayableMedia {
-
-    @SerializedName("type")
-    private val typeName: String = this.javaClass.name
 
     /**
      * File format path (without file:/ prefix)
@@ -61,6 +59,7 @@ data class SingleMedia(
     override var preferredAudio: GenericTrackDescription? = null,
 
     var metaCreationDate: String = "",
+    val bookmarks: ObservableList<MediaBookmark> = FXCollections.observableArrayList()
 ) : PlayableMedia() {
 
     override fun mediaFile(): MediaFile = MediaFile(path)

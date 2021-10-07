@@ -4,6 +4,7 @@ import cz.encircled.eplayer.common.PostponeTimer
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.addNewValueListener
+import cz.encircled.eplayer.view.controller.PlayerController
 import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import java.awt.BorderLayout
@@ -20,6 +21,7 @@ class PlayerPanel(
     private val appView: AppView,
     private val core: ApplicationCore,
     private val menu: JMenuBar,
+    private val controller: PlayerController,
 ) : BaseJPanel(BorderLayout()) {
 
     private var hideTimer: PostponeTimer? = null
@@ -28,7 +30,8 @@ class PlayerPanel(
 
     private val blankCursor: Cursor
 
-    private val playerControls: PlayerControls = PlayerControls(appView, core)
+    private val playerControls = PlayerControls(appView, core.settings, controller)
+    private val playerSideControls = PlayerSideControls(controller, core)
 
     private lateinit var mediaPlayer: EmbeddedMediaPlayerComponent
 
@@ -55,10 +58,17 @@ class PlayerPanel(
                     hideTimer?.cancel()
                     playerControls.isVisible = true
                 }
+
                 e.y <= menu.height -> {
                     hideTimer?.cancel()
                     menu.isVisible = true
                 }
+
+                e.x > width - playerSideControls.width -> {
+                    hideTimer?.cancel()
+                    playerSideControls.isVisible = true
+                }
+
                 else -> {
                     if (menu.isVisible) {
                         menu.isVisible = false
@@ -74,9 +84,10 @@ class PlayerPanel(
         blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, Point(0, 0), "blank cursor")
 
         add(playerControls, BorderLayout.SOUTH)
+        add(playerSideControls, BorderLayout.EAST)
 
         appView.fullScreenProperty().addNewValueListener {
-            if (it) onFullScreen() else onNotFullScreen()
+            if (it) onFullScreen() else onExitFullScreen()
         }
     }
 
@@ -93,13 +104,15 @@ class PlayerPanel(
         }
     }
 
-    private fun onNotFullScreen() {
+    private fun onExitFullScreen() {
+        // TODO side wont work then
         mediaPlayer.videoSurfaceComponent().removeMouseMotionListener(listener)
         hideTimer?.cancel()
         cursor = getDefaultCursor()
 
         menu.isVisible = true
         playerControls.isVisible = true
+        playerSideControls.isVisible = false
     }
 
     private fun onFullScreen() {
@@ -107,10 +120,12 @@ class PlayerPanel(
 
         menu.isVisible = false
         playerControls.isVisible = false
+        playerSideControls.isVisible = false
 
         hideTimer = PostponeTimer {
             cursor = blankCursor
             playerControls.isVisible = false
+            playerSideControls.isVisible = false
         }
         mediaPlayer.videoSurfaceComponent().addMouseMotionListener(listener)
     }
