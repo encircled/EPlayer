@@ -8,7 +8,7 @@ import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.service.event.MediaCharacteristic
 import cz.encircled.eplayer.util.TimeMeasure.measure
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.UiUtil.inNormalThread
+import cz.encircled.fswing.inNormalThread
 import org.apache.logging.log4j.LogManager
 import uk.co.caprica.vlcj.factory.MediaPlayerFactory
 import uk.co.caprica.vlcj.player.base.MediaPlayer

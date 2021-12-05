@@ -1,23 +1,27 @@
 package cz.encircled.eplayer.view.swing.components.quicknavi
 
-import cz.encircled.eplayer.service.Cancelable
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiMedia
-import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.controller.QuickNaviController
-import cz.encircled.eplayer.view.swing.border
-import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
-import cz.encircled.eplayer.view.swing.components.base.RemovalAware
-import cz.encircled.eplayer.view.swing.onHover
+import cz.encircled.fswing.border
+import cz.encircled.fswing.components.Cancelable
+import cz.encircled.fswing.components.FluentPanel
+import cz.encircled.fswing.components.RemovalAware
+import cz.encircled.fswing.model.Colours.BLUE_BG
+import cz.encircled.fswing.model.Colours.DARK_BG
+import cz.encircled.fswing.model.Colours.LIGHTER_BG
+import cz.encircled.fswing.onChange
+import cz.encircled.fswing.onHover
 import java.awt.Component
 import java.awt.Dimension
+import javax.swing.JPanel
 
 abstract class AbstractMediaPane(
     val media: UiMedia,
     val dataModel: UiDataModel,
     val controller: QuickNaviController,
-) : BaseJPanel(), RemovalAware {
+) : FluentPanel(), RemovalAware {
 
     override val cancelableListeners: MutableList<Cancelable> = ArrayList()
 
@@ -34,19 +38,20 @@ abstract class AbstractMediaPane(
         val header = header()
 
         body()?.let {
-            nextRow(it) {
-                width = AppView.SCREENSHOT_WIDTH
-                height = AppView.SCREENSHOT_HEIGHT
+            nextRow(width = AppView.SCREENSHOT_WIDTH, height = AppView.SCREENSHOT_HEIGHT) {
+                it
             }
         }
 
-        nextRow(header)
-        footer?.let { nextRow(footer) }
+        nextRow {
+            header
+        }
+        footer?.let { nextRow { it } }
 
         registerListeners(footer, header)
     }
 
-    private fun registerListeners(footer: Component?, header: BaseJPanel) {
+    private fun registerListeners(footer: Component?, header: JPanel) {
         fun onHover() {
             footer?.background = BLUE_BG
             header.background = BLUE_BG
@@ -59,14 +64,14 @@ abstract class AbstractMediaPane(
 
         onHover(::onHover, ::onExist)
 
-        dataModel.selectedMedia.addNewValueListener {
+        dataModel.selectedMedia.onChange {
             if (media == it) onHover() else onExist()
         }.cancelOnRemove()
 
         if (dataModel.selectedMedia.get() == media) onHover()
     }
 
-    abstract fun header(): BaseJPanel
+    abstract fun header(): JPanel
 
     abstract fun body(): Component?
 

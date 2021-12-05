@@ -6,15 +6,15 @@ import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.StringUtil
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiPlayableMedia
-import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.controller.QuickNaviController
-import cz.encircled.eplayer.view.swing.*
-import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
 import cz.encircled.eplayer.view.swing.components.base.ImagePanel
-import cz.encircled.eplayer.view.swing.components.base.RemovalAware
+import cz.encircled.fswing.*
+import cz.encircled.fswing.components.RemovalAware
+import cz.encircled.fswing.model.Colours.DARK_BG
 import java.awt.Component
 import java.awt.FlowLayout
 import javax.swing.JLabel
+import javax.swing.JPanel
 
 
 class PlayableMediaPane(
@@ -46,14 +46,14 @@ class PlayableMediaPane(
 
     fun name(): String = playableMedia.name()
 
-    override fun header(): BaseJPanel = gridPanel {
+    override fun header(): JPanel = gridPanel {
         background = DARK_BG
         padding(8, 5, 5, 5)
 
         nextRow {
             JLabel(name()).apply {
                 if (playableMedia is MediaSeries) {
-                    playableMedia.currentEpisode.addNewValueListener {
+                    playableMedia.currentEpisode.onChange {
                         text = name()
                     }.cancelOnRemove()
                 }
@@ -73,11 +73,11 @@ class PlayableMediaPane(
         val listener: (Number) -> Unit = {
             timeLabel.text = getTimeLabel(playableMedia)
         }
-        playableMedia.duration.addNewValueListener(listener).cancelOnRemove()
-        playableMedia.time.addNewValueListener(listener).cancelOnRemove()
+        playableMedia.duration.onChange(listener).cancelOnRemove()
+        playableMedia.time.onChange(listener).cancelOnRemove()
 
         if (playableMedia is MediaSeries) {
-            playableMedia.currentEpisode.addNewValueListener {
+            playableMedia.currentEpisode.onChange {
                 timeLabel.text = getTimeLabel(playableMedia)
             }.cancelOnRemove()
         }

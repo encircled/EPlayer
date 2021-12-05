@@ -1,6 +1,7 @@
 package cz.encircled.eplayer.view.swing.components.base
 
-import cz.encircled.eplayer.service.Cancelable
+import cz.encircled.fswing.components.Cancelable
+import cz.encircled.fswing.components.RemovalAware
 import javax.swing.JMenu
 
 class BaseJMenu(title: String) : JMenu(title), RemovalAware {

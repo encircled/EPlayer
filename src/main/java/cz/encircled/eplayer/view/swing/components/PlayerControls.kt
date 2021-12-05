@@ -5,24 +5,27 @@ import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.StringUtil
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.controller.PlayerController
-import cz.encircled.eplayer.view.swing.*
-import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
-import cz.encircled.eplayer.view.swing.components.base.ToggleButton
-import java.awt.Dimension
+import cz.encircled.fswing.*
+import cz.encircled.fswing.components.FluentPanel
+import cz.encircled.fswing.components.FluentToggleButton
+import cz.encircled.fswing.model.Colours.MEDIUM_BG
+import cz.encircled.fswing.model.DualState
+import cz.encircled.fswing.model.GridData
 import java.awt.GridBagConstraints
 import javax.swing.JLabel
 import javax.swing.JSlider
 
-class PlayerControls(appView: AppView, val settings: AppSettings, val controller: PlayerController) : BaseJPanel() {
+class PlayerControls(appView: AppView, val settings: AppSettings, val controller: PlayerController) : FluentPanel() {
 
-    private val playerToggle: ToggleButton = ToggleButton("pause.png", "play.png")
+    private val playerToggle: FluentToggleButton = FluentToggleButton(iconName = DualState("pause.png", "play.png"))
 
-    private val volumeToggle: ToggleButton = ToggleButton("volume.png", "volume_mute.png")
+    private val volumeToggle: FluentToggleButton =
+        FluentToggleButton(iconName = DualState("volume.png", "volume_mute.png"))
     private val volumeSlider: JSlider = JSlider(0, settings.maxVolume, settings.lastVolume)
     private val volumeText: JLabel = JLabel("${settings.lastVolume} %")
     private var lastVolumeSliderValue = 0
 
-    private val fullScreenToggle: ToggleButton = ToggleButton("fit.png", "shrink.png")
+    private val fullScreenToggle: FluentToggleButton = FluentToggleButton(iconName = DualState("fit.png", "shrink.png"))
 
     private val timeSlider: JSlider = JSlider()
     private val currentTimeText: JLabel = JLabel(StringUtil.msToTimeLabel(0L))
@@ -30,7 +33,7 @@ class PlayerControls(appView: AppView, val settings: AppSettings, val controller
 
     init {
         background = MEDIUM_BG
-        preferredSize = Dimension(AppView.MIN_WIDTH, AppView.PLAYER_CONTROLS_HEIGHT)
+        preferredSize = AppView.MIN_WIDTH x AppView.PLAYER_CONTROLS_HEIGHT
 
         playerToggle.onClick { controller.togglePlaying() }
         Event.playingChanged.listenUiThread {
@@ -44,14 +47,15 @@ class PlayerControls(appView: AppView, val settings: AppSettings, val controller
         initTimes()
 
         padding(20, 15)
-        nextColumn(GridData(width = 40)) {
+        nextColumn(40, 40) {
             flowPanel(hgap = 0, vhap = 0) {
+
                 background = MEDIUM_BG
                 add(playerToggle)
             }
         }
 
-        nextColumn(GridData(width = 300)) {
+        nextColumn(300, 40) {
             flowPanel(hgap = 0, vhap = 0) {
                 background = MEDIUM_BG
                 addAll(volumeToggle, volumeSlider, volumeText)
@@ -61,17 +65,16 @@ class PlayerControls(appView: AppView, val settings: AppSettings, val controller
             gridPanel {
                 background = MEDIUM_BG
 
-                nextColumn(timeSlider) {
-                    fill = GridBagConstraints.HORIZONTAL
+                nextColumn(GridData(fill = GridBagConstraints.HORIZONTAL)) {
+                    timeSlider
                 }
 
-                nextColumn(flowPanel(0, 0) {
-                    background = MEDIUM_BG
+                nextColumn(GridData(150, fill = GridBagConstraints.NONE)) {
+                    flowPanel(0, 0) {
+                        background = MEDIUM_BG
 
-                    addAll(currentTimeText, totalTimeText)
-                }) {
-                    width = 150
-                    fill = GridBagConstraints.NONE
+                        addAll(currentTimeText, totalTimeText)
+                    }
                 }
             }
         }

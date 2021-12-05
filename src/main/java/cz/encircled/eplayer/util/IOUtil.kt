@@ -6,6 +6,8 @@ import cz.encircled.eplayer.model.MediaSeries
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.model.SingleMedia
 import cz.encircled.eplayer.util.TimeMeasure.measure
+import cz.encircled.fswing.serialization.GsonSerializer
+import cz.encircled.fswing.serialization.Serializer
 import org.apache.commons.io.FileUtils
 import org.apache.logging.log4j.LogManager
 import java.io.File

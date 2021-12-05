@@ -7,12 +7,12 @@ import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.UiDataModel
-import cz.encircled.eplayer.view.UiUtil.inUiThread
 import cz.encircled.eplayer.view.controller.PlayerController
 import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.AppActions
 import cz.encircled.eplayer.view.swing.SwingActions
 import cz.encircled.eplayer.view.swing.components.quicknavi.QuickNaviPanel
+import cz.encircled.fswing.inUiThread
 import javafx.beans.property.ObjectProperty
 import javafx.beans.property.ReadOnlyBooleanProperty
 import javafx.beans.property.SimpleBooleanProperty

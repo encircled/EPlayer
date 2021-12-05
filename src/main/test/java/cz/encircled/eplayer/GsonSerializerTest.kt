@@ -1,11 +1,11 @@
 package cz.encircled.eplayer
 
 import cz.encircled.eplayer.model.*
-import cz.encircled.eplayer.util.GsonSerializer
 import cz.encircled.eplayer.util.MediaWrapper
-import cz.encircled.eplayer.util.Serializer
+import cz.encircled.fswing.observable.observableList
+import cz.encircled.fswing.serialization.GsonSerializer
+import cz.encircled.fswing.serialization.Serializer
 import javafx.beans.property.SimpleLongProperty
-import javafx.collections.FXCollections
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -87,7 +87,7 @@ class GsonSerializerTest {
             preferredAudio = GenericTrackDescription(2, "2 desc"),
             preferredSubtitle = GenericTrackDescription(3, "3 desc"),
             metaCreationDate = "2020-01-01",
-            bookmarks = FXCollections.observableArrayList(MediaBookmark(1), MediaBookmark(2))
+            bookmarks = observableList(MediaBookmark(1), MediaBookmark(2))
         )
     }
 

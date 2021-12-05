@@ -5,10 +5,10 @@ import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.TimeMeasure.measure
 import cz.encircled.eplayer.view.UiDataModel
-import cz.encircled.eplayer.view.UiUtil
 import cz.encircled.eplayer.view.controller.PlayerControllerImpl
 import cz.encircled.eplayer.view.controller.QuickNaviControllerImpl
 import cz.encircled.eplayer.view.swing.components.MainFrame
+import cz.encircled.fswing.inNormalThread
 import org.apache.logging.log4j.LogManager
 import java.awt.Font
 import javax.swing.JFrame
@@ -45,7 +45,7 @@ class SwingView(args: Array<String>) {
             quickNaviController.init(mainFrame)
             mainFrame.isVisible = true
 
-            UiUtil.inNormalThread {
+            inNormalThread {
                 core.delayedInit(mainFrame)
             }
         }

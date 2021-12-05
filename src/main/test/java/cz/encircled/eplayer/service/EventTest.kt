@@ -2,6 +2,7 @@ package cz.encircled.eplayer.service
 
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.service.event.OptionalMediaCharacteristic
+import cz.encircled.fswing.components.Cancelable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.test.AfterTest

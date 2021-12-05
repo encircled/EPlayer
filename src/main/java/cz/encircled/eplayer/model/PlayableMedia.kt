@@ -3,10 +3,10 @@ package cz.encircled.eplayer.model
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.util.DateUtil
 import cz.encircled.eplayer.util.StringUtil
+import cz.encircled.fswing.observable.collection.ObservableCollection
+import cz.encircled.fswing.observable.observableList
 import javafx.beans.property.SimpleIntegerProperty
 import javafx.beans.property.SimpleLongProperty
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 import java.io.File
 import kotlin.math.max
 import kotlin.math.min
@@ -59,7 +59,7 @@ data class SingleMedia(
     override var preferredAudio: GenericTrackDescription? = null,
 
     var metaCreationDate: String = "",
-    val bookmarks: ObservableList<MediaBookmark> = FXCollections.observableArrayList()
+    val bookmarks: ObservableCollection<MediaBookmark> = observableList()
 ) : PlayableMedia() {
 
     override fun mediaFile(): MediaFile = MediaFile(path)

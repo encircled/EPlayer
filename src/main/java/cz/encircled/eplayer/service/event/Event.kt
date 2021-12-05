@@ -3,8 +3,8 @@ package cz.encircled.eplayer.service.event
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
 import cz.encircled.eplayer.model.PlayableMedia
-import cz.encircled.eplayer.service.Cancelable
-import cz.encircled.eplayer.view.UiUtil
+import cz.encircled.fswing.components.Cancelable
+import cz.encircled.fswing.inUiThread
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import java.util.concurrent.CountDownLatch
@@ -55,7 +55,7 @@ data class Event<A>(val name: String, val minDelay: Long = 0, val verbose: Boole
         }
 
         uiListenersCopy.forEach {
-            UiUtil.inUiThread {
+            inUiThread {
                 try {
                     val start = System.currentTimeMillis()
                     it.invoke(arg)

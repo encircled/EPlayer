@@ -3,7 +3,7 @@ package cz.encircled.eplayer.view.controller
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.MediaBookmark
 import cz.encircled.eplayer.model.SingleMedia
-import cz.encircled.eplayer.view.UiUtil.inNormalThread
+import cz.encircled.fswing.inNormalThread
 
 interface PlayerController {
 

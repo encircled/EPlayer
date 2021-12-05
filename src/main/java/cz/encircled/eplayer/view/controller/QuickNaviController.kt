@@ -8,8 +8,9 @@ import cz.encircled.eplayer.service.CancelableExecution
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.util.TimeMeasure.measure
 import cz.encircled.eplayer.view.*
-import cz.encircled.eplayer.view.UiUtil.inNormalThread
-import cz.encircled.eplayer.view.UiUtil.inUiThread
+import cz.encircled.fswing.inNormalThread
+import cz.encircled.fswing.inUiThread
+import cz.encircled.fswing.onChange
 import org.apache.logging.log4j.LogManager
 import java.io.File
 import java.net.URLEncoder
@@ -62,7 +63,7 @@ class QuickNaviControllerImpl(
         Event.contextInitialized.listenUiThread {
             dataModel.foldersToScan.setAll(listOf(QUICK_NAVI) + core.settings.foldersToScan)
 
-            appView.currentSceneProperty.addNewValueListener {
+            appView.currentSceneProperty.onChange {
                 if (it == Scenes.QUICK_NAVI) refreshMedia()
             }
         }
@@ -74,7 +75,7 @@ class QuickNaviControllerImpl(
             dataModel.aggregationType,
             dataModel.flatView
         ).forEach {
-            it.addNewValueListener { refreshMedia() }
+            it.onChange { refreshMedia() }
         }
     }
 

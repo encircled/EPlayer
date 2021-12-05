@@ -12,7 +12,7 @@ import java.io.File
  */
 class OnDemandFolderScanner(private val core: ApplicationCore) : FolderScanService {
 
-    private val supportedFormats = setOf("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov")
+    private val supportedFormats = setOf("avi", "mkv", "mp3", "mp4", "flv", "wav", "wmv", "mov", "ts")
 
     override fun getMediaInFolder(path: String, callback: CancelableExecution<List<PlayableMedia>>) {
         val result = TimeMeasure.measure("OnDemandFolderScanner - $path") {

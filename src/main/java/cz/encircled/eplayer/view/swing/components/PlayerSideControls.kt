@@ -3,40 +3,31 @@ package cz.encircled.eplayer.view.swing.components
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.MediaBookmark
 import cz.encircled.eplayer.model.SingleMedia
-import cz.encircled.eplayer.service.Cancelable
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.addChangesListener
 import cz.encircled.eplayer.view.controller.PlayerController
-import cz.encircled.eplayer.view.swing.addAll
-import cz.encircled.eplayer.view.swing.boxPanel
-import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
-import cz.encircled.eplayer.view.swing.components.base.BaseLabel
-import cz.encircled.eplayer.view.swing.onClick
-import cz.encircled.eplayer.view.swing.padding
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
+import cz.encircled.fswing.addAll
+import cz.encircled.fswing.boxPanel
+import cz.encircled.fswing.components.FluentLabel
+import cz.encircled.fswing.components.FluentList
+import cz.encircled.fswing.components.FluentPanel
+import cz.encircled.fswing.model.Colours.MEDIUM_BG
+import cz.encircled.fswing.observable.observableList
+import cz.encircled.fswing.onClick
+import cz.encircled.fswing.padding
 import java.awt.Dimension
 import javax.swing.JButton
-import javax.swing.JList
 
-class PlayerSideControls(private val playerController: PlayerController, val core: ApplicationCore) : BaseJPanel() {
+class PlayerSideControls(private val playerController: PlayerController, val core: ApplicationCore) : FluentPanel() {
 
-    private lateinit var currentMediaBookmarks: ObservableList<MediaBookmark>
-    private var currentListener: Cancelable? = null
-    private val bookmarksList = JList<MediaBookmark>()
+    private val bookmarksList = FluentList<MediaBookmark>()
 
     init {
         background = MEDIUM_BG
         preferredSize = Dimension(150, AppView.MIN_HEIGHT - AppView.PLAYER_CONTROLS_HEIGHT)
 
         Event.mediaChange.listenUiThread {
-            currentListener?.cancel()
-            currentMediaBookmarks = if (it is SingleMedia) it.bookmarks else FXCollections.observableArrayList()
-            currentListener = currentMediaBookmarks.addChangesListener { _, _ ->
-                handleBookmarksChanged()
-            }
-            handleBookmarksChanged()
+            bookmarksList.dataSource(if (it is SingleMedia) it.bookmarks else observableList())
         }
 
         padding(5, 15, 5)
@@ -50,7 +41,7 @@ class PlayerSideControls(private val playerController: PlayerController, val cor
         nextRow {
             boxPanel {
                 addAll(
-                    BaseLabel("Bookmarks", isBold = true),
+                    FluentLabel("Bookmarks", isBold = true),
                     bookmarksList,
                     JButton("Add bookmark").onClick {
                         playerController.addBookmark()
@@ -58,10 +49,6 @@ class PlayerSideControls(private val playerController: PlayerController, val cor
                 )
             }
         }
-    }
-
-    private fun handleBookmarksChanged() {
-        bookmarksList.setListData(currentMediaBookmarks.toTypedArray())
     }
 
 }

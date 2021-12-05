@@ -2,20 +2,20 @@ package cz.encircled.eplayer.view.swing.components
 
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.model.GenericTrackDescription
-import cz.encircled.eplayer.service.Cancelable
 import cz.encircled.eplayer.service.event.Event
 import cz.encircled.eplayer.service.event.MediaCharacteristic
 import cz.encircled.eplayer.util.Localization
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.UiDataModel
-import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.controller.QuickNaviController
 import cz.encircled.eplayer.view.swing.ActionType
 import cz.encircled.eplayer.view.swing.SwingActions
-import cz.encircled.eplayer.view.swing.addAll
 import cz.encircled.eplayer.view.swing.components.base.BaseJMenu
-import cz.encircled.eplayer.view.swing.components.base.RemovalAware
+import cz.encircled.fswing.addAll
+import cz.encircled.fswing.components.Cancelable
+import cz.encircled.fswing.components.RemovalAware
+import cz.encircled.fswing.onChange
 import java.awt.Toolkit
 import java.awt.event.ActionListener
 import java.awt.event.KeyEvent
@@ -55,7 +55,7 @@ class SwingMenuBar(
             }
         }
 
-        appView.currentSceneProperty.addNewValueListener {
+        appView.currentSceneProperty.onChange {
             audioTracks.isEnabled = it == Scenes.PLAYER
             subtitles.isEnabled = it == Scenes.PLAYER
         }
@@ -79,12 +79,12 @@ class SwingMenuBar(
         val view = JMenu(Localization.view.ln())
 
         val fullScreen = JCheckBoxMenuItem(Localization.fullScreen.ln())
-        appView.fullScreenProperty().addNewValueListener { fullScreen.isSelected = it }
+        appView.fullScreenProperty().onChange { fullScreen.isSelected = it }
         fullScreen.onMenuClick(ActionType.FULL_SCREEN)
         fullScreen.isSelected = appView.isFullScreen()
 
         val fitScreen = JCheckBoxMenuItem(Localization.fitScreen.ln())
-        dataModel.fitToScreen.addNewValueListener { fitScreen.isSelected = it }
+        dataModel.fitToScreen.onChange { fitScreen.isSelected = it }
         fitScreen.addActionListener { dataModel.toggleFitToScreen() }
         fitScreen.accelerator = shortcut(KeyEvent.VK_G)
         fitScreen.isSelected = dataModel.fitToScreen.get()

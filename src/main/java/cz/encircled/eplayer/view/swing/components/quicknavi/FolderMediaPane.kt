@@ -3,16 +3,17 @@ package cz.encircled.eplayer.view.swing.components.quicknavi
 import cz.encircled.eplayer.view.UiDataModel
 import cz.encircled.eplayer.view.UiFolderMedia
 import cz.encircled.eplayer.view.controller.QuickNaviController
-import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
 import cz.encircled.eplayer.view.swing.components.base.ImagePanel
-import cz.encircled.eplayer.view.swing.components.base.RemovalAware
-import cz.encircled.eplayer.view.swing.flowPanel
-import cz.encircled.eplayer.view.swing.gridPanel
-import cz.encircled.eplayer.view.swing.onClick
-import cz.encircled.eplayer.view.swing.padding
+import cz.encircled.fswing.components.RemovalAware
+import cz.encircled.fswing.flowPanel
+import cz.encircled.fswing.gridPanel
+import cz.encircled.fswing.model.Colours
+import cz.encircled.fswing.onClick
+import cz.encircled.fswing.padding
 import java.awt.Component
 import java.awt.FlowLayout
 import javax.swing.JLabel
+import javax.swing.JPanel
 
 class FolderMediaPane(
     media: UiFolderMedia,
@@ -29,8 +30,8 @@ class FolderMediaPane(
         }
     }
 
-    override fun header(): BaseJPanel = gridPanel {
-        background = DARK_BG
+    override fun header(): JPanel = gridPanel {
+        background = Colours.DARK_BG
         padding(16, 20)
 
         nextRow {
@@ -64,7 +65,7 @@ class FolderMediaPane(
     }
 
     override fun footer(): Component = flowPanel(align = FlowLayout.RIGHT) {
-        background = DARK_BG
+        background = Colours.DARK_BG
         padding(6)
 
         nextColumn {

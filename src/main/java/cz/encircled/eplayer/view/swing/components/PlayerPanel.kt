@@ -3,9 +3,9 @@ package cz.encircled.eplayer.view.swing.components
 import cz.encircled.eplayer.common.PostponeTimer
 import cz.encircled.eplayer.core.ApplicationCore
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.controller.PlayerController
-import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
+import cz.encircled.fswing.components.FluentPanel
+import cz.encircled.fswing.onChange
 import uk.co.caprica.vlcj.player.component.EmbeddedMediaPlayerComponent
 import java.awt.BorderLayout
 import java.awt.Cursor
@@ -21,8 +21,8 @@ class PlayerPanel(
     private val appView: AppView,
     private val core: ApplicationCore,
     private val menu: JMenuBar,
-    private val controller: PlayerController,
-) : BaseJPanel(BorderLayout()) {
+    controller: PlayerController,
+) : FluentPanel(BorderLayout()) {
 
     private var hideTimer: PostponeTimer? = null
 
@@ -86,7 +86,7 @@ class PlayerPanel(
         add(playerControls, BorderLayout.SOUTH)
         add(playerSideControls, BorderLayout.EAST)
 
-        appView.fullScreenProperty().addNewValueListener {
+        appView.fullScreenProperty().onChange {
             if (it) onFullScreen() else onExitFullScreen()
         }
     }

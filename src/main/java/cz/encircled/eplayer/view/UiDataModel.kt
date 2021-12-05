@@ -2,9 +2,9 @@ package cz.encircled.eplayer.view
 
 import cz.encircled.eplayer.model.PlayableMedia
 import cz.encircled.eplayer.view.swing.components.quicknavi.AbstractMediaPane
+import cz.encircled.fswing.observable.collection.ObservableCollection
+import cz.encircled.fswing.observable.observableList
 import javafx.beans.property.*
-import javafx.collections.FXCollections
-import javafx.collections.ObservableList
 
 const val QUICK_NAVI = "Quick Navi"
 
@@ -17,7 +17,7 @@ data class UiDataModel(
 
     val filter: StringProperty = SimpleStringProperty(""),
 
-    val media: ObservableList<UiMedia> = FXCollections.observableArrayList(),
+    val media: ObservableCollection<UiMedia> = observableList(),
 
     val selectedMedia: ObjectProperty<UiMedia> = SimpleObjectProperty(),
 
@@ -33,7 +33,7 @@ data class UiDataModel(
      */
     val selectedFullPath: StringProperty = SimpleStringProperty(),
 
-    val foldersToScan: ObservableList<String> = FXCollections.observableArrayList(),
+    val foldersToScan: ObservableCollection<String> = observableList(),
 
     val lastScrollPosition: IntegerProperty = SimpleIntegerProperty(0),
 

@@ -3,9 +3,10 @@ package cz.encircled.eplayer.view.swing.components.quicknavi
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.Scenes
 import cz.encircled.eplayer.view.UiDataModel
-import cz.encircled.eplayer.view.addNewValueListener
 import cz.encircled.eplayer.view.controller.QuickNaviController
-import cz.encircled.eplayer.view.swing.components.base.BaseJPanel
+import cz.encircled.fswing.components.FluentPanel
+import cz.encircled.fswing.model.GridData
+import cz.encircled.fswing.onChange
 import org.apache.logging.log4j.LogManager
 import java.awt.GridBagConstraints
 import java.awt.datatransfer.DataFlavor
@@ -25,8 +26,7 @@ class QuickNaviPanel(
     private val dataModel: UiDataModel,
     val quickNaviController: QuickNaviController,
     val appView: AppView
-) :
-    BaseJPanel() {
+) : FluentPanel() {
 
     private val log = LogManager.getLogger()
 
@@ -49,26 +49,25 @@ class QuickNaviPanel(
                 dataModel.lastScrollPosition.set(it.value)
             }
         }
-        appView.currentSceneProperty.addNewValueListener {
+        appView.currentSceneProperty.onChange {
             if (it == Scenes.PLAYER) {
                 mediaContainerScroll.verticalScrollBar.value = dataModel.lastScrollPosition.get()
             }
         }
 
         mediaContainerScroll.verticalScrollBar.unitIncrement = 25
-        dataModel.selectedMediaPane.addNewValueListener {
+        dataModel.selectedMediaPane.onChange {
             // Set focus on selected one
             if (it != null) mediaContainerScroll.verticalScrollBar.value = max(it.y - 80, 0)
         }
 
 
         // Layout
-
-        nextRow(QuickNaviControls(quickNaviController, dataModel)) {
-            height = 34
+        nextRow(height = 34) {
+            QuickNaviControls(quickNaviController, dataModel)
         }
-        nextRow(mediaContainerScroll) {
-            fill = GridBagConstraints.BOTH
+        nextRow(GridData(fill = GridBagConstraints.BOTH)) {
+            mediaContainerScroll
         }
     }
 

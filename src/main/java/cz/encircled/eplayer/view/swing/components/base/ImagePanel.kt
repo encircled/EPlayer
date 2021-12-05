@@ -1,8 +1,10 @@
 package cz.encircled.eplayer.view.swing.components.base
 
 import cz.encircled.eplayer.view.AppView
-import cz.encircled.eplayer.view.UiUtil
-import cz.encircled.eplayer.view.swing.padding
+import cz.encircled.fswing.inNormalThread
+import cz.encircled.fswing.inUiThread
+import cz.encircled.fswing.model.Colours.LIGHTER_BG
+import cz.encircled.fswing.padding
 import java.awt.*
 import java.awt.image.BufferedImage
 import java.io.File
@@ -24,21 +26,21 @@ class ImagePanel(path: String, private val placeholder: String) : JPanel() {
     }
 
     init {
-        background = BaseJPanel.LIGHTER_BG
+        background = LIGHTER_BG
         setImage(path)
     }
 
     fun setImage(path: String) {
-        UiUtil.inNormalThread {
+        inNormalThread {
             try {
                 image = ImageIO.read(File(path))
-                UiUtil.inUiThread {
+                inUiThread {
                     removeAll()
                     validate()
                     repaint()
                 }
             } catch (ex: IOException) {
-                UiUtil.inUiThread {
+                inUiThread {
                     showPlaceholder()
                 }
             }
@@ -52,7 +54,7 @@ class ImagePanel(path: String, private val placeholder: String) : JPanel() {
 
         label.size = Dimension(AppView.SCREENSHOT_WIDTH, AppView.SCREENSHOT_HEIGHT)
         label.font = Font(label.font.name, Font.BOLD, 17)
-        label.background = BaseJPanel.LIGHTER_BG
+        label.background = LIGHTER_BG
         label.isEditable = false
 
         add(label, BorderLayout.CENTER)

@@ -1,13 +1,6 @@
 package cz.encircled.eplayer.service
 
-/**
- * Indicates that an object (like a listener or a subscription) can be cancelled
- */
-fun interface Cancelable {
-
-    fun cancel()
-
-}
+import cz.encircled.fswing.components.Cancelable
 
 class CancelableExecution<T>(private var execution: ((T) -> Unit)?) : Cancelable {
 

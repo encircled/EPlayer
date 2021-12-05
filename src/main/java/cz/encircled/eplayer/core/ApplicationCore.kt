@@ -13,6 +13,8 @@ import cz.encircled.eplayer.util.LocalizationProvider
 import cz.encircled.eplayer.util.TimeMeasure.measure
 import cz.encircled.eplayer.view.AppView
 import cz.encircled.eplayer.view.swing.AppActions
+import cz.encircled.fswing.settings.FluentSwingLocalization
+import cz.encircled.fswing.settings.FluentSwingSettings
 import javafx.application.Platform
 import org.apache.logging.log4j.LogManager
 import kotlin.system.exitProcess
@@ -70,6 +72,9 @@ class ApplicationCore(
         }
         settings.core = this
         LocalizationProvider.init(settings)
+        FluentSwingSettings.ln = object : FluentSwingLocalization {
+            override fun localize(code: String): String = LocalizationProvider.get(code)
+        }
     }
 
     fun delayedInit(appView: AppView) {
